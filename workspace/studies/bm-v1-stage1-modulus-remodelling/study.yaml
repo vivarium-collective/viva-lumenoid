@@ -70,6 +70,25 @@ baseline:
       hold_steps: 16000
       seed: 12345
 
+variants:
+  - name: reference
+    description: Published v1 parameter set (NC1×1, 7S×3, off_rate 0.02); the ensemble baseline.
+    params: {}
+
+simulation_set:
+  - name: stage1-seed-ensemble
+    status: completed
+    base_model: collagen-iv-network-stage1
+    seeds: [11, 22, 33, 44, 55, 66]
+    metrics:
+      elastic_modulus_lj: "-0.03 ± 0.06 (95% CI)"
+      coordination_z: 1.22
+      remodelling_time: "below detection (floppy network)"
+    pass_fail_tests:
+      - "elastic-modulus-consistent-with-floppy: pass"
+      - "relaxation-decays-not-densifies: pass"
+      - "network-assembles: pass"
+
 readouts:
   - name: elastic_modulus_lj
     description: Tangent slope of the bond-virial stress vs strain during the stretch ramp (baseline pre-stress removed).
@@ -232,6 +251,8 @@ findings:
       observed: "crosslinks 45→401 (old, densifies) vs steady ~54 then decay 46→3 (off-rate)"
     explanation: "Breaking must be length-independent to be a controllable rate (spec: force-independent in v1)."
     next_action: "adopted in viva_lumenoid/collagen.py; guarded by a regression test"
+    provenance:
+      run_ids: [stage1-seed-ensemble]
   - id: F2-floppy-below-rigidity-percolation
     kind: computational
     status: confirms
@@ -247,6 +268,8 @@ findings:
       Maxwell counting: NC1 beads reach z = 2, 7S beads z = 4, mean ≤ 3 < 4 → floppy
       regardless of crosslink density. Rigidity must come from bending / bundling.
     next_action: "seed FP1 (junction-bending rigidity study)"
+    provenance:
+      run_ids: [stage1-seed-ensemble]
   - id: F3-tau-below-detection
     kind: methodological
     status: partial
@@ -257,6 +280,8 @@ findings:
     evidence:
       observed: "ensemble viscous decay ~0.29→0.25; s0 < 2·noise → τ unresolved"
     next_action: "resolve on a rigid (bending) network or a much larger ensemble"
+    provenance:
+      run_ids: [stage1-seed-ensemble]
 
 followup_proposals:
   - id: fp1-junction-bending

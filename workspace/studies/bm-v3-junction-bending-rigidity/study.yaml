@@ -63,6 +63,33 @@ baseline:
       rungs: "[(1,3,0.12),(2,4,0.25),(3,5,0.40),(5,8,0.60)]"
       seeds: "[11,22,33]"
 
+variants:
+  - name: nc1x1-7sx3
+    description: Baseline connectivity (NC1×1, 7S×3) — z ≈ 1.2.
+    params: {nc1_max_crosslinks: 1, svns_max_crosslinks: 3, make_prob: 0.12}
+  - name: nc1x2-7sx4
+    description: Raised connectivity (bundling proxy) — z ≈ 1.6.
+    params: {nc1_max_crosslinks: 2, svns_max_crosslinks: 4, make_prob: 0.25}
+  - name: nc1x3-7sx5
+    description: Raised connectivity — z ≈ 2.3.
+    params: {nc1_max_crosslinks: 3, svns_max_crosslinks: 5, make_prob: 0.40}
+  - name: nc1x5-7sx8
+    description: Highest achievable connectivity — z ≈ 3.7 (still < 4).
+    params: {nc1_max_crosslinks: 5, svns_max_crosslinks: 8, make_prob: 0.60}
+
+simulation_set:
+  - name: rigidity-connectivity-sweep
+    status: completed
+    base_model: connectivity-sweep
+    seeds: [11, 22, 33]
+    metrics:
+      z_max: 3.72
+      reached_rigid: false
+      modulus: "consistent with 0 at every rung"
+    pass_fail_tests:
+      - "z-stays-below-threshold: pass"
+      - "modulus-stays-floppy: pass"
+
 readouts:
   - name: coordination_z
     description: Mean bead coordination z at each connectivity rung.
@@ -110,6 +137,8 @@ findings:
       range: "rigid only for z ≥ 4 (2D central-force isostatic point)"
     explanation: "NC1×1 + 7S×3 caps z at 3; bundling raises it but the geometry saturates below 4."
     next_action: "implement junction bending (fix bond/create atype + angle_style) — the load-bearing v2 fix"
+    provenance:
+      run_ids: [rigidity-connectivity-sweep]
 
 conclusion_logic:
   if_primary_tests_pass:
@@ -120,7 +149,7 @@ conclusion_logic:
   if_primary_tests_fail:
     diagnose:
       - "If z reaches 4 and modulus turns on, connectivity DOES rigidify — revise the finding."
-    block_downstream: "n/a"
+    block_downstream: "Nothing downstream is blocked — this is a diagnostic follow-up, not a pipeline gate."
 
 visualizations:
   - name: rigidity-diagnostic

@@ -53,6 +53,23 @@ baseline:
       strain_rates: "[5e-4, 1e-3, 2e-3, 4e-3, 8e-3, 1.6e-2]"
       seed: 12345
 
+variants:
+  - name: rate-sweep
+    description: Equibiaxial ε̇ swept over six rates (5e-4 … 1.6e-2) on the growing substrate.
+    params: {}
+
+simulation_set:
+  - name: stage2-strainrate-sweep
+    status: completed
+    base_model: collagen-iv-network-stage2
+    seeds: [12345]
+    metrics:
+      viscosity_lowrate: 401
+      regime: "elastic-dominated across sampled rates"
+    pass_fail_tests:
+      - "sweep-runs: pass"
+      - "viscosity-defined: pass"
+
 readouts:
   - name: sigma_steady
     description: Steady-state in-plane network stress at each imposed strain rate.
