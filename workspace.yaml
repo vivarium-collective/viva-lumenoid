@@ -24,7 +24,31 @@ layout:
 # Observable specs: name + store_path + index_by. Populated by the Studies
 # tab when you declare a behavior_test or readout. See .pbg/schemas/study.schema.json
 # (readouts section) for shape.
-observables: []
+observables:
+  - name: sigma_inplane
+    store_path: network/sigma_inplane
+    units: kT/a^3
+    description: In-plane network stress (bond virial only, V0-normalised).
+  - name: n_crosslinks
+    store_path: network/n_crosslinks
+    units: count
+    description: NC1/7S crosslink bonds (total minus intra-rod).
+  - name: strain
+    store_path: network/strain
+    units: dimensionless
+    description: Equibiaxial in-plane engineering strain.
+
+# Expert source documents (the AICS-Lumenoids v1 spec + diagram) that back the
+# investigation's claims and parameters.
+expert_docs:
+  - name: basement-membrane-v1-spec
+    path: workspace/references/basement-membrane-v1-spec.md
+    description: >
+      AICS-Lumenoids "Basement membrane — v1 model specification" (Roam export
+      2026-09-29). The source of every v1 parameter and open decision.
+  - name: lumenoid-basement-membrane-diagram
+    path: workspace/references/lumenoid-basement-membrane-diagram.svg
+    description: Diagrammatic version of the same v1 specification.
 
 # Visualization wiring (address + config). Populated by the Visualizations
 # tab and /viva-viz.

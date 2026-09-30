@@ -1,0 +1,103 @@
+schema_version: 2
+name: basement-membrane-v1
+title: "Basement membrane v1 — collagen IV network modulus & remodelling for the AICS vertex model"
+created: "2026-09-30"
+status: running
+lead: eran
+
+question: >
+  What effective elastic modulus and remodelling (stress-relaxation) time does a
+  coarse-grained collagen IV basement-membrane network produce on a growing
+  (biaxially stretching) boundary — the two numbers the AICS 3D vertex model
+  needs to couple to a basement membrane?
+
+hypothesis: >
+  A standalone collagen IV network, coarse-grained at the fiber scale (one
+  protomer = one two-bead rod, stochastic NC1/7S crosslinks, no excluded volume),
+  reproduces the Meadowcroft/Barrientos regime: a very soft elastic modulus
+  (the published network's own linear modulus is ≈0.03 Pa) and a crosslink-
+  turnover-limited stress-relaxation time that can be calibrated to the ≈20 h
+  collagen IV lifetime. Its effective modulus and remodelling time, tabulated
+  against growth rate ε̇, become inputs to the vertex model (offline coupling first).
+
+description: |
+  This investigation is the clean-room Vivarium build of the AICS-Lumenoids
+  "Basement membrane — v1 model specification" (Roam graph, exported 2026-09-29;
+  the source spec and diagram are in `workspace/references/`). We do NOT have the
+  authors' LAMMPS/Smoldyn decks, so every model parameter is transcribed from the
+  spec's parameter sheet and clearly labelled as such.
+
+  **Engines.** The workspace imports two already-wrapped simulators —
+  `viva-lammps` (the `LAMMPSProcess` bridge) and `viva-smoldyn` — and builds the
+  collagen IV network on top of the real LAMMPS engine. LAMMPS runs stages 1–2
+  (rigid rods, junction flexibility); Smoldyn is held for stage 3 (flexible
+  fibers + surface binders) per spec decision #2.
+
+  **Staged build (spec "v1 build").**
+    - Stage 1 — reproduce the paper; separate elastic from viscous. Stretch,
+      hold, then switch the crosslink chemistry on. Reports an elastic modulus
+      and a stress-relaxation time.  ← this investigation's first study.
+    - Stage 2 — growing substrate (flat): impose equibiaxial strain rate ε̇,
+      read off σ(ε̇); an effective viscosity η = σ/ε̇ and the rate at which the
+      response turns elastic.
+    - Stage 3 — add the cell–BM linker (surface-attached springs, constant
+      off-rate). Smoldyn's surface binders land here.
+    - Stage 4 — curvature (only if stages 2–3 depend on R beyond ε̇ = Ṙ/R).
+
+  **Coupling route (spec decision).** Offline first: tabulate the BM's modulus
+  and remodelling time against growth rate and hand them to the vertex model.
+  Then direct: vertex-mesh surface velocities drive the BM substrate, BM stress
+  feeds back, exchanged every N vertex steps.
+
+studies:
+  - bm-v1-stage1-modulus-remodelling
+
+at_a_glance:
+  - study: bm-v1-stage1-modulus-remodelling
+    role: >
+      Stage 1. Assemble → equilibrate → stretch → hold(elastic) → hold(chemistry
+      on, viscous). Produces the first elastic modulus and remodelling-time
+      readings from the clean-room network.
+
+acceptance_criteria:
+  - study: bm-v1-stage1-modulus-remodelling
+    behavior: >
+      The staged protocol runs end-to-end on real LAMMPS, a crosslinked network
+      assembles from two-bead rods, the stress-strain ramp yields a finite
+      (very soft) elastic modulus, and the chemistry-on hold shows a measurable
+      stress relaxation (or an honest noise-limited flag at v1 network size).
+
+executive:
+  what_is_this: >
+    The first Vivarium build of the AICS lumenoid basement membrane: a coarse-
+    grained collagen IV network on a moving boundary, run until it reports an
+    elastic modulus and a remodelling time for the vertex model.
+  verdict: >
+    Infrastructure stood up and stage 1 runs. The clean-room network assembles,
+    stretches, and relaxes on real LAMMPS; it reports a positive but very soft
+    elastic modulus (consistent with the paper's ≈0.03 Pa) and a remodelling time
+    that is currently noise-limited at v1 network size. Absolute stiffness in
+    pascals and a calibrated τ await the open decisions below.
+  verdict_status: preliminary
+  decisions_needed:
+    - "Engine for stages 1–2: LAMMPS now; revisit Smoldyn at stage 3 (spec #2)."
+    - "Secretion: fixed concentration vs fixed flux (spec #3)."
+    - "Energy scale: report modulus in Pa (fit to a measured modulus) or keep kT and report a ratio (spec #4)."
+    - "Coupling contract: which vertex-model term receives the BM — basal tension, mobility, or elastic spring (spec #5)."
+    - "Linker values: density, spring constant, off-rate; sweep off-rate as a multiple of the crosslink break rate (spec #6)."
+    - "Growth rate ε̇ from the lumenoid radius time course — still requested (spec #7)."
+    - "Slab thickness / layer count — one z-stack away (spec #9)."
+    - "Which readout calibrates vs validates — remodelling time calibrates MP and the time unit, so it cannot also validate (spec #10)."
+
+glossary:
+  - term: protomer
+    definition: One collagen IV triple-helical molecule (~376 nm end-to-end); modelled as one two-bead rod.
+  - term: NC1 / 7S
+    definition: The two crosslinking ends of a protomer. NC1 binds 1 partner (hexamer), 7S binds 3 (tetramer/spider).
+  - term: remodelling time
+    definition: The viscous stress-relaxation time set by crosslink make/break kinetics; calibrated to the ≈20 h collagen IV lifetime.
+  - term: ε̇ (epsilon-dot)
+    definition: Equibiaxial in-plane strain rate. A sphere of radius R growing at Ṙ stretches its shell at ε̇ = Ṙ/R.
+
+expert_docs:
+  - basement-membrane-v1-spec

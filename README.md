@@ -1,93 +1,75 @@
-# lumenoid
+# viva-lumenoid
 
-<!-- BEGIN:dashboard -->
-<!-- `vivarium-workbench gen-readme` fills this with a prominent link to the
-     live read-only dashboard (URL derived from the git remote). Before the repo
-     is pushed it shows a local-serve note; after the publish-dashboard workflow
-     runs (enable once: Settings → Pages → Source = `gh-pages`) it links the live
-     GitHub Pages dashboard. Run `vivarium-workbench gen-readme --workspace .`
-     (and `--check` in CI) to keep it fresh. -->
-<!-- END:dashboard -->
+Clean-room [process-bigraph](https://github.com/vivarium-collective/process-bigraph)
+build of the AICS-Lumenoids **"Basement membrane — v1 model specification"**: a
+standalone collagen IV network, coarse-grained at the fiber scale, run on a
+moving (biaxially stretching) boundary until it reports an **elastic modulus**
+and a **remodelling time** for the AICS 3D vertex model.
 
-A Process-Bigraph research workspace scaffolded from
-[viva-template](https://github.com/vivarium-collective/viva-template).
+The source spec and its diagram are in
+[`workspace/references/`](workspace/references/). Every model parameter is
+transcribed from that spec's parameter sheet and labelled as such — the authors'
+actual LAMMPS/Smoldyn decks are not in hand, so this is a clean-room build, not a
+byte-for-byte reproduction.
 
-## Getting started
+## What it is
 
-    bash scripts/serve.sh           # open the dashboard
-    python3 scripts/lint-workspace.py
+- **Engines.** Imports two already-wrapped simulators — [`viva-lammps`](https://github.com/vivarium-collective/viva-lammps)
+  (`LAMMPSProcess`) and [`viva-smoldyn`](https://github.com/vivarium-collective/viva-smoldyn).
+  The collagen IV network runs on **real LAMMPS**; Smoldyn is held for stage 3
+  (surface binders / flexible fibers).
+- **Model** (`viva_lumenoid/`). One collagen IV protomer = one **two-bead rod**
+  (bead spacing ≈114 nm); stochastic **NC1/7S crosslinks** (`fix bond/create` +
+  `fix bond/break`, NC1 binds 1, 7S binds 3); **no excluded volume** (the released
+  decks set every pair ε=0); an equibiaxial **`fix deform`** moving boundary. The
+  network stress is the **bond virial only**, normalised by the initial volume
+  (the spec flags the all-atom stress as a stage-1 error).
+- **Process-bigraph native.** `CollagenNetworkProcess` (a persistent LAMMPS
+  network driven by `strain_rate` + `chemistry_on` ports) and
+  `StagedStretchController` (sequences the stage-1 phases) compose into a
+  Composite; `run_stage1()` is the direct analysis driver.
 
-See `NEXT_STEPS.md` for the full tour.
+## The staged build (from the spec)
 
-> 🤖 **Using an AI coding assistant (Claude Code / Cursor / …)?** Hand it
-> **[docs/first-run-agent-guide.md](docs/first-run-agent-guide.md)** — a gated
-> runbook that takes an agent from a clean clone to a running vivarium-workbench
-> with one of this workspace's composites open in the viewer, then on to
-> authoring studies and contributing.
+| Stage | What | Status |
+|---|---|---|
+| 1 | Reproduce the paper; separate elastic from viscous (stretch → hold → chemistry on) | **runs** — this workspace |
+| 2 | Growing substrate (flat): impose ε̇, read σ(ε̇) → effective viscosity | next |
+| 3 | Add the cell–BM linker (surface springs, constant off-rate) — Smoldyn binders | deferred |
+| 4 | Curvature (only if stages 2–3 depend on R beyond ε̇ = Ṙ/R) | deferred |
 
-## Working with this workspace
+**Coupling route:** offline first — tabulate the BM's modulus + remodelling time
+against growth rate and hand them to the vertex model; then a direct two-way loop.
 
-The [viva-superpowers](https://github.com/vivarium-collective/viva-superpowers)
-Claude Code plugin provides skills that drive the canonical PR flow:
+## Quick start
 
-- `/viva-study <slug>` — start a study (8-section spec, `phase: Design|Build|Simulate|Evaluate|Decide`).
-- `/viva-investigation <slug>` — group related studies into an investigation (DAG via `pipeline_gate.prerequisites`).
-- `/viva-expert <tool>` — wrap a simulator as a process-bigraph Process or Step (sibling repo + tests + report). Pass `--lightweight` to write in-workspace instead.
-- `/viva-expert <name> <tools…>` — wire wrapped simulators into a composite (sibling repo, or `--lightweight` for in-workspace).
-- `/viva-viz` — generate a Visualization from a natural-language description.
-- `/viva-report` — regenerate `workspace/reports/index.html`.
+```bash
+uv venv .venv && source .venv/bin/activate
+# workspace + engines (see the pyproject note on the pbg-superpowers rebrand):
+uv pip install --no-deps -e . -e ../viva-lammps -e ../viva-smoldyn
+uv pip install process-bigraph numpy matplotlib
+# LAMMPS Python bindings — the PyPI wheel is MPICH-linked; on macOS point it at
+# homebrew's MPI-free serial lib:
+uv pip install lammps
+#   (macOS) ln -sf $(brew --prefix)/opt/lammps/lib/liblammps_serial.0.dylib \
+#           .venv/lib/python*/site-packages/lammps/liblammps.dylib
 
-Decide-phase studies can record `followup_proposals[]`; seed a child study
-from any proposal with `/viva-study seed-from-followup <parent>/<proposal_id>`.
+python demo/stage1_demo.py     # runs stage 1, prints readouts, saves the stress trace
+pytest -q                      # fast model + registration tests
+```
 
-## Composites & investigations
+## Stage-1 readouts (clean-room v1)
 
-These two tables are generated from the workspace by
-`vivarium-workbench gen-readme` — the same sets the dashboard shows — and kept
-fresh by CI (`workspace-ci` runs `gen-readme --check`). They fill in as you add
-composites and investigations; regenerate any time with
-`vivarium-workbench gen-readme --workspace .`.
+Running the study's default config (200 rods, ~4 s) gives a **positive but very
+soft** elastic modulus (~0.3–0.8 kT/a³, ~1–2 Pa) — consistent with the published
+network's own ≈0.03 Pa linear modulus — and a remodelling time that is currently
+**noise-limited** at this network size (flagged, not silently zeroed). Reporting
+absolute pascals and a calibrated τ is gated on the spec's open decisions
+(energy scale #4, equilibration #8, which-readout-calibrates #10).
 
-### Composites
+## The investigation
 
-<!-- BEGIN:composites -->
-<!-- generated by `vivarium-workbench gen-readme` — edit the source, not this table -->
-
-| Composite | What it is |
-|---|---|
-<!-- END:composites -->
-
-### Investigations
-
-<!-- BEGIN:investigations -->
-<!-- generated by `vivarium-workbench gen-readme` — edit the source, not this table -->
-
-| Investigation | Research question |
-|---|---|
-<!-- END:investigations -->
-
-## Layout
-
-Project code lives at the repo root; research state is grouped under `workspace/`
-(the `.pbg/` machine state stays at the root like `.git/`). Directory locations
-come from the `layout:` map in `workspace.yaml` — edit it to move things.
-
-- `workspace.yaml` — canonical state (validated against `.pbg/schemas/workspace.schema.json`).
-- `viva_lumenoid/` — your Python package (`core.py` exposes `build_core()`).
-- `scripts/` — `lint-workspace.py`, `serve.sh`, helpers.
-- `workspace/studies/`, `workspace/composites/`, `workspace/references/`, `workspace/datasets/` — research artifacts.
-- `workspace/notes/` — friction logs, walkthroughs, agent transcripts, ADRs. See `workspace/notes/README.md` for the
-  cleanup rule: **files under `notes/` survive cleanup sweeps by default**, because they're the
-  input to the next round of infrastructure improvements.
-- `.pbg/schemas/` — JSON schemas the lint + dashboard validate against.
-
-## Cleanup conventions
-
-Cleanup PRs (`chore(cleanup): …`, `chore(repo): trim …`) routinely remove generated files,
-one-shot scripts, and stale planning docs. Two locations are off-limits to bulk cleanup:
-
-- `workspace/notes/**` — see the rule in `workspace/notes/README.md`.
-- `workspace/references/notes/**` — per-paper literature notes, used by the findings protocol.
-
-If a specific file in either location is genuinely obsolete, delete it in its own commit
-with a one-line justification per file. Don't bundle with unrelated cleanup.
+[`workspace/investigations/basement-membrane-v1/`](workspace/investigations/basement-membrane-v1/)
+holds the research question, the study sequence, and the eight open decisions
+carried from the spec. The stage-1 study is
+[`workspace/studies/bm-v1-stage1-modulus-remodelling/`](workspace/studies/bm-v1-stage1-modulus-remodelling/).

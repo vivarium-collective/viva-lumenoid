@@ -20,7 +20,17 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-dev = ["pytest>=7.4"]
+dev = ["pytest>=7.4", "jsonschema[format-nongpl]>=4.21"]
+# The two wrapped simulators this workspace builds on. `pbg-lammps` is the
+# distribution name of viva-lammps (LAMMPSProcess); `viva-smoldyn` is held for
+# stage 3 (surface binders / flexible fibers). NOTE: both still declare a git
+# dep on `pbg-superpowers`, which now publishes as `viva-superpowers` — the name
+# mismatch makes a plain resolve fail, so for local dev install them editable
+# with `--no-deps` from the sibling checkouts:
+#     uv pip install --no-deps -e ../viva-lammps -e ../viva-smoldyn
+# LAMMPS itself must be provided by the environment (the PyPI `lammps` wheel is
+# MPICH-linked; on macOS point it at homebrew's MPI-free liblammps_serial).
+engines = ["pbg-lammps", "viva-smoldyn", "lammps"]
 
 [build-system]
 requires = ["hatchling"]
@@ -40,3 +50,5 @@ packages = ["viva_lumenoid"]
 
 [tool.uv.sources]
 vivarium-workbench = { git = "https://github.com/vivarium-collective/vivarium-workbench.git", branch = "main" }
+pbg-lammps = { git = "https://github.com/vivarium-collective/viva-lammps.git", branch = "main" }
+viva-smoldyn = { git = "https://github.com/vivarium-collective/viva-smoldyn.git", branch = "main" }
