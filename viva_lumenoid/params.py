@@ -58,6 +58,14 @@ class CollagenParams:
     make_prob: float = 0.12
     factor_mult: float = 0.66          # break rate = factor_mult relative to make
     break_every: int = 100
+    # Force-INDEPENDENT crosslink off-rate (per LJ time). Breaking is modelled by
+    # deleting a random fraction 1-exp(-off_rate*Δt) of crosslink bonds each
+    # interval — NOT LAMMPS `fix bond/break`, which only breaks over-stretched
+    # bonds (a force-DEPENDENT overstretch model that either dissolves or
+    # saturates the network, never a controllable rate). The remodelling time is
+    # τ ≈ 1/off_rate; this is the knob calibrated to the ≈20 h collagen IV
+    # lifetime (spec #10). v1 keeps it force-independent (catch-bonds are v2).
+    off_rate: float = 0.02
 
     # ---- pair interactions (spec v1-decision #2: released decks have eps=0) --
     # Every pair coefficient is zero in the released decks (lj/cut 0.0 0.0), so

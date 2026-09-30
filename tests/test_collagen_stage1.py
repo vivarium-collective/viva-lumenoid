@@ -39,16 +39,36 @@ def test_process_assembles_and_responds():
     s0 = proc.initial_state()
     assert s0["num_atoms"] == 2 * p.n_rods
     assert s0["n_crosslinks"] == 0                # bare rods, no crosslinks yet
-    # chemistry on with no strain -> crosslinks form
+    # formation on with no strain -> crosslinks form
     for _ in range(10):
-        s = proc.update({"strain_rate": 0.0, "chemistry_on": 1.0}, 10.0)
+        s = proc.update({"strain_rate": 0.0, "make_on": 1.0, "break_on": 1.0}, 10.0)
     assert s["n_crosslinks"] > 0
-    # strain the box -> box grows
+    # strain the box (frozen chemistry) -> box grows
     lx0 = s["box_dimensions"][0]
     for _ in range(5):
-        s = proc.update({"strain_rate": p.strain_rate, "chemistry_on": 0.0}, 10.0)
+        s = proc.update({"strain_rate": p.strain_rate, "make_on": 0.0, "break_on": 0.0}, 10.0)
     assert s["box_dimensions"][0] > lx0
     assert s["strain"] > 0
+    proc.close()
+
+
+def test_offrate_breaks_crosslinks_no_densification():
+    """Regression guard: break_on (force-independent off-rate) must REDUCE the
+    crosslink count — the old `fix bond/break` overstretch model let the network
+    only densify. Under make+break the count stays bounded (steady state); under
+    break-only it decays."""
+    from process_bigraph import allocate_core
+    p = _tiny()
+    proc = CollagenNetworkProcess(config={"params": p.to_dict()}, core=allocate_core())
+    proc.initial_state()
+    for _ in range(12):  # make + break -> steady state, not runaway
+        s = proc.update({"strain_rate": 0.0, "make_on": 1.0, "break_on": 1.0}, 20.0)
+    steady = s["n_crosslinks"]
+    assert steady < 3 * p.n_rods            # bounded, not saturated/overflowed
+    n0 = s["n_crosslinks"]
+    for _ in range(8):                       # break only -> decays
+        s = proc.update({"strain_rate": 0.0, "make_on": 0.0, "break_on": 1.0}, 20.0)
+    assert s["n_crosslinks"] < n0
     proc.close()
 
 
@@ -79,6 +99,7 @@ def test_composite_spec_shape():
     assert set(spec) == {"controller", "network", "emitter"}
     assert spec["network"]["address"] == "local:CollagenNetworkProcess"
     assert spec["controller"]["address"] == "local:StagedStretchController"
-    # controller drives the network's two control ports
+    # controller drives the network's control ports
     assert spec["network"]["inputs"]["strain_rate"] == ["strain_rate"]
-    assert spec["network"]["inputs"]["chemistry_on"] == ["chemistry_on"]
+    assert spec["network"]["inputs"]["make_on"] == ["make_on"]
+    assert spec["network"]["inputs"]["break_on"] == ["break_on"]

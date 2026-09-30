@@ -102,12 +102,13 @@ def run_stage1(params: CollagenParams | None = None,
 
     trace = {'t': [], 'strain': [], 'sigma': [], 'n_crosslinks': [], 'phase': []}
 
-    def drive(duration, strain_rate_val, chemistry, phase, t_offset):
+    def drive(duration, strain_rate_val, make_on, break_on, phase, t_offset):
         n = max(1, int(round(duration / sample_dt)))
         last = None
         for _ in range(n):
             last = proc.update(
-                {'strain_rate': strain_rate_val, 'chemistry_on': chemistry}, sample_dt)
+                {'strain_rate': strain_rate_val, 'make_on': make_on,
+                 'break_on': break_on}, sample_dt)
             t_offset += sample_dt
             trace['t'].append(t_offset)
             trace['strain'].append(last['strain'])
@@ -118,16 +119,17 @@ def run_stage1(params: CollagenParams | None = None,
 
     proc.initial_state()
     t = 0.0
-    assembled, t = drive(t_assemble, 0.0, 1.0, 'assemble', t)
+    # assemble to the make/break steady state (both on → genuine turnover count)
+    assembled, t = drive(t_assemble, 0.0, 1.0, 1.0, 'assemble', t)
     n_xlinks = assembled['n_crosslinks']
-    # Equilibrate with chemistry frozen so the pre-stress from crosslink
-    # formation settles before we measure a reference (spec decision #8 flags a
-    # too-short equilibration as one of the stage-1 errors).
-    relaxed, t = drive(t_hold, 0.0, 0.0, 'relax', t)
+    # Equilibrate FROZEN so the pre-stress settles before we measure a reference
+    # (spec #8 flags a too-short equilibration as one of the stage-1 errors).
+    relaxed, t = drive(t_hold, 0.0, 0.0, 0.0, 'relax', t)
     baseline = float(relaxed['sigma_inplane'])  # settled pre-stretch reference
-    _, t = drive(t_stretch, rate, 0.0, 'stretch', t)
-    elastic_last, t = drive(t_hold, 0.0, 0.0, 'hold_elastic', t)
-    viscous_last, t = drive(t_hold, 0.0, 1.0, 'hold_viscous', t)
+    _, t = drive(t_stretch, rate, 0.0, 0.0, 'stretch', t)
+    elastic_last, t = drive(t_hold, 0.0, 0.0, 0.0, 'hold_elastic', t)
+    # viscous relaxation: BREAKAGE ONLY (make off) so formation doesn't confound τ
+    viscous_last, t = drive(t_hold, 0.0, 0.0, 1.0, 'hold_viscous', t)
     snapshot = {
         'positions': viscous_last['positions'],
         'atom_types': viscous_last['atom_types'],
@@ -193,17 +195,19 @@ def stage1_composite_spec(params: CollagenParams | None = None) -> dict:
             'config': {
                 'strain_rate': rate,
                 't_assemble': p.assemble_steps * p.timestep,
+                't_relax': p.hold_steps * p.timestep,
                 't_stretch': p.target_strain / rate,
                 't_hold_elastic': p.hold_steps * p.timestep,
             },
             'inputs': {},
-            'outputs': {'strain_rate': ['strain_rate'], 'chemistry_on': ['chemistry_on'],
-                        'phase': ['phase']},
+            'outputs': {'strain_rate': ['strain_rate'], 'make_on': ['make_on'],
+                        'break_on': ['break_on'], 'phase': ['phase']},
         },
         'network': {
             '_type': 'process', 'address': 'local:CollagenNetworkProcess',
             'config': {'params': p.to_dict()},
-            'inputs': {'strain_rate': ['strain_rate'], 'chemistry_on': ['chemistry_on']},
+            'inputs': {'strain_rate': ['strain_rate'], 'make_on': ['make_on'],
+                       'break_on': ['break_on']},
             'outputs': {
                 'sigma_inplane': ['sigma_inplane'], 'strain': ['strain'],
                 'n_crosslinks': ['n_crosslinks'], 'pxx': ['pxx'], 'pyy': ['pyy'],
