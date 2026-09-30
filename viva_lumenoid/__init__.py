@@ -26,3 +26,7 @@ __all__ = [
     'stage1_ensemble', 'EnsembleResult', 'mean_coordination',
     'run_connectivity_sweep', 'RigidityResult',
 ]
+
+# Register the workspace's composite generators (discoverable by the workbench so
+# each study's baseline.composite resolves in the Composites/Registry tabs).
+from . import composites  # noqa: E402,F401
