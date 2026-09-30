@@ -34,3 +34,4 @@ workspace/reports/assets/*
 
 # generated demo artifacts
 demo/*.png
+demo/figs/

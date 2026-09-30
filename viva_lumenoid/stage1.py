@@ -36,10 +36,12 @@ class Stage1Result:
     stress_noise: float          # thermal noise floor of the bond-virial stress
     relaxation_noise_limited: bool  # True when tau is below the noise floor at this size
     trace: dict[str, list]  # t, strain, sigma, n_crosslinks, phase
+    snapshot: dict = None    # final network: positions, atom_types, box (for the mesh viz)
 
     def summary(self) -> dict[str, Any]:
         d = self.__dict__.copy()
         d.pop('trace')
+        d.pop('snapshot', None)
         return d
 
 
@@ -126,6 +128,12 @@ def run_stage1(params: CollagenParams | None = None,
     _, t = drive(t_stretch, rate, 0.0, 'stretch', t)
     elastic_last, t = drive(t_hold, 0.0, 0.0, 'hold_elastic', t)
     viscous_last, t = drive(t_hold, 0.0, 1.0, 'hold_viscous', t)
+    snapshot = {
+        'positions': viscous_last['positions'],
+        'atom_types': viscous_last['atom_types'],
+        'box': viscous_last['box_dimensions'],
+        'n_rods': p.n_rods,
+    }
     proc.close()
 
     ph = np.array(trace['phase'])
@@ -166,6 +174,7 @@ def run_stage1(params: CollagenParams | None = None,
         stress_noise=stress_noise,
         relaxation_noise_limited=bool(np.isnan(tau)),
         trace=trace,
+        snapshot=snapshot,
     )
 
 

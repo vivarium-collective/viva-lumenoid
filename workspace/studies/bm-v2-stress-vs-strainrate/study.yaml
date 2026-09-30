@@ -1,0 +1,135 @@
+schema_version: 4
+name: bm-v2-stress-vs-strainrate
+created: "2026-09-30"
+status: in-progress
+phase: Evaluate
+
+claim: >
+  Imposing an equibiaxial in-plane strain rate ε̇ on the growing collagen IV
+  network and reading the steady-state stress σ(ε̇) gives the effective viscosity
+  η = σ/ε̇ (viscous at slow rates) and the rate at which the response turns elastic
+  — the σ(ε̇) relation the vertex model needs.
+
+experiment: >
+  Assemble a crosslinked network, then stretch it equibiaxially at a fixed ε̇
+  WITH the crosslink chemistry on (the growing, remodelling substrate). Sweep ε̇
+  over a decade and read the steady-state in-plane bond-virial stress; compute
+  η = σ/ε̇ per rate and locate any viscous→elastic crossover.
+
+result: >
+  Runs the sweep in ~2 s over six rates. At v1 params σ(ε̇) is roughly
+  rate-INDEPENDENT (~0.3–0.4 kT/a³), so η ∝ 1/ε̇ (slope −1 on log–log) — the
+  network is ELASTIC-dominated across the sampled rates, not viscous, and the
+  crosslink count itself falls with rate (faster stretch outruns remodelling).
+  A clean viscous plateau needs slower rates / a larger, better-equilibrated
+  network — the same calibration the stage-1 study flags.
+
+purpose:
+  question: What is σ(ε̇), and where does the network cross from viscous to elastic?
+  mechanism: >
+    At ε̇ below the crosslink turnover rate the network remodels fast enough to
+    flow (σ ∝ ε̇, constant η); above it, bonds cannot relax between deformation
+    increments and the response stiffens.
+  expected_outcome: >
+    A viscous plateau in η at slow ε̇ and a crossover to elastic stiffening as ε̇
+    exceeds the turnover rate.
+
+key_assumptions:
+  - "Flat biaxial slab = the growing shell to leading order (ε̇ = Ṙ/R, R ≫ mesh)."
+  - "Chemistry ON during the stretch (growing, remodelling substrate) — unlike stage 1."
+  - "Steady stress read after a settle strain; network state at each rate depends on ε̇."
+
+parent_studies:
+  - bm-v1-stage1-modulus-remodelling
+
+baseline:
+  - name: collagen-iv-network-stage2
+    composite: viva_lumenoid.stage2_sweep
+    params:
+      n_rods: 150
+      box_xy: 18.0
+      assemble_steps: 4000
+      make_prob: 0.12
+      strain_rates: "[5e-4, 1e-3, 2e-3, 4e-3, 8e-3, 1.6e-2]"
+      seed: 12345
+
+readouts:
+  - name: sigma_steady
+    description: Steady-state in-plane network stress at each imposed strain rate.
+    store_path: "network/sigma_inplane"
+    units: kT/a^3
+    status: measured
+  - name: eta_effective
+    description: Effective viscosity η = σ/ε̇ per rate; a plateau marks the viscous regime.
+    store_path: "network/sigma_inplane"
+    units: kT·τ/a^3
+    status: measured
+  - name: crossover_rate
+    description: Strain rate where η departs from the low-rate plateau (viscous→elastic).
+    store_path: "network/sigma_inplane"
+    units: 1/τ
+    status: noise-limited
+
+behavior_tests:
+  - name: sweep-runs
+    classification: primary
+    description: The ε̇ sweep runs and returns a σ and η for every rate.
+    measure: {kind: count, field: rates}
+    pass_if: {op: gt, value: 0, field: n_rates}
+    units: count
+    requires_simulation: "true"
+  - name: viscosity-defined
+    classification: primary
+    description: A low-rate effective viscosity is computed.
+    measure: {kind: value, field: eta_lowrate}
+    pass_if: {op: finite, field: eta_lowrate}
+    units: kT·τ/a^3
+    requires_simulation: "true"
+  - name: viscous-plateau-vs-elastic
+    classification: secondary
+    description: σ(ε̇) shows a viscous plateau (η ~ const) at slow rates before stiffening.
+    measure: {kind: slope, field: eta_effective, versus: strain_rate, scale: log}
+    pass_if: {op: plateau, note: "η ~ const at slow ε̇"}
+    units: kT·τ/a^3
+    requires_simulation: "true"
+    blocked_by_requirements: ["slower rates / larger equilibrated network to expose the viscous regime"]
+
+conclusion_logic:
+  if_primary_tests_pass:
+    implementation_status: "σ(ε̇) sweep runs and reports η per rate."
+    biological_validation: "Elastic-dominated at v1 params; viscous plateau not yet exposed."
+    pipeline_unblocks:
+      - "Hand η(ε̇) / the crossover to the vertex model (offline coupling)."
+  if_primary_tests_fail:
+    diagnose:
+      - "Network state drifts with rate — equilibrate longer or hold crosslink count."
+      - "Signal noise-dominated — larger network / seed ensemble."
+    block_downstream: "No η(ε̇) for the coupling until σ(ε̇) is stable."
+
+limitations:
+  - "σ(ε̇) is elastic-dominated at these rates; the viscous plateau is not yet resolved."
+  - "Crosslink count differs across rates, confounding a clean σ(ε̇)."
+  - "Same small-network / noise caveats as stage 1."
+
+report:
+  title: "Stage 2 — σ(ε̇) on the growing substrate"
+  verdict: >
+    The sweep runs and yields σ(ε̇) and η per rate. At v1 params the response is
+    elastic-dominated (σ rate-independent, η ∝ 1/ε̇); exposing the viscous plateau
+    is gated on slower rates and a better-equilibrated network.
+  confidence: low
+  evidence_quality: preliminary
+  main_insight: >
+    The clean-room network is stiff/elastic on the sampled timescales — remodelling
+    is too slow relative to the imposed strain to give a viscous plateau yet.
+
+visualizations:
+  - name: stage2-diagnostic
+    address: "html:stage2_diagnostic.html"
+    config:
+      title: "Stage 2 — σ(ε̇) diagnostic"
+
+bibliography:
+  sources:
+    - key: barrientos2026basement
+      note: Grows the network at fixed stress; stage 2 inverts this to impose ε̇ and read σ.

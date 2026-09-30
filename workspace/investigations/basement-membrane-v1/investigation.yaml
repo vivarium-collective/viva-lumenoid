@@ -51,6 +51,7 @@ description: |
 
 studies:
   - bm-v1-stage1-modulus-remodelling
+  - bm-v2-stress-vs-strainrate
 
 at_a_glance:
   - study: bm-v1-stage1-modulus-remodelling
@@ -58,6 +59,10 @@ at_a_glance:
       Stage 1. Assemble → equilibrate → stretch → hold(elastic) → hold(chemistry
       on, viscous). Produces the first elastic modulus and remodelling-time
       readings from the clean-room network.
+  - study: bm-v2-stress-vs-strainrate
+    role: >
+      Stage 2. Sweep the equibiaxial strain rate ε̇ on the growing substrate and
+      read σ(ε̇) → the effective viscosity η and the viscous→elastic crossover.
 
 acceptance_criteria:
   - study: bm-v1-stage1-modulus-remodelling
@@ -66,6 +71,10 @@ acceptance_criteria:
       assembles from two-bead rods, the stress-strain ramp yields a finite
       (very soft) elastic modulus, and the chemistry-on hold shows a measurable
       stress relaxation (or an honest noise-limited flag at v1 network size).
+  - study: bm-v2-stress-vs-strainrate
+    behavior: >
+      The ε̇ sweep runs and returns σ(ε̇) and an effective viscosity η per rate,
+      with the viscous/elastic regime honestly characterised at v1 params.
 
 executive:
   what_is_this: >
