@@ -312,6 +312,48 @@ def rigidity_figure(result: Any) -> "object":
 
 
 # --------------------------------------------------------------------------- #
+# Junction-bending sweep (FP1 resolution)
+# --------------------------------------------------------------------------- #
+def bending_figure(result: Any) -> "object":
+    """Elastic modulus vs junction-bending stiffness: floppy → rigid."""
+    import plotly.graph_objects as go
+
+    pts = result.points
+    k = np.asarray([p.bending_k for p in pts])
+    med = np.asarray([p.modulus_median for p in pts])
+    iqr = np.asarray([p.modulus_iqr for p in pts])
+
+    fig = go.Figure()
+    fig.add_hline(y=0.0, line=dict(color=_MUTED, width=1, dash="dot"),
+                  annotation_text="floppy (E ≈ 0)", annotation_position="bottom right")
+    # per-seed points (shows the occasional numerical outlier honestly)
+    for p in pts:
+        fig.add_trace(go.Scatter(
+            x=[p.bending_k] * len(p.per_seed), y=p.per_seed, mode="markers",
+            marker=dict(size=7, color=BLUE, opacity=0.35), showlegend=False,
+            hovertemplate="seed E=%{y:.2f}<extra></extra>"))
+    # robust median trend with IQR
+    fig.add_trace(go.Scatter(
+        x=k, y=med, error_y=dict(type="data", array=iqr / 2, color=_MUTED, thickness=1.2),
+        mode="lines+markers", line=dict(color=GREEN, width=2.5),
+        marker=dict(size=12, color=GREEN, line=dict(width=1.4, color="white")),
+        name="median E", showlegend=False,
+        hovertemplate="bending_k=%{x}<br>median E=%{y:.2f} kT/a³<extra></extra>"))
+    fig.update_xaxes(title_text="junction bending stiffness  bending_k")
+    fig.update_yaxes(title_text="elastic modulus E (kT/a³)")
+    _layout(fig, height=470)
+    repro = any(getattr(p, "reproducible", False) for p in pts)
+    verdict = ("clean, reproducible modulus" if repro else
+               "large but ILL-CONDITIONED response — no reproducible modulus at v1 size")
+    fig.update_layout(title=dict(
+        text=(f"<b>FP1 — junction bending: floppy baseline vs bending response</b>   "
+              f"<span style='font-size:12px;color:{_MUTED}'>{verdict}; "
+              f"median (line) + per-seed points</span>"),
+        x=0.01, xanchor="left"))
+    return fig
+
+
+# --------------------------------------------------------------------------- #
 def figure_to_html(fig, title: str = "viva-lumenoid") -> str:
     import plotly.io as pio
     return pio.to_html(fig, full_html=True, include_plotlyjs="cdn",

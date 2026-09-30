@@ -35,6 +35,14 @@ def base_script(params: CollagenParams, data_path: str) -> str:
     """Base setup run once at build: box, styles, integrator, thermostat."""
     p = params
     pair_cutoff = max(p.crosslink_cutoff, p.crosslink_break_cutoff) + 1.0
+    # Junction bending (FP1) is applied via `fix restrain angle` pinned to each
+    # junction's AS-FORMED angle (see _rebuild_restraints) — NOT an angle_style
+    # with a single rest angle, which frustrates the randomly-oriented junctions
+    # and adds stress-variance instead of rigidity. Stiff restraints need a
+    # smaller timestep, so clamp it when bending is on (the spec's own dt=0.001–
+    # 0.002 regime). A wider ghost cutoff keeps stretched crosslinks' partners
+    # in range once the network stiffens.
+    dt = min(p.timestep, 0.002) if p.bending_k > 0.0 else p.timestep
     return f"""
 units lj
 atom_style molecular
@@ -51,6 +59,7 @@ bond_coeff 3 {p.crosslink_k} {p.crosslink_r0}
 pair_style zero {pair_cutoff}
 pair_coeff * *
 special_bonds lj 1.0 1.0 1.0
+comm_modify cutoff 4.0
 
 group nc1 type 1
 group svns type 2
@@ -58,7 +67,7 @@ group svns type 2
 velocity all create {p.temperature} {p.seed} mom yes rot yes dist gaussian
 fix integ all nve
 fix therm all langevin {p.temperature} {p.temperature} {p.langevin_damp} {p.seed}
-timestep {p.timestep}
+timestep {dt}
 
 # NETWORK stress = bond virial only (no kinetic/ideal-gas term), normalised by
 # the INITIAL volume in the reader. The spec flags reading the all-atom stress
@@ -69,7 +78,7 @@ compute netP all pressure NULL bond
 # that otherwise swamps the relaxation signal: mean of 20 samples over the last
 # 200 steps. The reader prefers this average and falls back to the instantaneous
 # compute before the first window fills.
-fix netPavg all ave/time 10 20 200 c_netP[1] c_netP[2] c_netP[3]
+fix netPavg all ave/time 10 40 400 c_netP[1] c_netP[2] c_netP[3]
 thermo 100000
 thermo_style custom step temp pe press pxx pyy pzz vol c_netP[1] c_netP[2] c_netP[3]
 """
@@ -98,6 +107,8 @@ class CollagenNetworkProcess(Process):
         self._deform_rate = None
         self._make_on = False
         self._break_calls = 0
+        self._restrain_on = False   # junction-bending fix restrain active?
+        self._chem_was_active = False
         self._lx0 = None  # initial box length, for strain
 
     def inputs(self):
@@ -213,6 +224,51 @@ class CollagenNetworkProcess(Process):
             self._lmp.command('group _br delete')
         self._fixes_dirty = True  # topology changed → next run needs full setup
 
+    @staticmethod
+    def _rod_partner(atom_id: int) -> int:
+        """Intra-rod partner bead: rod i = atoms (2i-1 NC1, 2i 7S), so an odd id's
+        partner is id+1 and an even id's partner is id-1 (see network.build_network_data)."""
+        return atom_id + 1 if atom_id % 2 == 1 else atom_id - 1
+
+    def _rebuild_restraints(self):
+        """Resync junction-bending restraints to the current crosslink set (FP1).
+
+        Each crosslink (u-v) is braced by two angle restraints — partner(u)-u-v
+        and u-v-partner(v) — pinned to their CURRENT (as-formed) angle, so the
+        junction resists bending away from the geometry it assembled in (no
+        single-rest-angle frustration). Uses `fix restrain`, which takes a target
+        per angle. Rebuilt whenever the crosslink topology changes so no restraint
+        references a broken crosslink; the targets are frozen through the stretch
+        phase, which is what makes them resist the applied strain.
+        """
+        p = self._params
+        if p.bending_k <= 0.0:
+            return
+        lmp = self._lmp
+        nlocal = lmp.extract_setting('nlocal')
+        x = lmp.numpy.extract_atom('x')[:nlocal].copy()
+        boxlo, boxhi, *_ = lmp.extract_box()
+        L = np.array([boxhi[i] - boxlo[i] for i in range(3)])
+        nb, data = lmp.gather_bonds()
+        arr = np.array(data, dtype=int).reshape(-1, 3)
+        xlinks = arr[(arr[:, 0] == 2) | (arr[:, 0] == 3)]
+        if self._restrain_on:
+            lmp.command('unfix rst')
+            self._restrain_on = False
+        terms = []
+        for _bt, u, v in xlinks:
+            for c, a, b in ((int(u), self._rod_partner(int(u)), int(v)),
+                            (int(v), int(u), self._rod_partner(int(v)))):
+                da = x[a - 1] - x[c - 1]; da -= L * np.round(da / L)
+                db = x[b - 1] - x[c - 1]; db -= L * np.round(db / L)
+                cosang = np.dot(da, db) / (np.linalg.norm(da) * np.linalg.norm(db) + 1e-12)
+                ang = float(np.degrees(np.arccos(np.clip(cosang, -1.0, 1.0))))
+                terms.append(f'angle {a} {c} {b} {p.bending_k} {p.bending_k} {ang:.1f}')
+        if terms:
+            lmp.command('fix rst all restrain ' + ' '.join(terms))
+            self._restrain_on = True
+        self._fixes_dirty = True
+
     def _read(self):
         lmp = self._lmp
         nlocal = lmp.extract_setting('nlocal')
@@ -258,13 +314,30 @@ class CollagenNetworkProcess(Process):
 
     def update(self, state, interval):
         self._build()
+        bending = self._params.bending_k > 0.0
         if state:
             self._apply_deform(state.get('strain_rate'))
             self._apply_make(state.get('make_on'))
-            # Breaking (off-rate deletion) is applied BEFORE integrating so the
-            # network relaxes over the interval after losing bonds.
-            if state.get('break_on', 0.0) and state['break_on'] >= 0.5:
+            broke = bool(state.get('break_on', 0.0) and state['break_on'] >= 0.5)
+            if broke:
+                # Breaking (off-rate deletion) BEFORE integrating so the network
+                # relaxes over the interval after losing bonds.
                 self._break_crosslinks(interval)
+            made = bool(state.get('make_on', 0.0) and state['make_on'] >= 0.5)
+            chem_active = made or broke
+            if bending:
+                # Pin junction-bending restraints to the AS-FORMED geometry exactly
+                # ONCE, at the assemble→frozen transition. Rebuilding every assembly
+                # step (assemble runs make+break together) re-pins to unsettled
+                # geometries and destabilises the run, so restraints are NOT created
+                # during assembly. During the viscous hold (breakage only: break on,
+                # make off) rebuild each step so no restraint references a deleted
+                # crosslink.
+                if broke and not made:
+                    self._rebuild_restraints()
+                elif self._chem_was_active and not chem_active:
+                    self._rebuild_restraints()   # freeze-in the assembled network
+                self._chem_was_active = chem_active
         n_steps = max(1, int(round(interval / self._dt)))
         # fix deform re-establishes its strain ramp during run setup, so while
         # deforming we must run with `pre yes` every step or the box stalls after
@@ -277,6 +350,39 @@ class CollagenNetworkProcess(Process):
         else:
             self._lmp.command(f'run {n_steps} pre no post no')
         return self._read()
+
+    def athermal_modulus(self, target_strain=0.04, n_increments=6, minimize_iters=4000):
+        """Athermal (T=0) elastic modulus: energy-minimise, then apply small
+        equibiaxial strain increments (change_box + minimise) and fit the
+        stress-strain slope. Deterministic — no thermal chaos — so the FLOPPY
+        modulus comes out cleanly (~0). For a stiff BENDING network the minimised
+        state is ill-conditioned (pre-stress + many local minima), so the value
+        is large but not reproducible at v1 network size — see the bm-v4 study.
+        Run it on a frozen, assembled (and, for bending, restraint-pinned) network.
+        """
+        from lammps import LMP_STYLE_GLOBAL, LMP_TYPE_VECTOR
+        lmp = self._lmp
+
+        def read_sigma():
+            lmp.command('run 0')
+            netP = lmp.numpy.extract_compute('netP', LMP_STYLE_GLOBAL, LMP_TYPE_VECTOR)
+            boxlo, boxhi, *_ = lmp.extract_box()
+            lx, ly, lz = (boxhi[i] - boxlo[i] for i in range(3))
+            sigma = -0.5 * (float(netP[0]) + float(netP[1])) * (lx * ly * lz / self._v0)
+            return sigma, lx / self._lx0 - 1.0
+
+        lmp.command(f'minimize 1e-6 1e-8 {minimize_iters} {minimize_iters * 10}')
+        s0, _ = read_sigma()
+        strains, sigmas = [], []
+        de = target_strain / n_increments
+        for _ in range(n_increments):
+            lmp.command(f'change_box all x scale {1 + de} y scale {1 + de} remap units box')
+            lmp.command(f'minimize 1e-6 1e-8 {minimize_iters} {minimize_iters * 10}')
+            s, e = read_sigma()
+            sigmas.append(s); strains.append(e)
+        A = np.vstack([strains, np.ones(len(strains))]).T
+        slope = float(np.linalg.lstsq(A, np.array(sigmas) - s0, rcond=None)[0][0])
+        return slope
 
     def close(self):
         if self._lmp is not None:

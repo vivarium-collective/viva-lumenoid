@@ -53,6 +53,7 @@ studies:
   - bm-v1-stage1-modulus-remodelling
   - bm-v2-stress-vs-strainrate
   - bm-v3-junction-bending-rigidity
+  - bm-v4-junction-bending
 
 at_a_glance:
   - study: bm-v1-stage1-modulus-remodelling
@@ -69,6 +70,12 @@ at_a_glance:
       Follow-up. Rigidity-percolation sweep: raising crosslink connectivity (z up
       to 3.7) never reaches z = 4 and never rigidifies — proving stiffness needs
       junction bending / bundling, not more crosslinks.
+  - study: bm-v4-junction-bending
+    role: >
+      Follow-up (FP1). Implements junction bending (fix restrain, as-formed angles)
+      + an athermal modulus. Bending dominates the mechanics (floppy → large |E|),
+      confirming it governs stiffness — but a reproducible modulus needs a larger,
+      pre-stress-free network (v2).
 
 acceptance_criteria:
   - study: bm-v1-stage1-modulus-remodelling
@@ -85,6 +92,11 @@ acceptance_criteria:
     behavior: >
       The connectivity sweep shows z stays below 4 and the modulus stays consistent
       with zero, establishing that rigidity requires junction bending / bundling.
+  - study: bm-v4-junction-bending
+    behavior: >
+      Junction bending is implemented and shown to dominate the mechanics (floppy
+      baseline cleanly ~0 → large |E|); a reproducible modulus is honestly flagged
+      as blocked on network size + a pre-stress-free measurement.
 
 executive:
   what_is_this: >
@@ -98,10 +110,14 @@ executive:
     below the 2D rigidity threshold z = 4 — it is FLOPPY by the spec's connectivity,
     matching the published ≈0.03 Pa. The rigidity sweep (bm-v3) confirms more
     crosslinks cannot fix this (z tops out at 3.7): stiffness requires junction
-    bending / bundling. The remodelling mechanism was corrected (a fix-bond/break
-    densification artifact → a force-independent off-rate), so stress now relaxes
-    correctly, but τ is below detection while the network is floppy. Absolute
-    pascals and a calibrated τ await junction bending + the energy-scale decision.
+    bending / bundling. FP1 (bm-v4) then implemented junction bending and confirmed
+    it — bending dominates the mechanics (floppy E≈0 → |E| tens–hundreds) — but the
+    modulus is ill-conditioned at v1 network size, so it is not yet calibratable; a
+    reproducible value needs a larger, pre-stress-free network (fp3). The remodelling
+    mechanism was corrected (a fix-bond/break densification artifact → a force-
+    independent off-rate), so stress now relaxes correctly, but τ is below detection
+    while the network is floppy. Absolute pascals and a calibrated τ await the
+    reproducible bending modulus + the energy-scale decision.
   verdict_status: preliminary
   decisions_needed:
     - "Engine for stages 1–2: LAMMPS now; revisit Smoldyn at stage 3 (spec #2)."

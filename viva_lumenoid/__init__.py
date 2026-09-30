@@ -17,6 +17,7 @@ from .stage1 import run_stage1, stage1_composite_spec, Stage1Result
 from .stage2 import run_stage2, Stage2Result
 from .ensemble import stage1_ensemble, EnsembleResult, mean_coordination
 from .rigidity import run_connectivity_sweep, RigidityResult
+from .bending import run_bending_sweep, BendingResult
 
 __all__ = [
     'CollagenParams', 'DEFAULT', 'build_network_data',
@@ -25,4 +26,5 @@ __all__ = [
     'run_stage2', 'Stage2Result',
     'stage1_ensemble', 'EnsembleResult', 'mean_coordination',
     'run_connectivity_sweep', 'RigidityResult',
+    'run_bending_sweep', 'BendingResult',
 ]
