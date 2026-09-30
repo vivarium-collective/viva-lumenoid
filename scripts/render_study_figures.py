@@ -14,7 +14,8 @@ import os
 
 from viva_lumenoid import run_stage1, CollagenParams
 from viva_lumenoid.stage2 import run_stage2
-from viva_lumenoid.viz import stage1_figure, stage2_figure, save_html
+from viva_lumenoid.rigidity import run_connectivity_sweep
+from viva_lumenoid.viz import stage1_figure, stage2_figure, rigidity_figure, save_html
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 STUDIES = os.path.join(ROOT, "workspace", "studies")
@@ -42,6 +43,15 @@ def main():
     save_html(stage2_figure(r2), os.path.join(s2, "stage2_diagnostic.html"),
               "Stage 2 — σ(ε̇) growing substrate")
     print(f"  low-rate η ≈ {r2.viscosity_lowrate:.0f}")
+
+    # Stage 3 (follow-up): rigidity-percolation sweep
+    s3 = os.path.join(STUDIES, "bm-v3-junction-bending-rigidity", "viz")
+    os.makedirs(s3, exist_ok=True)
+    print("Running rigidity sweep …")
+    r3 = run_connectivity_sweep()
+    save_html(rigidity_figure(r3), os.path.join(s3, "rigidity_diagnostic.html"),
+              "Rigidity sweep — modulus vs z")
+    print(f"  z 1.24→{max(p.z_mean for p in r3.points):.2f}; reached_rigid={r3.reached_rigid}")
     print("Figures written.")
 
 

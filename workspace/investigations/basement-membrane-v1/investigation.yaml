@@ -52,17 +52,23 @@ description: |
 studies:
   - bm-v1-stage1-modulus-remodelling
   - bm-v2-stress-vs-strainrate
+  - bm-v3-junction-bending-rigidity
 
 at_a_glance:
   - study: bm-v1-stage1-modulus-remodelling
     role: >
-      Stage 1. Assemble → equilibrate → stretch → hold(elastic) → hold(chemistry
-      on, viscous). Produces the first elastic modulus and remodelling-time
-      readings from the clean-room network.
+      Stage 1. Assemble → equilibrate → stretch → hold(elastic) → hold(breakage-
+      only, viscous). Elastic modulus is consistent with ZERO (z < 4, floppy); the
+      remodelling mechanism is correct but τ is below detection at v1 scale.
   - study: bm-v2-stress-vs-strainrate
     role: >
       Stage 2. Sweep the equibiaxial strain rate ε̇ on the growing substrate and
       read σ(ε̇) → the effective viscosity η and the viscous→elastic crossover.
+  - study: bm-v3-junction-bending-rigidity
+    role: >
+      Follow-up. Rigidity-percolation sweep: raising crosslink connectivity (z up
+      to 3.7) never reaches z = 4 and never rigidifies — proving stiffness needs
+      junction bending / bundling, not more crosslinks.
 
 acceptance_criteria:
   - study: bm-v1-stage1-modulus-remodelling
@@ -75,6 +81,10 @@ acceptance_criteria:
     behavior: >
       The ε̇ sweep runs and returns σ(ε̇) and an effective viscosity η per rate,
       with the viscous/elastic regime honestly characterised at v1 params.
+  - study: bm-v3-junction-bending-rigidity
+    behavior: >
+      The connectivity sweep shows z stays below 4 and the modulus stays consistent
+      with zero, establishing that rigidity requires junction bending / bundling.
 
 executive:
   what_is_this: >
@@ -82,11 +92,16 @@ executive:
     grained collagen IV network on a moving boundary, run until it reports an
     elastic modulus and a remodelling time for the vertex model.
   verdict: >
-    Infrastructure stood up and stage 1 runs. The clean-room network assembles,
-    stretches, and relaxes on real LAMMPS; it reports a positive but very soft
-    elastic modulus (consistent with the paper's ≈0.03 Pa) and a remodelling time
-    that is currently noise-limited at v1 network size. Absolute stiffness in
-    pascals and a calibrated τ await the open decisions below.
+    Infrastructure stood up and stages 1–2 run on real LAMMPS. Hardening produced
+    a mechanistic result: the network's elastic modulus is consistent with ZERO
+    (−0.03 ± 0.06 over a seed ensemble) because its mean coordination z ≤ 3 is
+    below the 2D rigidity threshold z = 4 — it is FLOPPY by the spec's connectivity,
+    matching the published ≈0.03 Pa. The rigidity sweep (bm-v3) confirms more
+    crosslinks cannot fix this (z tops out at 3.7): stiffness requires junction
+    bending / bundling. The remodelling mechanism was corrected (a fix-bond/break
+    densification artifact → a force-independent off-rate), so stress now relaxes
+    correctly, but τ is below detection while the network is floppy. Absolute
+    pascals and a calibrated τ await junction bending + the energy-scale decision.
   verdict_status: preliminary
   decisions_needed:
     - "Engine for stages 1–2: LAMMPS now; revisit Smoldyn at stage 3 (spec #2)."

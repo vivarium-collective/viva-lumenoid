@@ -61,7 +61,9 @@ def _steady_stress(proc, rate, params, sample_dt, measure_strain, settle_strain)
     total_strain = settle_strain + measure_strain
     n = max(1, int(round((total_strain / rate) / sample_dt)))
     for _ in range(n):
-        last = proc.update({'strain_rate': rate, 'chemistry_on': 1.0}, sample_dt)
+        # growing, remodelling substrate: make + break both on (turnover)
+        last = proc.update(
+            {'strain_rate': rate, 'make_on': 1.0, 'break_on': 1.0}, sample_dt)
         if last['strain'] >= settle_strain:
             sigmas.append(last['sigma_inplane'])
         xlinks = last['n_crosslinks']
@@ -90,10 +92,10 @@ def run_stage2(params: CollagenParams | None = None,
             config={'params': p.to_dict(), 'working_directory': working_directory},
             core=allocate_core())
         proc.initial_state()
-        # assemble the network (chemistry on, no strain)
+        # assemble the network to steady state (make + break on, no strain)
         n_as = max(1, int(round(t_assemble / sample_dt)))
         for _ in range(n_as):
-            proc.update({'strain_rate': 0.0, 'chemistry_on': 1.0}, sample_dt)
+            proc.update({'strain_rate': 0.0, 'make_on': 1.0, 'break_on': 1.0}, sample_dt)
         sig, std, xl = _steady_stress(proc, rate, p, sample_dt,
                                       measure_strain, settle_strain)
         proc.close()

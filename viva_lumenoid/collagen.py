@@ -18,8 +18,10 @@ workspace imports viva-lammps as a dependency and follows its bridge conventions
 from __future__ import annotations
 
 import os
+import math
 import tempfile
 
+import numpy as np
 from process_bigraph import Process, Step
 
 from .network import build_network_data
@@ -63,6 +65,11 @@ timestep {p.timestep}
 # instead of the network stress as one of the four stage-1 errors (decision #8),
 # so we isolate the bond contribution here.
 compute netP all pressure NULL bond
+# Time-average the bond-virial stress to cut the thermal noise (∝1/sqrt(N_bonds))
+# that otherwise swamps the relaxation signal: mean of 20 samples over the last
+# 200 steps. The reader prefers this average and falls back to the instantaneous
+# compute before the first window fills.
+fix netPavg all ave/time 10 20 200 c_netP[1] c_netP[2] c_netP[3]
 thermo 100000
 thermo_style custom step temp pe press pxx pyy pzz vol c_netP[1] c_netP[2] c_netP[3]
 """
@@ -89,11 +96,16 @@ class CollagenNetworkProcess(Process):
         self._fixes_dirty = False
         self._deform_on = False
         self._deform_rate = None
-        self._chem_on = False
+        self._make_on = False
+        self._break_calls = 0
         self._lx0 = None  # initial box length, for strain
 
     def inputs(self):
-        return {'strain_rate': 'float', 'chemistry_on': 'float'}
+        # make_on: formation (fix bond/create) on/off.
+        # break_on: force-independent off-rate (random deletion) on/off.
+        # Separately controllable so the staged protocol can run "breakage off,
+        # then on" (spec Fig 2D) without formation confounding the relaxation.
+        return {'strain_rate': 'float', 'make_on': 'float', 'break_on': 'float'}
 
     def outputs(self):
         return {
@@ -151,11 +163,11 @@ class CollagenNetworkProcess(Process):
                 self._deform_rate = 0.0
                 self._fixes_dirty = True
 
-    def _apply_chemistry(self, on):
+    def _apply_make(self, on):
+        """Toggle crosslink FORMATION (fix bond/create for NC1 and 7S ends)."""
         want = bool(on and on >= 0.5)
         p = self._params
-        if want and not self._chem_on:
-            pbreak = p.factor_mult * p.make_prob
+        if want and not self._make_on:
             s = p.seed
             self._lmp.command(
                 f'fix xlink_nc1 all bond/create {p.make_every} 1 1 {p.crosslink_cutoff} 2 '
@@ -165,19 +177,41 @@ class CollagenNetworkProcess(Process):
                 f'fix xlink_7s all bond/create {p.make_every} 2 2 {p.crosslink_cutoff} 3 '
                 f'iparam {1 + p.svns_max_crosslinks} 2 jparam {1 + p.svns_max_crosslinks} 2 '
                 f'prob {p.make_prob} {s + 2}')
-            self._lmp.command(
-                f'fix xbreak2 all bond/break {p.break_every} 2 {p.crosslink_break_cutoff} '
-                f'prob {pbreak} {s + 3}')
-            self._lmp.command(
-                f'fix xbreak3 all bond/break {p.break_every} 3 {p.crosslink_break_cutoff} '
-                f'prob {pbreak} {s + 4}')
-            self._chem_on = True
+            self._make_on = True
             self._fixes_dirty = True
-        elif not want and self._chem_on:
-            for name in ('xlink_nc1', 'xlink_7s', 'xbreak2', 'xbreak3'):
+        elif not want and self._make_on:
+            for name in ('xlink_nc1', 'xlink_7s'):
                 self._lmp.command(f'unfix {name}')
-            self._chem_on = False
+            self._make_on = False
             self._fixes_dirty = True
+
+    def _break_crosslinks(self, interval):
+        """Delete a random fraction 1-exp(-off_rate*interval) of crosslink bonds.
+
+        A force-INDEPENDENT stochastic off-rate: unlike `fix bond/break` (which
+        only breaks over-stretched bonds), this removes bonds regardless of their
+        length, so the remodelling time is a clean, controllable τ ≈ 1/off_rate.
+        """
+        p = self._params
+        frac = 1.0 - math.exp(-p.off_rate * interval)
+        if frac <= 0.0:
+            return
+        nb, data = self._lmp.gather_bonds()
+        arr = np.array(data, dtype=int).reshape(-1, 3)
+        xlinks = arr[(arr[:, 0] == 2) | (arr[:, 0] == 3)]
+        if len(xlinks) == 0:
+            return
+        n_del = int(round(frac * len(xlinks)))
+        if n_del <= 0:
+            return
+        rng = np.random.default_rng(p.seed + self._break_calls)
+        self._break_calls += 1
+        sel = xlinks[rng.choice(len(xlinks), size=min(n_del, len(xlinks)), replace=False)]
+        for bt, a1, a2 in sel:
+            self._lmp.command(f'group _br id {int(a1)} {int(a2)}')
+            self._lmp.command(f'delete_bonds _br bond {int(bt)} remove special')
+            self._lmp.command('group _br delete')
+        self._fixes_dirty = True  # topology changed → next run needs full setup
 
     def _read(self):
         lmp = self._lmp
@@ -195,10 +229,14 @@ class CollagenNetworkProcess(Process):
         # volume. Tension (stretched bonds) gives negative bond pressure, so the
         # in-plane STRESS is +(that), averaged over the two in-plane axes.
         from lammps import LMP_STYLE_GLOBAL, LMP_TYPE_VECTOR
-        netP = lmp.numpy.extract_compute('netP', LMP_STYLE_GLOBAL, LMP_TYPE_VECTOR)
+        avg = [float(lmp.extract_fix('netPavg', LMP_STYLE_GLOBAL, LMP_TYPE_VECTOR, i))
+               for i in range(2)]
+        if avg[0] == 0.0 and avg[1] == 0.0:   # window not filled yet → instantaneous
+            netP = lmp.numpy.extract_compute('netP', LMP_STYLE_GLOBAL, LMP_TYPE_VECTOR)
+            avg = [float(netP[0]), float(netP[1])]
         vol = lx * ly * lz
         scale = vol / self._v0 if self._v0 else 1.0
-        sigma_inplane = -0.5 * (float(netP[0]) + float(netP[1])) * scale
+        sigma_inplane = -0.5 * (avg[0] + avg[1]) * scale
         strain = (lx / self._lx0) - 1.0 if self._lx0 else 0.0
         return {
             'pxx': pxx, 'pyy': pyy, 'pzz': float(lmp.get_thermo('pzz')),
@@ -222,7 +260,11 @@ class CollagenNetworkProcess(Process):
         self._build()
         if state:
             self._apply_deform(state.get('strain_rate'))
-            self._apply_chemistry(state.get('chemistry_on'))
+            self._apply_make(state.get('make_on'))
+            # Breaking (off-rate deletion) is applied BEFORE integrating so the
+            # network relaxes over the interval after losing bonds.
+            if state.get('break_on', 0.0) and state['break_on'] >= 0.5:
+                self._break_crosslinks(interval)
         n_steps = max(1, int(round(interval / self._dt)))
         # fix deform re-establishes its strain ramp during run setup, so while
         # deforming we must run with `pre yes` every step or the box stalls after
@@ -249,18 +291,24 @@ class CollagenNetworkProcess(Process):
 
 
 class StagedStretchController(Process):
-    """Sequence the spec's stage-1 protocol by writing the two control ports.
+    """Sequence the spec's stage-1 protocol (Fig 2D: "breakage off, then on").
 
-    Phases (spec: "stretch, hold, then switch the chemistry on"):
-      assemble : chemistry on, no strain   -> grow the initial crosslinked network
-      stretch  : chemistry off, strain ε̇   -> load the frozen network (elastic)
-      hold_el  : chemistry off, no strain  -> elastic stress plateau
-      hold_vis : chemistry on,  no strain  -> viscous stress relaxation (remodelling)
+    Phases:
+      assemble : make+break on, no strain  -> grow to the make/break steady state
+      relax    : frozen, no strain         -> settle the pre-stress (equilibration)
+      stretch  : frozen, strain ε̇          -> load the frozen network (elastic)
+      hold_el  : frozen, no strain         -> elastic stress plateau
+      hold_vis : BREAKAGE ONLY, no strain  -> viscous stress relaxation (remodelling)
+
+    "Frozen" = make_on=0, break_on=0 so the topology is fixed during loading. The
+    viscous hold turns on breaking ONLY, so the relaxation is not confounded by
+    formation (the densification bug the old chemistry_on toggle produced).
     """
 
     config_schema = {
         'strain_rate': {'_type': 'float', '_default': 1.0e-4},
         't_assemble': {'_type': 'float', '_default': 200.0},
+        't_relax': {'_type': 'float', '_default': 200.0},
         't_stretch': {'_type': 'float', '_default': 100.0},
         't_hold_elastic': {'_type': 'float', '_default': 200.0},
     }
@@ -273,22 +321,30 @@ class StagedStretchController(Process):
         return {}
 
     def outputs(self):
-        return {'strain_rate': 'float', 'chemistry_on': 'float', 'phase': 'string'}
+        return {'strain_rate': 'float', 'make_on': 'float', 'break_on': 'float',
+                'phase': 'string'}
 
     def update(self, state, interval):
         c = self.config
         t0 = c['t_assemble']
-        t1 = t0 + c['t_stretch']
-        t2 = t1 + c['t_hold_elastic']
+        t1 = t0 + c['t_relax']
+        t2 = t1 + c['t_stretch']
+        t3 = t2 + c['t_hold_elastic']
         t = self._t
         self._t += interval
+
+        def out(sr, mk, bk, ph):
+            return {'strain_rate': sr, 'make_on': mk, 'break_on': bk, 'phase': ph}
+
         if t < t0:
-            return {'strain_rate': 0.0, 'chemistry_on': 1.0, 'phase': 'assemble'}
+            return out(0.0, 1.0, 1.0, 'assemble')
         if t < t1:
-            return {'strain_rate': c['strain_rate'], 'chemistry_on': 0.0, 'phase': 'stretch'}
+            return out(0.0, 0.0, 0.0, 'relax')
         if t < t2:
-            return {'strain_rate': 0.0, 'chemistry_on': 0.0, 'phase': 'hold_elastic'}
-        return {'strain_rate': 0.0, 'chemistry_on': 1.0, 'phase': 'hold_viscous'}
+            return out(c['strain_rate'], 0.0, 0.0, 'stretch')
+        if t < t3:
+            return out(0.0, 0.0, 0.0, 'hold_elastic')
+        return out(0.0, 0.0, 1.0, 'hold_viscous')
 
 
 def register_viva_lumenoid(core):
