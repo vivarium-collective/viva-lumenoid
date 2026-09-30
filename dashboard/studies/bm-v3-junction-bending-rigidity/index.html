@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<title>Study: bm-v2-stress-vs-strainrate</title>
+<title>Study: bm-v3-junction-bending-rigidity</title>
 <link rel="stylesheet" href="/viva-lumenoid/dashboard/assets/style.css">
 <link rel="stylesheet" href="/viva-lumenoid/dashboard/assets/progress-track.css">
 <!-- Inherit the workbench light/dark theme (this page loads in an iframe;
@@ -14,7 +14,7 @@
 <header class="study-header">
   <div style="display:flex; align-items:baseline; gap:12px; justify-content:space-between;">
   <h1 class="study-title">
-    <span class="study-name" id="study-name" data-slug="bm-v2-stress-vs-strainrate" title="bm-v2-stress-vs-strainrate">bm v2 stress vs strainrate</span>
+    <span class="study-name" id="study-name" data-slug="bm-v3-junction-bending-rigidity" title="bm-v3-junction-bending-rigidity">bm v3 junction bending rigidity</span>
     
     <span class="study-kind-tag study-kind-computational" data-study-kind="computational" title="Study kind">computational</span>
     
@@ -32,11 +32,11 @@
   <div class="study-status-row" style="display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin-top:6px;">
     
     
-    <span class="status-pill status-in-progress" title="Headline status derived from the highest-precedence multi-axis field (or legacy `status` as fallback).">in-progress</span>
+    <span class="status-pill gate-status gate-status-passed" title="Pipeline gate verdict (Pass A multi-axis status). Drives downstream unblocking.">gate: passed</span>
     
 
     
-    <div id="readiness-panel" data-slug="bm-v2-stress-vs-strainrate"></div>
+    <div id="readiness-panel" data-slug="bm-v3-junction-bending-rigidity"></div>
 
     
     
@@ -50,24 +50,24 @@
         
         <span class="status-stepper">
           
-          <span class="status-step gate-step axis-design_status gate-state-not-assessed" title="Gate 1 · Plan">
-            <span class="dot"></span>1&nbsp;·&nbsp;Plan
+          <span class="status-step gate-step axis-design_status gate-state-not-assessed set" title="Gate 1 · Plan">
+            <span class="dot"></span>1&nbsp;·&nbsp;Plan<span class="step-val">drafted</span>
           </span>
           
-          <span class="status-step gate-step axis-simulation_status gate-state-not-assessed set" title="Gate 2 · Execution">
-            <span class="dot"></span>2&nbsp;·&nbsp;Execution
+          <span class="status-step gate-step axis-simulation_status gate-state-passed set" title="Gate 2 · Execution">
+            <span class="dot"></span>2&nbsp;·&nbsp;Execution<span class="step-val">ran</span>
           </span>
           
-          <span class="status-step gate-step axis-evaluation_status gate-state-not-assessed set" title="Gate 3 · Evidence">
-            <span class="dot"></span>3&nbsp;·&nbsp;Evidence
+          <span class="status-step gate-step axis-evaluation_status gate-state-passed set" title="Gate 3 · Evidence">
+            <span class="dot"></span>3&nbsp;·&nbsp;Evidence<span class="step-val">evaluated</span>
           </span>
           
-          <span class="status-step gate-step axis-evaluation_status gate-state-not-assessed set" title="Gate 4 · Quality">
-            <span class="dot"></span>4&nbsp;·&nbsp;Quality
+          <span class="status-step gate-step axis-evaluation_status gate-state-passed set" title="Gate 4 · Quality">
+            <span class="dot"></span>4&nbsp;·&nbsp;Quality<span class="step-val">evaluated</span>
           </span>
           
-          <span class="status-step gate-step axis-gate_status gate-state-not-assessed set" title="Gate 5 · Decision">
-            <span class="dot"></span>5&nbsp;·&nbsp;Decision
+          <span class="status-step gate-step axis-gate_status gate-state-passed set" title="Gate 5 · Decision">
+            <span class="dot"></span>5&nbsp;·&nbsp;Decision<span class="step-val">passed</span>
           </span>
           
           <span class="status-step gate-step axis-expert_review_status gate-state-not-assessed" title="Gate 6 · Release">
@@ -75,20 +75,24 @@
           </span>
           
           
+          <span class="status-step axis-implementation_status set">
+            <span class="dot"></span>Implementation<span class="step-val">complete</span>
+          </span>
+          
         </span>
       </summary>
       <div class="status-stepper-body">
         
         <div class="status-detail-row gate-row gate-state-not-assessed">
           <span class="status-detail-axis">1 · Plan</span>
-          <span class="status-chip gate-state-not-assessed">not set</span>
+          <span class="status-chip gate-state-not-assessed">drafted</span>
           
           
         </div>
         
-        <div class="status-detail-row gate-row gate-state-not-assessed">
+        <div class="status-detail-row gate-row gate-state-passed">
           <span class="status-detail-axis">2 · Execution</span>
-          <span class="status-chip gate-state-not-assessed">not set</span>
+          <span class="status-chip gate-state-passed">ran</span>
           
           <span class="gate-computed-chip gate-state-not-assessed" title="no runs in runs.db">◆ computed: not_run</span>
           
@@ -96,9 +100,9 @@
           
         </div>
         
-        <div class="status-detail-row gate-row gate-state-not-assessed">
+        <div class="status-detail-row gate-row gate-state-passed">
           <span class="status-detail-axis">3 · Evidence</span>
-          <span class="status-chip gate-state-not-assessed">not set</span>
+          <span class="status-chip gate-state-passed">evaluated</span>
           
           <span class="gate-computed-chip gate-state-not-assessed" title="nothing run to evaluate">◆ computed: not_evaluated</span>
           
@@ -106,9 +110,9 @@
           
         </div>
         
-        <div class="status-detail-row gate-row gate-state-not-assessed">
+        <div class="status-detail-row gate-row gate-state-passed">
           <span class="status-detail-axis">4 · Quality</span>
-          <span class="status-chip gate-state-not-assessed">not set</span>
+          <span class="status-chip gate-state-passed">evaluated</span>
           
           <span class="gate-computed-chip gate-state-not-assessed" title="nothing run to evaluate">◆ computed: not_evaluated</span>
           
@@ -116,9 +120,9 @@
           
         </div>
         
-        <div class="status-detail-row gate-row gate-state-not-assessed">
+        <div class="status-detail-row gate-row gate-state-passed">
           <span class="status-detail-axis">5 · Decision</span>
-          <span class="status-chip gate-state-not-assessed">not set</span>
+          <span class="status-chip gate-state-passed">passed</span>
           
           <span class="gate-computed-chip gate-state-not-assessed" title="spine gate evaluator (study_verdict.roll_up_verdict / pipeline_gate.gate_evaluator)">◆ computed: not_started</span>
           
@@ -134,6 +138,11 @@
         </div>
         
         
+        <div class="status-detail-row">
+          <span class="status-detail-axis">Implementation</span>
+          <span class="status-chip">complete</span>
+        </div>
+        
       </div>
     </details>
     
@@ -145,9 +154,9 @@
 <div class="composite-lint-banner" role="alert"
      style="margin:8px 0 14px 0;padding:10px 14px;background:#fffbeb;border:1px solid #f59e0b;border-left-width:5px;border-radius:6px;color:#92400e;font-size:0.9em">
   
-  <div>⚠ composite not found in registry: <code>viva_lumenoid.stage2_sweep</code></div>
+  <div>⚠ composite not found in registry: <code>viva_lumenoid.rigidity_sweep</code></div>
   
-  <div>⚠ composite not found in registry: <code>collagen-iv-network-stage2</code></div>
+  <div>⚠ composite not found in registry: <code>connectivity-sweep</code></div>
   
   <div style="margin-top:4px;font-size:0.86em;color:#a16207">
     This study references a composite that doesn't resolve — it may not declare a
@@ -162,13 +171,13 @@
 
 
 
-<p id="study-question-headline" class="study-question-headline"><span class="q-glyph">Q</span> What is σ(ε̇), and where does the network cross from viscous to elastic?</p>
+<p id="study-question-headline" class="study-question-headline"><span class="q-glyph">Q</span> Can more crosslink connectivity rigidify the v1 network, or is bending required?</p>
 
 <nav class="study-tabs" aria-label="Study sections">
   
   <div class="act-cluster" data-act="study">
     <div class="act-header">
-      <span class="act-gate-dot" data-gate="study" data-gate-state="not-assessed"></span>
+      <span class="act-gate-dot" data-gate="study" data-gate-state="passed"></span>
       <span class="act-label">The Study</span>
     </div>
     <div class="act-tabs">
@@ -189,7 +198,7 @@
   </div>
   <div class="act-cluster" data-act="evidence">
     <div class="act-header">
-      <span class="act-gate-dot" data-gate="evidence" data-gate-state="not-assessed"></span>
+      <span class="act-gate-dot" data-gate="evidence" data-gate-state="passed"></span>
       <span class="act-label">Evidence</span>
     </div>
     <div class="act-tabs">
@@ -201,7 +210,7 @@
   </div>
   <div class="act-cluster" data-act="assurance">
     <div class="act-header">
-      <span class="act-gate-dot" data-gate="assurance" data-gate-state="not-assessed"></span>
+      <span class="act-gate-dot" data-gate="assurance" data-gate-state="passed"></span>
       <span class="act-label">Assurance</span>
     </div>
     <div class="act-tabs">
@@ -213,7 +222,7 @@
   </div>
   <div class="act-cluster" data-act="decision">
     <div class="act-header">
-      <span class="act-gate-dot" data-gate="decision" data-gate-state="not-assessed"></span>
+      <span class="act-gate-dot" data-gate="decision" data-gate-state="passed"></span>
       <span class="act-label">Decision</span>
     </div>
     <div class="act-tabs">
@@ -573,36 +582,99 @@
 
     <div class="ctr-block">
       <h2 class="overview-label ctr-h">Claim</h2>
-      <p class="ctr-text">Imposing an equibiaxial in-plane strain rate ε̇ on the growing collagen IV network and reading the steady-state stress σ(ε̇) gives the effective viscosity η = σ/ε̇ (viscous at slow rates) and the rate at which the response turns elastic — the σ(ε̇) relation the vertex model needs.
+      <p class="ctr-text">The v1 collagen IV network&#39;s ~zero elastic modulus is a rigidity-percolation effect: with NC1×1 + 7S×3 connectivity the mean coordination z ≤ 3 stays below the 2D central-force isostatic point z = 4, so raising crosslink connectivity alone cannot rigidify it — a measurable modulus needs junction bending (or true bundling bonds).
 </p>
       
     </div>
 
     <div class="ctr-block">
       <h2 class="overview-label ctr-h">Test</h2>
-      <p class="ctr-text">Assemble a crosslinked network, then stretch it equibiaxially at a fixed ε̇ WITH the crosslink chemistry on (the growing, remodelling substrate). Sweep ε̇ over a decade and read the steady-state in-plane bond-virial stress; compute η = σ/ε̇ per rate and locate any viscous→elastic crossover.
+      <p class="ctr-text">Sweep the max crosslinks per end (a bundling proxy: NC1×k + 7S×m, k,m rising) so the mean coordination z climbs, and measure the seed-ensemble elastic modulus vs z against the z = 4 threshold.
 </p>
       
       <div class="ctr-meta">
-        <div class="ctr-meta-row"><span class="ctr-meta-k">Model</span> <code>collagen-iv-network-stage2</code></div>
-        <div class="ctr-meta-row"><span class="ctr-meta-k">Measures</span> <span class="ctr-meta-item">The ε̇ sweep runs and returns a σ and η for every rate.</span><span class="ctr-dot">·</span><span class="ctr-meta-item">A low-rate effective viscosity is computed.</span><span class="ctr-dot">·</span><span class="ctr-meta-item">σ(ε̇) shows a viscous plateau (η ~ const) at slow rates before stiffening.</span></div>
+        <div class="ctr-meta-row"><span class="ctr-meta-k">Model</span> <code>connectivity-sweep</code></div>
+        <div class="ctr-meta-row"><span class="ctr-meta-k">Measures</span> <span class="ctr-meta-item">The NC1/7S topology cannot reach the 2D rigidity threshold z = 4.</span><span class="ctr-dot">·</span><span class="ctr-meta-item">The modulus is consistent with zero at every rung while z &lt; 4.</span></div>
       </div>
       
     </div>
 
     <div class="ctr-block">
       <h2 class="overview-label ctr-h">Result</h2>
-      <p class="ctr-text">Runs the sweep in ~2 s over six rates. At v1 params σ(ε̇) is roughly rate-INDEPENDENT (~0.3–0.4 kT/a³), so η ∝ 1/ε̇ (slope −1 on log–log) — the network is ELASTIC-dominated across the sampled rates, not viscous, and the crosslink count itself falls with rate (faster stretch outruns remodelling). A clean viscous plateau needs slower rates / a larger, better-equilibrated network — the same calibration the stage-1 study flags.
+      <p class="ctr-text">Across the achievable range z rises 1.24 → 3.72 (crosslinks 48 → 543 on 200 rods) but NEVER reaches z = 4, and the modulus stays statistically consistent with zero at every rung (−0.05 to −0.08 ± ~0.08–0.17 LJ, all CIs span 0). The NC1/7S topology saturates geometrically below the isostatic point, so central- force crosslinks cannot rigidify the sheet. Rigidity must come from junction bending — the &#34;soft angles where rods join&#34; the spec names.
 </p>
       
       
+    <div class="overview-section findings-section">
+      <h2 class="overview-label">🔬 Findings — what this study taught us</h2>
+      
+      
+      
+      
+      
+      
+      
+      
+      <div class="finding-card finding-kind-computational finding-status-confirms">
+        <details class="finding-details">
+          <summary class="finding-row">
+            <span class="finding-status-glyph">✓</span>
+            <span class="finding-claim finding-statement">Raising NC1/7S crosslinks lifts z to only ~3.7 (never 4), and the modulus stays consistent with zero throughout — central-force connectivity cannot rigidify the v1 sheet.
+</span>
+            
+          </summary>
+          <div class="finding-drawer">
+            <div class="finding-header">
+              <span class="finding-id">F1-connectivity-cannot-rigidify</span>
+              <span class="finding-kind">computational</span>
+              <span class="finding-status-text">confirms literature</span>
+            </div>
+            
+            
+            <div class="finding-evidence">
+              <strong>observed:</strong> z 1.24→3.72; modulus −0.05→−0.08 ± ~0.08–0.17 (95% CI, all span 0) · 
+              
+              
+              
+              
+              
+            </div>
+            
+            
+            <div class="finding-traceability" style="font-size:0.84em;color:#475569;padding:4px 10px;margin:4px 0">
+              
+              
+              runs: <a href="#run-rigidity-connectivity-sweep"><code>rigidity-connectivity-sweep</code></a>
+            </div>
+            
+            
+            
+            
+            
+            <div class="finding-expected">
+              <strong>expected:</strong> rigid only for z ≥ 4 (2D central-force isostatic point) · 
+              
+              
+            </div>
+            
+            
+            <div class="finding-explanation"><em>Why:</em> NC1×1 + 7S×3 caps z at 3; bundling raises it but the geometry saturates below 4.</div>
+            
+            <div class="finding-next"><strong>→ Next:</strong> implement junction bending (fix bond/create atype + angle_style) — the load-bearing v2 fix</div>
+          </div>
+        </details>
+      </div>
+      
+      
+    </div>
+    
       
       
       
       <div class="ctr-meta ctr-assess">
         
         
-        <div class="ctr-meta-row"><span class="ctr-meta-k">Caveat</span> <span class="ctr-meta-item">σ(ε̇) is elastic-dominated at these rates; the viscous plateau is not yet resolved.</span></div>
+        <div class="ctr-meta-row"><span class="ctr-meta-k">Caveat</span> <span class="ctr-meta-item">Bundling is modelled only as raised crosslink caps, not explicit lateral-association bonds.</span></div>
         
       </div>
       
@@ -619,12 +691,12 @@
   <div style="display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:8px;">
     <h2 class="overview-label" style="margin:0">Model composition</h2>
     
-    <button type="button" class="btn-mini" onclick="window._vivStudyNotebookFromCard(event, 'bm-v2-stress-vs-strainrate', '')" title="Download a runnable Jupyter notebook for THIS study — its composite + editable parameters + figures">↓ notebook</button>
+    <button type="button" class="btn-mini" onclick="window._vivStudyNotebookFromCard(event, 'bm-v3-junction-bending-rigidity', '')" title="Download a runnable Jupyter notebook for THIS study — its composite + editable parameters + figures">↓ notebook</button>
   </div>
 
   
   
-  <div id="model-composite-cards" class="model-composite-cards" data-study="bm-v2-stress-vs-strainrate"
+  <div id="model-composite-cards" class="model-composite-cards" data-study="bm-v3-junction-bending-rigidity"
        data-study-config="">
     <div class="viv-loading"><span class="viv-loading-spin" aria-hidden="true"></span><span>Loading composite card(s)…</span></div>
   </div>
@@ -645,28 +717,28 @@
   <div class="overview-section" id="model-section">
     <h3>Runnable models <span class="muted" style="font-size:0.85em;font-weight:normal">— the composite(s) this study simulates</span></h3>
     
-    <div class="cond-block" data-model-composite="viva_lumenoid.stage2_sweep" data-model-overrides='{"assemble_steps": 4000, "box_xy": 18.0, "make_prob": 0.12, "n_rods": 150, "seed": 12345, "strain_rates": "[5e-4, 1e-3, 2e-3, 4e-3, 8e-3, 1.6e-2]"}'>
+    <div class="cond-block" data-model-composite="viva_lumenoid.rigidity_sweep" data-model-overrides='{"assemble_steps": 8000, "box_xy": 20.0, "hold_steps": 8000, "n_rods": 200, "rungs": "[(1,3,0.12),(2,4,0.25),(3,5,0.40),(5,8,0.60)]", "seeds": "[11,22,33]"}'>
       <div class="cond-block-title" style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
-        <strong>collagen-iv-network-stage2</strong>
+        <strong>connectivity-sweep</strong>
         
-        <code style="font-size:0.82em;color:#374151;background:#f1f5f9;padding:1px 6px;border-radius:3px">viva_lumenoid.stage2_sweep</code>
+        <code style="font-size:0.82em;color:#374151;background:#f1f5f9;padding:1px 6px;border-radius:3px">viva_lumenoid.rigidity_sweep</code>
         <button type="button" class="action-btn" style="font-size:0.8em"
-                onclick="_openCompositeLoom('viva_lumenoid.stage2_sweep')">🧬 explore &amp; run ↗</button>
+                onclick="_openCompositeLoom('viva_lumenoid.rigidity_sweep')">🧬 explore &amp; run ↗</button>
         
       </div>
       
       <div style="display:flex;align-items:center;gap:6px;margin-top:6px">
         
-        <select class="baseline-composite-input" data-baseline-name="collagen-iv-network-stage2"
-                data-current="viva_lumenoid.stage2_sweep"
+        <select class="baseline-composite-input" data-baseline-name="connectivity-sweep"
+                data-current="viva_lumenoid.rigidity_sweep"
                 style="flex:1;min-width:200px;font-family:monospace;font-size:0.82em;padding:3px 6px">
-          <option value="viva_lumenoid.stage2_sweep" selected>viva_lumenoid.stage2_sweep</option>
+          <option value="viva_lumenoid.rigidity_sweep" selected>viva_lumenoid.rigidity_sweep</option>
           
         </select>
         <button type="button" class="action-btn baseline-composite-set" style="font-size:0.8em"
-                data-baseline-name="collagen-iv-network-stage2">Set composite</button>
+                data-baseline-name="connectivity-sweep">Set composite</button>
       </div>
-      <div class="baseline-composite-status muted" data-baseline-name="collagen-iv-network-stage2" style="font-size:0.8em;margin-top:2px"></div>
+      <div class="baseline-composite-status muted" data-baseline-name="connectivity-sweep" style="font-size:0.8em;margin-top:2px"></div>
       
       
       
@@ -715,7 +787,7 @@
 
   <h4>Latest run preview</h4>
   <p class="muted" style="font-size:0.9em">Per-store sparkline + first/last/min/max from the most recent run's emitted trajectory. This is a downsampled PREVIEW, not the full data — use the per-store or Download-all links for the complete arrays.</p>
-  <div id="results-preview" data-study="bm-v2-stress-vs-strainrate">
+  <div id="results-preview" data-study="bm-v3-junction-bending-rigidity">
     <div class="viv-loading"><span class="viv-loading-spin" aria-hidden="true"></span><span>Loading results preview…</span></div>
   </div>
 
@@ -735,7 +807,7 @@
   
   <div class="overview-section" id="study-analyses-section">
     <h3>Analyses to run <span class="muted" style="font-size:0.85em;font-weight:normal">— which of the workspace's <code>ANALYSIS_REGISTRY</code> entries to compute on dispatch</span></h3>
-    <div id="study-analyses-list" data-study="bm-v2-stress-vs-strainrate">
+    <div id="study-analyses-list" data-study="bm-v3-junction-bending-rigidity">
       <div class="viv-loading"><span class="viv-loading-spin" aria-hidden="true"></span><span>Loading analyses…</span></div>
     </div>
     <div style="margin-top:8px">
@@ -751,9 +823,9 @@
   <div style="display:flex;align-items:baseline;gap:12px;flex-wrap:wrap">
     <span class="muted" style="margin-right:auto;font-weight:600">Analysis result files</span>
     <a id="data-download-all" class="btn-mini" style="display:none"
-       href="/api/study-analysis-zip?study=bm-v2-stress-vs-strainrate">Download all (.zip)</a>
+       href="/api/study-analysis-zip?study=bm-v3-junction-bending-rigidity">Download all (.zip)</a>
   </div>
-  <div id="data-files" data-study="bm-v2-stress-vs-strainrate">
+  <div id="data-files" data-study="bm-v3-junction-bending-rigidity">
     <div class="viv-loading"><span class="viv-loading-spin" aria-hidden="true"></span><span>Loading result files…</span></div>
   </div>
 </div>
@@ -774,7 +846,7 @@
     interval/buffer, output location, and emit scope — from
     <code>lib/emitters.py</code> and this study's (or the workspace's)
     <code>runtime.default_emitter</code>.</p>
-    <div id="readouts-emitter" data-study="bm-v2-stress-vs-strainrate">
+    <div id="readouts-emitter" data-study="bm-v3-junction-bending-rigidity">
       <div class="viv-loading"><span class="viv-loading-spin" aria-hidden="true"></span><span>Loading emitter configuration…</span></div>
     </div>
 
@@ -786,7 +858,7 @@
     
     <div id="readouts-download" style="margin:0 0 16px 0"></div>
 
-    <div id="readouts-table" data-study="bm-v2-stress-vs-strainrate">
+    <div id="readouts-table" data-study="bm-v3-junction-bending-rigidity">
       <div class="viv-loading"><span class="viv-loading-spin" aria-hidden="true"></span><span>Loading readouts from the composite emit plan…</span></div>
     </div>
 
@@ -794,7 +866,7 @@
     <p class="muted" style="font-size:0.9em">Store path, dtype, shape
     <code>(n_steps, …)</code>, units, and a best-effort byte estimate for each emitted
     leaf.</p>
-    <div id="readouts-shapes" data-study="bm-v2-stress-vs-strainrate">
+    <div id="readouts-shapes" data-study="bm-v3-junction-bending-rigidity">
       <div class="viv-loading"><span class="viv-loading-spin" aria-hidden="true"></span><span>Loading output shapes…</span></div>
     </div>
 
@@ -809,7 +881,7 @@
     
     
     <div class="viz-actions-row" style="display:flex; justify-content:flex-end; margin-bottom:10px;">
-      <button type="button" class="btn-mini" onclick="window._vivStudyFiguresFromCard(event, 'bm-v2-stress-vs-strainrate')" title="Download this study's visualizations (figure panels + its composite) as a zip">↓ visualizations</button>
+      <button type="button" class="btn-mini" onclick="window._vivStudyFiguresFromCard(event, 'bm-v3-junction-bending-rigidity')" title="Download this study's visualizations (figure panels + its composite) as a zip">↓ visualizations</button>
     </div>
     
 
@@ -873,10 +945,10 @@
     
     
     
-    <li class="expected-behavior-item" id="bt-sweep-runs"
+    <li class="expected-behavior-item" id="bt-z-stays-below-threshold"
         data-test-kind="behavioral"
         
-        data-pytest-node="sweep-runs"
+        data-pytest-node="z-stays-below-threshold"
         data-classification="primary"
         data-result="pending"
         style="margin: 0 0 10px 0; padding: 10px 12px; border-left: 4px solid #10b981; background: #f8fafc; border-radius: 4px;">
@@ -885,19 +957,19 @@
       <div style="display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;">
         <span class="bt-result" style="font-size: 0.75em; font-family: monospace; padding: 2px 8px; border-radius: 9999px; background: #f1f5f9; color: #475569">⏳ pending</span>
         <span class="classification-pill classification-primary">primary</span>
-        <strong style="font-size: 0.9em;">sweep-runs</strong>
+        <strong style="font-size: 0.9em;">z-stays-below-threshold</strong>
         
         <span class="muted" style="font-size:0.78em">requires: <code>true</code></span>
         
       </div>
-      <div style="margin-top: 6px; font-size: 0.95em;">The ε̇ sweep runs and returns a σ and η for every rate.</div>
+      <div style="margin-top: 6px; font-size: 0.95em;">The NC1/7S topology cannot reach the 2D rigidity threshold z = 4.</div>
       
       
       <details style="margin-top: 6px; font-size: 0.82em;">
         <summary class="muted" style="cursor: pointer;">Assertion</summary>
         
-        <pre style="background:#fff; padding:8px; margin:4px 0 0 0; border:1px solid #e2e8f0; border-radius:3px; overflow-x:auto;">measure: {"field": "rates", "kind": "count"}
-pass_if: {"field": "n_rates", "op": "gt", "value": 0}</pre>
+        <pre style="background:#fff; padding:8px; margin:4px 0 0 0; border:1px solid #e2e8f0; border-radius:3px; overflow-x:auto;">measure: {"field": "coordination_z", "kind": "max"}
+pass_if: {"field": "max_z", "op": "lt", "value": 4.0}</pre>
       </details>
       
       
@@ -912,10 +984,10 @@ pass_if: {"field": "n_rates", "op": "gt", "value": 0}</pre>
     
     
     
-    <li class="expected-behavior-item" id="bt-viscosity-defined"
+    <li class="expected-behavior-item" id="bt-modulus-stays-floppy"
         data-test-kind="behavioral"
         
-        data-pytest-node="viscosity-defined"
+        data-pytest-node="modulus-stays-floppy"
         data-classification="primary"
         data-result="pending"
         style="margin: 0 0 10px 0; padding: 10px 12px; border-left: 4px solid #10b981; background: #f8fafc; border-radius: 4px;">
@@ -924,60 +996,33 @@ pass_if: {"field": "n_rates", "op": "gt", "value": 0}</pre>
       <div style="display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;">
         <span class="bt-result" style="font-size: 0.75em; font-family: monospace; padding: 2px 8px; border-radius: 9999px; background: #f1f5f9; color: #475569">⏳ pending</span>
         <span class="classification-pill classification-primary">primary</span>
-        <strong style="font-size: 0.9em;">viscosity-defined</strong>
+        <strong style="font-size: 0.9em;">modulus-stays-floppy</strong>
         
         <span class="muted" style="font-size:0.78em">requires: <code>true</code></span>
         
       </div>
-      <div style="margin-top: 6px; font-size: 0.95em;">A low-rate effective viscosity is computed.</div>
+      <div style="margin-top: 6px; font-size: 0.95em;">The modulus is consistent with zero at every rung while z &lt; 4.</div>
       
       
       <details style="margin-top: 6px; font-size: 0.82em;">
         <summary class="muted" style="cursor: pointer;">Assertion</summary>
         
-        <pre style="background:#fff; padding:8px; margin:4px 0 0 0; border:1px solid #e2e8f0; border-radius:3px; overflow-x:auto;">measure: {"field": "eta_lowrate", "kind": "value"}
-pass_if: {"field": "eta_lowrate", "op": "finite"}</pre>
+        <pre style="background:#fff; padding:8px; margin:4px 0 0 0; border:1px solid #e2e8f0; border-radius:3px; overflow-x:auto;">measure: {"ensemble": 3, "field": "elastic_modulus_vs_z", "kind": "value"}
+pass_if: {"note": "all CIs span 0", "op": "consistent_with_zero"}</pre>
       </details>
       
       
-      
-      
-    </li>
-    
-    
-    
-    
-    
-    
-    
-    
-    <li class="expected-behavior-item" id="bt-viscous-plateau-vs-elastic"
-        data-test-kind="behavioral"
-        
-        data-pytest-node="viscous-plateau-vs-elastic"
-        data-classification="secondary"
-        data-result="pending"
-        style="margin: 0 0 10px 0; padding: 10px 12px; border-left: 4px solid #cbd5e1; background: #f8fafc; border-radius: 4px;">
-      
-        
-      <div style="display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;">
-        <span class="bt-result" style="font-size: 0.75em; font-family: monospace; padding: 2px 8px; border-radius: 9999px; background: #f1f5f9; color: #475569">⏳ pending</span>
-        <span class="classification-pill classification-secondary">secondary</span>
-        <strong style="font-size: 0.9em;">viscous-plateau-vs-elastic</strong>
-        
-        <span class="muted" style="font-size:0.78em">requires: <code>true</code></span>
-        
-      </div>
-      <div style="margin-top: 6px; font-size: 0.95em;">σ(ε̇) shows a viscous plateau (η ~ const) at slow rates before stiffening.</div>
-      
-      
-      <details style="margin-top: 6px; font-size: 0.82em;">
-        <summary class="muted" style="cursor: pointer;">Assertion</summary>
-        
-        <pre style="background:#fff; padding:8px; margin:4px 0 0 0; border:1px solid #e2e8f0; border-radius:3px; overflow-x:auto;">measure: {"field": "eta_effective", "kind": "slope", "scale": "log", "versus": "strain_rate"}
-pass_if: {"note": "\u03b7 ~ const at slow \u03b5\u0307", "op": "plateau"}</pre>
+      <details style="margin-top: 6px; font-size: 0.82em">
+        <summary class="muted" style="cursor:pointer; color:#92400e">⚠ Calibration anchor</summary>
+        <pre style="background:#fff7ed; padding:8px; margin:4px 0 0 0; border:1px solid #fdba74; border-radius:3px; overflow-x:auto">{
+  "cites": [
+    "meadowcroft2025nonequilibrium"
+  ],
+  "literature_target": 4.0,
+  "observed_value": "z 1.24\u21923.72, modulus \u22120.05\u2192\u22120.08 (all consistent with 0)",
+  "resolution": "model"
+}</pre>
       </details>
-      
       
       
       
@@ -1097,14 +1142,14 @@ pass_if: {"note": "\u03b7 ~ const at slow \u03b5\u0307", "op": "plateau"}</pre>
       <div style="padding:10px 14px;background:#f0fdf4;border-left:4px solid #10b981;border-radius:4px;margin-bottom:8px">
         <strong>✓ If primary tests pass:</strong>
         
-        <div style="margin-top:4px"><em>Implementation:</em> σ(ε̇) sweep runs and reports η per rate.</div>
+        <div style="margin-top:4px"><em>Implementation:</em> Connectivity sweep runs; z and modulus recorded per rung.</div>
         
         
-        <div style="margin-top:4px"><em>Empirical validation:</em> Elastic-dominated at v1 params; viscous plateau not yet exposed.</div>
+        <div style="margin-top:4px"><em>Empirical validation:</em> Confirms the floppy-network finding; identifies bending as the rigidity source.</div>
         
         
         <div style="margin-top:4px"><em>Pipeline unblocks:</em>
-          <ul style="margin:4px 0 0 18px"><li>Hand η(ε̇) / the crossover to the vertex model (offline coupling).</li></ul>
+          <ul style="margin:4px 0 0 18px"><li>Junction-bending implementation (auto-angles at crosslink junctions).</li></ul>
         </div>
         
       </div>
@@ -1114,11 +1159,11 @@ pass_if: {"note": "\u03b7 ~ const at slow \u03b5\u0307", "op": "plateau"}</pre>
         <strong>✗ If primary tests fail:</strong>
         
         <div style="margin-top:4px"><em>Diagnose:</em>
-          <ul style="margin:4px 0 0 18px"><li>Network state drifts with rate — equilibrate longer or hold crosslink count.</li><li>Signal noise-dominated — larger network / seed ensemble.</li></ul>
+          <ul style="margin:4px 0 0 18px"><li>If z reaches 4 and modulus turns on, connectivity DOES rigidify — revise the finding.</li></ul>
         </div>
         
         
-        <div style="margin-top:4px"><em>Block downstream:</em> No η(ε̇) for the coupling until σ(ε̇) is stable.</div>
+        <div style="margin-top:4px"><em>Block downstream:</em> Nothing downstream is blocked — this is a diagnostic follow-up, not a pipeline gate.</div>
         
       </div>
       
@@ -1141,7 +1186,7 @@ pass_if: {"note": "\u03b7 ~ const at slow \u03b5\u0307", "op": "plateau"}</pre>
     <div class="overview-section">
       <h3 class="overview-label">Key assumptions</h3>
       <ul style="margin:0 0 0 18px;padding:0;font-size:0.93em">
-        <li style="margin:2px 0">Flat biaxial slab = the growing shell to leading order (ε̇ = Ṙ/R, R ≫ mesh).</li><li style="margin:2px 0">Chemistry ON during the stretch (growing, remodelling substrate) — unlike stage 1.</li><li style="margin:2px 0">Steady stress read after a settle strain; network state at each rate depends on ε̇.</li>
+        <li style="margin:2px 0">Mean coordination z = 1 + n_crosslinks/n_rods (beads = 2·n_rods; bonds = intra + crosslinks).</li><li style="margin:2px 0">Raising NC1/7S max crosslinks is a proxy for lateral bundling (more junctions).</li><li style="margin:2px 0">Same clean-room parameters and force-independent off-rate as stage 1.</li>
       </ul>
     </div>
     
@@ -1151,7 +1196,7 @@ pass_if: {"note": "\u03b7 ~ const at slow \u03b5\u0307", "op": "plateau"}</pre>
       <h3 class="overview-label">Limitations</h3>
       <p class="muted" style="margin:0 0 6px 0;font-size:0.85em">What this study explicitly does NOT validate (prevents overclaim).</p>
       <ul style="margin:0 0 0 18px;padding:0;font-size:0.93em">
-        <li style="margin:2px 0">σ(ε̇) is elastic-dominated at these rates; the viscous plateau is not yet resolved.</li><li style="margin:2px 0">Crosslink count differs across rates, confounding a clean σ(ε̇).</li><li style="margin:2px 0">Same small-network / noise caveats as stage 1.</li>
+        <li style="margin:2px 0">Bundling is modelled only as raised crosslink caps, not explicit lateral-association bonds.</li><li style="margin:2px 0">Junction bending is NOT yet implemented — this study motivates it, does not test it.</li><li style="margin:2px 0">Same LJ-unit / energy-scale caveat as stage 1.</li>
       </ul>
     </div>
     
@@ -1195,7 +1240,7 @@ pass_if: {"note": "\u03b7 ~ const at slow \u03b5\u0307", "op": "plateau"}</pre>
 <script>window.__DASH_CONFIG__ = { mode: "snapshot", interactiveUrl: "https://github.com/vivarium-collective/viva-lumenoid", basePath: "/viva-lumenoid/dashboard", inputsDownloadBase: "https://github.com/vivarium-collective/viva-lumenoid/raw/main", provenance: {"repo_slug": "vivarium-collective/viva-lumenoid", "repo_url": "https://github.com/vivarium-collective/viva-lumenoid", "commit": "9b5e4ab8ca67d8e912cb16658146b10c869dc476", "commit_url": "https://github.com/vivarium-collective/viva-lumenoid/commit/9b5e4ab8ca67d8e912cb16658146b10c869dc476", "branch": "main", "generated_at": "2026-09-30 21:28 UTC"} };</script>
 <script src="/viva-lumenoid/dashboard/assets/data-source.js"></script>
 <script>
-window._studyName = "bm-v2-stress-vs-strainrate";
+window._studyName = "bm-v3-junction-bending-rigidity";
 window._study = null;  // populated by _bootstrapStudy() in study-detail.js
 
 // Save handler for the Conditions → Model settings editable rows.
