@@ -1,0 +1,1 @@
+{"present": false, "study": "bm-v1-stage1-modulus-remodelling", "reason": "ImportError: cannot import name 'loop_state' from 'viva_superpowers' (/Users/eranagmon/.claude/plugins/cache/viva-superpowers/viva-superpowers/0.21.0/viva_superpowers/__init__.py)"}
