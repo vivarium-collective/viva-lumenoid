@@ -1,5 +1,10 @@
 # viva-lumenoid
 
+<!-- BEGIN dashboard -->
+> ## 📊 [**Live dashboard →**](https://vivarium-collective.github.io/viva-lumenoid/dashboard/)
+> Browse every investigation & study interactively, or read the [published investigation reports](https://vivarium-collective.github.io/viva-lumenoid/). Auto-published from `main` on every merge.
+<!-- END dashboard -->
+
 📊 **[Read-only dashboard](https://vivarium-collective.github.io/viva-lumenoid/)** — browse the investigation, both studies, and the interactive diagnostic figures with no install (published to GitHub Pages).
 
 Clean-room [process-bigraph](https://github.com/vivarium-collective/process-bigraph)
