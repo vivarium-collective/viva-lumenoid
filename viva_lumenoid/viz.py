@@ -270,6 +270,48 @@ def stage2_figure(result: Any) -> "object":
 
 
 # --------------------------------------------------------------------------- #
+# Rigidity-percolation sweep (follow-up)
+# --------------------------------------------------------------------------- #
+def rigidity_figure(result: Any) -> "object":
+    """Elastic modulus vs mean coordination z, against the 2D rigidity threshold."""
+    import plotly.graph_objects as go
+
+    pts = result.points
+    z = np.asarray([p.z_mean for p in pts])
+    mod = np.asarray([p.modulus_mean for p in pts])
+    ci = np.asarray([p.modulus_ci95 for p in pts])
+    zc = result.rigidity_threshold
+
+    fig = go.Figure()
+    # shade the floppy region z < zc
+    fig.add_vrect(x0=min(0.9, float(z.min()) - 0.2), x1=zc, fillcolor="rgba(76,120,168,0.06)",
+                  line_width=0, annotation_text="floppy (z < 4)",
+                  annotation_position="top left", annotation_font_size=11)
+    fig.add_vline(x=zc, line=dict(color=RED, width=2, dash="dash"),
+                  annotation_text="rigidity threshold z = 4", annotation_position="top right")
+    fig.add_hline(y=0.0, line=dict(color=_MUTED, width=1, dash="dot"))
+    fig.add_trace(go.Scatter(
+        x=z, y=mod, error_y=dict(type="data", array=ci, color=_MUTED, thickness=1.2),
+        mode="lines+markers", line=dict(color=GREEN, width=2),
+        marker=dict(size=11, color=GREEN, line=dict(width=1.2, color="white")),
+        name="modulus", showlegend=False,
+        customdata=np.stack([[p.nc1_max for p in pts], [p.svns_max for p in pts]], axis=-1),
+        hovertemplate=("z=%{x:.2f}<br>E=%{y:.3f} kT/a³"
+                       "<br>NC1×%{customdata[0]} 7S×%{customdata[1]}<extra></extra>")))
+    fig.update_xaxes(title_text="mean coordination z", range=[min(0.9, float(z.min()) - 0.2),
+                                                              max(zc + 0.5, float(z.max()) + 0.3)])
+    fig.update_yaxes(title_text="elastic modulus E (kT/a³)")
+    _layout(fig, height=460)
+    reached = "reached rigidity" if result.reached_rigid else "never reaches z = 4 → stays floppy"
+    fig.update_layout(title=dict(
+        text=(f"<b>Rigidity sweep — modulus vs connectivity</b>   "
+              f"<span style='font-size:12px;color:{_MUTED}'>"
+              f"raising NC1/7S crosslinks per end: {reached}</span>"),
+        x=0.01, xanchor="left"))
+    return fig
+
+
+# --------------------------------------------------------------------------- #
 def figure_to_html(fig, title: str = "viva-lumenoid") -> str:
     import plotly.io as pio
     return pio.to_html(fig, full_html=True, include_plotlyjs="cdn",
