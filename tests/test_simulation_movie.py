@@ -3,6 +3,9 @@ from __future__ import annotations
 
 import pytest
 
+pytest.importorskip("lammps", reason="LAMMPS Python bindings required")
+pytest.importorskip("plotly", reason="plotly required for figures")
+
 from viva_lumenoid import CollagenParams, run_stage1
 from viva_lumenoid import viz
 
