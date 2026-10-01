@@ -59,8 +59,8 @@ if _env and Path(_env).is_dir():
     REPO = Path(_env)
 if REPO is None:
     REPO = _find_repo_root(Path.cwd().resolve())
-if REPO is None and Path('/Users/eranagmon/code/viva-lumenoid--composites').is_dir():
-    REPO = Path('/Users/eranagmon/code/viva-lumenoid--composites')
+if REPO is None and Path('/home/runner/work/viva-lumenoid/viva-lumenoid').is_dir():
+    REPO = Path('/home/runner/work/viva-lumenoid/viva-lumenoid')
 if REPO is None:
     REPO = Path.cwd()
 sys.path.insert(0, str(REPO))
@@ -157,15 +157,15 @@ def _render_one(address, config, runs_db, study_yaml):
 #
 # | simulation | composite | steps | params |
 # | --- | --- | --- | --- |
-# | `collagen-iv-network-stage1` | `viva_lumenoid.composites.stage1_composite` | 0 | n_rods=200, box_xy=20.0, slab_thickness=2.0, bead_spacing_nm=114.0, persistence_length_nm=40.0, make_prob=0.12, make_every=100, break_every=100, factor_mult=0.66, target_strain=0.15, strain_rate=0.0015, assemble_steps=8000, hold_steps=16000, seed=12345 |
+# | `collagen-iv-network-stage1` | `viva_lumenoid.stage1_composite` | 0 | n_rods=200, box_xy=20.0, slab_thickness=2.0, bead_spacing_nm=114.0, persistence_length_nm=40.0, make_prob=0.12, make_every=100, break_every=100, factor_mult=0.66, target_strain=0.15, strain_rate=0.0015, assemble_steps=8000, hold_steps=16000, seed=12345 |
 
 # ### Specification (process-bigraph) — load, inspect, edit
 #
 # Each composite is a process-bigraph *document*: named processes (`_type: process`) bound to an `address`, wired by `inputs`/`outputs` ports over shared stores. For every composite below the first cell loads the spec into a plain **editable Python dict** and prints its structure; the second cell is a **control panel** listing every configuration value and per-process `interval` so you can tweak any of them. Your edits are read when the composite is built and run, in the **Run** section.
 
-# **Composite `viva_lumenoid.composites.stage1_composite`** — `spec_viva_lumenoid_composites_stage1_composite` (a plain, editable dict)
+# **Composite `viva_lumenoid.stage1_composite`** — `spec_viva_lumenoid_stage1_composite` (a plain, editable dict)
 
-# _composite spec file for `viva_lumenoid.composites.stage1_composite` not found under `viva_lumenoid/composites/` — skipped._
+# _composite spec file for `viva_lumenoid.stage1_composite` not found under `viva_lumenoid/composites/` — skipped._
 
 # ### Run
 #
@@ -217,15 +217,15 @@ _save_viz('bm-v1-stage1-modulus-remodelling', 'stage1-diagnostic', _render_one('
 #
 # | simulation | composite | steps | params |
 # | --- | --- | --- | --- |
-# | `collagen-iv-network-stage2` | `viva_lumenoid.composites.stage2_sweep` | 0 | n_rods=150, box_xy=18.0, assemble_steps=4000, make_prob=0.12, strain_rates=[5e-4, 1e-3, 2e-3, 4e-3, 8e-3, 1.6e-2], seed=12345 |
+# | `collagen-iv-network-stage2` | `viva_lumenoid.stage2_sweep` | 0 | n_rods=150, box_xy=18.0, assemble_steps=4000, make_prob=0.12, strain_rates=[5e-4, 1e-3, 2e-3, 4e-3, 8e-3, 1.6e-2], seed=12345 |
 
 # ### Specification (process-bigraph) — load, inspect, edit
 #
 # Each composite is a process-bigraph *document*: named processes (`_type: process`) bound to an `address`, wired by `inputs`/`outputs` ports over shared stores. For every composite below the first cell loads the spec into a plain **editable Python dict** and prints its structure; the second cell is a **control panel** listing every configuration value and per-process `interval` so you can tweak any of them. Your edits are read when the composite is built and run, in the **Run** section.
 
-# **Composite `viva_lumenoid.composites.stage2_sweep`** — `spec_viva_lumenoid_composites_stage2_sweep` (a plain, editable dict)
+# **Composite `viva_lumenoid.stage2_sweep`** — `spec_viva_lumenoid_stage2_sweep` (a plain, editable dict)
 
-# _composite spec file for `viva_lumenoid.composites.stage2_sweep` not found under `viva_lumenoid/composites/` — skipped._
+# _composite spec file for `viva_lumenoid.stage2_sweep` not found under `viva_lumenoid/composites/` — skipped._
 
 # ### Run
 #
@@ -268,7 +268,7 @@ _save_viz('bm-v2-stress-vs-strainrate', 'stage2-diagnostic', _render_one('html:s
 #
 # | simulation | composite | steps | params |
 # | --- | --- | --- | --- |
-# | `connectivity-sweep` | `viva_lumenoid.composites.connectivity_sweep` | 0 | n_rods=200, box_xy=20.0, assemble_steps=8000, hold_steps=8000, rungs=[(1,3,0.12),(2,4,0.25),(3,5,0.40),(5,8,0.60)], seeds=[11,22,33] |
+# | `connectivity-sweep` | `viva_lumenoid.rigidity_sweep` | 0 | n_rods=200, box_xy=20.0, assemble_steps=8000, hold_steps=8000, rungs=[(1,3,0.12),(2,4,0.25),(3,5,0.40),(5,8,0.60)], seeds=[11,22,33] |
 #
 # Declared parameter sets (`study.yaml` variants):
 #
@@ -281,9 +281,9 @@ _save_viz('bm-v2-stress-vs-strainrate', 'stage2-diagnostic', _render_one('html:s
 #
 # Each composite is a process-bigraph *document*: named processes (`_type: process`) bound to an `address`, wired by `inputs`/`outputs` ports over shared stores. For every composite below the first cell loads the spec into a plain **editable Python dict** and prints its structure; the second cell is a **control panel** listing every configuration value and per-process `interval` so you can tweak any of them. Your edits are read when the composite is built and run, in the **Run** section.
 
-# **Composite `viva_lumenoid.composites.connectivity_sweep`** — `spec_viva_lumenoid_composites_connectivity_sweep` (a plain, editable dict)
+# **Composite `viva_lumenoid.rigidity_sweep`** — `spec_viva_lumenoid_rigidity_sweep` (a plain, editable dict)
 
-# _composite spec file for `viva_lumenoid.composites.connectivity_sweep` not found under `viva_lumenoid/composites/` — skipped._
+# _composite spec file for `viva_lumenoid.rigidity_sweep` not found under `viva_lumenoid/composites/` — skipped._
 
 # ### Run
 #
@@ -314,6 +314,57 @@ _save_viz('bm-v3-junction-bending-rigidity', 'rigidity-diagnostic', _render_one(
 # | --- | --- | --- |
 # | z-stays-below-threshold | kind=max field=coordination_z | op lt value 4.0 field max_z |
 # | modulus-stays-floppy | kind=value field=elastic_modulus_vs_z ensemble=3 | op consistent_with_zero note all CIs span 0 |
+
+# ## Study: `bm-v4-junction-bending`
+#
+# **Purpose.** Bending constraints at crosslink junctions lift a sub-isostatic (z < 4) central-force network out of the floppy regime — the physically-expected rigidity source for a semiflexible fiber network.
+#
+# **Claim.** Junction bending — harmonic angle restraints pinned to each crosslink's as-formed geometry — is the constraint that governs the basement membrane's stiffness (bm-v3 showed crosslink connectivity alone cannot, z < 4). Adding it dominates the network's mechanics, but a CLEAN, reproducible elastic modulus is not obtainable at v1 network size.
+
+# ### Parameters
+#
+# | simulation | composite | steps | params |
+# | --- | --- | --- | --- |
+# | `junction-bending-network` | `viva_lumenoid.bending_sweep` | 0 | n_rods=200, box_xy=20.0, bending_k=80.0, timestep=0.002, seed=12345 |
+
+# ### Specification (process-bigraph) — load, inspect, edit
+#
+# Each composite is a process-bigraph *document*: named processes (`_type: process`) bound to an `address`, wired by `inputs`/`outputs` ports over shared stores. For every composite below the first cell loads the spec into a plain **editable Python dict** and prints its structure; the second cell is a **control panel** listing every configuration value and per-process `interval` so you can tweak any of them. Your edits are read when the composite is built and run, in the **Run** section.
+
+# **Composite `viva_lumenoid.bending_sweep`** — `spec_viva_lumenoid_bending_sweep` (a plain, editable dict)
+
+# _composite spec file for `viva_lumenoid.bending_sweep` not found under `viva_lumenoid/composites/` — skipped._
+
+# ### Run
+#
+# _Set the runtime (`STEPS`) and step size (`INTERVAL`), then run. Each simulation builds the (edited) spec above and writes `runs.db`; the figures below read it. Set `RERUN = False` to skip re-simulating._
+
+# === Study: bm-v4-junction-bending ===
+STUDY = 'bm-v4-junction-bending'
+STUDY_DIR = REPO / 'workspace/studies' / STUDY
+STUDY_YAML = str(STUDY_DIR / "study.yaml")
+RUNS_DB = str(STUDY_DIR / "runs.db")
+
+print("No recorded runs for this study; nothing to reproduce.")
+
+# ### Visualizations
+#
+# _Results are shown by the figures below, produced by the run above._
+
+# **bending-diagnostic**
+
+# bending-diagnostic
+_save_viz('bm-v4-junction-bending', 'bending-diagnostic', _render_one('html:bending_diagnostic.html', {'title': 'FP1 — junction bending response'}, RUNS_DB, STUDY_YAML))
+
+# ### Acceptance criteria
+#
+# _Pre-registered checks (criteria/thresholds only — run the cells above to evaluate them)._
+#
+# | test | measures | passes if |
+# | --- | --- | --- |
+# | floppy-baseline-clean | kind=value field=modulus_vs_bending_k at=bending_k=0 | op near_zero tol 0.1 |
+# | bending-changes-mechanics | kind=magnitude field=modulus_vs_bending_k at=bending_k>0 | op gt value 1.0 note |E| jumps orders of magnitude above floppy |
+# | reproducible-modulus | kind=iqr_over_median field=modulus_vs_bending_k at=bending_k>0 | op lt value 0.5 note IQR < 0.5·|median| |
 
 # ## Open decisions
 # - Engine for stages 1–2: LAMMPS now; revisit Smoldyn at stage 3 (spec #2).

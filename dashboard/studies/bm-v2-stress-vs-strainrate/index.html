@@ -145,6 +145,8 @@
 <div class="composite-lint-banner" role="alert"
      style="margin:8px 0 14px 0;padding:10px 14px;background:#fffbeb;border:1px solid #f59e0b;border-left-width:5px;border-radius:6px;color:#92400e;font-size:0.9em">
   
+  <div>⚠ composite not found in registry: <code>viva_lumenoid.stage2_sweep</code></div>
+  
   <div>⚠ composite not found in registry: <code>collagen-iv-network-stage2</code></div>
   
   <div style="margin-top:4px;font-size:0.86em;color:#a16207">
@@ -643,22 +645,22 @@
   <div class="overview-section" id="model-section">
     <h3>Runnable models <span class="muted" style="font-size:0.85em;font-weight:normal">— the composite(s) this study simulates</span></h3>
     
-    <div class="cond-block" data-model-composite="viva_lumenoid.composites.stage2_sweep" data-model-overrides='{"assemble_steps": 4000, "box_xy": 18.0, "make_prob": 0.12, "n_rods": 150, "seed": 12345, "strain_rates": "[5e-4, 1e-3, 2e-3, 4e-3, 8e-3, 1.6e-2]"}'>
+    <div class="cond-block" data-model-composite="viva_lumenoid.stage2_sweep" data-model-overrides='{"assemble_steps": 4000, "box_xy": 18.0, "make_prob": 0.12, "n_rods": 150, "seed": 12345, "strain_rates": "[5e-4, 1e-3, 2e-3, 4e-3, 8e-3, 1.6e-2]"}'>
       <div class="cond-block-title" style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
         <strong>collagen-iv-network-stage2</strong>
         
-        <code style="font-size:0.82em;color:#374151;background:#f1f5f9;padding:1px 6px;border-radius:3px">viva_lumenoid.composites.stage2_sweep</code>
+        <code style="font-size:0.82em;color:#374151;background:#f1f5f9;padding:1px 6px;border-radius:3px">viva_lumenoid.stage2_sweep</code>
         <button type="button" class="action-btn" style="font-size:0.8em"
-                onclick="_openCompositeLoom('viva_lumenoid.composites.stage2_sweep')">🧬 explore &amp; run ↗</button>
+                onclick="_openCompositeLoom('viva_lumenoid.stage2_sweep')">🧬 explore &amp; run ↗</button>
         
       </div>
       
       <div style="display:flex;align-items:center;gap:6px;margin-top:6px">
         
         <select class="baseline-composite-input" data-baseline-name="collagen-iv-network-stage2"
-                data-current="viva_lumenoid.composites.stage2_sweep"
+                data-current="viva_lumenoid.stage2_sweep"
                 style="flex:1;min-width:200px;font-family:monospace;font-size:0.82em;padding:3px 6px">
-          <option value="viva_lumenoid.composites.stage2_sweep" selected>viva_lumenoid.composites.stage2_sweep</option>
+          <option value="viva_lumenoid.stage2_sweep" selected>viva_lumenoid.stage2_sweep</option>
           
         </select>
         <button type="button" class="action-btn baseline-composite-set" style="font-size:0.8em"
@@ -1190,7 +1192,7 @@ pass_if: {"note": "\u03b7 ~ const at slow \u03b5\u0307", "op": "plateau"}</pre>
 </section>
 
 </main>
-<script>window.__DASH_CONFIG__ = { mode: "snapshot", interactiveUrl: "https://github.com/vivarium-collective/viva-lumenoid", basePath: "/viva-lumenoid/dashboard", inputsDownloadBase: "https://github.com/vivarium-collective/viva-lumenoid/raw/register-composites", provenance: {"repo_slug": "vivarium-collective/viva-lumenoid", "repo_url": "https://github.com/vivarium-collective/viva-lumenoid", "commit": "ce2b7c13a6783daede35ff720b57fe02ac20691e", "commit_url": "https://github.com/vivarium-collective/viva-lumenoid/commit/ce2b7c13a6783daede35ff720b57fe02ac20691e", "branch": "register-composites", "generated_at": "2026-09-30 23:55 UTC"} };</script>
+<script>window.__DASH_CONFIG__ = { mode: "snapshot", interactiveUrl: "https://github.com/vivarium-collective/viva-lumenoid", basePath: "/viva-lumenoid/dashboard", inputsDownloadBase: "https://github.com/vivarium-collective/viva-lumenoid/raw/main", provenance: {"repo_slug": "vivarium-collective/viva-lumenoid", "repo_url": "https://github.com/vivarium-collective/viva-lumenoid", "commit": "ade29975b1ebe0be4ed3c4e51a1d7ecbeba700c0", "commit_url": "https://github.com/vivarium-collective/viva-lumenoid/commit/ade29975b1ebe0be4ed3c4e51a1d7ecbeba700c0", "branch": "main", "generated_at": "2026-10-01 01:06 UTC"} };</script>
 <script src="/viva-lumenoid/dashboard/assets/data-source.js"></script>
 <script>
 window._studyName = "bm-v2-stress-vs-strainrate";

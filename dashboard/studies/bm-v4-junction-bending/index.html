@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<title>Study: bm-v1-stage1-modulus-remodelling</title>
+<title>Study: bm-v4-junction-bending</title>
 <link rel="stylesheet" href="/viva-lumenoid/dashboard/assets/style.css">
 <link rel="stylesheet" href="/viva-lumenoid/dashboard/assets/progress-track.css">
 <!-- Inherit the workbench light/dark theme (this page loads in an iframe;
@@ -14,7 +14,7 @@
 <header class="study-header">
   <div style="display:flex; align-items:baseline; gap:12px; justify-content:space-between;">
   <h1 class="study-title">
-    <span class="study-name" id="study-name" data-slug="bm-v1-stage1-modulus-remodelling" title="bm-v1-stage1-modulus-remodelling">bm v1 stage1 modulus remodelling</span>
+    <span class="study-name" id="study-name" data-slug="bm-v4-junction-bending" title="bm-v4-junction-bending">bm v4 junction bending</span>
     
     <span class="study-kind-tag study-kind-computational" data-study-kind="computational" title="Study kind">computational</span>
     
@@ -32,11 +32,11 @@
   <div class="study-status-row" style="display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin-top:6px;">
     
     
-    <span class="status-pill gate-status gate-status-passed" title="Pipeline gate verdict (Pass A multi-axis status). Drives downstream unblocking.">gate: passed</span>
+    <span class="status-pill gate-status gate-status-needs_calibration" title="Pipeline gate verdict (Pass A multi-axis status). Drives downstream unblocking.">gate: needs_calibration</span>
     
 
     
-    <div id="readiness-panel" data-slug="bm-v1-stage1-modulus-remodelling"></div>
+    <div id="readiness-panel" data-slug="bm-v4-junction-bending"></div>
 
     
     
@@ -66,8 +66,8 @@
             <span class="dot"></span>4&nbsp;·&nbsp;Quality<span class="step-val">evaluated</span>
           </span>
           
-          <span class="status-step gate-step axis-gate_status gate-state-passed set" title="Gate 5 · Decision">
-            <span class="dot"></span>5&nbsp;·&nbsp;Decision<span class="step-val">passed</span>
+          <span class="status-step gate-step axis-gate_status gate-state-passed-with-conditions set" title="Gate 5 · Decision">
+            <span class="dot"></span>5&nbsp;·&nbsp;Decision<span class="step-val">needs_calibration</span>
           </span>
           
           <span class="status-step gate-step axis-expert_review_status gate-state-not-assessed" title="Gate 6 · Release">
@@ -120,9 +120,9 @@
           
         </div>
         
-        <div class="status-detail-row gate-row gate-state-passed">
+        <div class="status-detail-row gate-row gate-state-passed-with-conditions">
           <span class="status-detail-axis">5 · Decision</span>
-          <span class="status-chip gate-state-passed">passed</span>
+          <span class="status-chip gate-state-passed-with-conditions">needs_calibration</span>
           
           <span class="gate-computed-chip gate-state-not-assessed" title="spine gate evaluator (study_verdict.roll_up_verdict / pipeline_gate.gate_evaluator)">◆ computed: not_started</span>
           
@@ -154,9 +154,9 @@
 <div class="composite-lint-banner" role="alert"
      style="margin:8px 0 14px 0;padding:10px 14px;background:#fffbeb;border:1px solid #f59e0b;border-left-width:5px;border-radius:6px;color:#92400e;font-size:0.9em">
   
-  <div>⚠ composite not found in registry: <code>viva_lumenoid.stage1_composite</code></div>
+  <div>⚠ composite not found in registry: <code>viva_lumenoid.bending_sweep</code></div>
   
-  <div>⚠ composite not found in registry: <code>collagen-iv-network-stage1</code></div>
+  <div>⚠ composite not found in registry: <code>junction-bending</code></div>
   
   <div style="margin-top:4px;font-size:0.86em;color:#a16207">
     This study references a composite that doesn't resolve — it may not declare a
@@ -171,14 +171,13 @@
 
 
 
-<p id="study-question-headline" class="study-question-headline"><span class="q-glyph">Q</span> Can the clean-room collagen IV network separate an elastic modulus from a viscous remodelling time, as the paper&#39;s staged protocol does?
-</p>
+<p id="study-question-headline" class="study-question-headline"><span class="q-glyph">Q</span> Does junction bending yield the measurable modulus the vertex model needs?</p>
 
 <nav class="study-tabs" aria-label="Study sections">
   
   <div class="act-cluster" data-act="study">
     <div class="act-header">
-      <span class="act-gate-dot" data-gate="study" data-gate-state="passed"></span>
+      <span class="act-gate-dot" data-gate="study" data-gate-state="passed-with-conditions"></span>
       <span class="act-label">The Study</span>
     </div>
     <div class="act-tabs">
@@ -223,7 +222,7 @@
   </div>
   <div class="act-cluster" data-act="decision">
     <div class="act-header">
-      <span class="act-gate-dot" data-gate="decision" data-gate-state="passed"></span>
+      <span class="act-gate-dot" data-gate="decision" data-gate-state="passed-with-conditions"></span>
       <span class="act-label">Decision</span>
     </div>
     <div class="act-tabs">
@@ -583,28 +582,26 @@
 
     <div class="ctr-block">
       <h2 class="overview-label ctr-h">Claim</h2>
-      <p class="ctr-text">A coarse-grained collagen IV network (two-bead rods, stochastic NC1/7S crosslinks, no excluded volume) run through the spec&#39;s stage-1 protocol — stretch, hold, then switch the chemistry on — yields a separable elastic modulus and remodelling (stress-relaxation) time on real LAMMPS.
+      <p class="ctr-text">Junction bending — harmonic angle restraints pinned to each crosslink&#39;s as-formed geometry — is the constraint that governs the basement membrane&#39;s stiffness (bm-v3 showed crosslink connectivity alone cannot, z &lt; 4). Adding it dominates the network&#39;s mechanics, but a CLEAN, reproducible elastic modulus is not obtainable at v1 network size.
 </p>
       
     </div>
 
     <div class="ctr-block">
       <h2 class="overview-label ctr-h">Test</h2>
-      <p class="ctr-text">Build N two-bead rods in a quasi-2D periodic slab; assemble a crosslinked network with fix bond/create (NC1 binds 1, 7S binds 3); equilibrate with the chemistry frozen; apply an equibiaxial in-plane strain (fix deform) with the chemistry frozen (elastic loading); hold and read the elastic plateau; then switch crosslink make/break on and read the viscous stress relaxation. Network stress is the bond-virial pressure only (no kinetic term), normalised by the initial volume — the spec flags the all-atom stress as a stage-1 error.
+      <p class="ctr-text">Implement bending via LAMMPS `fix restrain` pinned to each junction&#39;s as-formed angle (a per-junction rest angle, so no single-rest-angle frustration), with an auto-reduced timestep for stability. Measure the ATHERMAL modulus by energy minimisation (change_box + minimise; deterministic, no thermal chaos) and sweep the bending stiffness bending_k.
 </p>
       
       <div class="ctr-meta">
-        <div class="ctr-meta-row"><span class="ctr-meta-k">Model</span> <code>collagen-iv-network-stage1</code></div>
-        <div class="ctr-meta-row"><span class="ctr-meta-k">Measures</span> <span class="ctr-meta-item">The assemble phase forms a crosslinked network from bare rods.</span><span class="ctr-dot">·</span><span class="ctr-meta-item">The stress-strain slope over a seed ensemble is consistent with a floppy (near-zero-modulus) network, matching the published ≈0.03 Pa.
-</span><span class="ctr-dot">·</span><span class="ctr-meta-item">Under breakage-only, the held stress DECAYS as crosslinks break (not densifies) — the corrected remodelling mechanism.
-</span><span class="ctr-dot">·</span><span class="ctr-meta-item">The relaxation time can be calibrated to the collagen IV lifetime.</span></div>
+        <div class="ctr-meta-row"><span class="ctr-meta-k">Model</span> <code>junction-bending-network</code></div>
+        <div class="ctr-meta-row"><span class="ctr-meta-k">Measures</span> <span class="ctr-meta-item">Athermal minimisation measures the floppy (k=0) modulus cleanly as ~0.</span><span class="ctr-dot">·</span><span class="ctr-meta-item">Bending produces a large mechanical response (|E| &gt;&gt; floppy).</span><span class="ctr-dot">·</span><span class="ctr-meta-item">The bending modulus is reproducible across seeds (a usable value).</span></div>
       </div>
       
     </div>
 
     <div class="ctr-block">
       <h2 class="overview-label ctr-h">Result</h2>
-      <p class="ctr-text">Runs end-to-end in ~4 s. The network assembles ~100 crosslinks from 200 rods, the stress-strain ramp gives a positive but very soft tangent modulus (~0.3–0.8 in LJ units, ~1–2 Pa at kT/a³ ≈ 2.5 Pa) consistent with the paper&#39;s ≈0.03 Pa linear modulus, and the chemistry-on hold shows a stress change as crosslinks turn over. The remodelling time is currently noise-limited at this network size (flagged, not silently zeroed) — calibration is spec decision #10.
+      <p class="ctr-text">The floppy baseline (bending_k = 0) is measured cleanly and reproducibly: E ≈ 0 (per-seed −0.006, 0.0, 0.015). Turning bending on produces a LARGE mechanical response (|E| jumps to tens–hundreds) — the network is no longer floppy — but the stiff, pre-stressed, disordered network has many near- degenerate minima, so the modulus is ILL-CONDITIONED: it scatters wildly and sign-flips (k=80 per-seed −570 … +54, median −210). FP1 therefore confirms bending&#39;s role qualitatively (it dominates the mechanics) but does NOT yet yield a calibratable modulus. A clean value needs a much larger network (self- averaging) and a pre-stress-free reference state — a scoped v2 task.
 </p>
       
       
@@ -622,20 +619,20 @@
         <details class="finding-details">
           <summary class="finding-row">
             <span class="finding-status-glyph">◆</span>
-            <span class="finding-claim finding-statement">LAMMPS `fix bond/break` models only OVER-STRETCH breaking, not a force- independent off-rate — small Rmax dissolves the network, large Rmax saturates it. Replacing it with a controlled random-deletion off-rate gives a make/break steady state and genuine remodelling.
+            <span class="finding-claim finding-statement">Junction bending is implemented as `fix restrain` pinned to each junction&#39;s as-formed angle (per-junction rest angle avoids the single-rest-angle frustration), with an auto-reduced timestep and an athermal energy-minimised modulus readout.
 </span>
             
           </summary>
           <div class="finding-drawer">
             <div class="finding-header">
-              <span class="finding-id">F1-offrate-not-overstretch</span>
+              <span class="finding-id">F1-bending-implemented</span>
               <span class="finding-kind">methodological</span>
               <span class="finding-status-text">novel literature</span>
             </div>
             
             
             <div class="finding-evidence">
-              <strong>observed:</strong> crosslinks 45→401 (old, densifies) vs steady ~54 then decay 46→3 (off-rate) · 
+              <strong>observed:</strong> floppy modulus measured cleanly (E ≈ 0, deterministic) via minimisation · 
               
               
               
@@ -647,16 +644,16 @@
             <div class="finding-traceability" style="font-size:0.84em;color:#475569;padding:4px 10px;margin:4px 0">
               
               
-              runs: <a href="#run-stage1-seed-ensemble"><code>stage1-seed-ensemble</code></a>
+              runs: <a href="#run-bending-athermal-sweep"><code>bending-athermal-sweep</code></a>
             </div>
             
             
             
             
             
-            <div class="finding-explanation"><em>Why:</em> Breaking must be length-independent to be a controllable rate (spec: force-independent in v1).</div>
             
-            <div class="finding-next"><strong>→ Next:</strong> adopted in viva_lumenoid/collagen.py; guarded by a regression test</div>
+            
+            <div class="finding-next"><strong>→ Next:</strong> adopted in viva_lumenoid/collagen.py + bending.py</div>
           </div>
         </details>
       </div>
@@ -669,83 +666,24 @@
       
       
       
-      <div class="finding-card finding-kind-computational finding-status-confirms">
-        <details class="finding-details">
-          <summary class="finding-row">
-            <span class="finding-status-glyph">✓</span>
-            <span class="finding-claim finding-statement">The v1 central-force network is below the 2D rigidity threshold (mean z ≤ 3 &lt; 4), so its elastic modulus is statistically consistent with zero — matching the published ≈0.03 Pa.
-</span>
-            
-          </summary>
-          <div class="finding-drawer">
-            <div class="finding-header">
-              <span class="finding-id">F2-floppy-below-rigidity-percolation</span>
-              <span class="finding-kind">computational</span>
-              <span class="finding-status-text">confirms literature</span>
-            </div>
-            
-            
-            <div class="finding-evidence">
-              <strong>observed:</strong> modulus −0.03 ± 0.06 LJ (95% CI, 6 seeds); mean z ≈ 1.2; z_max = 3 · 
-              
-              
-              
-              
-              
-            </div>
-            
-            
-            <div class="finding-traceability" style="font-size:0.84em;color:#475569;padding:4px 10px;margin:4px 0">
-              
-              
-              runs: <a href="#run-stage1-seed-ensemble"><code>stage1-seed-ensemble</code></a>
-            </div>
-            
-            
-            
-            
-            
-            <div class="finding-expected">
-              <strong>expected:</strong> ≈0.03 Pa (Meadowcroft supplement, near-floppy) · 
-              
-              
-            </div>
-            
-            
-            <div class="finding-explanation"><em>Why:</em> Maxwell counting: NC1 beads reach z = 2, 7S beads z = 4, mean ≤ 3 &lt; 4 → floppy regardless of crosslink density. Rigidity must come from bending / bundling.
-</div>
-            
-            <div class="finding-next"><strong>→ Next:</strong> seed FP1 (junction-bending rigidity study)</div>
-          </div>
-        </details>
-      </div>
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      <div class="finding-card finding-kind-methodological finding-status-partial">
+      <div class="finding-card finding-kind-computational finding-status-partial">
         <details class="finding-details">
           <summary class="finding-row">
             <span class="finding-status-glyph">◐</span>
-            <span class="finding-claim finding-statement">The remodelling mechanism is now correct (stress decays as crosslinks break), but the relaxable stress is small in a floppy network, so τ is below detection at v1 scale.
+            <span class="finding-claim finding-statement">Bending dominates the mechanics (|E| jumps to tens–hundreds, network no longer floppy) but the modulus is ill-conditioned at v1 size — it scatters and sign-flips across seeds (pathological near-degenerate minima), so it is not yet a calibratable value.
 </span>
             
           </summary>
           <div class="finding-drawer">
             <div class="finding-header">
-              <span class="finding-id">F3-tau-below-detection</span>
-              <span class="finding-kind">methodological</span>
+              <span class="finding-id">F2-bending-dominates-but-illconditioned</span>
+              <span class="finding-kind">computational</span>
               <span class="finding-status-text">partial literature</span>
             </div>
             
             
             <div class="finding-evidence">
-              <strong>observed:</strong> ensemble viscous decay ~0.29→0.25; s0 &lt; 2·noise → τ unresolved · 
+              <strong>observed:</strong> k=0 E≈0; k=80 per-seed −570…+54 (median −210); reproducible=false · 
               
               
               
@@ -757,16 +695,17 @@
             <div class="finding-traceability" style="font-size:0.84em;color:#475569;padding:4px 10px;margin:4px 0">
               
               
-              runs: <a href="#run-stage1-seed-ensemble"><code>stage1-seed-ensemble</code></a>
+              runs: <a href="#run-bending-athermal-sweep"><code>bending-athermal-sweep</code></a>
             </div>
             
             
             
             
             
+            <div class="finding-explanation"><em>Why:</em> The stiff, pre-stressed, disordered small network has many near-degenerate energy minima; the equibiaxial-stress modulus is dominated by pre-stress and finite-size buckling rather than the intrinsic shear modulus.
+</div>
             
-            
-            <div class="finding-next"><strong>→ Next:</strong> resolve on a rigid (bending) network or a much larger ensemble</div>
+            <div class="finding-next"><strong>→ Next:</strong> seed v2: larger network (self-averaging) + pre-stress-free reference</div>
           </div>
         </details>
       </div>
@@ -779,14 +718,8 @@
       
       <div class="ctr-meta ctr-assess">
         
-        <div class="ctr-meta-row"><span class="ctr-meta-k">Confidence</span>
-          
-          <span class="ctr-vch">biology&nbsp;PASS</span>
-          <span class="ctr-vch">insight&nbsp;POSITIVE</span>
-        </div>
         
-        
-        <div class="ctr-meta-row"><span class="ctr-meta-k">Caveat</span> <span class="ctr-meta-item">Network is FLOPPY (z ≤ 3 &lt; 4): central-force crosslinks alone give ~zero modulus; rigidity needs junction bending / bundling (FP1).</span></div>
+        <div class="ctr-meta-row"><span class="ctr-meta-k">Caveat</span> <span class="ctr-meta-item">The bending modulus is ill-conditioned at 200 rods (pre-stress + finite-size); not calibratable yet.</span></div>
         
       </div>
       
@@ -803,12 +736,12 @@
   <div style="display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:8px;">
     <h2 class="overview-label" style="margin:0">Model composition</h2>
     
-    <button type="button" class="btn-mini" onclick="window._vivStudyNotebookFromCard(event, 'bm-v1-stage1-modulus-remodelling', '')" title="Download a runnable Jupyter notebook for THIS study — its composite + editable parameters + figures">↓ notebook</button>
+    <button type="button" class="btn-mini" onclick="window._vivStudyNotebookFromCard(event, 'bm-v4-junction-bending', '')" title="Download a runnable Jupyter notebook for THIS study — its composite + editable parameters + figures">↓ notebook</button>
   </div>
 
   
   
-  <div id="model-composite-cards" class="model-composite-cards" data-study="bm-v1-stage1-modulus-remodelling"
+  <div id="model-composite-cards" class="model-composite-cards" data-study="bm-v4-junction-bending"
        data-study-config="">
     <div class="viv-loading"><span class="viv-loading-spin" aria-hidden="true"></span><span>Loading composite card(s)…</span></div>
   </div>
@@ -829,28 +762,28 @@
   <div class="overview-section" id="model-section">
     <h3>Runnable models <span class="muted" style="font-size:0.85em;font-weight:normal">— the composite(s) this study simulates</span></h3>
     
-    <div class="cond-block" data-model-composite="viva_lumenoid.stage1_composite" data-model-overrides='{"assemble_steps": 8000, "bead_spacing_nm": 114.0, "box_xy": 20.0, "break_every": 100, "factor_mult": 0.66, "hold_steps": 16000, "make_every": 100, "make_prob": 0.12, "n_rods": 200, "persistence_length_nm": 40.0, "seed": 12345, "slab_thickness": 2.0, "strain_rate": 0.0015, "target_strain": 0.15}'>
+    <div class="cond-block" data-model-composite="viva_lumenoid.bending_sweep" data-model-overrides='{"bending_k": 80.0, "box_xy": 20.0, "n_rods": 200, "seed": 12345, "timestep": 0.002}'>
       <div class="cond-block-title" style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
-        <strong>collagen-iv-network-stage1</strong>
+        <strong>junction-bending-network</strong>
         
-        <code style="font-size:0.82em;color:#374151;background:#f1f5f9;padding:1px 6px;border-radius:3px">viva_lumenoid.stage1_composite</code>
+        <code style="font-size:0.82em;color:#374151;background:#f1f5f9;padding:1px 6px;border-radius:3px">viva_lumenoid.bending_sweep</code>
         <button type="button" class="action-btn" style="font-size:0.8em"
-                onclick="_openCompositeLoom('viva_lumenoid.stage1_composite')">🧬 explore &amp; run ↗</button>
+                onclick="_openCompositeLoom('viva_lumenoid.bending_sweep')">🧬 explore &amp; run ↗</button>
         
       </div>
       
       <div style="display:flex;align-items:center;gap:6px;margin-top:6px">
         
-        <select class="baseline-composite-input" data-baseline-name="collagen-iv-network-stage1"
-                data-current="viva_lumenoid.stage1_composite"
+        <select class="baseline-composite-input" data-baseline-name="junction-bending-network"
+                data-current="viva_lumenoid.bending_sweep"
                 style="flex:1;min-width:200px;font-family:monospace;font-size:0.82em;padding:3px 6px">
-          <option value="viva_lumenoid.stage1_composite" selected>viva_lumenoid.stage1_composite</option>
+          <option value="viva_lumenoid.bending_sweep" selected>viva_lumenoid.bending_sweep</option>
           
         </select>
         <button type="button" class="action-btn baseline-composite-set" style="font-size:0.8em"
-                data-baseline-name="collagen-iv-network-stage1">Set composite</button>
+                data-baseline-name="junction-bending-network">Set composite</button>
       </div>
-      <div class="baseline-composite-status muted" data-baseline-name="collagen-iv-network-stage1" style="font-size:0.8em;margin-top:2px"></div>
+      <div class="baseline-composite-status muted" data-baseline-name="junction-bending-network" style="font-size:0.8em;margin-top:2px"></div>
       
       
       
@@ -899,7 +832,7 @@
 
   <h4>Latest run preview</h4>
   <p class="muted" style="font-size:0.9em">Per-store sparkline + first/last/min/max from the most recent run's emitted trajectory. This is a downsampled PREVIEW, not the full data — use the per-store or Download-all links for the complete arrays.</p>
-  <div id="results-preview" data-study="bm-v1-stage1-modulus-remodelling">
+  <div id="results-preview" data-study="bm-v4-junction-bending">
     <div class="viv-loading"><span class="viv-loading-spin" aria-hidden="true"></span><span>Loading results preview…</span></div>
   </div>
 
@@ -919,7 +852,7 @@
   
   <div class="overview-section" id="study-analyses-section">
     <h3>Analyses to run <span class="muted" style="font-size:0.85em;font-weight:normal">— which of the workspace's <code>ANALYSIS_REGISTRY</code> entries to compute on dispatch</span></h3>
-    <div id="study-analyses-list" data-study="bm-v1-stage1-modulus-remodelling">
+    <div id="study-analyses-list" data-study="bm-v4-junction-bending">
       <div class="viv-loading"><span class="viv-loading-spin" aria-hidden="true"></span><span>Loading analyses…</span></div>
     </div>
     <div style="margin-top:8px">
@@ -935,9 +868,9 @@
   <div style="display:flex;align-items:baseline;gap:12px;flex-wrap:wrap">
     <span class="muted" style="margin-right:auto;font-weight:600">Analysis result files</span>
     <a id="data-download-all" class="btn-mini" style="display:none"
-       href="/api/study-analysis-zip?study=bm-v1-stage1-modulus-remodelling">Download all (.zip)</a>
+       href="/api/study-analysis-zip?study=bm-v4-junction-bending">Download all (.zip)</a>
   </div>
-  <div id="data-files" data-study="bm-v1-stage1-modulus-remodelling">
+  <div id="data-files" data-study="bm-v4-junction-bending">
     <div class="viv-loading"><span class="viv-loading-spin" aria-hidden="true"></span><span>Loading result files…</span></div>
   </div>
 </div>
@@ -958,7 +891,7 @@
     interval/buffer, output location, and emit scope — from
     <code>lib/emitters.py</code> and this study's (or the workspace's)
     <code>runtime.default_emitter</code>.</p>
-    <div id="readouts-emitter" data-study="bm-v1-stage1-modulus-remodelling">
+    <div id="readouts-emitter" data-study="bm-v4-junction-bending">
       <div class="viv-loading"><span class="viv-loading-spin" aria-hidden="true"></span><span>Loading emitter configuration…</span></div>
     </div>
 
@@ -970,7 +903,7 @@
     
     <div id="readouts-download" style="margin:0 0 16px 0"></div>
 
-    <div id="readouts-table" data-study="bm-v1-stage1-modulus-remodelling">
+    <div id="readouts-table" data-study="bm-v4-junction-bending">
       <div class="viv-loading"><span class="viv-loading-spin" aria-hidden="true"></span><span>Loading readouts from the composite emit plan…</span></div>
     </div>
 
@@ -978,7 +911,7 @@
     <p class="muted" style="font-size:0.9em">Store path, dtype, shape
     <code>(n_steps, …)</code>, units, and a best-effort byte estimate for each emitted
     leaf.</p>
-    <div id="readouts-shapes" data-study="bm-v1-stage1-modulus-remodelling">
+    <div id="readouts-shapes" data-study="bm-v4-junction-bending">
       <div class="viv-loading"><span class="viv-loading-spin" aria-hidden="true"></span><span>Loading output shapes…</span></div>
     </div>
 
@@ -993,7 +926,7 @@
     
     
     <div class="viz-actions-row" style="display:flex; justify-content:flex-end; margin-bottom:10px;">
-      <button type="button" class="btn-mini" onclick="window._vivStudyFiguresFromCard(event, 'bm-v1-stage1-modulus-remodelling')" title="Download this study's visualizations (figure panels + its composite) as a zip">↓ visualizations</button>
+      <button type="button" class="btn-mini" onclick="window._vivStudyFiguresFromCard(event, 'bm-v4-junction-bending')" title="Download this study's visualizations (figure panels + its composite) as a zip">↓ visualizations</button>
     </div>
     
 
@@ -1057,10 +990,10 @@
     
     
     
-    <li class="expected-behavior-item" id="bt-network-assembles"
+    <li class="expected-behavior-item" id="bt-floppy-baseline-clean"
         data-test-kind="behavioral"
         
-        data-pytest-node="network-assembles"
+        data-pytest-node="floppy-baseline-clean"
         data-classification="primary"
         data-result="pending"
         style="margin: 0 0 10px 0; padding: 10px 12px; border-left: 4px solid #10b981; background: #f8fafc; border-radius: 4px;">
@@ -1069,19 +1002,19 @@
       <div style="display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;">
         <span class="bt-result" style="font-size: 0.75em; font-family: monospace; padding: 2px 8px; border-radius: 9999px; background: #f1f5f9; color: #475569">⏳ pending</span>
         <span class="classification-pill classification-primary">primary</span>
-        <strong style="font-size: 0.9em;">network-assembles</strong>
+        <strong style="font-size: 0.9em;">floppy-baseline-clean</strong>
         
         <span class="muted" style="font-size:0.78em">requires: <code>true</code></span>
         
       </div>
-      <div style="margin-top: 6px; font-size: 0.95em;">The assemble phase forms a crosslinked network from bare rods.</div>
+      <div style="margin-top: 6px; font-size: 0.95em;">Athermal minimisation measures the floppy (k=0) modulus cleanly as ~0.</div>
       
       
       <details style="margin-top: 6px; font-size: 0.82em;">
         <summary class="muted" style="cursor: pointer;">Assertion</summary>
         
-        <pre style="background:#fff; padding:8px; margin:4px 0 0 0; border:1px solid #e2e8f0; border-radius:3px; overflow-x:auto;">measure: {"field": "n_crosslinks", "kind": "count", "when": "end-of-assemble"}
-pass_if: {"field": "n_crosslinks", "op": "gt", "value": 0}</pre>
+        <pre style="background:#fff; padding:8px; margin:4px 0 0 0; border:1px solid #e2e8f0; border-radius:3px; overflow-x:auto;">measure: {"at": "bending_k=0", "field": "modulus_vs_bending_k", "kind": "value"}
+pass_if: {"op": "near_zero", "tol": 0.1}</pre>
       </details>
       
       
@@ -1096,10 +1029,10 @@ pass_if: {"field": "n_crosslinks", "op": "gt", "value": 0}</pre>
     
     
     
-    <li class="expected-behavior-item" id="bt-elastic-modulus-consistent-with-floppy"
+    <li class="expected-behavior-item" id="bt-bending-changes-mechanics"
         data-test-kind="behavioral"
         
-        data-pytest-node="elastic-modulus-consistent-with-floppy"
+        data-pytest-node="bending-changes-mechanics"
         data-classification="primary"
         data-result="pending"
         style="margin: 0 0 10px 0; padding: 10px 12px; border-left: 4px solid #10b981; background: #f8fafc; border-radius: 4px;">
@@ -1108,72 +1041,19 @@ pass_if: {"field": "n_crosslinks", "op": "gt", "value": 0}</pre>
       <div style="display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;">
         <span class="bt-result" style="font-size: 0.75em; font-family: monospace; padding: 2px 8px; border-radius: 9999px; background: #f1f5f9; color: #475569">⏳ pending</span>
         <span class="classification-pill classification-primary">primary</span>
-        <strong style="font-size: 0.9em;">elastic-modulus-consistent-with-floppy</strong>
+        <strong style="font-size: 0.9em;">bending-changes-mechanics</strong>
         
         <span class="muted" style="font-size:0.78em">requires: <code>true</code></span>
         
       </div>
-      <div style="margin-top: 6px; font-size: 0.95em;">The stress-strain slope over a seed ensemble is consistent with a floppy (near-zero-modulus) network, matching the published ≈0.03 Pa.
-</div>
+      <div style="margin-top: 6px; font-size: 0.95em;">Bending produces a large mechanical response (|E| &gt;&gt; floppy).</div>
       
       
       <details style="margin-top: 6px; font-size: 0.82em;">
         <summary class="muted" style="cursor: pointer;">Assertion</summary>
         
-        <pre style="background:#fff; padding:8px; margin:4px 0 0 0; border:1px solid #e2e8f0; border-radius:3px; overflow-x:auto;">measure: {"ensemble": 6, "field": "sigma_inplane", "kind": "slope", "phase": "stretch", "versus": "strain"}
-pass_if: {"note": "floppy network; z \u003c 4", "op": "consistent_with_zero"}</pre>
-      </details>
-      
-      
-      <details style="margin-top: 6px; font-size: 0.82em">
-        <summary class="muted" style="cursor:pointer; color:#92400e">⚠ Calibration anchor</summary>
-        <pre style="background:#fff7ed; padding:8px; margin:4px 0 0 0; border:1px solid #fdba74; border-radius:3px; overflow-x:auto">{
-  "cites": [
-    "meadowcroft2025nonequilibrium"
-  ],
-  "literature_target": 0.03,
-  "observed_value": -0.03,
-  "resolution": "model"
-}</pre>
-      </details>
-      
-      
-      
-    </li>
-    
-    
-    
-    
-    
-    
-    
-    
-    <li class="expected-behavior-item" id="bt-relaxation-decays-not-densifies"
-        data-test-kind="behavioral"
-        
-        data-pytest-node="relaxation-decays-not-densifies"
-        data-classification="primary"
-        data-result="pending"
-        style="margin: 0 0 10px 0; padding: 10px 12px; border-left: 4px solid #10b981; background: #f8fafc; border-radius: 4px;">
-      
-        
-      <div style="display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;">
-        <span class="bt-result" style="font-size: 0.75em; font-family: monospace; padding: 2px 8px; border-radius: 9999px; background: #f1f5f9; color: #475569">⏳ pending</span>
-        <span class="classification-pill classification-primary">primary</span>
-        <strong style="font-size: 0.9em;">relaxation-decays-not-densifies</strong>
-        
-        <span class="muted" style="font-size:0.78em">requires: <code>true</code></span>
-        
-      </div>
-      <div style="margin-top: 6px; font-size: 0.95em;">Under breakage-only, the held stress DECAYS as crosslinks break (not densifies) — the corrected remodelling mechanism.
-</div>
-      
-      
-      <details style="margin-top: 6px; font-size: 0.82em;">
-        <summary class="muted" style="cursor: pointer;">Assertion</summary>
-        
-        <pre style="background:#fff; padding:8px; margin:4px 0 0 0; border:1px solid #e2e8f0; border-radius:3px; overflow-x:auto;">measure: {"compare_to": "crosslink_count", "field": "sigma_inplane", "kind": "delta", "phase": "hold_viscous"}
-pass_if: {"note": "crosslinks decay 46\u21923; stress drops in the correct direction", "op": "decreases"}</pre>
+        <pre style="background:#fff; padding:8px; margin:4px 0 0 0; border:1px solid #e2e8f0; border-radius:3px; overflow-x:auto;">measure: {"at": "bending_k\u003e0", "field": "modulus_vs_bending_k", "kind": "magnitude"}
+pass_if: {"note": "|E| jumps orders of magnitude above floppy", "op": "gt", "value": 1.0}</pre>
       </details>
       
       
@@ -1188,45 +1068,33 @@ pass_if: {"note": "crosslinks decay 46\u21923; stress drops in the correct direc
     
     
     
-    <li class="expected-behavior-item" id="bt-remodelling-time-calibratable"
+    <li class="expected-behavior-item" id="bt-reproducible-modulus"
         data-test-kind="behavioral"
         
-        data-pytest-node="remodelling-time-calibratable"
-        data-classification="secondary"
+        data-pytest-node="reproducible-modulus"
+        data-classification="primary"
         data-result="pending"
-        style="margin: 0 0 10px 0; padding: 10px 12px; border-left: 4px solid #cbd5e1; background: #f8fafc; border-radius: 4px;">
+        style="margin: 0 0 10px 0; padding: 10px 12px; border-left: 4px solid #10b981; background: #f8fafc; border-radius: 4px;">
       
         
       <div style="display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;">
         <span class="bt-result" style="font-size: 0.75em; font-family: monospace; padding: 2px 8px; border-radius: 9999px; background: #f1f5f9; color: #475569">⏳ pending</span>
-        <span class="classification-pill classification-secondary">secondary</span>
-        <strong style="font-size: 0.9em;">remodelling-time-calibratable</strong>
+        <span class="classification-pill classification-primary">primary</span>
+        <strong style="font-size: 0.9em;">reproducible-modulus</strong>
         
         <span class="muted" style="font-size:0.78em">requires: <code>true</code></span>
         
       </div>
-      <div style="margin-top: 6px; font-size: 0.95em;">The relaxation time can be calibrated to the collagen IV lifetime.</div>
+      <div style="margin-top: 6px; font-size: 0.95em;">The bending modulus is reproducible across seeds (a usable value).</div>
       
       
       <details style="margin-top: 6px; font-size: 0.82em;">
         <summary class="muted" style="cursor: pointer;">Assertion</summary>
         
-        <pre style="background:#fff; padding:8px; margin:4px 0 0 0; border:1px solid #e2e8f0; border-radius:3px; overflow-x:auto;">measure: {"convert": "hours", "field": "sigma_inplane", "kind": "relaxation_time", "phase": "hold_viscous"}
-pass_if: {"op": "calibratable", "range_hours": "3-30 across systems", "target_hours": 20}</pre>
+        <pre style="background:#fff; padding:8px; margin:4px 0 0 0; border:1px solid #e2e8f0; border-radius:3px; overflow-x:auto;">measure: {"at": "bending_k\u003e0", "field": "modulus_vs_bending_k", "kind": "iqr_over_median"}
+pass_if: {"note": "IQR \u003c 0.5\u00b7|median|", "op": "lt", "value": 0.5}</pre>
       </details>
       
-      
-      <details style="margin-top: 6px; font-size: 0.82em">
-        <summary class="muted" style="cursor:pointer; color:#92400e">⚠ Calibration anchor</summary>
-        <pre style="background:#fff7ed; padding:8px; margin:4px 0 0 0; border:1px solid #fdba74; border-radius:3px; overflow-x:auto">{
-  "cites": [
-    "barrientos2026basement"
-  ],
-  "literature_target": 20,
-  "observed_value": "below detection (\u03c4 \u2248 1/off_rate by construction; not resolvable while floppy)",
-  "resolution": "model"
-}</pre>
-      </details>
       
       
       
@@ -1305,35 +1173,33 @@ pass_if: {"op": "calibratable", "range_hours": "3-30 across systems", "target_ho
           <span class="narrative-label">Regression basis</span>
           <textarea class="narrative-input narrative-textarea" rows="2"
                     data-narrative-path="conclusion_verdicts.regression_compatibility.basis"
-                    placeholder="e.g. Builds cleanly; tests pass; pyproject deps unchanged.">No upstream regression baseline for this clean-room build.</textarea>
+                    placeholder="e.g. Builds cleanly; tests pass; pyproject deps unchanged."></textarea>
         </label>
         <label class="narrative-row">
           <span class="narrative-label">Empirical validation</span>
           <span class="narrative-input verdict-badge-computed" data-verdict-track="biological_validation"
                 title="Computed from the gate evaluator (read-only)"
-                style="display:inline-block;padding:2px 12px;border-radius:9999px;font-weight:700;font-size:0.85em;background:#f1f5f9;color:#475569">PASS</span>
+                style="display:inline-block;padding:2px 12px;border-radius:9999px;font-weight:700;font-size:0.85em;background:#f1f5f9;color:#475569">PENDING</span>
           <span class="muted small" style="margin-left:6px">computed from gate evaluator</span>
         </label>
         <label class="narrative-row narrative-row-wide">
           <span class="narrative-label">Empirical basis</span>
           <textarea class="narrative-input narrative-textarea" rows="2"
                     data-narrative-path="conclusion_verdicts.biological_validation.basis"
-                    placeholder="e.g. atp_fraction = 0.997, outside Boesen 2024 band [0.2, 0.5].">Consistent with the published ≈0.03 Pa (near-floppy) modulus; the floppiness is mechanistically explained by connectivity (z &lt; 4).
-</textarea>
+                    placeholder="e.g. atp_fraction = 0.997, outside Boesen 2024 band [0.2, 0.5]."></textarea>
         </label>
         <label class="narrative-row">
           <span class="narrative-label">Explanatory gain</span>
           <span class="narrative-input verdict-badge-computed" data-verdict-track="explanatory_gain"
                 title="Computed from interpretation-tier findings (read-only)"
-                style="display:inline-block;padding:2px 12px;border-radius:9999px;font-weight:700;font-size:0.85em;background:#f1f5f9;color:#475569">POSITIVE</span>
+                style="display:inline-block;padding:2px 12px;border-radius:9999px;font-weight:700;font-size:0.85em;background:#f1f5f9;color:#475569">PENDING</span>
           <span class="muted small" style="margin-left:6px">computed from interpretation-tier findings</span>
         </label>
         <label class="narrative-row narrative-row-wide">
           <span class="narrative-label">Explanatory basis</span>
           <textarea class="narrative-input narrative-textarea" rows="2"
                     data-narrative-path="conclusion_verdicts.explanatory_gain.basis"
-                    placeholder="e.g. Three findings worth keeping; design_pivot_required closed.">Identifies WHY the BM network is soft — connectivity below rigidity percolation — telling the vertex model that BM stiffness comes from bending/bundling, not crosslink count.
-</textarea>
+                    placeholder="e.g. Three findings worth keeping; design_pivot_required closed."></textarea>
         </label>
       </div>
     </div>
@@ -1348,14 +1214,14 @@ pass_if: {"op": "calibratable", "range_hours": "3-30 across systems", "target_ho
       <div style="padding:10px 14px;background:#f0fdf4;border-left:4px solid #10b981;border-radius:4px;margin-bottom:8px">
         <strong>✓ If primary tests pass:</strong>
         
-        <div style="margin-top:4px"><em>Implementation:</em> Stage 1 runs end-to-end and separates elastic from viscous.</div>
+        <div style="margin-top:4px"><em>Implementation:</em> Bending implemented; floppy baseline clean.</div>
         
         
-        <div style="margin-top:4px"><em>Empirical validation:</em> Qualitative match to the paper&#39;s very-soft regime; absolute Pa gated on the energy-scale decision.</div>
+        <div style="margin-top:4px"><em>Empirical validation:</em> Bending confirmed as the mechanics-governing constraint.</div>
         
         
         <div style="margin-top:4px"><em>Pipeline unblocks:</em>
-          <ul style="margin:4px 0 0 18px"><li>Stage 2 — σ(ε̇) sweep on the growing (biaxially stretching) substrate.</li><li>Energy-scale + calibration decisions (spec #4/#10).</li></ul>
+          <ul style="margin:4px 0 0 18px"><li>A v2 rigid-modulus measurement (larger network + pre-stress-free reference).</li></ul>
         </div>
         
       </div>
@@ -1365,11 +1231,11 @@ pass_if: {"op": "calibratable", "range_hours": "3-30 across systems", "target_ho
         <strong>✗ If primary tests fail:</strong>
         
         <div style="margin-top:4px"><em>Diagnose:</em>
-          <ul style="margin:4px 0 0 18px"><li>Network under-percolated — raise make_prob or assemble length.</li><li>Stress noise-dominated — larger network / seed ensemble.</li><li>Bond-virial stress readout — confirm the kinetic term is excluded and V0-normalised.</li></ul>
+          <ul style="margin:4px 0 0 18px"><li>Modulus ill-conditioned — enlarge the network and remove pre-stress before measuring.</li></ul>
         </div>
         
         
-        <div style="margin-top:4px"><em>Block downstream:</em> Do not proceed to stage 2 until stage 1 gives a stable modulus.</div>
+        <div style="margin-top:4px"><em>Block downstream:</em> No calibratable BM modulus for the vertex-model coupling until this is resolved.</div>
         
       </div>
       
@@ -1392,7 +1258,7 @@ pass_if: {"op": "calibratable", "range_hours": "3-30 across systems", "target_ho
     <div class="overview-section">
       <h3 class="overview-label">Key assumptions</h3>
       <ul style="margin:0 0 0 18px;padding:0;font-size:0.93em">
-        <li style="margin:2px 0">One protomer = one two-bead rod; junction flexibility folded into a finite intra-rod bond (dynamic junction angles omitted in v1-minimal).</li><li style="margin:2px 0">No excluded volume — every pair coefficient is zero (spec #2: the released decks set eps=0).</li><li style="margin:2px 0">Crosslink make/break locked at FactorMult = 0.66 (make/break ratio 1.52), as in the released decks.</li><li style="margin:2px 0">Quasi-2D slab; rods lie in-plane; thickness/layer count deferred (spec #9).</li><li style="margin:2px 0">Energy unit = kT, so stress unit = kT/a³ ≈ 2.5 Pa; absolute pascals not yet claimed (spec #4).</li>
+        <li style="margin:2px 0">Bending = harmonic angle restraint pinned to each junction&#39;s as-formed angle (fix restrain).</li><li style="margin:2px 0">Stiff restraints need a reduced timestep (dt ≈ 0.002; the spec&#39;s own regime).</li><li style="margin:2px 0">Athermal (T=0) energy minimisation gives the deterministic elastic modulus.</li>
       </ul>
     </div>
     
@@ -1402,7 +1268,7 @@ pass_if: {"op": "calibratable", "range_hours": "3-30 across systems", "target_ho
       <h3 class="overview-label">Limitations</h3>
       <p class="muted" style="margin:0 0 6px 0;font-size:0.85em">What this study explicitly does NOT validate (prevents overclaim).</p>
       <ul style="margin:0 0 0 18px;padding:0;font-size:0.93em">
-        <li style="margin:2px 0">Network is FLOPPY (z ≤ 3 &lt; 4): central-force crosslinks alone give ~zero modulus; rigidity needs junction bending / bundling (FP1).</li><li style="margin:2px 0">τ below detection while floppy — the relaxable stress is small; a rigid network is needed to resolve it.</li><li style="margin:2px 0">No dynamic junction angles; persistence length is only approximately represented (spec: LAMMPS puts l_p as soft angles at junctions) — the load-bearing v2 gap.</li><li style="margin:2px 0">No excluded volume, so pore-size / bundling readouts are not yet physical (deferred).</li><li style="margin:2px 0">Modulus reported in LJ units / as a ratio, not calibrated pascals (spec #4).</li><li style="margin:2px 0">Parameters transcribed from the spec&#39;s sheet, NOT the authors&#39; actual decks (not yet in hand).</li>
+        <li style="margin:2px 0">The bending modulus is ill-conditioned at 200 rods (pre-stress + finite-size); not calibratable yet.</li><li style="margin:2px 0">Bending targets are pinned from a thermally-noisy as-formed geometry (a pre-stress source).</li><li style="margin:2px 0">Only equibiaxial stress-strain slope is used; a shear or energy-curvature modulus may be better conditioned.</li>
       </ul>
     </div>
     
@@ -1439,13 +1305,13 @@ pass_if: {"op": "calibratable", "range_hours": "3-30 across systems", "target_ho
         
         <div class="di-unc di-unc-resolved">
           <h4>✓ Resolved uncertainties</h4>
-          <ul><li>The viscous &#39;relaxation&#39; densification was a fix-bond/break artifact — root-caused and fixed.</li><li>The ~0 modulus is rigidity-percolation physics (z &lt; 4), not a measurement failure.</li></ul>
+          <ul><li>Bending, not crosslink connectivity, governs this network&#39;s stiffness (confirmed qualitatively).</li><li>The athermal minimisation measures the floppy modulus cleanly (fixes the dynamic-measurement chaos).</li></ul>
         </div>
         
         
         <div class="di-unc di-unc-remaining">
           <h4>● Remaining uncertainties</h4>
-          <ul><li>τ (remodelling time) — below detection until the network is rigid.</li><li>Absolute modulus in pascals — energy scale still open (spec #4).</li></ul>
+          <ul><li>A reproducible, calibratable bending modulus — blocked on network size + pre-stress-free measurement.</li></ul>
         </div>
         
       </div>
@@ -1461,14 +1327,14 @@ pass_if: {"op": "calibratable", "range_hours": "3-30 across systems", "target_ho
       <div class="di-group">
         <h3>Follow-up study proposals
           <span class="muted" style="font-weight:normal;font-size:0.82em">(discovered)</span>
-          <span class="muted" style="font-weight:normal;font-size:0.85em">(2)</span></h3>
+          <span class="muted" style="font-weight:normal;font-size:0.85em">(1)</span></h3>
         <p class="muted" style="margin:0 0 8px 0;font-size:0.85em">Click <strong>➕ Add to investigation</strong> to spawn a new study node in the investigation graph.</p>
         <div class="followup-list">
           
           
           <div class="di-card di-fup-card">
             <div class="followup-header">
-              <strong class="followup-title">Junction-bending rigidity study</strong>
+              <strong class="followup-title">Reproducible bending modulus at scale</strong>
               
               
               
@@ -1478,24 +1344,7 @@ pass_if: {"op": "calibratable", "range_hours": "3-30 across systems", "target_ho
             
             <div class="followup-actions" style="margin-top:8px">
               <button class="btn-seed-followup"
-                      onclick="_seedFollowupProposal('bm-v1-stage1-modulus-remodelling', "fp1-junction-bending")">➕ Add to investigation</button>
-            </div>
-          </div>
-          
-          
-          <div class="di-card di-fup-card">
-            <div class="followup-header">
-              <strong class="followup-title">Off-rate → τ calibration to the ≈20 h lifetime</strong>
-              
-              
-              
-              
-            </div>
-            
-            
-            <div class="followup-actions" style="margin-top:8px">
-              <button class="btn-seed-followup"
-                      onclick="_seedFollowupProposal('bm-v1-stage1-modulus-remodelling', "fp2-offrate-calibration")">➕ Add to investigation</button>
+                      onclick="_seedFollowupProposal('bm-v4-junction-bending', "fp3-largescale-prestressfree-modulus")">➕ Add to investigation</button>
             </div>
           </div>
           
@@ -1521,7 +1370,7 @@ pass_if: {"op": "calibratable", "range_hours": "3-30 across systems", "target_ho
 <script>window.__DASH_CONFIG__ = { mode: "snapshot", interactiveUrl: "https://github.com/vivarium-collective/viva-lumenoid", basePath: "/viva-lumenoid/dashboard", inputsDownloadBase: "https://github.com/vivarium-collective/viva-lumenoid/raw/main", provenance: {"repo_slug": "vivarium-collective/viva-lumenoid", "repo_url": "https://github.com/vivarium-collective/viva-lumenoid", "commit": "ade29975b1ebe0be4ed3c4e51a1d7ecbeba700c0", "commit_url": "https://github.com/vivarium-collective/viva-lumenoid/commit/ade29975b1ebe0be4ed3c4e51a1d7ecbeba700c0", "branch": "main", "generated_at": "2026-10-01 01:06 UTC"} };</script>
 <script src="/viva-lumenoid/dashboard/assets/data-source.js"></script>
 <script>
-window._studyName = "bm-v1-stage1-modulus-remodelling";
+window._studyName = "bm-v4-junction-bending";
 window._study = null;  // populated by _bootstrapStudy() in study-detail.js
 
 // Save handler for the Conditions → Model settings editable rows.
