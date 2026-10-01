@@ -25,14 +25,19 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 STUDIES = os.path.join(ROOT, "workspace", "studies")
 
 
-def render_movie(study, fname, title, params, **run_kw):
-    """Run stage 1 with frame capture and write the spatial simulation movie."""
+def render_movie(study, fname, title, params, mode, **clip_kw):
+    """Capture a finely-sampled, coherent clip and write the spatial movie.
+
+    Uses movie.capture_clip (small dt + periodic-unwrap + COM-drift removal) so
+    the motion is continuous, not the teleporting of coarse analysis snapshots.
+    """
+    from viva_lumenoid.movie import capture_clip
     d = os.path.join(STUDIES, study, "viz")
     os.makedirs(d, exist_ok=True)
-    r = run_stage1(params, capture_frames=True, **run_kw)
-    save_html(network_movie_figure(r, title), os.path.join(d, fname), title)
-    print(f"  movie {study}/{fname}: {len(r.frames)} frames")
-    return r
+    c = capture_clip(params, mode=mode, **clip_kw)
+    save_html(network_movie_figure(c, title), os.path.join(d, fname), title)
+    print(f"  movie {study}/{fname}: {c.summary}")
+    return c
 
 
 def main():
@@ -98,36 +103,32 @@ def main():
     print(f"  pore median {r5.median_pore_nm:.0f} nm · mean strand {r5.mean_strand:.2f} "
           f"(max {r5.max_strand})")
 
-    # Simulation movies — the actual spatial state unfolding, one per study,
-    # tuned to that study's point. Captured from real runs (frame_stride keeps
-    # ~40-60 frames so the HTML stays light).
+    # Simulation movies — the actual spatial state unfolding, COHERENTLY: each is
+    # a finely-sampled clip (small dt, periodic-unwrapped, COM-drift removed) of
+    # the mode that matters for that study, so the motion is continuous.
     print("Rendering simulation movies …")
     render_movie("bm-v1-stage1-modulus-remodelling", "stage1_movie.html",
-                 "stage 1 — assemble → stretch → hold → remodel",
-                 CollagenParams(n_rods=140, box_xy=18.0, assemble_steps=6000,
-                                hold_steps=10000),
-                 sample_dt=8.0, frame_stride=1)
+                 "stage 1 — remodelling: crosslinks break, the network relaxes",
+                 CollagenParams(n_rods=140, box_xy=18.0, assemble_steps=7000),
+                 mode="remodel", n_frames=80, dt=0.15)
     render_movie("bm-v2-stress-vs-strainrate", "stage2_movie.html",
-                 "stage 2 — the growing substrate stretches",
-                 CollagenParams(n_rods=140, box_xy=18.0, assemble_steps=5000,
-                                hold_steps=4000, target_strain=0.30, strain_rate=4e-3),
-                 sample_dt=8.0, frame_stride=1)
+                 "stage 2 — the growing substrate stretches (equibiaxial)",
+                 CollagenParams(n_rods=140, box_xy=18.0, assemble_steps=6000),
+                 mode="stretch", n_frames=80, dt=0.06, strain_rate=0.02)
     render_movie("bm-v3-junction-bending-rigidity", "rigidity_movie.html",
-                 "rigidity — high-connectivity network (NC1×5 + 7S×8)",
+                 "rigidity — high-connectivity network jiggling (NC1×5 + 7S×8)",
                  CollagenParams(n_rods=180, box_xy=20.0, assemble_steps=8000,
-                                hold_steps=4000, nc1_max_crosslinks=5,
-                                svns_max_crosslinks=8, make_prob=0.6),
-                 sample_dt=10.0, frame_stride=1)
+                                nc1_max_crosslinks=5, svns_max_crosslinks=8, make_prob=0.6),
+                 mode="relax", n_frames=80, dt=0.15)
     render_movie("bm-v4-junction-bending", "bending_movie.html",
                  "junction bending — rods pinned at crosslink angles",
                  CollagenParams(n_rods=140, box_xy=18.0, assemble_steps=6000,
-                                hold_steps=8000, bending_k=50.0),
-                 sample_dt=8.0, frame_stride=1)
+                                bending_k=50.0),
+                 mode="relax", n_frames=80, dt=0.15)
     render_movie("bm-v5-porosity-bundling", "assembly_movie.html",
                  "assembly — a porous collagen IV mesh forms",
-                 CollagenParams(n_rods=400, box_xy=20.0, assemble_steps=10000,
-                                hold_steps=4000),
-                 sample_dt=4.0, frame_stride=2)
+                 CollagenParams(n_rods=300, box_xy=20.0),
+                 mode="assemble", n_frames=75, dt=0.15)
     print("Figures written.")
 
 

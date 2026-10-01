@@ -430,14 +430,20 @@ def network_movie_figure(result: Any, title: str = "collagen IV network") -> "ob
     tr = result.trace
     tt, sg, phs = np.asarray(tr["t"]), np.asarray(tr["sigma"]), np.asarray(tr["phase"])
     maxbox = max(float(f["box"][0]) for f in frames)
+    # auto-range the mesh panel to the actual data extent (unwrapping can carry a
+    # few beads just outside the box — show them rather than clip) unioned w/ box
+    _allx = np.concatenate([np.asarray(f["positions"])[:, 0] for f in frames])
+    _ally = np.concatenate([np.asarray(f["positions"])[:, 1] for f in frames])
+    _lo = min(float(_allx.min()), float(_ally.min()), 0.0) - 0.8
+    _hi = max(float(_allx.max()), float(_ally.max()), maxbox) + 0.8
 
     def phase_color(ph):
         return PHASE_COLOR.get(ph, _MUTED)
 
     fig = make_subplots(
         rows=1, cols=2, column_widths=[0.6, 0.4],
-        subplot_titles=("Network — spatial state (rods + crosslink ends)",
-                        "Network stress through the protocol"),
+        subplot_titles=("Network — quasi-2D slab, top-down (rods + crosslink ends)",
+                        "Network stress through the clip"),
         horizontal_spacing=0.09)
 
     f0 = frames[0]
@@ -495,9 +501,9 @@ def network_movie_figure(result: Any, title: str = "collagen IV network") -> "ob
                       currentvalue=dict(prefix="phase: ", font=dict(size=12)),
                       steps=steps)])
 
-    fig.update_xaxes(range=[-0.5, maxbox + 0.5], row=1, col=1, constrain="domain",
+    fig.update_xaxes(range=[_lo, _hi], row=1, col=1, constrain="domain",
                      title_text="x (a)")
-    fig.update_yaxes(range=[-0.5, maxbox + 0.5], row=1, col=1, constrain="domain",
+    fig.update_yaxes(range=[_lo, _hi], row=1, col=1, constrain="domain",
                      title_text="y (a)")
     fig.update_xaxes(title_text="LJ time", row=1, col=2)
     fig.update_yaxes(title_text="σ (kT/a³)", row=1, col=2)
@@ -506,8 +512,9 @@ def network_movie_figure(result: Any, title: str = "collagen IV network") -> "ob
         margin=dict(l=56, r=24, t=96, b=72),
         title=dict(text=(f"<b>Simulation movie — {title}</b>   "
                    f"<span style='font-size:12px;color:{_MUTED}'>"
-                   f"{len(frames)} frames · box border coloured by phase · "
-                   f"press ▶ play</span>"), x=0.01, xanchor="left"))
+                   f"{len(frames)} frames · quasi-2D slab (z≈2a thick) shown "
+                   f"top-down · finely sampled + drift-removed · press ▶ play</span>"),
+                   x=0.01, xanchor="left"))
     return fig
 
 
