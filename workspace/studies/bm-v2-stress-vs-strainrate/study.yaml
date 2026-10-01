@@ -44,7 +44,7 @@ parent_studies:
 
 baseline:
   - name: collagen-iv-network-stage2
-    composite: viva_lumenoid.stage2_sweep
+    composite: viva_lumenoid.composites.stage2_sweep
     params:
       n_rods: 150
       box_xy: 18.0

@@ -53,7 +53,7 @@ key_assumptions:
 
 baseline:
   - name: collagen-iv-network-stage1
-    composite: viva_lumenoid.stage1_composite
+    composite: viva_lumenoid.composites.stage1_composite
     params:
       n_rods: 200
       box_xy: 20.0

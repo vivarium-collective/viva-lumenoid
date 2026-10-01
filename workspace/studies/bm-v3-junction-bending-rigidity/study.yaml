@@ -54,7 +54,7 @@ key_assumptions:
 
 baseline:
   - name: connectivity-sweep
-    composite: viva_lumenoid.rigidity_sweep
+    composite: viva_lumenoid.composites.connectivity_sweep
     params:
       n_rods: 200
       box_xy: 20.0

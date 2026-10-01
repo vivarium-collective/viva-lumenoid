@@ -28,3 +28,7 @@ __all__ = [
     'run_connectivity_sweep', 'RigidityResult',
     'run_bending_sweep', 'BendingResult',
 ]
+
+# Register the workspace's composite generators (discoverable by the workbench so
+# each study's baseline.composite resolves in the Composites/Registry tabs).
+from . import composites  # noqa: E402,F401
