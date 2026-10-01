@@ -141,6 +141,10 @@ report:
     is too slow relative to the imposed strain to give a viscous plateau yet.
 
 visualizations:
+  - name: stage2-movie
+    address: "html:stage2_movie.html"
+    config:
+      title: "Simulation movie — the growing substrate stretches"
   - name: stage2-diagnostic
     address: "html:stage2_diagnostic.html"
     config:

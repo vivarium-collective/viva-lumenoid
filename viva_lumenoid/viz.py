@@ -386,6 +386,132 @@ def bending_figure(result: Any) -> "object":
 
 
 # --------------------------------------------------------------------------- #
+# Simulation movie — the spatial network state unfolding, synced to a metric
+# --------------------------------------------------------------------------- #
+def _frame_mesh(frame):
+    """(rod_xs, rod_ys, nc1_xy, s7_xy, box_xy) for one captured frame."""
+    pos = np.asarray(frame["positions"], dtype=float)
+    lx, ly = float(frame["box"][0]), float(frame["box"][1])
+    types = np.asarray(frame.get("atom_types")) if frame.get("atom_types") is not None else None
+    n = (len(pos) // 2) * 2
+    xs, ys = [], []
+    for i in range(0, n, 2):
+        a, b = pos[i], pos[i + 1]
+        if (a[0] - b[0]) ** 2 + (a[1] - b[1]) ** 2 > 9.0:   # periodic-wrap streak
+            continue
+        xs += [a[0], b[0], None]
+        ys += [a[1], b[1], None]
+    nc1 = s7 = (np.array([]), np.array([]))
+    if types is not None:
+        m = types[:len(pos)] == 1
+        nc1 = (pos[:len(types)][m][:, 0], pos[:len(types)][m][:, 1])
+        s7 = (pos[:len(types)][~m][:, 0], pos[:len(types)][~m][:, 1])
+    box_xy = ([0, lx, lx, 0, 0], [0, 0, ly, ly, 0])
+    return xs, ys, nc1, s7, box_xy
+
+
+def network_movie_figure(result: Any, title: str = "collagen IV network") -> "object":
+    """An animated player of the network's spatial state (left) synced to the
+    stress trace (right) — play/pause + a phase-labelled time slider.
+
+    ``result`` must have ``frames`` (from run_stage1(capture_frames=True)); the
+    box outline + cursor are coloured by the current protocol phase so the
+    assemble → relax → stretch → hold → remodel structure reads at a glance.
+    """
+    from plotly.subplots import make_subplots
+    import plotly.graph_objects as go
+
+    frames = result.frames or []
+    if not frames:
+        raise ValueError("result has no captured frames (run with capture_frames=True)")
+    t_all = np.asarray([f["t"] for f in frames])
+    sig_all = np.asarray([f["sigma"] for f in frames])
+    # full (dense) stress trace for the static backdrop line
+    tr = result.trace
+    tt, sg, phs = np.asarray(tr["t"]), np.asarray(tr["sigma"]), np.asarray(tr["phase"])
+    maxbox = max(float(f["box"][0]) for f in frames)
+
+    def phase_color(ph):
+        return PHASE_COLOR.get(ph, _MUTED)
+
+    fig = make_subplots(
+        rows=1, cols=2, column_widths=[0.6, 0.4],
+        subplot_titles=("Network — spatial state (rods + crosslink ends)",
+                        "Network stress through the protocol"),
+        horizontal_spacing=0.09)
+
+    f0 = frames[0]
+    xs, ys, nc1, s7, box_xy = _frame_mesh(f0)
+    # --- base data (indices matter for frame .traces mapping) ---
+    fig.add_trace(go.Scatter(x=xs, y=ys, mode="lines",
+                  line=dict(color="rgba(80,90,105,0.55)", width=1.2),
+                  name="rods", showlegend=False, hoverinfo="skip"), row=1, col=1)      # 0
+    fig.add_trace(go.Scatter(x=nc1[0], y=nc1[1], mode="markers", name="NC1 end",
+                  marker=dict(size=4, color=BLUE), hoverinfo="skip"), row=1, col=1)     # 1
+    fig.add_trace(go.Scatter(x=s7[0], y=s7[1], mode="markers", name="7S end",
+                  marker=dict(size=4, color=ORANGE), hoverinfo="skip"), row=1, col=1)   # 2
+    fig.add_trace(go.Scatter(x=box_xy[0], y=box_xy[1], mode="lines",
+                  line=dict(color=phase_color(f0["phase"]), width=2.5),
+                  name="box", showlegend=False, hoverinfo="skip"), row=1, col=1)        # 3
+    # static stress backdrop + phase-coloured markers
+    fig.add_trace(go.Scatter(x=tt, y=sg, mode="lines",
+                  line=dict(color="rgba(120,130,145,0.45)", width=1.2),
+                  name="σ(t)", showlegend=False, hoverinfo="skip"), row=1, col=2)       # 4
+    fig.add_trace(go.Scatter(x=[f0["t"]], y=[f0["sigma"]], mode="markers",
+                  marker=dict(size=13, color=phase_color(f0["phase"]),
+                              line=dict(width=1.5, color="white")),
+                  name="now", showlegend=False,
+                  hovertemplate="t=%{x:.0f}<br>σ=%{y:.3f}<extra></extra>"), row=1, col=2)  # 5
+
+    go_frames = []
+    for i, f in enumerate(frames):
+        xs, ys, nc1, s7, box_xy = _frame_mesh(f)
+        c = phase_color(f["phase"])
+        go_frames.append(go.Frame(name=str(i), traces=[0, 1, 2, 3, 5], data=[
+            go.Scatter(x=xs, y=ys),
+            go.Scatter(x=nc1[0], y=nc1[1]),
+            go.Scatter(x=s7[0], y=s7[1]),
+            go.Scatter(x=box_xy[0], y=box_xy[1], line=dict(color=c, width=2.5)),
+            go.Scatter(x=[f["t"]], y=[f["sigma"]], marker=dict(color=c, size=13)),
+        ]))
+    fig.frames = go_frames
+
+    steps = [dict(method="animate", label=f"{f['phase']} ε={f['strain']:.2f}",
+                  args=[[str(i)], dict(mode="immediate",
+                        frame=dict(duration=0, redraw=True),
+                        transition=dict(duration=0))])
+             for i, f in enumerate(frames)]
+    fig.update_layout(
+        updatemenus=[dict(type="buttons", direction="left", x=0.0, y=1.14,
+            xanchor="left", yanchor="top", pad=dict(t=0, r=8),
+            buttons=[
+                dict(label="▶ play", method="animate", args=[None, dict(
+                    frame=dict(duration=90, redraw=True), fromcurrent=True,
+                    transition=dict(duration=0))]),
+                dict(label="❚❚ pause", method="animate", args=[[None], dict(
+                    mode="immediate", frame=dict(duration=0, redraw=False),
+                    transition=dict(duration=0))])])],
+        sliders=[dict(active=0, x=0.0, y=0, len=1.0, pad=dict(t=28, b=8),
+                      currentvalue=dict(prefix="phase: ", font=dict(size=12)),
+                      steps=steps)])
+
+    fig.update_xaxes(range=[-0.5, maxbox + 0.5], row=1, col=1, constrain="domain",
+                     title_text="x (a)")
+    fig.update_yaxes(range=[-0.5, maxbox + 0.5], row=1, col=1, constrain="domain",
+                     title_text="y (a)")
+    fig.update_xaxes(title_text="LJ time", row=1, col=2)
+    fig.update_yaxes(title_text="σ (kT/a³)", row=1, col=2)
+    _layout(fig, height=560)
+    fig.update_layout(
+        margin=dict(l=56, r=24, t=96, b=72),
+        title=dict(text=(f"<b>Simulation movie — {title}</b>   "
+                   f"<span style='font-size:12px;color:{_MUTED}'>"
+                   f"{len(frames)} frames · box border coloured by phase · "
+                   f"press ▶ play</span>"), x=0.01, xanchor="left"))
+    return fig
+
+
+# --------------------------------------------------------------------------- #
 # Stage 5 — porosity & bundling (geometric readouts vs measured comparators)
 # --------------------------------------------------------------------------- #
 def porosity_bundling_figure(result: Any) -> "object":

@@ -166,6 +166,10 @@ conclusion_logic:
     block_downstream: "Diagnostic readout study; nothing downstream is gated on it."
 
 visualizations:
+  - name: assembly-movie
+    address: "html:assembly_movie.html"
+    config:
+      title: "Simulation movie — a porous collagen IV mesh forms"
   - name: porosity-bundling
     address: "html:porosity_bundling.html"
     config:

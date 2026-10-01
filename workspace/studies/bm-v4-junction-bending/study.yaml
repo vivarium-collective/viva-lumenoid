@@ -186,6 +186,10 @@ discovery_implications:
     - {id: fp3-largescale-prestressfree-modulus, title: "Reproducible bending modulus at scale"}
 
 visualizations:
+  - name: bending-movie
+    address: "html:bending_movie.html"
+    config:
+      title: "Simulation movie — rods pinned at crosslink angles"
   - name: bending-diagnostic
     address: "html:bending_diagnostic.html"
     config:

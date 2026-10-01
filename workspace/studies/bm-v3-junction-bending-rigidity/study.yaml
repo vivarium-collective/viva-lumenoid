@@ -152,6 +152,10 @@ conclusion_logic:
     block_downstream: "Nothing downstream is blocked — this is a diagnostic follow-up, not a pipeline gate."
 
 visualizations:
+  - name: rigidity-movie
+    address: "html:rigidity_movie.html"
+    config:
+      title: "Simulation movie — high-connectivity network (NC1×5 + 7S×8)"
   - name: rigidity-diagnostic
     address: "html:rigidity_diagnostic.html"
     config:
