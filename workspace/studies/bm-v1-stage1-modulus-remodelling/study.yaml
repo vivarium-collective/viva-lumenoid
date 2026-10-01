@@ -183,6 +183,7 @@ conclusion_logic:
     block_downstream: "Do not proceed to stage 2 until stage 1 gives a stable modulus."
 
 limitations:
+  - "Cross-check (2026-10-01): the released code includes NC1/7S junction angles (bending: angle_coeff 1 = 4.0 @180°, plus 7S angles) and a 3σ rod (r0=3.0). This study's floppy ~0 modulus is an artifact of omitting those angles (bending_k=0) and using a 1σ rod; it does not represent the published model. See references/cross-check-vs-released-code.md."
   - "Network is floppy (z ≤ 3 < 4): central-force crosslinks alone give ~zero modulus; rigidity needs junction bending / bundling (FP1)."
   - "τ below detection while floppy — the relaxable stress is small; a rigid network is needed to resolve it."
   - "No dynamic junction angles; persistence length is only approximately represented (spec: LAMMPS puts l_p as soft angles at junctions) — the load-bearing v2 gap."

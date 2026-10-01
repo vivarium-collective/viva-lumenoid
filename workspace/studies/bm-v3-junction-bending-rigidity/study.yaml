@@ -166,6 +166,7 @@ visualizations:
       title: "Rigidity sweep — modulus vs coordination z"
 
 limitations:
+  - "Cross-check (2026-10-01): the released model is NOT central-force — it sets NC1/7S junction angles (bending). The rigidity-percolation premise here is general physics but does not describe the published model, which is angle-stabilized. See references/cross-check-vs-released-code.md."
   - "Clean-room parameters transcribed from the spec; the authors' LAMMPS input scripts are now public (Zenodo 10.5281/zenodo.20719515) and not yet cross-checked against this build."
   - "Bundling is modelled only as raised crosslink caps, not explicit lateral-association bonds."
   - "Junction bending is not yet implemented — this study motivates it, does not test it."

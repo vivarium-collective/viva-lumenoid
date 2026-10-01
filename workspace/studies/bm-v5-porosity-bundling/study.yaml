@@ -180,6 +180,7 @@ visualizations:
       title: "Evidence map — readouts vs measured comparators"
 
 limitations:
+  - "Cross-check (2026-10-01): pore sizes in nm use the wrong length mapping (rod is 1σ here, 3σ in the released code → σ≈125 nm), and bundling is affected by the absent 7S angles that organise trimers. Not a like-for-like comparison. See references/cross-check-vs-released-code.md."
   - "Clean-room parameters transcribed from the spec; the authors' LAMMPS input scripts are now public (Zenodo 10.5281/zenodo.20719515) and not yet cross-checked against this build."
   - "Bundling is inferred geometrically (lateral proximity + parallelism), not from explicit lateral bonds the model lacks."
   - "Pore sizes depend on the chosen density; the comparator is matched at one coverage, not proven universal."

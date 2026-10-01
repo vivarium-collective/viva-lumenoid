@@ -50,13 +50,18 @@ class CollagenParams:
     crosslink_cutoff: float = 0.35     # Rmin for bond/create (form when within this)
     crosslink_break_cutoff: float = 1.20  # Rmax for bond/break
 
-    # ---- junction bending (FP1; spec: l_p enters as "soft angles where rods join")
-    # A harmonic angle (partner–end–partner) at each crosslink junction gives the
-    # network BENDING rigidity, the constraint that lifts a sub-isostatic (z < 4)
-    # central-force network out of the floppy regime into a measurable modulus.
-    # bending_k = 0 reproduces the v1 floppy central-force network exactly.
-    bending_k: float = 0.0             # harmonic angle stiffness (energy/rad^2)
-    bending_theta0: float = 180.0      # rest angle (deg); 180 = rods collinear across the junction
+    # ---- junction bending (harmonic angle at each crosslink junction) --------
+    # CROSS-CHECK CORRECTION (2026-10-01, see references/cross-check-vs-released-
+    # code.md): the released code is NOT a central-force network. It sets an NC1
+    # junction angle `angle_coeff 1 4.0 180.0` (KangNC1 = 4.0, rest 180°) plus two
+    # 7S angles (k=1.0 @155°, k=1.0 @60°). So bending is a core feature of the
+    # published model, not an add-on, and `bending_k = 0` does NOT reproduce it —
+    # it omits it. The default stays 0 only to keep existing runs reproducible;
+    # the released NC1 value is 4.0 and a faithful run must set it (and add the 7S
+    # angles). The floppy/central-force results (bm-v1/bm-v3/bm-v4) are artifacts
+    # of this omission, pending a re-run with the released angle set.
+    bending_k: float = 0.0             # harmonic angle stiffness; RELEASED NC1 value = 4.0
+    bending_theta0: float = 180.0      # rest angle (deg); released NC1 angle = 180°
 
     # ---- crosslink kinetics (spec: MP make rate, break locked at FactorMult) --
     # `MP` sets bond formation; breaking is locked to it at FactorMult = 0.66,

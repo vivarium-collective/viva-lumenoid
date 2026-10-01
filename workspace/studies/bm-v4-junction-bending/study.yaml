@@ -200,6 +200,7 @@ visualizations:
       title: "FP1 — junction bending response"
 
 limitations:
+  - "Cross-check (2026-10-01): junction bending is NOT a new ingredient — the released code already sets KangNC1=4.0 (@180°) plus two 7S angles. Re-scope as 'match the released angle set', not 'add bending'. See references/cross-check-vs-released-code.md."
   - "Clean-room parameters transcribed from the spec; the authors' LAMMPS input scripts are now public (Zenodo 10.5281/zenodo.20719515) and not yet cross-checked against this build."
   - "The bending modulus is ill-conditioned at 200 rods (pre-stress + finite-size); not calibratable yet."
   - "Bending targets are pinned from a thermally-noisy as-formed geometry (a pre-stress source)."

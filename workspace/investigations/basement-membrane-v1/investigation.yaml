@@ -116,6 +116,16 @@ executive:
     grained collagen IV network on a moving boundary, run until it reports an
     elastic modulus and a remodelling time for the vertex model.
   verdict: >
+    CROSS-CHECK CAVEAT (2026-10-01): a parameter comparison against the now-public
+    released code (references/cross-check-vs-released-code.md) found the released
+    model is bending-stabilized — it sets NC1/7S junction angles (KangNC1 = 4.0 at
+    180°, plus two 7S angles) — NOT the central-force network this investigation
+    assumed. The mechanical conclusions below (floppy modulus, bending-as-missing)
+    are therefore artifacts of our omitting those angles (and a 1σ rod vs the
+    released 3σ), not properties of the published model, and must be re-derived
+    after correcting the parameters. The infrastructure and the structural
+    matches (topology, no excluded volume, kT, dt, FactorMult, MP) stand.
+    ---
     Infrastructure stood up and stages 1–2 run on real LAMMPS. Hardening produced
     a mechanistic result: the network's elastic modulus is consistent with zero
     (−0.03 ± 0.06 over a seed ensemble) because its mean coordination z ≤ 3 is
@@ -132,7 +142,7 @@ executive:
     reproducible bending modulus + the energy-scale decision.
   verdict_status: preliminary
   decisions_needed:
-    - "Cross-check the clean-room parameters against the now-public released LAMMPS input scripts (github.com/Billie1717/BasementMembraneTurnoverSims, Zenodo 10.5281/zenodo.20719515); reconcile any divergence before reporting absolute values."
+    - "DONE 2026-10-01 — cross-checked against the released code (references/cross-check-vs-released-code.md): structure matches, but the released model is bending-stabilized (NC1/7S angles) and diverges on bond stiffness (6.0 vs 100), rod length (3σ vs 1σ), cutoffs, Nevery, break mechanism and GCE. NEXT: correct CollagenParams to the released values (add the angle set, bond k/r0, rod r0=3.0, damp=0.1) and re-run bm-v1/v3/v4 before reporting any modulus."
     - "Engine for stages 1–2: LAMMPS now; revisit Smoldyn at stage 3 (spec #2)."
     - "Secretion: fixed concentration vs fixed flux (spec #3)."
     - "Energy scale: report modulus in Pa (fit to a measured modulus) or keep kT and report a ratio (spec #4)."
