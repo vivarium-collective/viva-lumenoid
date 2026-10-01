@@ -196,6 +196,11 @@ def _save_viz(study, slug, html):
 # stage1-movie
 _save_viz('bm-v1-stage1-modulus-remodelling', 'stage1-movie', _render_one('html:stage1_movie.html', {'title': 'Simulation movie — the staged protocol unfolding'}, RUNS_DB, STUDY_YAML))
 
+# **stage1-movie-3d**
+
+# stage1-movie-3d
+_save_viz('bm-v1-stage1-modulus-remodelling', 'stage1-movie-3d', _render_one('html:stage1_movie_3d.html', {'title': '3D view — the quasi-2D slab, rotatable'}, RUNS_DB, STUDY_YAML))
+
 # **stage1-diagnostic**
 
 # stage1-diagnostic
@@ -252,6 +257,11 @@ print("No recorded runs for this study; nothing to reproduce.")
 
 # stage2-movie
 _save_viz('bm-v2-stress-vs-strainrate', 'stage2-movie', _render_one('html:stage2_movie.html', {'title': 'Simulation movie — the growing substrate stretches'}, RUNS_DB, STUDY_YAML))
+
+# **stage2-movie-3d**
+
+# stage2-movie-3d
+_save_viz('bm-v2-stress-vs-strainrate', 'stage2-movie-3d', _render_one('html:stage2_movie_3d.html', {'title': '3D view — the slab stretching, rotatable'}, RUNS_DB, STUDY_YAML))
 
 # **stage2-diagnostic**
 
@@ -316,6 +326,11 @@ print("No recorded runs for this study; nothing to reproduce.")
 # rigidity-movie
 _save_viz('bm-v3-junction-bending-rigidity', 'rigidity-movie', _render_one('html:rigidity_movie.html', {'title': 'Simulation movie — high-connectivity network (NC1×5 + 7S×8)'}, RUNS_DB, STUDY_YAML))
 
+# **rigidity-movie-3d**
+
+# rigidity-movie-3d
+_save_viz('bm-v3-junction-bending-rigidity', 'rigidity-movie-3d', _render_one('html:rigidity_movie_3d.html', {'title': '3D view — the connected network, rotatable'}, RUNS_DB, STUDY_YAML))
+
 # **rigidity-diagnostic**
 
 # rigidity-diagnostic
@@ -370,6 +385,11 @@ print("No recorded runs for this study; nothing to reproduce.")
 
 # bending-movie
 _save_viz('bm-v4-junction-bending', 'bending-movie', _render_one('html:bending_movie.html', {'title': 'Simulation movie — rods pinned at crosslink angles'}, RUNS_DB, STUDY_YAML))
+
+# **bending-movie-3d**
+
+# bending-movie-3d
+_save_viz('bm-v4-junction-bending', 'bending-movie-3d', _render_one('html:bending_movie_3d.html', {'title': '3D view — the bending-pinned network, rotatable'}, RUNS_DB, STUDY_YAML))
 
 # **bending-diagnostic**
 
