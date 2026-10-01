@@ -78,7 +78,7 @@ variants:
 simulation_set:
   - name: stage1-seed-ensemble
     status: completed
-    base_model: collagen-iv-network-stage1
+    base_model: viva_lumenoid.composites.stage1_composite
     seeds: [11, 22, 33, 44, 55, 66]
     metrics:
       elastic_modulus_lj: "-0.03 ± 0.06 (95% CI)"

@@ -75,7 +75,7 @@ variants:
 simulation_set:
   - name: bending-athermal-sweep
     status: completed
-    base_model: junction-bending
+    base_model: viva_lumenoid.composites.bending_sweep
     seeds: [11, 22, 33, 44, 55]
     metrics:
       floppy_modulus: "≈0 (clean, reproducible)"
