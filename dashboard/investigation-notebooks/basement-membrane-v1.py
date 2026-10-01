@@ -471,7 +471,7 @@ _save_viz('bm-v5-porosity-bundling', 'evidence-map', _render_one('html:evidence_
 # | bundling-under-shoots-5-7 | kind=mean field=protomers_per_strand | op lt value 2.0 field mean_strand |
 
 # ## Open decisions
-# - Cross-check the clean-room parameters against the now-public released LAMMPS input scripts (github.com/Billie1717/BasementMembraneTurnoverSims, Zenodo 10.5281/zenodo.20719515); reconcile any divergence before reporting absolute values.
+# - DONE 2026-10-01 — cross-checked against the released code (references/cross-check-vs-released-code.md): structure matches, but the released model is bending-stabilized (NC1/7S angles) and diverges on bond stiffness (6.0 vs 100), rod length (3σ vs 1σ), cutoffs, Nevery, break mechanism and GCE. NEXT: correct CollagenParams to the released values (add the angle set, bond k/r0, rod r0=3.0, damp=0.1) and re-run bm-v1/v3/v4 before reporting any modulus.
 # - Engine for stages 1–2: LAMMPS now; revisit Smoldyn at stage 3 (spec #2).
 # - Secretion: fixed concentration vs fixed flux (spec #3).
 # - Energy scale: report modulus in Pa (fit to a measured modulus) or keep kT and report a ratio (spec #4).

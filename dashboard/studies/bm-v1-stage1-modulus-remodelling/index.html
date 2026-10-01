@@ -772,7 +772,7 @@
         </div>
         
         
-        <div class="ctr-meta-row"><span class="ctr-meta-k">Caveat</span> <span class="ctr-meta-item">Network is floppy (z ≤ 3 &lt; 4): central-force crosslinks alone give ~zero modulus; rigidity needs junction bending / bundling (FP1).</span></div>
+        <div class="ctr-meta-row"><span class="ctr-meta-k">Caveat</span> <span class="ctr-meta-item">Cross-check (2026-10-01): the released code includes NC1/7S junction angles (bending: angle_coeff 1 = 4.0 @180°, plus 7S angles) and a 3σ rod (r0=3.0). This study&#39;s floppy ~0 modulus is an artifact of omitting those angles (bending_k=0) and using a 1σ rod; it does not represent the published model. See references/cross-check-vs-released-code.md.</span></div>
         
       </div>
       
@@ -1388,7 +1388,7 @@ pass_if: {"op": "calibratable", "range_hours": "3-30 across systems", "target_ho
       <h3 class="overview-label">Limitations</h3>
       <p class="muted" style="margin:0 0 6px 0;font-size:0.85em">What this study explicitly does NOT validate (prevents overclaim).</p>
       <ul style="margin:0 0 0 18px;padding:0;font-size:0.93em">
-        <li style="margin:2px 0">Network is floppy (z ≤ 3 &lt; 4): central-force crosslinks alone give ~zero modulus; rigidity needs junction bending / bundling (FP1).</li><li style="margin:2px 0">τ below detection while floppy — the relaxable stress is small; a rigid network is needed to resolve it.</li><li style="margin:2px 0">No dynamic junction angles; persistence length is only approximately represented (spec: LAMMPS puts l_p as soft angles at junctions) — the load-bearing v2 gap.</li><li style="margin:2px 0">No excluded volume, so pore-size / bundling readouts are not yet physical (deferred).</li><li style="margin:2px 0">Modulus reported in LJ units / as a ratio, not calibrated pascals (spec #4).</li><li style="margin:2px 0">Parameters transcribed from the spec&#39;s sheet, not ported from the authors&#39; input scripts; those scripts are now public (Zenodo 10.5281/zenodo.20719515) but not yet cross-checked against this build.</li>
+        <li style="margin:2px 0">Cross-check (2026-10-01): the released code includes NC1/7S junction angles (bending: angle_coeff 1 = 4.0 @180°, plus 7S angles) and a 3σ rod (r0=3.0). This study&#39;s floppy ~0 modulus is an artifact of omitting those angles (bending_k=0) and using a 1σ rod; it does not represent the published model. See references/cross-check-vs-released-code.md.</li><li style="margin:2px 0">Network is floppy (z ≤ 3 &lt; 4): central-force crosslinks alone give ~zero modulus; rigidity needs junction bending / bundling (FP1).</li><li style="margin:2px 0">τ below detection while floppy — the relaxable stress is small; a rigid network is needed to resolve it.</li><li style="margin:2px 0">No dynamic junction angles; persistence length is only approximately represented (spec: LAMMPS puts l_p as soft angles at junctions) — the load-bearing v2 gap.</li><li style="margin:2px 0">No excluded volume, so pore-size / bundling readouts are not yet physical (deferred).</li><li style="margin:2px 0">Modulus reported in LJ units / as a ratio, not calibrated pascals (spec #4).</li><li style="margin:2px 0">Parameters transcribed from the spec&#39;s sheet, not ported from the authors&#39; input scripts; those scripts are now public (Zenodo 10.5281/zenodo.20719515) but not yet cross-checked against this build.</li>
       </ul>
     </div>
     
@@ -1504,7 +1504,7 @@ pass_if: {"op": "calibratable", "range_hours": "3-30 across systems", "target_ho
 </section>
 
 </main>
-<script>window.__DASH_CONFIG__ = { mode: "snapshot", interactiveUrl: "https://github.com/vivarium-collective/viva-lumenoid", basePath: "/viva-lumenoid/dashboard", inputsDownloadBase: "https://github.com/vivarium-collective/viva-lumenoid/raw/spec-update-v2", provenance: {"repo_slug": "vivarium-collective/viva-lumenoid", "repo_url": "https://github.com/vivarium-collective/viva-lumenoid", "commit": "f5afeb27f2a3c0deb8d22df2d053bb43f51cdcb7", "commit_url": "https://github.com/vivarium-collective/viva-lumenoid/commit/f5afeb27f2a3c0deb8d22df2d053bb43f51cdcb7", "branch": "spec-update-v2", "generated_at": "2026-10-01 22:23 UTC"} };</script>
+<script>window.__DASH_CONFIG__ = { mode: "snapshot", interactiveUrl: "https://github.com/vivarium-collective/viva-lumenoid", basePath: "/viva-lumenoid/dashboard", inputsDownloadBase: "https://github.com/vivarium-collective/viva-lumenoid/raw/spec-update-v2", provenance: {"repo_slug": "vivarium-collective/viva-lumenoid", "repo_url": "https://github.com/vivarium-collective/viva-lumenoid", "commit": "51f19f09b0c783c399cd9484dcdf8922172de9cc", "commit_url": "https://github.com/vivarium-collective/viva-lumenoid/commit/51f19f09b0c783c399cd9484dcdf8922172de9cc", "branch": "spec-update-v2", "generated_at": "2026-10-01 22:32 UTC"} };</script>
 <script src="/viva-lumenoid/dashboard/assets/data-source.js"></script>
 <script>
 window._studyName = "bm-v1-stage1-modulus-remodelling";
