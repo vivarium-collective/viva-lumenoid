@@ -10,12 +10,12 @@ gate_status: passed
 design_status: drafted
 
 claim: >
-  The two geometric readouts the spec asks the network to REPRODUCE behave as it
-  predicts: the simulated pore-size distribution reaches the measured corneal-EM
-  band (72 ± 40 nm) at realistic density, but the NC1/7S-only topology cannot
-  bundle — the protomers-per-strand distribution stays near 1 and under-shoots
-  the 5–7 comparator, the spec-named failure of a model with no lateral-
-  association bond.
+  Of the two geometric readouts the spec asks the network to reproduce, one is
+  met and one is not: the simulated pore-size distribution reaches the measured
+  corneal-EM band (72 ± 40 nm) at realistic density, while the protomers-per-
+  strand distribution stays near 1, below the measured 5–7. The released NC1/7S
+  topology has no lateral-association bond, so it cannot form multi-protomer
+  strands — a limitation the spec identifies in advance.
 
 experiment: >
   Assemble the real LAMMPS collagen IV network at several densities, then read
@@ -29,8 +29,8 @@ result: >
   in the corneal-EM band (72 ± 40 nm) at the densest network; the open mesh is
   realistic, and pore size is a density knob, not a universal. Bundling stays
   near 1 (mean 1.03 → 1.17 protomers/strand, ~82% singletons, max occasionally
-  5–7) — the NC1/7S topology with no lateral-association bond cannot build the
-  5–7 strands measured in the PFHR-9 scaffold, exactly the spec's named failure.
+  5–7). With no lateral-association bond, the NC1/7S topology cannot build the
+  5–7-protomer strands measured in the PFHR-9 scaffold.
 
 parent_studies:
   - bm-v1-stage1-modulus-remodelling
@@ -108,7 +108,7 @@ behavior_tests:
     classification: primary
     description: >
       The NC1/7S-only network cannot build 5–7-protomer strands — the bundling
-      distribution stays near 1 (a spec-named failure, confirming the missing
+      distribution stays near 1 (below the measured 5–7, confirming the missing
       lateral-association bond).
     measure: {kind: mean, field: protomers_per_strand}
     pass_if: {op: lt, value: 2.0, field: mean_strand}
@@ -139,9 +139,9 @@ findings:
     kind: computational
     status: confirms
     statement: >
-      The NC1/7S-only topology cannot bundle: mean strand size stays near 1
-      (~82% singletons), never building the 5–7-protomer strands a real scaffold
-      shows — the spec-named failure of a model with no lateral-association bond.
+      The NC1/7S-only topology does not bundle: mean strand size stays near 1
+      (~82% singletons), below the 5–7 protomers per strand measured in the
+      PFHR-9 scaffold. The model has no lateral-association bond.
     evidence:
       observed: "mean strand 1.03 → 1.17, max 5–7 occasionally, <5% of rods in 5–7 strands"
     expected:
@@ -189,15 +189,15 @@ report:
   title: "Stage v5 — porosity & bundling: the geometric readouts"
   verdict: >
     The network reproduces the measured pore-size distribution at realistic
-    density but cannot bundle: protomers-per-strand stays near 1, far short of the
-    5–7 a real BM scaffold shows. Porosity validates; bundling flags a missing
-    lateral-association bond — the concrete v2 addition.
+    density but does not bundle: protomers-per-strand stays near 1, below the
+    measured 5–7. Porosity meets its comparator; bundling identifies a missing
+    lateral-association bond as the next model addition.
   confidence: medium
   evidence_quality: preliminary
   main_insight: >
-    Of the two geometric readouts the spec asks the model to reproduce, one
-    (porosity) lands in the measured band and one (bundling) exposes a named
-    structural gap — a clean, honest separation of what v1 captures from what it misses.
+    Of the two geometric readouts, porosity falls within the measured band and
+    bundling does not. The gap isolates one missing interaction — a lateral-
+    association bond — rather than a diffuse discrepancy.
 
 bibliography:
   sources:

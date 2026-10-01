@@ -21,7 +21,7 @@ result: >
   rate-INDEPENDENT (~0.3–0.4 kT/a³), so η ∝ 1/ε̇ (slope −1 on log–log) — the
   network is ELASTIC-dominated across the sampled rates, not viscous, and the
   crosslink count itself falls with rate (faster stretch outruns remodelling).
-  A clean viscous plateau needs slower rates / a larger, better-equilibrated
+  A well-defined viscous plateau needs slower rates / a larger, better-equilibrated
   network — the same calibration the stage-1 study flags.
 
 purpose:
@@ -125,7 +125,7 @@ conclusion_logic:
 
 limitations:
   - "σ(ε̇) is elastic-dominated at these rates; the viscous plateau is not yet resolved."
-  - "Crosslink count differs across rates, confounding a clean σ(ε̇)."
+  - "Crosslink count differs across rates, confounding σ(ε̇)."
   - "Same small-network / noise caveats as stage 1."
 
 report:
