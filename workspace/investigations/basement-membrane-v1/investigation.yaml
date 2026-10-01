@@ -23,7 +23,7 @@ hypothesis: >
 description: |
   This investigation is the clean-room Vivarium build of the AICS-Lumenoids
   "Basement membrane — v1 model specification" (Roam graph, exported 2026-09-29;
-  the source spec and diagram are in `workspace/references/`). We do NOT have the
+  the source spec and diagram are in `workspace/references/`). We do not have the
   authors' LAMMPS/Smoldyn decks, so every model parameter is transcribed from the
   spec's parameter sheet and clearly labelled as such.
 
@@ -60,7 +60,7 @@ at_a_glance:
   - study: bm-v1-stage1-modulus-remodelling
     role: >
       Stage 1. Assemble → equilibrate → stretch → hold(elastic) → hold(breakage-
-      only, viscous). Elastic modulus is consistent with ZERO (z < 4, floppy); the
+      only, viscous). Elastic modulus is consistent with zero (z < 4, floppy); the
       remodelling mechanism is correct but τ is below detection at v1 scale.
   - study: bm-v2-stress-vs-strainrate
     role: >
@@ -80,10 +80,10 @@ at_a_glance:
   - study: bm-v5-porosity-bundling
     role: >
       Geometric readouts (spec "has: geometrical structure"). Reads porosity +
-      bundling off the real network vs measured BM: pore size reaches the corneal-
-      EM band (72 ± 40 nm) at density, but the NC1/7S-only topology under-bundles
-      (mean ~1 protomer/strand, far short of 5–7) — the spec-named failure of a
-      model with no lateral-association bond. Carries the investigation evidence map.
+      bundling off the real network against measured BM. Pore diameter reaches the
+      corneal-EM band (72 ± 40 nm) at realistic density; the NC1/7S-only topology
+      under-bundles (mean ~1 protomer/strand, below the measured 5–7), because the
+      released model has no lateral-association bond. Carries the evidence map.
 
 acceptance_criteria:
   - study: bm-v1-stage1-modulus-remodelling
@@ -91,20 +91,20 @@ acceptance_criteria:
       The staged protocol runs end-to-end on real LAMMPS, a crosslinked network
       assembles from two-bead rods, the stress-strain ramp yields a finite
       (very soft) elastic modulus, and the chemistry-on hold shows a measurable
-      stress relaxation (or an honest noise-limited flag at v1 network size).
+      stress relaxation, or a noise-limited null at v1 network size.
   - study: bm-v2-stress-vs-strainrate
     behavior: >
       The ε̇ sweep runs and returns σ(ε̇) and an effective viscosity η per rate,
-      with the viscous/elastic regime honestly characterised at v1 params.
+      with the viscous and elastic regimes identified at v1 parameters.
   - study: bm-v3-junction-bending-rigidity
     behavior: >
       The connectivity sweep shows z stays below 4 and the modulus stays consistent
       with zero, establishing that rigidity requires junction bending / bundling.
   - study: bm-v4-junction-bending
     behavior: >
-      Junction bending is implemented and shown to dominate the mechanics (floppy
-      baseline cleanly ~0 → large |E|); a reproducible modulus is honestly flagged
-      as blocked on network size + a pre-stress-free measurement.
+      Junction bending is implemented and dominates the mechanics (floppy baseline
+      ~0 → large |E|); a reproducible modulus is blocked on network size and a
+      pre-stress-free measurement.
 
 executive:
   what_is_this: >
@@ -113,9 +113,9 @@ executive:
     elastic modulus and a remodelling time for the vertex model.
   verdict: >
     Infrastructure stood up and stages 1–2 run on real LAMMPS. Hardening produced
-    a mechanistic result: the network's elastic modulus is consistent with ZERO
+    a mechanistic result: the network's elastic modulus is consistent with zero
     (−0.03 ± 0.06 over a seed ensemble) because its mean coordination z ≤ 3 is
-    below the 2D rigidity threshold z = 4 — it is FLOPPY by the spec's connectivity,
+    below the 2D rigidity threshold z = 4 — it is floppy by the spec's connectivity,
     matching the published ≈0.03 Pa. The rigidity sweep (bm-v3) confirms more
     crosslinks cannot fix this (z tops out at 3.7): stiffness requires junction
     bending / bundling. FP1 (bm-v4) then implemented junction bending and confirmed

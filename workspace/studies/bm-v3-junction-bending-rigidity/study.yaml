@@ -167,7 +167,7 @@ visualizations:
 
 limitations:
   - "Bundling is modelled only as raised crosslink caps, not explicit lateral-association bonds."
-  - "Junction bending is NOT yet implemented — this study motivates it, does not test it."
+  - "Junction bending is not yet implemented — this study motivates it, does not test it."
   - "Same LJ-unit / energy-scale caveat as stage 1."
 
 report:

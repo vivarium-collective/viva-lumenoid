@@ -10,29 +10,29 @@ gate_status: needs_calibration
 design_status: drafted
 
 claim: >
-  Junction bending — harmonic angle restraints pinned to each crosslink's
-  as-formed geometry — is the constraint that governs the basement membrane's
-  stiffness (bm-v3 showed crosslink connectivity alone cannot, z < 4). Adding it
-  dominates the network's mechanics, but a CLEAN, reproducible elastic modulus is
-  not obtainable at v1 network size.
+  Junction bending (harmonic angle restraints pinned to each crosslink's
+  as-formed geometry) is the constraint that governs the network's stiffness;
+  bm-v3 showed crosslink connectivity alone cannot (z < 4). Adding bending
+  dominates the mechanics, but a reproducible elastic modulus is not obtainable
+  at v1 network size.
 
 experiment: >
   Implement bending via LAMMPS `fix restrain` pinned to each junction's as-formed
   angle (a per-junction rest angle, so no single-rest-angle frustration), with an
-  auto-reduced timestep for stability. Measure the ATHERMAL modulus by energy
-  minimisation (change_box + minimise; deterministic, no thermal chaos) and sweep
-  the bending stiffness bending_k.
+  auto-reduced timestep for stability. Measure the athermal modulus by energy
+  minimisation (change_box + minimise; deterministic) and sweep the bending
+  stiffness bending_k.
 
 result: >
-  The floppy baseline (bending_k = 0) is measured cleanly and reproducibly:
-  E ≈ 0 (per-seed −0.006, 0.0, 0.015). Turning bending on produces a LARGE
-  mechanical response (|E| jumps to tens–hundreds) — the network is no longer
-  floppy — but the stiff, pre-stressed, disordered network has many near-
-  degenerate minima, so the modulus is ILL-CONDITIONED: it scatters wildly and
-  sign-flips (k=80 per-seed −570 … +54, median −210). FP1 therefore confirms
-  bending's role qualitatively (it dominates the mechanics) but does NOT yet
-  yield a calibratable modulus. A clean value needs a much larger network (self-
-  averaging) and a pre-stress-free reference state — a scoped v2 task.
+  The floppy baseline (bending_k = 0) is reproducible: E ≈ 0 (per-seed −0.006,
+  0.0, 0.015). Turning bending on produces a large mechanical response (|E|
+  reaches tens to hundreds; the network is no longer floppy), but the stiff,
+  pre-stressed, disordered network has many near-degenerate minima, so the
+  modulus is ill-conditioned: it scatters across seeds and changes sign (k=80
+  per-seed −570 … +54, median −210). FP1 therefore establishes that bending
+  dominates the mechanics but does not yet yield a calibratable modulus. A
+  reproducible value needs a larger network (self-averaging) and a pre-stress-
+  free reference state; this is scoped as a v2 task.
 
 seeded_from:
   study: bm-v3-junction-bending-rigidity
@@ -78,7 +78,7 @@ simulation_set:
     base_model: viva_lumenoid.composites.bending_sweep
     seeds: [11, 22, 33, 44, 55]
     metrics:
-      floppy_modulus: "≈0 (clean, reproducible)"
+      floppy_modulus: "≈0 (reproducible)"
       bending_response: "|E| tens–hundreds, sign-flipping (ill-conditioned)"
       reproducible: false
     pass_fail_tests:
@@ -101,7 +101,7 @@ readouts:
 behavior_tests:
   - name: floppy-baseline-clean
     classification: primary
-    description: Athermal minimisation measures the floppy (k=0) modulus cleanly as ~0.
+    description: Athermal minimisation measures the floppy (k=0) modulus as ~0 (deterministic).
     measure: {kind: value, field: modulus_vs_bending_k, at: "bending_k=0"}
     pass_if: {op: near_zero, tol: 0.1}
     units: kT/a^3
@@ -132,7 +132,7 @@ findings:
       frustration), with an auto-reduced timestep and an athermal energy-minimised
       modulus readout.
     evidence:
-      observed: "floppy modulus measured cleanly (E ≈ 0, deterministic) via minimisation"
+      observed: "floppy modulus measured as E ≈ 0 (deterministic) via minimisation"
     next_action: "adopted in viva_lumenoid/collagen.py + bending.py"
     provenance:
       run_ids: [bending-athermal-sweep]
@@ -179,7 +179,7 @@ followup_proposals:
 discovery_implications:
   resolved_uncertainties:
     - "Bending, not crosslink connectivity, governs this network's stiffness (confirmed qualitatively)."
-    - "The athermal minimisation measures the floppy modulus cleanly (fixes the dynamic-measurement chaos)."
+    - "The athermal minimisation measures the floppy modulus deterministically (removes the dynamic-measurement noise)."
   remaining_uncertainties:
     - "A reproducible, calibratable bending modulus — blocked on network size + pre-stress-free measurement."
   followup_study_proposals:
@@ -207,18 +207,19 @@ limitations:
 report:
   title: "Stage v4 — junction bending: mechanism confirmed, modulus not yet calibratable"
   verdict: >
-    Junction bending is implemented and DOMINATES the network's mechanics (floppy
-    E≈0 → |E| tens–hundreds), confirming it — not crosslink count — governs BM
-    stiffness. But the modulus is ill-conditioned at v1 network size (sign-flipping
-    scatter from pre-stress + near-degenerate minima), so it is not yet a
-    calibratable input for the vertex model. Next: a larger network + a pre-stress-
-    free reference (fp3).
+    Junction bending is implemented and dominates the network's mechanics (floppy
+    E≈0 → |E| tens–hundreds), confirming that bending, not crosslink count,
+    governs BM stiffness. The modulus is ill-conditioned at v1 network size
+    (sign-flipping scatter from pre-stress and near-degenerate minima), so it is
+    not yet a calibratable input for the vertex model. Next: a larger network and
+    a pre-stress-free reference (fp3).
   confidence: low
   evidence_quality: preliminary
   main_insight: >
-    Bending is the right rigidity mechanism (and the athermal measurement cleanly
-    nails the floppy baseline), but turning it into a reproducible modulus is a
-    finite-size / pre-stress problem that needs a larger, relaxed network.
+    Bending is the rigidity mechanism, and the athermal measurement resolves the
+    floppy baseline (E ≈ 0) deterministically. Turning bending into a reproducible
+    modulus is a finite-size and pre-stress problem that needs a larger, relaxed
+    network.
 
 bibliography:
   sources:

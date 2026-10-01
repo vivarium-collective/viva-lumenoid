@@ -183,12 +183,12 @@ conclusion_logic:
     block_downstream: "Do not proceed to stage 2 until stage 1 gives a stable modulus."
 
 limitations:
-  - "Network is FLOPPY (z ≤ 3 < 4): central-force crosslinks alone give ~zero modulus; rigidity needs junction bending / bundling (FP1)."
+  - "Network is floppy (z ≤ 3 < 4): central-force crosslinks alone give ~zero modulus; rigidity needs junction bending / bundling (FP1)."
   - "τ below detection while floppy — the relaxable stress is small; a rigid network is needed to resolve it."
   - "No dynamic junction angles; persistence length is only approximately represented (spec: LAMMPS puts l_p as soft angles at junctions) — the load-bearing v2 gap."
   - "No excluded volume, so pore-size / bundling readouts are not yet physical (deferred)."
   - "Modulus reported in LJ units / as a ratio, not calibrated pascals (spec #4)."
-  - "Parameters transcribed from the spec's sheet, NOT the authors' actual decks (not yet in hand)."
+  - "Parameters transcribed from the spec's sheet, not the authors' actual decks (not yet in hand)."
 
 design_pivot_required:
   - id: engine
@@ -226,9 +226,9 @@ report:
   verdict: >
     The staged protocol runs on real LAMMPS. Over a 6-seed ensemble the elastic
     modulus is −0.03 ± 0.06 (95% CI) LJ units — statistically CONSISTENT WITH
-    ZERO. This is understood, not noise: the mean coordination z ≈ 1.2 (and z ≤ 3
+    zero. This is understood, not noise: the mean coordination z ≈ 1.2 (and z ≤ 3
     even at full crosslinking) is below the 2D central-force rigidity threshold
-    z = 4, so the network is FLOPPY — matching the published model's own ≈0.03 Pa
+    z = 4, so the network is floppy — matching the published model's own ≈0.03 Pa
     modulus. The remodelling mechanism is now correct (crosslinks hold at a
     make/break steady state, freeze under load, and decay under breakage-only),
     but the relaxation signal is below detection at v1 scale, so τ is not yet
@@ -254,7 +254,7 @@ findings:
       LAMMPS `fix bond/break` models only OVER-STRETCH breaking, not a force-
       independent off-rate — small Rmax dissolves the network, large Rmax saturates
       it. Replacing it with a controlled random-deletion off-rate gives a make/break
-      steady state and genuine remodelling.
+      steady state and crosslink turnover.
     evidence:
       observed: "crosslinks 45→401 (old, densifies) vs steady ~54 then decay 46→3 (off-rate)"
     explanation: "Breaking must be length-independent to be a controllable rate (spec: force-independent in v1)."
