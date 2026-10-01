@@ -72,3 +72,22 @@ def stage2_sweep(core=None, **kw) -> dict:
 )
 def connectivity_sweep(core=None, **kw) -> dict:
     return stage1_composite_spec(_params(**kw))
+
+
+_BENDING_PARAMS = dict(_COMMON_PARAMS)
+_BENDING_PARAMS["bending_k"] = {
+    "type": "float", "default": 50.0,
+    "description": "Junction bending stiffness (fix restrain, as-formed angles); >0 rigidifies.",
+}
+
+
+@composite_generator(
+    name="bending_sweep",
+    description="FP1 (bm-v4) — the collagen IV network WITH junction bending "
+                "(fix restrain pinned to each crosslink's as-formed angle). The "
+                "athermal modulus is swept vs bending_k.",
+    parameters=_BENDING_PARAMS,
+    core_extensions=[register_viva_lumenoid],
+)
+def bending_sweep(core=None, **kw) -> dict:
+    return stage1_composite_spec(_params(**kw))
