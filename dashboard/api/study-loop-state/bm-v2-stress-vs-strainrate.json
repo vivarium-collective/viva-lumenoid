@@ -1,1 +1,1 @@
-{"present": false, "study": "bm-v2-stress-vs-strainrate", "reason": "ImportError: cannot import name 'loop_state' from 'viva_superpowers' (/Users/eranagmon/.claude/plugins/cache/viva-superpowers/viva-superpowers/0.21.0/viva_superpowers/__init__.py)"}
+{"present": false, "study": "bm-v2-stress-vs-strainrate", "reason": "not built via the agentic model-building loop"}

@@ -1,7 +1,7 @@
 {
   "mode": "snapshot",
   "smsApiBase": "",
-  "repo": "https://github.com/vivarium-collective/viva-lumenoid.git",
-  "commit": "d65da19032edac63f11e7f04b4e08fe613a1dc51",
-  "generated_from_ref": "sim-movies"
+  "repo": "https://github.com/vivarium-collective/viva-lumenoid",
+  "commit": "e8a6f64391c25147d9ae61058c7bb72dd092e978",
+  "generated_from_ref": "main"
 }
