@@ -59,8 +59,8 @@ if _env and Path(_env).is_dir():
     REPO = Path(_env)
 if REPO is None:
     REPO = _find_repo_root(Path.cwd().resolve())
-if REPO is None and Path('/home/runner/work/viva-lumenoid/viva-lumenoid').is_dir():
-    REPO = Path('/home/runner/work/viva-lumenoid/viva-lumenoid')
+if REPO is None and Path('/Users/eranagmon/code/viva-lumenoid--spec-update').is_dir():
+    REPO = Path('/Users/eranagmon/code/viva-lumenoid--spec-update')
 if REPO is None:
     REPO = Path.cwd()
 sys.path.insert(0, str(REPO))
@@ -471,6 +471,7 @@ _save_viz('bm-v5-porosity-bundling', 'evidence-map', _render_one('html:evidence_
 # | bundling-under-shoots-5-7 | kind=mean field=protomers_per_strand | op lt value 2.0 field mean_strand |
 
 # ## Open decisions
+# - Cross-check the clean-room parameters against the now-public released LAMMPS input scripts (github.com/Billie1717/BasementMembraneTurnoverSims, Zenodo 10.5281/zenodo.20719515); reconcile any divergence before reporting absolute values.
 # - Engine for stages 1–2: LAMMPS now; revisit Smoldyn at stage 3 (spec #2).
 # - Secretion: fixed concentration vs fixed flux (spec #3).
 # - Energy scale: report modulus in Pa (fit to a measured modulus) or keep kT and report a ratio (spec #4).
