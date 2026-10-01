@@ -59,8 +59,8 @@ if _env and Path(_env).is_dir():
     REPO = Path(_env)
 if REPO is None:
     REPO = _find_repo_root(Path.cwd().resolve())
-if REPO is None and Path('/home/runner/work/viva-lumenoid/viva-lumenoid').is_dir():
-    REPO = Path('/home/runner/work/viva-lumenoid/viva-lumenoid')
+if REPO is None and Path('/Users/eranagmon/code/viva-lumenoid--spec-enrich').is_dir():
+    REPO = Path('/Users/eranagmon/code/viva-lumenoid--spec-enrich')
 if REPO is None:
     REPO = Path.cwd()
 sys.path.insert(0, str(REPO))
@@ -365,6 +365,65 @@ _save_viz('bm-v4-junction-bending', 'bending-diagnostic', _render_one('html:bend
 # | floppy-baseline-clean | kind=value field=modulus_vs_bending_k at=bending_k=0 | op near_zero tol 0.1 |
 # | bending-changes-mechanics | kind=magnitude field=modulus_vs_bending_k at=bending_k>0 | op gt value 1.0 note |E| jumps orders of magnitude above floppy |
 # | reproducible-modulus | kind=iqr_over_median field=modulus_vs_bending_k at=bending_k>0 | op lt value 0.5 note IQR < 0.5·|median| |
+
+# ## Study: `bm-v5-porosity-bundling`
+#
+# **Purpose.** Porosity is set by the areal density of rods (an emergent mesh); bundling requires lateral association of 5–7 protomers into a strand, a bond the released NC1/7S model does not have (it can bundle only through 7S branching).
+#
+# **Claim.** The two geometric readouts the spec asks the network to REPRODUCE behave as it predicts: the simulated pore-size distribution reaches the measured corneal-EM band (72 ± 40 nm) at realistic density, but the NC1/7S-only topology cannot bundle — the protomers-per-strand distribution stays near 1 and under-shoots the 5–7 comparator, the spec-named failure of a model with no lateral- association bond.
+
+# ### Parameters
+#
+# | simulation | composite | steps | params |
+# | --- | --- | --- | --- |
+# | `porosity-bundling-network` | `viva_lumenoid.composites.porosity_bundling` | 0 | n_rods=500, box_xy=20.0, assemble_steps=8000 |
+#
+# Declared parameter sets (`study.yaml` variants):
+#
+# - **density-sweep** — `box_xy=20.0`
+
+# ### Specification (process-bigraph) — load, inspect, edit
+#
+# Each composite is a process-bigraph *document*: named processes (`_type: process`) bound to an `address`, wired by `inputs`/`outputs` ports over shared stores. For every composite below the first cell loads the spec into a plain **editable Python dict** and prints its structure; the second cell is a **control panel** listing every configuration value and per-process `interval` so you can tweak any of them. Your edits are read when the composite is built and run, in the **Run** section.
+
+# **Composite `viva_lumenoid.composites.porosity_bundling`** — `spec_viva_lumenoid_composites_porosity_bundling` (a plain, editable dict)
+
+# _composite spec file for `viva_lumenoid.composites.porosity_bundling` not found under `viva_lumenoid/composites/` — skipped._
+
+# ### Run
+#
+# _Set the runtime (`STEPS`) and step size (`INTERVAL`), then run. Each simulation builds the (edited) spec above and writes `runs.db`; the figures below read it. Set `RERUN = False` to skip re-simulating._
+
+# === Study: bm-v5-porosity-bundling ===
+STUDY = 'bm-v5-porosity-bundling'
+STUDY_DIR = REPO / 'workspace/studies' / STUDY
+STUDY_YAML = str(STUDY_DIR / "study.yaml")
+RUNS_DB = str(STUDY_DIR / "runs.db")
+
+print("No recorded runs for this study; nothing to reproduce.")
+
+# ### Visualizations
+#
+# _Results are shown by the figures below, produced by the run above._
+
+# **porosity-bundling**
+
+# porosity-bundling
+_save_viz('bm-v5-porosity-bundling', 'porosity-bundling', _render_one('html:porosity_bundling.html', {'title': 'Stage 5 — porosity & bundling vs measured BM'}, RUNS_DB, STUDY_YAML))
+
+# **evidence-map**
+
+# evidence-map
+_save_viz('bm-v5-porosity-bundling', 'evidence-map', _render_one('html:evidence_map.html', {'title': 'Evidence map — readouts vs measured comparators'}, RUNS_DB, STUDY_YAML))
+
+# ### Acceptance criteria
+#
+# _Pre-registered checks (criteria/thresholds only — run the cells above to evaluate them)._
+#
+# | test | measures | passes if |
+# | --- | --- | --- |
+# | porosity-reaches-EM-band | kind=median field=pore_diameter | op between lo 32.0 hi 112.0 field median_pore_nm |
+# | bundling-under-shoots-5-7 | kind=mean field=protomers_per_strand | op lt value 2.0 field mean_strand |
 
 # ## Open decisions
 # - Engine for stages 1–2: LAMMPS now; revisit Smoldyn at stage 3 (spec #2).
