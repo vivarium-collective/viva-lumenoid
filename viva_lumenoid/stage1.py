@@ -37,11 +37,13 @@ class Stage1Result:
     relaxation_noise_limited: bool  # True when tau is below the noise floor at this size
     trace: dict[str, list]  # t, strain, sigma, n_crosslinks, phase
     snapshot: dict = None    # final network: positions, atom_types, box (for the mesh viz)
+    frames: list = None      # time-ordered spatial snapshots for the simulation movie
 
     def summary(self) -> dict[str, Any]:
         d = self.__dict__.copy()
         d.pop('trace')
         d.pop('snapshot', None)
+        d.pop('frames', None)
         return d
 
 
@@ -85,8 +87,15 @@ def _relaxation_time(t: np.ndarray, sigma: np.ndarray) -> float:
 def run_stage1(params: CollagenParams | None = None,
                strain_rate: float | None = None,
                sample_dt: float = 5.0,
-               working_directory: str = '') -> Stage1Result:
-    """Run the four-phase stage-1 protocol and return the reduced readouts."""
+               working_directory: str = '',
+               capture_frames: bool = False,
+               frame_stride: int = 2) -> Stage1Result:
+    """Run the four-phase stage-1 protocol and return the reduced readouts.
+
+    With ``capture_frames=True`` the spatial state (positions, box, atom types)
+    is collected every ``frame_stride`` samples into ``result.frames`` — the
+    trajectory that drives the simulation movie (viz.network_movie_figure).
+    """
     p = params or CollagenParams()
     rate = strain_rate if strain_rate is not None else p.strain_rate
 
@@ -101,6 +110,8 @@ def run_stage1(params: CollagenParams | None = None,
     t_hold = p.hold_steps * p.timestep
 
     trace = {'t': [], 'strain': [], 'sigma': [], 'n_crosslinks': [], 'phase': []}
+    frames: list = []
+    _ctr = {'i': 0}
 
     def drive(duration, strain_rate_val, make_on, break_on, phase, t_offset):
         n = max(1, int(round(duration / sample_dt)))
@@ -115,6 +126,16 @@ def run_stage1(params: CollagenParams | None = None,
             trace['sigma'].append(last['sigma_inplane'])
             trace['n_crosslinks'].append(last['n_crosslinks'])
             trace['phase'].append(phase)
+            if capture_frames and _ctr['i'] % max(1, frame_stride) == 0:
+                frames.append({
+                    't': t_offset, 'strain': float(last['strain']),
+                    'sigma': float(last['sigma_inplane']),
+                    'n_crosslinks': int(last['n_crosslinks']), 'phase': phase,
+                    'positions': np.asarray(last['positions'], dtype=float).round(3),
+                    'atom_types': np.asarray(last['atom_types']),
+                    'box': list(last['box_dimensions']),
+                })
+            _ctr['i'] += 1
         return last, t_offset
 
     proc.initial_state()
@@ -177,6 +198,7 @@ def run_stage1(params: CollagenParams | None = None,
         relaxation_noise_limited=bool(np.isnan(tau)),
         trace=trace,
         snapshot=snapshot,
+        frames=(frames if capture_frames else None),
     )
 
 
