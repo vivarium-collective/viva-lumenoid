@@ -325,15 +325,15 @@ _save_viz('bm-v3-junction-bending-rigidity', 'rigidity-diagnostic', _render_one(
 #
 # | simulation | composite | steps | params |
 # | --- | --- | --- | --- |
-# | `junction-bending-network` | `viva_lumenoid.bending_sweep` | 0 | n_rods=200, box_xy=20.0, bending_k=80.0, timestep=0.002, seed=12345 |
+# | `junction-bending-network` | `viva_lumenoid.composites.bending_sweep` | 0 | n_rods=200, box_xy=20.0, bending_k=80.0, timestep=0.002, seed=12345 |
 
 # ### Specification (process-bigraph) — load, inspect, edit
 #
 # Each composite is a process-bigraph *document*: named processes (`_type: process`) bound to an `address`, wired by `inputs`/`outputs` ports over shared stores. For every composite below the first cell loads the spec into a plain **editable Python dict** and prints its structure; the second cell is a **control panel** listing every configuration value and per-process `interval` so you can tweak any of them. Your edits are read when the composite is built and run, in the **Run** section.
 
-# **Composite `viva_lumenoid.bending_sweep`** — `spec_viva_lumenoid_bending_sweep` (a plain, editable dict)
+# **Composite `viva_lumenoid.composites.bending_sweep`** — `spec_viva_lumenoid_composites_bending_sweep` (a plain, editable dict)
 
-# _composite spec file for `viva_lumenoid.bending_sweep` not found under `viva_lumenoid/composites/` — skipped._
+# _composite spec file for `viva_lumenoid.composites.bending_sweep` not found under `viva_lumenoid/composites/` — skipped._
 
 # ### Run
 #
