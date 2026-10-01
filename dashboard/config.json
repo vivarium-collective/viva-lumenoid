@@ -1,7 +1,7 @@
 {
   "mode": "snapshot",
   "smsApiBase": "",
-  "repo": "https://github.com/vivarium-collective/viva-lumenoid.git",
-  "commit": "49d059c2918923db543dfea7f325a5f6e646dfcb",
-  "generated_from_ref": "register-bm4-composite"
+  "repo": "https://github.com/vivarium-collective/viva-lumenoid",
+  "commit": "a370dbdee97e603ae4024c6835c49e0e6017f7c5",
+  "generated_from_ref": "main"
 }
