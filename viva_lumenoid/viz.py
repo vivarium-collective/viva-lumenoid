@@ -15,9 +15,36 @@ from typing import Any
 
 import numpy as np
 
+from . import comparators as C
+
 # Colourblind-safe categorical palette (Tableau/Vega-derived; validated order).
 BLUE, ORANGE, GREEN, RED, PURPLE, TEAL, GOLD = (
     "#4C78A8", "#F58518", "#54A24B", "#E45756", "#B279A2", "#72B7B2", "#EECA3B")
+
+# Comparator bands render in a reserved neutral/good hue so a measured literature
+# range never reads as "another data series": soft green fill + a dashed centre.
+_BAND_FILL = "rgba(84,162,75,0.10)"
+_BAND_LINE = "rgba(84,162,75,0.55)"
+
+
+def _comparator_band(fig, comp, orient="v", row=None, col=None, label=True):
+    """Shade a measured-literature band (lo..hi) with a centre line + label."""
+    kw = {}
+    if row is not None:
+        kw = dict(row=row, col=col)
+    if orient == "v":
+        fig.add_vrect(x0=comp.lo, x1=comp.hi, fillcolor=_BAND_FILL, line_width=0,
+                      **kw)
+        fig.add_vline(x=comp.value, line=dict(color=_BAND_LINE, width=1.5, dash="dash"),
+                      annotation_text=(comp.label if label else None),
+                      annotation_position="top", annotation_font_size=10, **kw)
+    else:
+        fig.add_hrect(y0=comp.lo, y1=comp.hi, fillcolor=_BAND_FILL, line_width=0,
+                      **kw)
+        fig.add_hline(y=comp.value, line=dict(color=_BAND_LINE, width=1.5, dash="dash"),
+                      annotation_text=(comp.label if label else None),
+                      annotation_position="right", annotation_font_size=10, **kw)
+    return fig
 
 PHASE_COLOR = {
     "assemble": "#9AA0A6",       # grey — building the network
@@ -288,7 +315,12 @@ def rigidity_figure(result: Any) -> "object":
                   line_width=0, annotation_text="floppy (z < 4)",
                   annotation_position="top left", annotation_font_size=11)
     fig.add_vline(x=zc, line=dict(color=RED, width=2, dash="dash"),
-                  annotation_text="rigidity threshold z = 4", annotation_position="top right")
+                  annotation_text="rigidity threshold z = 4 (Maxwell, 2D)",
+                  annotation_position="top right")
+    # where the released NC1×1 + 7S×3 topology tops out: z ≤ 3, sub-isostatic
+    fig.add_vline(x=C.Z_NC1_7S_MAX, line=dict(color=ORANGE, width=1.5, dash="dot"),
+                  annotation_text="NC1×1 + 7S×3 → z ≤ 3", annotation_position="bottom right",
+                  annotation_font_size=10)
     fig.add_hline(y=0.0, line=dict(color=_MUTED, width=1, dash="dot"))
     fig.add_trace(go.Scatter(
         x=z, y=mod, error_y=dict(type="data", array=ci, color=_MUTED, thickness=1.2),
@@ -349,6 +381,163 @@ def bending_figure(result: Any) -> "object":
         text=(f"<b>FP1 — junction bending: floppy baseline vs bending response</b>   "
               f"<span style='font-size:12px;color:{_MUTED}'>{verdict}; "
               f"median (line) + per-seed points</span>"),
+        x=0.01, xanchor="left"))
+    return fig
+
+
+# --------------------------------------------------------------------------- #
+# Stage 5 — porosity & bundling (geometric readouts vs measured comparators)
+# --------------------------------------------------------------------------- #
+def porosity_bundling_figure(result: Any) -> "object":
+    """2x2: pore-size distribution + density scaling + strand-size bundling +
+    the pore map (distance field) — each against its measured comparator."""
+    from plotly.subplots import make_subplots
+    import plotly.graph_objects as go
+    from . import geometry as geo
+
+    fig = make_subplots(
+        rows=2, cols=2,
+        subplot_titles=(
+            "Pore-size distribution vs measured BM",
+            "Pore size scales with network density",
+            "Bundling — protomers per strand (model under-bundles)",
+            "Pore map — maximal inscribed empty discs"),
+        vertical_spacing=0.14, horizontal_spacing=0.11)
+
+    # (1,1) pore-size histogram vs corneal-EM + Matrigel bands
+    diam = np.asarray(result.pore_diam_nm)
+    _comparator_band(fig, C.PORE_CORNEAL_EM, "v", row=1, col=1)
+    _comparator_band(fig, C.PORE_MATRIGEL, "v", row=1, col=1, label=False)
+    fig.add_trace(go.Histogram(
+        x=diam, nbinsx=40, marker=dict(color=BLUE, line=dict(width=0.5, color="white")),
+        name="pores", showlegend=False,
+        hovertemplate="pore ≈%{x:.0f} nm<br>%{y} discs<extra></extra>"), row=1, col=1)
+    fig.add_vline(x=result.median_pore_nm, line=dict(color=RED, width=2),
+                  annotation_text=f"median {result.median_pore_nm:.0f} nm",
+                  annotation_position="top right", row=1, col=1)
+
+    # (1,2) median pore vs density (coverage), with comparator bands
+    cov = np.asarray([p.coverage * 100 for p in result.points])
+    medp = np.asarray([p.median_pore_nm for p in result.points])
+    _comparator_band(fig, C.PORE_CORNEAL_EM, "h", row=1, col=2)
+    fig.add_trace(go.Scatter(
+        x=cov, y=medp, mode="lines+markers", line=dict(color=PURPLE, width=2),
+        marker=dict(size=11, color=PURPLE, line=dict(width=1, color="white")),
+        name="median pore", showlegend=False,
+        customdata=[p.n_rods for p in result.points],
+        hovertemplate="coverage %{x:.1f}%<br>%{customdata} rods<br>median %{y:.0f} nm<extra></extra>"),
+        row=1, col=2)
+
+    # (2,1) bundling strand-size histogram vs the 5-7 band
+    hist = result.bundling_hist or {}
+    sizes = sorted(hist)
+    counts = [hist[s] for s in sizes]
+    _comparator_band(fig, C.BUNDLING_PFHR9, "v", row=2, col=1)
+    fig.add_trace(go.Bar(
+        x=sizes, y=counts, marker=dict(color=TEAL), name="strands", showlegend=False,
+        hovertemplate="%{x} protomers/strand<br>%{y} strands<extra></extra>"), row=2, col=1)
+    fig.add_annotation(row=2, col=1, x=0.98, y=0.92, xref="x domain", yref="y domain",
+                       xanchor="right", showarrow=False, font=dict(size=11, color=_MUTED),
+                       text=(f"mean {result.mean_strand:.2f} · max {result.max_strand}"
+                             f" · {result.frac_in_5_7:.0%} in 5–7"))
+
+    # (2,2) pore map: distance field heatmap + rod overlay (recomputed from mesh)
+    if result.snapshot:
+        por = geo.porosity(result.snapshot["positions"], result.snapshot["box"],
+                           grid_px=180)
+        grid = por.grid
+        lx, ly = por.extent_a
+        fig.add_trace(go.Heatmap(
+            z=grid, x=np.linspace(0, lx, grid.shape[1]), y=np.linspace(0, ly, grid.shape[0]),
+            colorscale="Tealrose", showscale=False, zsmooth="best",
+            hovertemplate="empty-disc radius %{z:.2f} a<extra></extra>"), row=2, col=2)
+        xs, ys, *_ , (bx, by) = _network_segments(result.snapshot)
+        fig.add_trace(go.Scatter(
+            x=xs, y=ys, mode="lines", line=dict(color="rgba(20,24,30,0.45)", width=1.0),
+            showlegend=False, hoverinfo="skip"), row=2, col=2)
+        fig.update_xaxes(range=[0, lx], row=2, col=2, constrain="domain")
+        fig.update_yaxes(range=[0, ly], row=2, col=2, constrain="domain")
+
+    fig.update_xaxes(title_text="pore diameter (nm)", row=1, col=1)
+    fig.update_yaxes(title_text="count", row=1, col=1)
+    fig.update_xaxes(title_text="areal coverage (%)", row=1, col=2)
+    fig.update_yaxes(title_text="median pore (nm)", row=1, col=2)
+    fig.update_xaxes(title_text="protomers per strand", row=2, col=1, dtick=1)
+    fig.update_yaxes(title_text="strand count", type="log", row=2, col=1)
+    fig.update_xaxes(title_text="x (a)", row=2, col=2)
+    fig.update_yaxes(title_text="y (a)", row=2, col=2)
+
+    _layout(fig)
+    fig.update_layout(title=dict(
+        text=(f"<b>Stage 5 — porosity &amp; bundling</b>   "
+              f"<span style='font-size:12px;color:{_MUTED}'>"
+              f"pores reach the corneal-EM band at high density; bundling "
+              f"under-shoots 5–7 (no lateral bond)</span>"),
+        x=0.01, xanchor="left"))
+    return fig
+
+
+# --------------------------------------------------------------------------- #
+# Evidence map — every v1 readout against its measured comparator + provenance
+# --------------------------------------------------------------------------- #
+def evidence_map_figure(measured: dict | None = None) -> "object":
+    """A forest plot of the spec's measured comparators, faceted by unit, with
+    the model's own measured values overlaid where available.
+
+    ``measured`` may carry: modulus_Pa, pore_median_nm, mean_strand,
+    remodelling_h — each drawn as a red diamond against its literature band.
+    """
+    from plotly.subplots import make_subplots
+    import plotly.graph_objects as go
+    measured = measured or {}
+
+    panels = [
+        ("Geometry (nm)", [C.PROTOMER_CONTOUR, C.PERSISTENCE_LENGTH,
+                           C.BEAD_SPACING, C.FIBRIL_DIAMETER], "linear", None),
+        ("Pores (nm)", [C.PORE_CORNEAL_EM, C.PORE_MATRIGEL], "linear",
+         ("pore_median_nm", "model pore median")),
+        ("Modulus (Pa)", C.MODULUS_LADDER, "log",
+         ("modulus_Pa", "model E")),
+        ("Bundling / time", [C.BUNDLING_PFHR9, C.REMODELLING_TIME], "linear", None),
+    ]
+    fig = make_subplots(rows=1, cols=len(panels), horizontal_spacing=0.055,
+                        subplot_titles=[p[0] for p in panels])
+
+    for ci, (_, comps, scale, overlay) in enumerate(panels, start=1):
+        ylabels = [c.label for c in comps]
+        yy = list(range(len(comps)))
+        xmid = [c.value for c in comps]
+        xlo = [c.value - c.lo for c in comps]
+        xhi = [c.hi - c.value for c in comps]
+        fig.add_trace(go.Scatter(
+            x=xmid, y=yy, mode="markers",
+            error_x=dict(type="data", symmetric=False, array=xhi, arrayminus=xlo,
+                         color=_BAND_LINE, thickness=2, width=6),
+            marker=dict(size=10, color=GREEN, line=dict(width=1, color="white")),
+            showlegend=False,
+            customdata=[[c.method, c.source] for c in comps],
+            hovertemplate="%{text}: %{x}<br>%{customdata[0]}<br><i>%{customdata[1]}</i><extra></extra>",
+            text=ylabels), row=1, col=ci)
+        # overlay the model's measured value for this panel, if provided
+        if overlay and overlay[0] in measured:
+            mv = measured[overlay[0]]
+            # place the model marker on whichever comparator row shares the quantity
+            yrow = len(comps) - 1
+            fig.add_trace(go.Scatter(
+                x=[mv], y=[yrow + 0.0], mode="markers",
+                marker=dict(size=15, color=RED, symbol="diamond",
+                            line=dict(width=1.2, color="white")),
+                name=overlay[1], showlegend=False,
+                hovertemplate=f"<b>{overlay[1]}</b>: %{{x:.3g}}<extra></extra>"), row=1, col=ci)
+        fig.update_xaxes(type=scale, row=1, col=ci)
+        fig.update_yaxes(tickmode="array", tickvals=yy, ticktext=ylabels,
+                         row=1, col=ci, tickfont=dict(size=10))
+
+    _layout(fig, height=430)
+    fig.update_layout(title=dict(
+        text=("<b>Evidence map — what each v1 readout is held against</b>   "
+              f"<span style='font-size:12px;color:{_MUTED}'>measured literature "
+              f"bands (green) from the spec; model values (red ◆) where run</span>"),
         x=0.01, xanchor="left"))
     return fig
 

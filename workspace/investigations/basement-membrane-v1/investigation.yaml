@@ -54,6 +54,7 @@ studies:
   - bm-v2-stress-vs-strainrate
   - bm-v3-junction-bending-rigidity
   - bm-v4-junction-bending
+  - bm-v5-porosity-bundling
 
 at_a_glance:
   - study: bm-v1-stage1-modulus-remodelling
@@ -76,6 +77,13 @@ at_a_glance:
       + an athermal modulus. Bending dominates the mechanics (floppy → large |E|),
       confirming it governs stiffness — but a reproducible modulus needs a larger,
       pre-stress-free network (v2).
+  - study: bm-v5-porosity-bundling
+    role: >
+      Geometric readouts (spec "has: geometrical structure"). Reads porosity +
+      bundling off the real network vs measured BM: pore size reaches the corneal-
+      EM band (72 ± 40 nm) at density, but the NC1/7S-only topology under-bundles
+      (mean ~1 protomer/strand, far short of 5–7) — the spec-named failure of a
+      model with no lateral-association bond. Carries the investigation evidence map.
 
 acceptance_criteria:
   - study: bm-v1-stage1-modulus-remodelling

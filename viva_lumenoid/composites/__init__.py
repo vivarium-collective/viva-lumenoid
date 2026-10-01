@@ -91,3 +91,15 @@ _BENDING_PARAMS["bending_k"] = {
 )
 def bending_sweep(core=None, **kw) -> dict:
     return stage1_composite_spec(_params(**kw))
+
+
+@composite_generator(
+    name="porosity_bundling",
+    description="Stage 5 (bm-v5) — the assembled collagen IV network, read for "
+                "its geometric readouts: pore-size distribution (porosity) and "
+                "protomers-per-strand (bundling), against the measured BM comparators.",
+    parameters=_COMMON_PARAMS,
+    core_extensions=[register_viva_lumenoid],
+)
+def porosity_bundling(core=None, **kw) -> dict:
+    return stage1_composite_spec(_params(**kw))
