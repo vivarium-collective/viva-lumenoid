@@ -16,8 +16,10 @@ from viva_lumenoid import run_stage1, CollagenParams
 from viva_lumenoid.stage2 import run_stage2
 from viva_lumenoid.rigidity import run_connectivity_sweep
 from viva_lumenoid.bending import run_bending_sweep
+from viva_lumenoid.stage5 import run_porosity_bundling
 from viva_lumenoid.viz import (stage1_figure, stage2_figure, rigidity_figure,
-                               bending_figure, save_html)
+                               bending_figure, porosity_bundling_figure,
+                               evidence_map_figure, save_html)
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 STUDIES = os.path.join(ROOT, "workspace", "studies")
@@ -64,6 +66,27 @@ def main():
               "FP1 — junction bending")
     print(f"  floppy median {r4.points[0].modulus_median:+.3f}; "
           f"large_response={r4.large_response}")
+
+    # Stage 5 (bm-v5): porosity & bundling geometric readouts + evidence map
+    s5 = os.path.join(STUDIES, "bm-v5-porosity-bundling", "viz")
+    os.makedirs(s5, exist_ok=True)
+    print("Running porosity & bundling density sweep …")
+    r5 = run_porosity_bundling(densities=(150, 250, 350, 500), assemble_steps=8000)
+    save_html(porosity_bundling_figure(r5),
+              os.path.join(s5, "porosity_bundling.html"),
+              "Stage 5 — porosity & bundling")
+    # Evidence map overlays the model's own measured values (modulus from stage 1,
+    # pore median + mean strand from stage 5) on the measured literature bands.
+    measured = {
+        "modulus_Pa": float(getattr(r1, "elastic_modulus_Pa", r1.elastic_modulus_lj * 2.5)),
+        "pore_median_nm": r5.median_pore_nm,
+        "mean_strand": r5.mean_strand,
+    }
+    save_html(evidence_map_figure(measured),
+              os.path.join(s5, "evidence_map.html"),
+              "Evidence map — readouts vs comparators")
+    print(f"  pore median {r5.median_pore_nm:.0f} nm · mean strand {r5.mean_strand:.2f} "
+          f"(max {r5.max_strand})")
     print("Figures written.")
 
 
