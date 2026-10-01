@@ -59,8 +59,8 @@ if _env and Path(_env).is_dir():
     REPO = Path(_env)
 if REPO is None:
     REPO = _find_repo_root(Path.cwd().resolve())
-if REPO is None and Path('/home/runner/work/viva-lumenoid/viva-lumenoid').is_dir():
-    REPO = Path('/home/runner/work/viva-lumenoid/viva-lumenoid')
+if REPO is None and Path('/Users/eranagmon/code/viva-lumenoid--sim-movies').is_dir():
+    REPO = Path('/Users/eranagmon/code/viva-lumenoid--sim-movies')
 if REPO is None:
     REPO = Path.cwd()
 sys.path.insert(0, str(REPO))
@@ -183,7 +183,7 @@ print("No recorded runs for this study; nothing to reproduce.")
 #
 # _Results are shown by the figures below, produced by the run above._
 
-# **stage1-diagnostic**
+# **stage1-movie**
 
 def _save_viz(study, slug, html):
     d = REPO / 'reports/notebooks/figures' / study
@@ -192,6 +192,11 @@ def _save_viz(study, slug, html):
     out.write_text(html, encoding='utf-8')
     print('  wrote', out)
 
+
+# stage1-movie
+_save_viz('bm-v1-stage1-modulus-remodelling', 'stage1-movie', _render_one('html:stage1_movie.html', {'title': 'Simulation movie — the staged protocol unfolding'}, RUNS_DB, STUDY_YAML))
+
+# **stage1-diagnostic**
 
 # stage1-diagnostic
 _save_viz('bm-v1-stage1-modulus-remodelling', 'stage1-diagnostic', _render_one('html:stage1_diagnostic.html', {'title': 'Stage 1 — modulus & remodelling diagnostic'}, RUNS_DB, STUDY_YAML))
@@ -242,6 +247,11 @@ print("No recorded runs for this study; nothing to reproduce.")
 # ### Visualizations
 #
 # _Results are shown by the figures below, produced by the run above._
+
+# **stage2-movie**
+
+# stage2-movie
+_save_viz('bm-v2-stress-vs-strainrate', 'stage2-movie', _render_one('html:stage2_movie.html', {'title': 'Simulation movie — the growing substrate stretches'}, RUNS_DB, STUDY_YAML))
 
 # **stage2-diagnostic**
 
@@ -301,6 +311,11 @@ print("No recorded runs for this study; nothing to reproduce.")
 #
 # _Results are shown by the figures below, produced by the run above._
 
+# **rigidity-movie**
+
+# rigidity-movie
+_save_viz('bm-v3-junction-bending-rigidity', 'rigidity-movie', _render_one('html:rigidity_movie.html', {'title': 'Simulation movie — high-connectivity network (NC1×5 + 7S×8)'}, RUNS_DB, STUDY_YAML))
+
 # **rigidity-diagnostic**
 
 # rigidity-diagnostic
@@ -350,6 +365,11 @@ print("No recorded runs for this study; nothing to reproduce.")
 # ### Visualizations
 #
 # _Results are shown by the figures below, produced by the run above._
+
+# **bending-movie**
+
+# bending-movie
+_save_viz('bm-v4-junction-bending', 'bending-movie', _render_one('html:bending_movie.html', {'title': 'Simulation movie — rods pinned at crosslink angles'}, RUNS_DB, STUDY_YAML))
 
 # **bending-diagnostic**
 
@@ -405,6 +425,11 @@ print("No recorded runs for this study; nothing to reproduce.")
 # ### Visualizations
 #
 # _Results are shown by the figures below, produced by the run above._
+
+# **assembly-movie**
+
+# assembly-movie
+_save_viz('bm-v5-porosity-bundling', 'assembly-movie', _render_one('html:assembly_movie.html', {'title': 'Simulation movie — a porous collagen IV mesh forms'}, RUNS_DB, STUDY_YAML))
 
 # **porosity-bundling**
 
