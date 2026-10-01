@@ -89,3 +89,16 @@ def test_clip_feeds_the_movie_figure():
 def test_clip_rejects_unknown_mode():
     with pytest.raises(ValueError):
         capture_clip(mode="nope")
+
+
+def test_3d_movie_figure_renders_with_z():
+    c = capture_clip(CollagenParams(n_rods=60, box_xy=16.0, assemble_steps=2500),
+                     mode="relax", n_frames=18, dt=0.15)
+    # z is a real (thin) dimension in the captured slab
+    zspan = np.ptp(np.concatenate([np.asarray(f["positions"])[:, 2] for f in c.frames]))
+    assert zspan > 0.5
+    fig = viz.network_movie_3d_figure(c, "slab")
+    assert len(fig.frames) == 18
+    assert fig.data[0].type == "scatter3d"
+    html = viz.figure_to_html(fig)
+    assert "3D view" in html and "scatter3d" in html

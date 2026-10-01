@@ -19,14 +19,16 @@ from viva_lumenoid.bending import run_bending_sweep
 from viva_lumenoid.stage5 import run_porosity_bundling
 from viva_lumenoid.viz import (stage1_figure, stage2_figure, rigidity_figure,
                                bending_figure, porosity_bundling_figure,
-                               evidence_map_figure, network_movie_figure, save_html)
+                               evidence_map_figure, network_movie_figure,
+                               network_movie_3d_figure, save_html)
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 STUDIES = os.path.join(ROOT, "workspace", "studies")
 
 
-def render_movie(study, fname, title, params, mode, **clip_kw):
-    """Capture a finely-sampled, coherent clip and write the spatial movie.
+def render_movie(study, fname, title, params, mode, fname_3d=None, **clip_kw):
+    """Capture a finely-sampled, coherent clip once and write the 2D movie, plus
+    an optional rotatable 3D view of the same clip.
 
     Uses movie.capture_clip (small dt + periodic-unwrap + COM-drift removal) so
     the motion is continuous, not the teleporting of coarse analysis snapshots.
@@ -36,7 +38,11 @@ def render_movie(study, fname, title, params, mode, **clip_kw):
     os.makedirs(d, exist_ok=True)
     c = capture_clip(params, mode=mode, **clip_kw)
     save_html(network_movie_figure(c, title), os.path.join(d, fname), title)
-    print(f"  movie {study}/{fname}: {c.summary}")
+    msg = f"  movie {study}/{fname}: {c.summary}"
+    if fname_3d:
+        save_html(network_movie_3d_figure(c, title), os.path.join(d, fname_3d), title)
+        msg += f"  + 3D {fname_3d}"
+    print(msg)
     return c
 
 
@@ -110,21 +116,24 @@ def main():
     render_movie("bm-v1-stage1-modulus-remodelling", "stage1_movie.html",
                  "stage 1 — remodelling: crosslinks break, the network relaxes",
                  CollagenParams(n_rods=140, box_xy=18.0, assemble_steps=7000),
-                 mode="remodel", n_frames=80, dt=0.15)
+                 mode="remodel", n_frames=80, dt=0.15, fname_3d="stage1_movie_3d.html")
     render_movie("bm-v2-stress-vs-strainrate", "stage2_movie.html",
                  "stage 2 — the growing substrate stretches (equibiaxial)",
                  CollagenParams(n_rods=140, box_xy=18.0, assemble_steps=6000),
-                 mode="stretch", n_frames=80, dt=0.06, strain_rate=0.02)
+                 mode="stretch", n_frames=80, dt=0.06, strain_rate=0.02,
+                 fname_3d="stage2_movie_3d.html")
     render_movie("bm-v3-junction-bending-rigidity", "rigidity_movie.html",
                  "rigidity — high-connectivity network jiggling (NC1×5 + 7S×8)",
                  CollagenParams(n_rods=180, box_xy=20.0, assemble_steps=8000,
                                 nc1_max_crosslinks=5, svns_max_crosslinks=8, make_prob=0.6),
-                 mode="relax", n_frames=80, dt=0.15)
+                 mode="relax", n_frames=80, dt=0.15, fname_3d="rigidity_movie_3d.html")
     render_movie("bm-v4-junction-bending", "bending_movie.html",
                  "junction bending — rods pinned at crosslink angles",
                  CollagenParams(n_rods=140, box_xy=18.0, assemble_steps=6000,
                                 bending_k=50.0),
-                 mode="relax", n_frames=80, dt=0.15)
+                 mode="relax", n_frames=80, dt=0.15, fname_3d="bending_movie_3d.html")
+    # bm-v5 stays 2D-only: its study-charts payload (assembly movie + porosity +
+    # evidence map) is already near the 16 MB per-file publish limit.
     render_movie("bm-v5-porosity-bundling", "assembly_movie.html",
                  "assembly — a porous collagen IV mesh forms",
                  CollagenParams(n_rods=300, box_xy=20.0),

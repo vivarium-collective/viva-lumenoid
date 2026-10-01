@@ -519,6 +519,109 @@ def network_movie_figure(result: Any, title: str = "collagen IV network") -> "ob
 
 
 # --------------------------------------------------------------------------- #
+# True 3D view — the quasi-2D slab in 3D, rotatable and animated
+# --------------------------------------------------------------------------- #
+def _frame_mesh_3d(frame):
+    """(rod x/y/z with None breaks, nc1 xyz, s7 xyz) for one frame, in 3D."""
+    pos = np.asarray(frame["positions"], dtype=float)
+    types = np.asarray(frame.get("atom_types")) if frame.get("atom_types") is not None else None
+    n = (len(pos) // 2) * 2
+    xs, ys, zs = [], [], []
+    for i in range(0, n, 2):
+        a, b = pos[i], pos[i + 1]
+        if (a[0] - b[0]) ** 2 + (a[1] - b[1]) ** 2 > 9.0:   # periodic-wrap streak
+            continue
+        xs += [a[0], b[0], None]; ys += [a[1], b[1], None]; zs += [a[2], b[2], None]
+    nc1 = s7 = (np.array([]), np.array([]), np.array([]))
+    if types is not None:
+        m = types[:len(pos)] == 1
+        p = pos[:len(types)]
+        nc1 = (p[m][:, 0], p[m][:, 1], p[m][:, 2])
+        s7 = (p[~m][:, 0], p[~m][:, 1], p[~m][:, 2])
+    return xs, ys, zs, nc1, s7
+
+
+def _box_wireframe_3d(lx, ly, lz):
+    """12 edges of the slab box as x/y/z line lists with None breaks."""
+    c = [(0, 0, 0), (lx, 0, 0), (lx, ly, 0), (0, ly, 0),
+         (0, 0, lz), (lx, 0, lz), (lx, ly, lz), (0, ly, lz)]
+    edges = [(0, 1), (1, 2), (2, 3), (3, 0), (4, 5), (5, 6), (6, 7), (7, 4),
+             (0, 4), (1, 5), (2, 6), (3, 7)]
+    xs, ys, zs = [], [], []
+    for i, j in edges:
+        xs += [c[i][0], c[j][0], None]
+        ys += [c[i][1], c[j][1], None]
+        zs += [c[i][2], c[j][2], None]
+    return xs, ys, zs
+
+
+def network_movie_3d_figure(result: Any, title: str = "collagen IV network",
+                            z_exaggerate: float = 2.0) -> "object":
+    """A rotatable, animated **3D** view of the quasi-2D slab — rods + crosslink
+    ends in 3D with the box wireframe, so the slab's z-thickness (and the several
+    layers through it) are visible. Drag to orbit; press ▶ to play.
+
+    ``z_exaggerate`` stretches the (very thin) z axis for visibility only — the
+    subtitle says so; x/y are to scale.
+    """
+    import plotly.graph_objects as go
+    frames = result.frames or []
+    if not frames:
+        raise ValueError("result has no captured frames (run with capture_frames=True)")
+    lx = max(float(f["box"][0]) for f in frames)
+    ly = max(float(f["box"][1]) for f in frames)
+    lz = max(float(f["box"][2]) for f in frames)
+
+    def traces_for(f):
+        xs, ys, zs, nc1, s7 = _frame_mesh_3d(f)
+        bx, by, bz = _box_wireframe_3d(float(f["box"][0]), float(f["box"][1]), float(f["box"][2]))
+        return [
+            go.Scatter3d(x=xs, y=ys, z=zs, mode="lines",
+                         line=dict(color="rgba(80,90,105,0.55)", width=2),
+                         name="rods", showlegend=False, hoverinfo="skip"),
+            go.Scatter3d(x=nc1[0], y=nc1[1], z=nc1[2], mode="markers", name="NC1 end",
+                         marker=dict(size=2.6, color=BLUE), hoverinfo="skip"),
+            go.Scatter3d(x=s7[0], y=s7[1], z=s7[2], mode="markers", name="7S end",
+                         marker=dict(size=2.6, color=ORANGE), hoverinfo="skip"),
+            go.Scatter3d(x=bx, y=by, z=bz, mode="lines",
+                         line=dict(color="rgba(120,130,145,0.6)", width=2),
+                         showlegend=False, hoverinfo="skip"),
+        ]
+
+    fig = go.Figure(data=traces_for(frames[0]))
+    fig.frames = [go.Frame(name=str(i), data=traces_for(f)) for i, f in enumerate(frames)]
+    steps = [dict(method="animate", label=f"{f['phase']} ε={f['strain']:.2f}",
+                  args=[[str(i)], dict(mode="immediate",
+                        frame=dict(duration=0, redraw=True), transition=dict(duration=0))])
+             for i, f in enumerate(frames)]
+    fig.update_layout(
+        template="plotly_white", height=620,
+        font=dict(family="Inter, -apple-system, Segoe UI, sans-serif", size=13, color=_INK),
+        margin=dict(l=0, r=0, t=96, b=72),
+        scene=dict(
+            xaxis_title="x (a)", yaxis_title="y (a)", zaxis_title="z (a)",
+            aspectmode="manual",
+            aspectratio=dict(x=1, y=ly / lx, z=max(0.14, z_exaggerate * lz / lx)),
+            camera=dict(eye=dict(x=1.5, y=1.5, z=1.1))),
+        updatemenus=[dict(type="buttons", direction="left", x=0.0, y=1.1,
+            xanchor="left", yanchor="top",
+            buttons=[
+                dict(label="▶ play", method="animate", args=[None, dict(
+                    frame=dict(duration=100, redraw=True), fromcurrent=True,
+                    transition=dict(duration=0))]),
+                dict(label="❚❚ pause", method="animate", args=[[None], dict(
+                    mode="immediate", frame=dict(duration=0, redraw=False))])])],
+        sliders=[dict(active=0, x=0.0, y=0, len=1.0, pad=dict(t=24, b=8),
+                      currentvalue=dict(prefix="phase: ", font=dict(size=12)), steps=steps)],
+        title=dict(text=(f"<b>3D view — {title}</b>   "
+                   f"<span style='font-size:12px;color:{_MUTED}'>"
+                   f"the real 3D quasi-2D slab · drag to orbit · z ×{z_exaggerate:g} "
+                   f"for visibility (x/y to scale) · press ▶ play</span>"),
+                   x=0.01, xanchor="left"))
+    return fig
+
+
+# --------------------------------------------------------------------------- #
 # Stage 5 — porosity & bundling (geometric readouts vs measured comparators)
 # --------------------------------------------------------------------------- #
 def porosity_bundling_figure(result: Any) -> "object":

@@ -212,6 +212,10 @@ visualizations:
     address: "html:stage1_movie.html"
     config:
       title: "Simulation movie — the staged protocol unfolding"
+  - name: stage1-movie-3d
+    address: "html:stage1_movie_3d.html"
+    config:
+      title: "3D view — the quasi-2D slab, rotatable"
   - name: stage1-diagnostic
     address: "html:stage1_diagnostic.html"
     config:

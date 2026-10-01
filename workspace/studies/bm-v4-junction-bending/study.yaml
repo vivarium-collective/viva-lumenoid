@@ -190,6 +190,10 @@ visualizations:
     address: "html:bending_movie.html"
     config:
       title: "Simulation movie — rods pinned at crosslink angles"
+  - name: bending-movie-3d
+    address: "html:bending_movie_3d.html"
+    config:
+      title: "3D view — the bending-pinned network, rotatable"
   - name: bending-diagnostic
     address: "html:bending_diagnostic.html"
     config:
