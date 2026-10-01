@@ -1,7 +1,7 @@
 {
   "mode": "snapshot",
   "smsApiBase": "",
-  "repo": "https://github.com/vivarium-collective/viva-lumenoid",
-  "commit": "4ca368cf00c7ea8a5759c59e39d8b53a5b13d794",
-  "generated_from_ref": "main"
+  "repo": "https://github.com/vivarium-collective/viva-lumenoid.git",
+  "commit": "76aae6a699d3ae6cc2a6c72ce7285fb19b69ddbf",
+  "generated_from_ref": "fix-simset-base-model"
 }
