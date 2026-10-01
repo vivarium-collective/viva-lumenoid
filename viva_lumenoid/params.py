@@ -1,14 +1,17 @@
 """Published parameter set for the v1 coarse-grained collagen IV network.
 
 Every value here is a *clean-room* transcription from the Basement-membrane v1
-specification (AICS-Lumenoids Roam graph, exported 2026-09-29) and the two
+specification (AICS-Lumenoids Roam graph, exported 2026-09-30) and the two
 papers it rests on — Meadowcroft 2025 (nonequilibrium collagen IV) and
-Barrientos 2026 (basement-membrane growth). We do **not** have the authors'
-LAMMPS decks on this machine, so these are the numbers as stated in the spec's
-parameter sheet, not a byte-for-byte copy of their input files. Where the spec
+Barrientos 2026 (basement-membrane growth). These are the numbers as stated in
+the spec's parameter sheet, not a byte-for-byte copy of the authors' input
+files. The authors' LAMMPS input scripts are now public
+(github.com/Billie1717/BasementMembraneTurnoverSims, Zenodo
+10.5281/zenodo.20719515, commit ab4c004) and are the ground truth to cross-check
+these against — a verification task that has not yet been done. Where the spec
 records a convention uncertainty or an unresolved choice, the comment says so.
 
-Units are Lennard-Jones (LJ) reduced units, matching the released decks:
+Units are Lennard-Jones (LJ) reduced units, matching the released input scripts:
   * length unit  σ  = the two-bead spacing a ≈ 114 nm (protomer 376 nm end-to-end)
   * energy unit  ε  = kT  (so one stress unit is kT/a**3 ≈ 2-3 Pa at a ≈ 114-125 nm)
   * the network's own linear Young's modulus in the paper is ≈0.03 Pa — i.e.
@@ -57,7 +60,7 @@ class CollagenParams:
 
     # ---- crosslink kinetics (spec: MP make rate, break locked at FactorMult) --
     # `MP` sets bond formation; breaking is locked to it at FactorMult = 0.66,
-    # giving a make/break ratio of 1.52 in the released decks. Calibrated by
+    # giving a make/break ratio of 1.52 in the released input scripts. Calibrated by
     # matching the relaxation time to the ≈20 h collagen IV lifetime (EVD).
     make_every: int = 100              # Nevery for fix bond/create (LJ steps)
     # per-attempt formation probability (MP proxy), tuned so the assemble phase
@@ -75,8 +78,8 @@ class CollagenParams:
     # lifetime (spec #10). v1 keeps it force-independent (catch-bonds are v2).
     off_rate: float = 0.02
 
-    # ---- pair interactions (spec v1-decision #2: released decks have eps=0) --
-    # Every pair coefficient is zero in the released decks (lj/cut 0.0 0.0), so
+    # ---- pair interactions (spec v1-decision #2: released input scripts have eps=0) --
+    # Every pair coefficient is zero in the released input scripts (lj/cut 0.0 0.0), so
     # rods pass through each other — NO excluded volume in v1. Bonds carry all
     # the mechanics. We mirror that with pair_style zero.
     excluded_volume: bool = False
@@ -84,7 +87,7 @@ class CollagenParams:
     # ---- thermodynamics / integrator -------------------------------------
     temperature: float = 1.0           # kT energy unit
     langevin_damp: float = 1.0         # overdamped-ish network dynamics
-    timestep: float = 0.01             # released decks use 0.01 (Cell Methods 0.001,
+    timestep: float = 0.01             # released input scripts use 0.01 (Cell Methods 0.001,
                                        # supplement 0.002 — v1-decision open question)
 
     # ---- box / population (quasi-2D slab; spec: rods lie in-plane) --------

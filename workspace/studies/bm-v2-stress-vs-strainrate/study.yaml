@@ -124,6 +124,7 @@ conclusion_logic:
     block_downstream: "No η(ε̇) for the coupling until σ(ε̇) is stable."
 
 limitations:
+  - "Clean-room parameters transcribed from the spec; the authors' LAMMPS input scripts are now public (Zenodo 10.5281/zenodo.20719515) and not yet cross-checked against this build."
   - "σ(ε̇) is elastic-dominated at these rates; the viscous plateau is not yet resolved."
   - "Crosslink count differs across rates, confounding σ(ε̇)."
   - "Same small-network / noise caveats as stage 1."

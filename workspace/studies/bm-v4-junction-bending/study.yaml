@@ -200,6 +200,7 @@ visualizations:
       title: "FP1 — junction bending response"
 
 limitations:
+  - "Clean-room parameters transcribed from the spec; the authors' LAMMPS input scripts are now public (Zenodo 10.5281/zenodo.20719515) and not yet cross-checked against this build."
   - "The bending modulus is ill-conditioned at 200 rods (pre-stress + finite-size); not calibratable yet."
   - "Bending targets are pinned from a thermally-noisy as-formed geometry (a pre-stress source)."
   - "Only equibiaxial stress-strain slope is used; a shear or energy-curvature modulus may be better conditioned."

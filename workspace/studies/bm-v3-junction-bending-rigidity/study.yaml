@@ -166,6 +166,7 @@ visualizations:
       title: "Rigidity sweep — modulus vs coordination z"
 
 limitations:
+  - "Clean-room parameters transcribed from the spec; the authors' LAMMPS input scripts are now public (Zenodo 10.5281/zenodo.20719515) and not yet cross-checked against this build."
   - "Bundling is modelled only as raised crosslink caps, not explicit lateral-association bonds."
   - "Junction bending is not yet implemented — this study motivates it, does not test it."
   - "Same LJ-unit / energy-scale caveat as stage 1."

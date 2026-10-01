@@ -46,8 +46,8 @@ purpose:
 
 key_assumptions:
   - "One protomer = one two-bead rod; junction flexibility folded into a finite intra-rod bond (dynamic junction angles omitted in v1-minimal)."
-  - "No excluded volume — every pair coefficient is zero (spec #2: the released decks set eps=0)."
-  - "Crosslink make/break locked at FactorMult = 0.66 (make/break ratio 1.52), as in the released decks."
+  - "No excluded volume — every pair coefficient is zero (spec #2: the released input scripts set eps=0)."
+  - "Crosslink make/break locked at FactorMult = 0.66 (make/break ratio 1.52), as in the released input scripts."
   - "Quasi-2D slab; rods lie in-plane; thickness/layer count deferred (spec #9)."
   - "Energy unit = kT, so stress unit = kT/a³ ≈ 2.5 Pa; absolute pascals not yet claimed (spec #4)."
 
@@ -188,7 +188,7 @@ limitations:
   - "No dynamic junction angles; persistence length is only approximately represented (spec: LAMMPS puts l_p as soft angles at junctions) — the load-bearing v2 gap."
   - "No excluded volume, so pore-size / bundling readouts are not yet physical (deferred)."
   - "Modulus reported in LJ units / as a ratio, not calibrated pascals (spec #4)."
-  - "Parameters transcribed from the spec's sheet, not the authors' actual decks (not yet in hand)."
+  - "Parameters transcribed from the spec's sheet, not ported from the authors' input scripts; those scripts are now public (Zenodo 10.5281/zenodo.20719515) but not yet cross-checked against this build."
 
 design_pivot_required:
   - id: engine
@@ -243,8 +243,10 @@ report:
     bending / bundling, not crosslink count — a direct constraint on the
     vertex-model coupling.
   caveat: >
-    Parameters are transcribed from the spec, not the authors' decks; τ is below
-    detection at 200 rods; the modulus is reported in LJ units (energy scale open).
+    Parameters are transcribed from the spec rather than ported from the authors'
+    input scripts (now public, Zenodo 10.5281/zenodo.20719515, not yet cross-
+    checked); τ is below detection at 200 rods; the modulus is reported in LJ
+    units (energy scale open).
 
 findings:
   - id: F1-offrate-not-overstretch
@@ -343,5 +345,7 @@ bibliography:
       note: Nonequilibrium collagen IV network; the two-bead-rod + stochastic-crosslink model v1 is built from.
     - key: barrientos2026basement
       note: Basement-membrane growth at fixed stress; stage 2 inverts this to impose ε̇ and read σ.
+    - key: barrientos2026code
+      note: The authors' released LAMMPS input scripts (Zenodo 10.5281/zenodo.20719515); the ground truth to cross-check this clean-room build against.
     - key: source-spec
       note: "AICS-Lumenoids 'Basement membrane — v1 model specification' (workspace/references/basement-membrane-v1-spec.md)."

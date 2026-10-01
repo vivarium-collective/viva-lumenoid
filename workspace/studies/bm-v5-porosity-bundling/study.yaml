@@ -180,6 +180,7 @@ visualizations:
       title: "Evidence map — readouts vs measured comparators"
 
 limitations:
+  - "Clean-room parameters transcribed from the spec; the authors' LAMMPS input scripts are now public (Zenodo 10.5281/zenodo.20719515) and not yet cross-checked against this build."
   - "Bundling is inferred geometrically (lateral proximity + parallelism), not from explicit lateral bonds the model lacks."
   - "Pore sizes depend on the chosen density; the comparator is matched at one coverage, not proven universal."
   - "Single seed per density rung; a seed ensemble would put CIs on the pore/bundling trends."

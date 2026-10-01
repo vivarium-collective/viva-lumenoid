@@ -54,7 +54,7 @@ bond_coeff 1 {p.bond_k_intra} {p.bond_length}
 bond_coeff 2 {p.crosslink_k} {p.crosslink_r0}
 bond_coeff 3 {p.crosslink_k} {p.crosslink_r0}
 
-# No excluded volume (spec: released decks set every pair eps=0). pair_style
+# No excluded volume (spec: released input scripts set every pair eps=0). pair_style
 # zero still builds the neighbor lists that fix bond/create needs.
 pair_style zero {pair_cutoff}
 pair_coeff * *

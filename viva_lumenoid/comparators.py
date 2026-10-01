@@ -2,7 +2,7 @@
 
 Single source of truth for every experimental number the model is held against.
 Each value is transcribed from the AICS-Lumenoids "Basement membrane — v1"
-specification (Roam export 2026-09-29) and its diagrammatic board — the two
+specification (Roam export 2026-09-30) and its diagrammatic board — the two
 documents in ``workspace/references/``. A readout the simulation produces is
 *validated* by landing in one of these bands (or honestly missing it); the
 visualizations draw these as reference bands so a chart answers "is the model

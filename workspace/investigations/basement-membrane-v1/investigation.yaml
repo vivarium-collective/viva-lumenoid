@@ -22,10 +22,14 @@ hypothesis: >
 
 description: |
   This investigation is the clean-room Vivarium build of the AICS-Lumenoids
-  "Basement membrane — v1 model specification" (Roam graph, exported 2026-09-29;
-  the source spec and diagram are in `workspace/references/`). We do not have the
-  authors' LAMMPS/Smoldyn decks, so every model parameter is transcribed from the
-  spec's parameter sheet and clearly labelled as such.
+  "Basement membrane — v1 model specification" (Roam graph, exported 2026-09-30;
+  the source spec and diagram are in `workspace/references/`). Every model
+  parameter is transcribed from the spec's parameter sheet and labelled as such.
+  The authors' LAMMPS input scripts are now public
+  (github.com/Billie1717/BasementMembraneTurnoverSims, Zenodo
+  10.5281/zenodo.20719515, commit `ab4c004`); this build remains a transcription
+  from the spec rather than a port of those scripts, and they are the ground
+  truth to cross-check its parameters against (not yet done — decision below).
 
   **Engines.** The workspace imports two already-wrapped simulators —
   `viva-lammps` (the `LAMMPSProcess` bridge) and `viva-smoldyn` — and builds the
@@ -128,6 +132,7 @@ executive:
     reproducible bending modulus + the energy-scale decision.
   verdict_status: preliminary
   decisions_needed:
+    - "Cross-check the clean-room parameters against the now-public released LAMMPS input scripts (github.com/Billie1717/BasementMembraneTurnoverSims, Zenodo 10.5281/zenodo.20719515); reconcile any divergence before reporting absolute values."
     - "Engine for stages 1–2: LAMMPS now; revisit Smoldyn at stage 3 (spec #2)."
     - "Secretion: fixed concentration vs fixed flux (spec #3)."
     - "Energy scale: report modulus in Pa (fit to a measured modulus) or keep kT and report a ratio (spec #4)."
