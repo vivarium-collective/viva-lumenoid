@@ -1,7 +1,7 @@
 {
   "mode": "snapshot",
   "smsApiBase": "",
-  "repo": "https://github.com/vivarium-collective/viva-lumenoid",
-  "commit": "e8a6f64391c25147d9ae61058c7bb72dd092e978",
-  "generated_from_ref": "main"
+  "repo": "https://github.com/vivarium-collective/viva-lumenoid.git",
+  "commit": "290c3e2a9522a80de7f6d5117eb5b44b0c3073bd",
+  "generated_from_ref": "harden-scientific-content"
 }

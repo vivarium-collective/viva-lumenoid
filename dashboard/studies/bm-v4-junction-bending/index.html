@@ -568,26 +568,26 @@
 
     <div class="ctr-block">
       <h2 class="overview-label ctr-h">Claim</h2>
-      <p class="ctr-text">Junction bending — harmonic angle restraints pinned to each crosslink&#39;s as-formed geometry — is the constraint that governs the basement membrane&#39;s stiffness (bm-v3 showed crosslink connectivity alone cannot, z &lt; 4). Adding it dominates the network&#39;s mechanics, but a CLEAN, reproducible elastic modulus is not obtainable at v1 network size.
+      <p class="ctr-text">Junction bending (harmonic angle restraints pinned to each crosslink&#39;s as-formed geometry) is the constraint that governs the network&#39;s stiffness; bm-v3 showed crosslink connectivity alone cannot (z &lt; 4). Adding bending dominates the mechanics, but a reproducible elastic modulus is not obtainable at v1 network size.
 </p>
       
     </div>
 
     <div class="ctr-block">
       <h2 class="overview-label ctr-h">Test</h2>
-      <p class="ctr-text">Implement bending via LAMMPS `fix restrain` pinned to each junction&#39;s as-formed angle (a per-junction rest angle, so no single-rest-angle frustration), with an auto-reduced timestep for stability. Measure the ATHERMAL modulus by energy minimisation (change_box + minimise; deterministic, no thermal chaos) and sweep the bending stiffness bending_k.
+      <p class="ctr-text">Implement bending via LAMMPS `fix restrain` pinned to each junction&#39;s as-formed angle (a per-junction rest angle, so no single-rest-angle frustration), with an auto-reduced timestep for stability. Measure the athermal modulus by energy minimisation (change_box + minimise; deterministic) and sweep the bending stiffness bending_k.
 </p>
       
       <div class="ctr-meta">
         <div class="ctr-meta-row"><span class="ctr-meta-k">Model</span> <code>junction-bending-network</code></div>
-        <div class="ctr-meta-row"><span class="ctr-meta-k">Measures</span> <span class="ctr-meta-item">Athermal minimisation measures the floppy (k=0) modulus cleanly as ~0.</span><span class="ctr-dot">·</span><span class="ctr-meta-item">Bending produces a large mechanical response (|E| &gt;&gt; floppy).</span><span class="ctr-dot">·</span><span class="ctr-meta-item">The bending modulus is reproducible across seeds (a usable value).</span></div>
+        <div class="ctr-meta-row"><span class="ctr-meta-k">Measures</span> <span class="ctr-meta-item">Athermal minimisation measures the floppy (k=0) modulus as ~0 (deterministic).</span><span class="ctr-dot">·</span><span class="ctr-meta-item">Bending produces a large mechanical response (|E| &gt;&gt; floppy).</span><span class="ctr-dot">·</span><span class="ctr-meta-item">The bending modulus is reproducible across seeds (a usable value).</span></div>
       </div>
       
     </div>
 
     <div class="ctr-block">
       <h2 class="overview-label ctr-h">Result</h2>
-      <p class="ctr-text">The floppy baseline (bending_k = 0) is measured cleanly and reproducibly: E ≈ 0 (per-seed −0.006, 0.0, 0.015). Turning bending on produces a LARGE mechanical response (|E| jumps to tens–hundreds) — the network is no longer floppy — but the stiff, pre-stressed, disordered network has many near- degenerate minima, so the modulus is ILL-CONDITIONED: it scatters wildly and sign-flips (k=80 per-seed −570 … +54, median −210). FP1 therefore confirms bending&#39;s role qualitatively (it dominates the mechanics) but does NOT yet yield a calibratable modulus. A clean value needs a much larger network (self- averaging) and a pre-stress-free reference state — a scoped v2 task.
+      <p class="ctr-text">The floppy baseline (bending_k = 0) is reproducible: E ≈ 0 (per-seed −0.006, 0.0, 0.015). Turning bending on produces a large mechanical response (|E| reaches tens to hundreds; the network is no longer floppy), but the stiff, pre-stressed, disordered network has many near-degenerate minima, so the modulus is ill-conditioned: it scatters across seeds and changes sign (k=80 per-seed −570 … +54, median −210). FP1 therefore establishes that bending dominates the mechanics but does not yet yield a calibratable modulus. A reproducible value needs a larger network (self-averaging) and a pre-stress- free reference state; this is scoped as a v2 task.
 </p>
       
       
@@ -618,7 +618,7 @@
             
             
             <div class="finding-evidence">
-              <strong>observed:</strong> floppy modulus measured cleanly (E ≈ 0, deterministic) via minimisation · 
+              <strong>observed:</strong> floppy modulus measured as E ≈ 0 (deterministic) via minimisation · 
               
               
               
@@ -993,7 +993,7 @@
         <span class="muted" style="font-size:0.78em">requires: <code>true</code></span>
         
       </div>
-      <div style="margin-top: 6px; font-size: 0.95em;">Athermal minimisation measures the floppy (k=0) modulus cleanly as ~0.</div>
+      <div style="margin-top: 6px; font-size: 0.95em;">Athermal minimisation measures the floppy (k=0) modulus as ~0 (deterministic).</div>
       
       
       <details style="margin-top: 6px; font-size: 0.82em;">
@@ -1291,7 +1291,7 @@ pass_if: {"note": "IQR \u003c 0.5\u00b7|median|", "op": "lt", "value": 0.5}</pre
         
         <div class="di-unc di-unc-resolved">
           <h4>✓ Resolved uncertainties</h4>
-          <ul><li>Bending, not crosslink connectivity, governs this network&#39;s stiffness (confirmed qualitatively).</li><li>The athermal minimisation measures the floppy modulus cleanly (fixes the dynamic-measurement chaos).</li></ul>
+          <ul><li>Bending, not crosslink connectivity, governs this network&#39;s stiffness (confirmed qualitatively).</li><li>The athermal minimisation measures the floppy modulus deterministically (removes the dynamic-measurement noise).</li></ul>
         </div>
         
         
@@ -1353,7 +1353,7 @@ pass_if: {"note": "IQR \u003c 0.5\u00b7|median|", "op": "lt", "value": 0.5}</pre
 </section>
 
 </main>
-<script>window.__DASH_CONFIG__ = { mode: "snapshot", interactiveUrl: "https://github.com/vivarium-collective/viva-lumenoid", basePath: "/viva-lumenoid/dashboard", inputsDownloadBase: "https://github.com/vivarium-collective/viva-lumenoid/raw/main", provenance: {"repo_slug": "vivarium-collective/viva-lumenoid", "repo_url": "https://github.com/vivarium-collective/viva-lumenoid", "commit": "e8a6f64391c25147d9ae61058c7bb72dd092e978", "commit_url": "https://github.com/vivarium-collective/viva-lumenoid/commit/e8a6f64391c25147d9ae61058c7bb72dd092e978", "branch": "main", "generated_at": "2026-10-01 21:04 UTC"} };</script>
+<script>window.__DASH_CONFIG__ = { mode: "snapshot", interactiveUrl: "https://github.com/vivarium-collective/viva-lumenoid", basePath: "/viva-lumenoid/dashboard", inputsDownloadBase: "https://github.com/vivarium-collective/viva-lumenoid/raw/harden-scientific-content", provenance: {"repo_slug": "vivarium-collective/viva-lumenoid", "repo_url": "https://github.com/vivarium-collective/viva-lumenoid", "commit": "290c3e2a9522a80de7f6d5117eb5b44b0c3073bd", "commit_url": "https://github.com/vivarium-collective/viva-lumenoid/commit/290c3e2a9522a80de7f6d5117eb5b44b0c3073bd", "branch": "harden-scientific-content", "generated_at": "2026-10-01 21:08 UTC"} };</script>
 <script src="/viva-lumenoid/dashboard/assets/data-source.js"></script>
 <script>
 window._studyName = "bm-v4-junction-bending";

@@ -59,8 +59,8 @@ if _env and Path(_env).is_dir():
     REPO = Path(_env)
 if REPO is None:
     REPO = _find_repo_root(Path.cwd().resolve())
-if REPO is None and Path('/home/runner/work/viva-lumenoid/viva-lumenoid').is_dir():
-    REPO = Path('/home/runner/work/viva-lumenoid/viva-lumenoid')
+if REPO is None and Path('/Users/eranagmon/code/viva-lumenoid--harden').is_dir():
+    REPO = Path('/Users/eranagmon/code/viva-lumenoid--harden')
 if REPO is None:
     REPO = Path.cwd()
 sys.path.insert(0, str(REPO))
@@ -349,7 +349,7 @@ _save_viz('bm-v3-junction-bending-rigidity', 'rigidity-diagnostic', _render_one(
 #
 # **Purpose.** Bending constraints at crosslink junctions lift a sub-isostatic (z < 4) central-force network out of the floppy regime — the physically-expected rigidity source for a semiflexible fiber network.
 #
-# **Claim.** Junction bending — harmonic angle restraints pinned to each crosslink's as-formed geometry — is the constraint that governs the basement membrane's stiffness (bm-v3 showed crosslink connectivity alone cannot, z < 4). Adding it dominates the network's mechanics, but a CLEAN, reproducible elastic modulus is not obtainable at v1 network size.
+# **Claim.** Junction bending (harmonic angle restraints pinned to each crosslink's as-formed geometry) is the constraint that governs the network's stiffness; bm-v3 showed crosslink connectivity alone cannot (z < 4). Adding bending dominates the mechanics, but a reproducible elastic modulus is not obtainable at v1 network size.
 
 # ### Parameters
 #
@@ -410,7 +410,7 @@ _save_viz('bm-v4-junction-bending', 'bending-diagnostic', _render_one('html:bend
 #
 # **Purpose.** Porosity is set by the areal density of rods (an emergent mesh); bundling requires lateral association of 5–7 protomers into a strand, a bond the released NC1/7S model does not have (it can bundle only through 7S branching).
 #
-# **Claim.** The two geometric readouts the spec asks the network to REPRODUCE behave as it predicts: the simulated pore-size distribution reaches the measured corneal-EM band (72 ± 40 nm) at realistic density, but the NC1/7S-only topology cannot bundle — the protomers-per-strand distribution stays near 1 and under-shoots the 5–7 comparator, the spec-named failure of a model with no lateral- association bond.
+# **Claim.** Of the two geometric readouts the spec asks the network to reproduce, one is met and one is not: the simulated pore-size distribution reaches the measured corneal-EM band (72 ± 40 nm) at realistic density, while the protomers-per- strand distribution stays near 1, below the measured 5–7. The released NC1/7S topology has no lateral-association bond, so it cannot form multi-protomer strands — a limitation the spec identifies in advance.
 
 # ### Parameters
 #

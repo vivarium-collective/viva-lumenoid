@@ -608,7 +608,7 @@
         <details class="finding-details">
           <summary class="finding-row">
             <span class="finding-status-glyph">◆</span>
-            <span class="finding-claim finding-statement">LAMMPS `fix bond/break` models only OVER-STRETCH breaking, not a force- independent off-rate — small Rmax dissolves the network, large Rmax saturates it. Replacing it with a controlled random-deletion off-rate gives a make/break steady state and genuine remodelling.
+            <span class="finding-claim finding-statement">LAMMPS `fix bond/break` models only OVER-STRETCH breaking, not a force- independent off-rate — small Rmax dissolves the network, large Rmax saturates it. Replacing it with a controlled random-deletion off-rate gives a make/break steady state and crosslink turnover.
 </span>
             
           </summary>
@@ -772,7 +772,7 @@
         </div>
         
         
-        <div class="ctr-meta-row"><span class="ctr-meta-k">Caveat</span> <span class="ctr-meta-item">Network is FLOPPY (z ≤ 3 &lt; 4): central-force crosslinks alone give ~zero modulus; rigidity needs junction bending / bundling (FP1).</span></div>
+        <div class="ctr-meta-row"><span class="ctr-meta-k">Caveat</span> <span class="ctr-meta-item">Network is floppy (z ≤ 3 &lt; 4): central-force crosslinks alone give ~zero modulus; rigidity needs junction bending / bundling (FP1).</span></div>
         
       </div>
       
@@ -1388,7 +1388,7 @@ pass_if: {"op": "calibratable", "range_hours": "3-30 across systems", "target_ho
       <h3 class="overview-label">Limitations</h3>
       <p class="muted" style="margin:0 0 6px 0;font-size:0.85em">What this study explicitly does NOT validate (prevents overclaim).</p>
       <ul style="margin:0 0 0 18px;padding:0;font-size:0.93em">
-        <li style="margin:2px 0">Network is FLOPPY (z ≤ 3 &lt; 4): central-force crosslinks alone give ~zero modulus; rigidity needs junction bending / bundling (FP1).</li><li style="margin:2px 0">τ below detection while floppy — the relaxable stress is small; a rigid network is needed to resolve it.</li><li style="margin:2px 0">No dynamic junction angles; persistence length is only approximately represented (spec: LAMMPS puts l_p as soft angles at junctions) — the load-bearing v2 gap.</li><li style="margin:2px 0">No excluded volume, so pore-size / bundling readouts are not yet physical (deferred).</li><li style="margin:2px 0">Modulus reported in LJ units / as a ratio, not calibrated pascals (spec #4).</li><li style="margin:2px 0">Parameters transcribed from the spec&#39;s sheet, NOT the authors&#39; actual decks (not yet in hand).</li>
+        <li style="margin:2px 0">Network is floppy (z ≤ 3 &lt; 4): central-force crosslinks alone give ~zero modulus; rigidity needs junction bending / bundling (FP1).</li><li style="margin:2px 0">τ below detection while floppy — the relaxable stress is small; a rigid network is needed to resolve it.</li><li style="margin:2px 0">No dynamic junction angles; persistence length is only approximately represented (spec: LAMMPS puts l_p as soft angles at junctions) — the load-bearing v2 gap.</li><li style="margin:2px 0">No excluded volume, so pore-size / bundling readouts are not yet physical (deferred).</li><li style="margin:2px 0">Modulus reported in LJ units / as a ratio, not calibrated pascals (spec #4).</li><li style="margin:2px 0">Parameters transcribed from the spec&#39;s sheet, not the authors&#39; actual decks (not yet in hand).</li>
       </ul>
     </div>
     
@@ -1504,7 +1504,7 @@ pass_if: {"op": "calibratable", "range_hours": "3-30 across systems", "target_ho
 </section>
 
 </main>
-<script>window.__DASH_CONFIG__ = { mode: "snapshot", interactiveUrl: "https://github.com/vivarium-collective/viva-lumenoid", basePath: "/viva-lumenoid/dashboard", inputsDownloadBase: "https://github.com/vivarium-collective/viva-lumenoid/raw/main", provenance: {"repo_slug": "vivarium-collective/viva-lumenoid", "repo_url": "https://github.com/vivarium-collective/viva-lumenoid", "commit": "e8a6f64391c25147d9ae61058c7bb72dd092e978", "commit_url": "https://github.com/vivarium-collective/viva-lumenoid/commit/e8a6f64391c25147d9ae61058c7bb72dd092e978", "branch": "main", "generated_at": "2026-10-01 21:04 UTC"} };</script>
+<script>window.__DASH_CONFIG__ = { mode: "snapshot", interactiveUrl: "https://github.com/vivarium-collective/viva-lumenoid", basePath: "/viva-lumenoid/dashboard", inputsDownloadBase: "https://github.com/vivarium-collective/viva-lumenoid/raw/harden-scientific-content", provenance: {"repo_slug": "vivarium-collective/viva-lumenoid", "repo_url": "https://github.com/vivarium-collective/viva-lumenoid", "commit": "290c3e2a9522a80de7f6d5117eb5b44b0c3073bd", "commit_url": "https://github.com/vivarium-collective/viva-lumenoid/commit/290c3e2a9522a80de7f6d5117eb5b44b0c3073bd", "branch": "harden-scientific-content", "generated_at": "2026-10-01 21:08 UTC"} };</script>
 <script src="/viva-lumenoid/dashboard/assets/data-source.js"></script>
 <script>
 window._studyName = "bm-v1-stage1-modulus-remodelling";

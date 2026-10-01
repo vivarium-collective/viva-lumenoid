@@ -568,7 +568,7 @@
 
     <div class="ctr-block">
       <h2 class="overview-label ctr-h">Claim</h2>
-      <p class="ctr-text">The two geometric readouts the spec asks the network to REPRODUCE behave as it predicts: the simulated pore-size distribution reaches the measured corneal-EM band (72 ± 40 nm) at realistic density, but the NC1/7S-only topology cannot bundle — the protomers-per-strand distribution stays near 1 and under-shoots the 5–7 comparator, the spec-named failure of a model with no lateral- association bond.
+      <p class="ctr-text">Of the two geometric readouts the spec asks the network to reproduce, one is met and one is not: the simulated pore-size distribution reaches the measured corneal-EM band (72 ± 40 nm) at realistic density, while the protomers-per- strand distribution stays near 1, below the measured 5–7. The released NC1/7S topology has no lateral-association bond, so it cannot form multi-protomer strands — a limitation the spec identifies in advance.
 </p>
       
     </div>
@@ -580,7 +580,7 @@
       
       <div class="ctr-meta">
         <div class="ctr-meta-row"><span class="ctr-meta-k">Model</span> <code>porosity-bundling-network</code></div>
-        <div class="ctr-meta-row"><span class="ctr-meta-k">Measures</span> <span class="ctr-meta-item">The simulated pore median falls within the corneal-EM band (72 ± 40 nm) at realistic density.</span><span class="ctr-dot">·</span><span class="ctr-meta-item">The NC1/7S-only network cannot build 5–7-protomer strands — the bundling distribution stays near 1 (a spec-named failure, confirming the missing lateral-association bond).
+        <div class="ctr-meta-row"><span class="ctr-meta-k">Measures</span> <span class="ctr-meta-item">The simulated pore median falls within the corneal-EM band (72 ± 40 nm) at realistic density.</span><span class="ctr-dot">·</span><span class="ctr-meta-item">The NC1/7S-only network cannot build 5–7-protomer strands — the bundling distribution stays near 1 (below the measured 5–7, confirming the missing lateral-association bond).
 </span></div>
       </div>
       
@@ -588,7 +588,7 @@
 
     <div class="ctr-block">
       <h2 class="overview-label ctr-h">Result</h2>
-      <p class="ctr-text">Pore median falls with coverage (130 → 76 nm as rods rise 150 → 500) and lands in the corneal-EM band (72 ± 40 nm) at the densest network; the open mesh is realistic, and pore size is a density knob, not a universal. Bundling stays near 1 (mean 1.03 → 1.17 protomers/strand, ~82% singletons, max occasionally 5–7) — the NC1/7S topology with no lateral-association bond cannot build the 5–7 strands measured in the PFHR-9 scaffold, exactly the spec&#39;s named failure.
+      <p class="ctr-text">Pore median falls with coverage (130 → 76 nm as rods rise 150 → 500) and lands in the corneal-EM band (72 ± 40 nm) at the densest network; the open mesh is realistic, and pore size is a density knob, not a universal. Bundling stays near 1 (mean 1.03 → 1.17 protomers/strand, ~82% singletons, max occasionally 5–7). With no lateral-association bond, the NC1/7S topology cannot build the 5–7-protomer strands measured in the PFHR-9 scaffold.
 </p>
       
       
@@ -664,7 +664,7 @@
         <details class="finding-details">
           <summary class="finding-row">
             <span class="finding-status-glyph">✓</span>
-            <span class="finding-claim finding-statement">The NC1/7S-only topology cannot bundle: mean strand size stays near 1 (~82% singletons), never building the 5–7-protomer strands a real scaffold shows — the spec-named failure of a model with no lateral-association bond.
+            <span class="finding-claim finding-statement">The NC1/7S-only topology does not bundle: mean strand size stays near 1 (~82% singletons), below the 5–7 protomers per strand measured in the PFHR-9 scaffold. The model has no lateral-association bond.
 </span>
             
           </summary>
@@ -1059,7 +1059,7 @@ pass_if: {"field": "median_pore_nm", "hi": 112.0, "lo": 32.0, "op": "between"}</
         <span class="muted" style="font-size:0.78em">requires: <code>true</code></span>
         
       </div>
-      <div style="margin-top: 6px; font-size: 0.95em;">The NC1/7S-only network cannot build 5–7-protomer strands — the bundling distribution stays near 1 (a spec-named failure, confirming the missing lateral-association bond).
+      <div style="margin-top: 6px; font-size: 0.95em;">The NC1/7S-only network cannot build 5–7-protomer strands — the bundling distribution stays near 1 (below the measured 5–7, confirming the missing lateral-association bond).
 </div>
       
       
@@ -1296,7 +1296,7 @@ pass_if: {"field": "mean_strand", "op": "lt", "value": 2.0}</pre>
 </section>
 
 </main>
-<script>window.__DASH_CONFIG__ = { mode: "snapshot", interactiveUrl: "https://github.com/vivarium-collective/viva-lumenoid", basePath: "/viva-lumenoid/dashboard", inputsDownloadBase: "https://github.com/vivarium-collective/viva-lumenoid/raw/main", provenance: {"repo_slug": "vivarium-collective/viva-lumenoid", "repo_url": "https://github.com/vivarium-collective/viva-lumenoid", "commit": "e8a6f64391c25147d9ae61058c7bb72dd092e978", "commit_url": "https://github.com/vivarium-collective/viva-lumenoid/commit/e8a6f64391c25147d9ae61058c7bb72dd092e978", "branch": "main", "generated_at": "2026-10-01 21:04 UTC"} };</script>
+<script>window.__DASH_CONFIG__ = { mode: "snapshot", interactiveUrl: "https://github.com/vivarium-collective/viva-lumenoid", basePath: "/viva-lumenoid/dashboard", inputsDownloadBase: "https://github.com/vivarium-collective/viva-lumenoid/raw/harden-scientific-content", provenance: {"repo_slug": "vivarium-collective/viva-lumenoid", "repo_url": "https://github.com/vivarium-collective/viva-lumenoid", "commit": "290c3e2a9522a80de7f6d5117eb5b44b0c3073bd", "commit_url": "https://github.com/vivarium-collective/viva-lumenoid/commit/290c3e2a9522a80de7f6d5117eb5b44b0c3073bd", "branch": "harden-scientific-content", "generated_at": "2026-10-01 21:08 UTC"} };</script>
 <script src="/viva-lumenoid/dashboard/assets/data-source.js"></script>
 <script>
 window._studyName = "bm-v5-porosity-bundling";
