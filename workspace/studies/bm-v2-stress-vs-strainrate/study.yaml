@@ -61,7 +61,7 @@ variants:
 simulation_set:
   - name: stage2-strainrate-sweep
     status: completed
-    base_model: collagen-iv-network-stage2
+    base_model: viva_lumenoid.composites.stage2_sweep
     seeds: [12345]
     metrics:
       viscosity_lowrate: 401

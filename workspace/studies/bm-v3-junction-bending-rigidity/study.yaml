@@ -80,7 +80,7 @@ variants:
 simulation_set:
   - name: rigidity-connectivity-sweep
     status: completed
-    base_model: connectivity-sweep
+    base_model: viva_lumenoid.composites.connectivity_sweep
     seeds: [11, 22, 33]
     metrics:
       z_max: 3.72
