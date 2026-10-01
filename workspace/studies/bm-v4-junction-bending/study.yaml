@@ -59,7 +59,7 @@ key_assumptions:
 
 baseline:
   - name: junction-bending-network
-    composite: viva_lumenoid.bending_sweep
+    composite: viva_lumenoid.composites.bending_sweep
     params:
       n_rods: 200
       box_xy: 20.0
