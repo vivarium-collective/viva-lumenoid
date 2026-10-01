@@ -15,7 +15,9 @@ import os
 from viva_lumenoid import run_stage1, CollagenParams
 from viva_lumenoid.stage2 import run_stage2
 from viva_lumenoid.rigidity import run_connectivity_sweep
-from viva_lumenoid.viz import stage1_figure, stage2_figure, rigidity_figure, save_html
+from viva_lumenoid.bending import run_bending_sweep
+from viva_lumenoid.viz import (stage1_figure, stage2_figure, rigidity_figure,
+                               bending_figure, save_html)
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 STUDIES = os.path.join(ROOT, "workspace", "studies")
@@ -52,6 +54,16 @@ def main():
     save_html(rigidity_figure(r3), os.path.join(s3, "rigidity_diagnostic.html"),
               "Rigidity sweep — modulus vs z")
     print(f"  z 1.24→{max(p.z_mean for p in r3.points):.2f}; reached_rigid={r3.reached_rigid}")
+
+    # Stage 4 (FP1): junction-bending sweep (athermal modulus)
+    s4 = os.path.join(STUDIES, "bm-v4-junction-bending", "viz")
+    os.makedirs(s4, exist_ok=True)
+    print("Running junction-bending sweep (athermal; dt=0.002) …")
+    r4 = run_bending_sweep(seeds=[11, 22, 33, 44, 55])
+    save_html(bending_figure(r4), os.path.join(s4, "bending_diagnostic.html"),
+              "FP1 — junction bending")
+    print(f"  floppy median {r4.points[0].modulus_median:+.3f}; "
+          f"large_response={r4.large_response}")
     print("Figures written.")
 
 

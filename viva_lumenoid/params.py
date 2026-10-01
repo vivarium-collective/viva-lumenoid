@@ -47,6 +47,14 @@ class CollagenParams:
     crosslink_cutoff: float = 0.35     # Rmin for bond/create (form when within this)
     crosslink_break_cutoff: float = 1.20  # Rmax for bond/break
 
+    # ---- junction bending (FP1; spec: l_p enters as "soft angles where rods join")
+    # A harmonic angle (partner–end–partner) at each crosslink junction gives the
+    # network BENDING rigidity, the constraint that lifts a sub-isostatic (z < 4)
+    # central-force network out of the floppy regime into a measurable modulus.
+    # bending_k = 0 reproduces the v1 floppy central-force network exactly.
+    bending_k: float = 0.0             # harmonic angle stiffness (energy/rad^2)
+    bending_theta0: float = 180.0      # rest angle (deg); 180 = rods collinear across the junction
+
     # ---- crosslink kinetics (spec: MP make rate, break locked at FactorMult) --
     # `MP` sets bond formation; breaking is locked to it at FactorMult = 0.66,
     # giving a make/break ratio of 1.52 in the released decks. Calibrated by
