@@ -282,7 +282,7 @@ _save_viz('bm-v2-stress-vs-strainrate', 'stage2-diagnostic', _render_one('html:s
 #
 # **Purpose.** Maxwell rigidity percolation: a central-force network is floppy below z = 2d (= 4 in 2D). Bond-bending constraints lower the threshold and rigidify sub- isostatic networks.
 #
-# **Claim.** The v1 collagen IV network's ~zero elastic modulus is a rigidity-percolation effect: with NC1×1 + 7S×3 connectivity the mean coordination z ≤ 3 stays below the 2D central-force isostatic point z = 4, so raising crosslink connectivity alone cannot rigidify it — a measurable modulus needs junction bending (or true bundling bonds).
+# **Claim.** SUPERSEDED by the 2026-10-01 cross-check. This study originally explained the soft modulus as a central-force rigidity-percolation effect (z ≤ 3 < 4). The released code is NOT central-force — it sets junction angles (NC1 180° k=4.0, 7S 155°/60°) — so that explanation does not describe the published model, which carries those angles and is still soft (≈0.03 Pa). What this sweep actually shows: with angles OFF (our earlier transcription) and the corrected params, the network is sub-isostatic (z tops out ≈2.0) and soft — a property of the angle- off transcription, not of the paper.
 
 # ### Parameters
 #
@@ -349,13 +349,13 @@ _save_viz('bm-v3-junction-bending-rigidity', 'rigidity-diagnostic', _render_one(
 #
 # **Purpose.** Bending constraints at crosslink junctions lift a sub-isostatic (z < 4) central-force network out of the floppy regime — the physically-expected rigidity source for a semiflexible fiber network.
 #
-# **Claim.** Junction bending (harmonic angle restraints pinned to each crosslink's as-formed geometry) is the constraint that governs the network's stiffness; bm-v3 showed crosslink connectivity alone cannot (z < 4). Adding bending dominates the mechanics, but a reproducible elastic modulus is not obtainable at v1 network size.
+# **Claim.** REFRAMED by the 2026-10-01 cross-check. Junction bending is NOT a new ingredient we add — the released model already sets it (NC1 angle k=4.0 @180°, plus 7S angles @155°/60°). This study sweeps bending_k around the released value 4.0. Our as-formed `fix restrain` realization of bending is ill-conditioned at v1 size, and — the key point — bending does not make the network stiff in absolute terms: the released model has these angles and is still soft (≈0.03 Pa). Bending is part of the force field, not the missing source of stiffness.
 
 # ### Parameters
 #
 # | simulation | composite | steps | params |
 # | --- | --- | --- | --- |
-# | `junction-bending-network` | `viva_lumenoid.composites.bending_sweep` | 0 | n_rods=200, box_xy=20.0, bending_k=80.0, timestep=0.002, seed=12345 |
+# | `junction-bending-network` | `viva_lumenoid.composites.bending_sweep` | 0 | n_rods=200, box_xy=20.0, bending_k=4.0, timestep=0.002, seed=12345 |
 
 # ### Specification (process-bigraph) — load, inspect, edit
 #

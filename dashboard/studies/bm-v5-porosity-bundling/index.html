@@ -588,7 +588,7 @@
 
     <div class="ctr-block">
       <h2 class="overview-label ctr-h">Result</h2>
-      <p class="ctr-text">Pore median falls with coverage (130 → 76 nm as rods rise 150 → 500) and lands in the corneal-EM band (72 ± 40 nm) at the densest network; the open mesh is realistic, and pore size is a density knob, not a universal. Bundling stays near 1 (mean 1.03 → 1.17 protomers/strand, ~82% singletons, max occasionally 5–7). With no lateral-association bond, the NC1/7S topology cannot build the 5–7-protomer strands measured in the PFHR-9 scaffold.
+      <p class="ctr-text">Re-run 2026-10-01 with the parameters corrected to the released code (3σ rod, σ≈125 nm). Pore median falls with coverage and lands near/within the corneal-EM band (72 ± 40 nm) at the densest network (median ~54 nm); the open mesh is realistic, and pore size is a density knob, not a universal. Bundling stays near 1 (mean ~1.29 protomers/strand, mostly singletons, max ~6). With no lateral- association bond, the NC1/7S topology cannot build the 5–7-protomer strands measured in the PFHR-9 scaffold.
 </p>
       
       
@@ -606,7 +606,7 @@
         <details class="finding-details">
           <summary class="finding-row">
             <span class="finding-status-glyph">✓</span>
-            <span class="finding-claim finding-statement">Pore size scales with network density and reaches the corneal-EM band (72 ± 40 nm) at the densest sampled network (median 76 nm) — the mesh is realistic and pore size is a tunable density readout, not a free universal.
+            <span class="finding-claim finding-statement">Pore size scales with network density and reaches the corneal-EM band (72 ± 40 nm) at the densest sampled network (median 54 nm, corrected σ≈125 nm) — the mesh is realistic and pore size is a tunable density readout, not a free universal.
 </span>
             
           </summary>
@@ -619,7 +619,7 @@
             
             
             <div class="finding-evidence">
-              <strong>observed:</strong> median pore 130 → 108 → 120 → 76 nm as rods rise 150 → 500 · 
+              <strong>observed:</strong> median pore ~54 nm at the densest network (re-run 2026-10-01, corrected params) · 
               
               
               
@@ -677,7 +677,7 @@
             
             
             <div class="finding-evidence">
-              <strong>observed:</strong> mean strand 1.03 → 1.17, max 5–7 occasionally, &lt;5% of rods in 5–7 strands · 
+              <strong>observed:</strong> mean strand ~1.29, max ~6, &lt;5% of rods in 5–7 strands · 
               
               
               
@@ -1026,7 +1026,7 @@ pass_if: {"field": "median_pore_nm", "hi": 112.0, "lo": 32.0, "op": "between"}</
     "abrams2000nanoscale"
   ],
   "literature_target": "72 \u00b1 40 nm (corneal BM, low-voltage SEM)",
-  "observed_value": "median 76 nm at 500 rods (coverage ~5.6%)",
+  "observed_value": "median 54 nm at the densest network (corrected \u03c3\u2248125 nm)",
   "resolution": "model"
 }</pre>
       </details>
@@ -1078,7 +1078,7 @@ pass_if: {"field": "mean_strand", "op": "lt", "value": 2.0}</pre>
     "pokidysheva2025targeted"
   ],
   "literature_target": "5\u20137 protomers/strand (PFHR-9 scaffold, immuno-gold SEM)",
-  "observed_value": "mean 1.17 protomers/strand, ~82% singletons, \u003c5% in 5\u20137",
+  "observed_value": "mean 1.29 protomers/strand, mostly singletons, max ~6",
   "resolution": "model"
 }</pre>
       </details>
@@ -1296,7 +1296,7 @@ pass_if: {"field": "mean_strand", "op": "lt", "value": 2.0}</pre>
 </section>
 
 </main>
-<script>window.__DASH_CONFIG__ = { mode: "snapshot", interactiveUrl: "https://github.com/vivarium-collective/viva-lumenoid", basePath: "/viva-lumenoid/dashboard", inputsDownloadBase: "https://github.com/vivarium-collective/viva-lumenoid/raw/spec-update-v2", provenance: {"repo_slug": "vivarium-collective/viva-lumenoid", "repo_url": "https://github.com/vivarium-collective/viva-lumenoid", "commit": "51f19f09b0c783c399cd9484dcdf8922172de9cc", "commit_url": "https://github.com/vivarium-collective/viva-lumenoid/commit/51f19f09b0c783c399cd9484dcdf8922172de9cc", "branch": "spec-update-v2", "generated_at": "2026-10-01 22:32 UTC"} };</script>
+<script>window.__DASH_CONFIG__ = { mode: "snapshot", interactiveUrl: "https://github.com/vivarium-collective/viva-lumenoid", basePath: "/viva-lumenoid/dashboard", inputsDownloadBase: "https://github.com/vivarium-collective/viva-lumenoid/raw/spec-update-v2", provenance: {"repo_slug": "vivarium-collective/viva-lumenoid", "repo_url": "https://github.com/vivarium-collective/viva-lumenoid", "commit": "cd18d31af71a49ce3644879c2bc80de243afbbe9", "commit_url": "https://github.com/vivarium-collective/viva-lumenoid/commit/cd18d31af71a49ce3644879c2bc80de243afbbe9", "branch": "spec-update-v2", "generated_at": "2026-10-02 00:34 UTC"} };</script>
 <script src="/viva-lumenoid/dashboard/assets/data-source.js"></script>
 <script>
 window._studyName = "bm-v5-porosity-bundling";

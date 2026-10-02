@@ -590,7 +590,7 @@
 
     <div class="ctr-block">
       <h2 class="overview-label ctr-h">Result</h2>
-      <p class="ctr-text">Runs end-to-end in ~4 s. The network assembles ~100 crosslinks from 200 rods, the stress-strain ramp gives a positive but very soft tangent modulus (~0.3–0.8 in LJ units, ~1–2 Pa at kT/a³ ≈ 2.5 Pa) consistent with the paper&#39;s ≈0.03 Pa linear modulus, and the chemistry-on hold shows a stress change as crosslinks turn over. The remodelling time is currently noise-limited at this network size (flagged, not silently zeroed) — calibration is spec decision #10.
+      <p class="ctr-text">Re-run 2026-10-01 with the parameters corrected to the released code (3σ rod, crosslink k=6/r0=0.5, cutoffs 0.65/1.35, damp=0.1, Nevery=500, σ≈125 nm). The stress-strain ramp gives a very soft tangent modulus consistent with zero at this network size (~−0.5 to +0.5 LJ across seeds, ~±1 Pa at kT/σ³ ≈ 2.2 Pa), consistent with the paper&#39;s ≈0.03 Pa linear modulus, and the chemistry-on hold shows a stress change as crosslinks turn over. The remodelling time is noise- limited at this network size (flagged, not silently zeroed) — calibration is spec decision #10. NOTE: the modulus is small/noise-limited, not a clean value; the earlier &#34;floppy because central-force&#34; explanation is retired (see bm-v3).
 </p>
       
       
@@ -1504,7 +1504,7 @@ pass_if: {"op": "calibratable", "range_hours": "3-30 across systems", "target_ho
 </section>
 
 </main>
-<script>window.__DASH_CONFIG__ = { mode: "snapshot", interactiveUrl: "https://github.com/vivarium-collective/viva-lumenoid", basePath: "/viva-lumenoid/dashboard", inputsDownloadBase: "https://github.com/vivarium-collective/viva-lumenoid/raw/spec-update-v2", provenance: {"repo_slug": "vivarium-collective/viva-lumenoid", "repo_url": "https://github.com/vivarium-collective/viva-lumenoid", "commit": "51f19f09b0c783c399cd9484dcdf8922172de9cc", "commit_url": "https://github.com/vivarium-collective/viva-lumenoid/commit/51f19f09b0c783c399cd9484dcdf8922172de9cc", "branch": "spec-update-v2", "generated_at": "2026-10-01 22:32 UTC"} };</script>
+<script>window.__DASH_CONFIG__ = { mode: "snapshot", interactiveUrl: "https://github.com/vivarium-collective/viva-lumenoid", basePath: "/viva-lumenoid/dashboard", inputsDownloadBase: "https://github.com/vivarium-collective/viva-lumenoid/raw/spec-update-v2", provenance: {"repo_slug": "vivarium-collective/viva-lumenoid", "repo_url": "https://github.com/vivarium-collective/viva-lumenoid", "commit": "cd18d31af71a49ce3644879c2bc80de243afbbe9", "commit_url": "https://github.com/vivarium-collective/viva-lumenoid/commit/cd18d31af71a49ce3644879c2bc80de243afbbe9", "branch": "spec-update-v2", "generated_at": "2026-10-02 00:34 UTC"} };</script>
 <script src="/viva-lumenoid/dashboard/assets/data-source.js"></script>
 <script>
 window._studyName = "bm-v1-stage1-modulus-remodelling";

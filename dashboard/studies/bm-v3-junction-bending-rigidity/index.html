@@ -568,7 +568,7 @@
 
     <div class="ctr-block">
       <h2 class="overview-label ctr-h">Claim</h2>
-      <p class="ctr-text">The v1 collagen IV network&#39;s ~zero elastic modulus is a rigidity-percolation effect: with NC1×1 + 7S×3 connectivity the mean coordination z ≤ 3 stays below the 2D central-force isostatic point z = 4, so raising crosslink connectivity alone cannot rigidify it — a measurable modulus needs junction bending (or true bundling bonds).
+      <p class="ctr-text">SUPERSEDED by the 2026-10-01 cross-check. This study originally explained the soft modulus as a central-force rigidity-percolation effect (z ≤ 3 &lt; 4). The released code is NOT central-force — it sets junction angles (NC1 180° k=4.0, 7S 155°/60°) — so that explanation does not describe the published model, which carries those angles and is still soft (≈0.03 Pa). What this sweep actually shows: with angles OFF (our earlier transcription) and the corrected params, the network is sub-isostatic (z tops out ≈2.0) and soft — a property of the angle- off transcription, not of the paper.
 </p>
       
     </div>
@@ -587,7 +587,7 @@
 
     <div class="ctr-block">
       <h2 class="overview-label ctr-h">Result</h2>
-      <p class="ctr-text">Across the achievable range z rises 1.24 → 3.72 (crosslinks 48 → 543 on 200 rods) but NEVER reaches z = 4, and the modulus stays statistically consistent with zero at every rung (−0.05 to −0.08 ± ~0.08–0.17 LJ, all CIs span 0). The NC1/7S topology saturates geometrically below the isostatic point, so central- force crosslinks cannot rigidify the sheet. Rigidity must come from junction bending — the &#34;soft angles where rods join&#34; the spec names.
+      <p class="ctr-text">With the corrected released params and angles off, raising the crosslink caps lifts z only to ~2.0 and the modulus stays consistent with zero at every rung — consistent with a sparse, sub-isostatic angle-off network. But this is NOT the mechanism of the published model&#39;s softness: the released model has junction angles and is still soft (≈0.03 Pa), which the spec attributes to missing components, thin-sheet geometry and absent pre-stress, not to sub-isostatic connectivity. The rigidity-percolation framing is retired as the explanation.
 </p>
       
       
@@ -618,7 +618,7 @@
             
             
             <div class="finding-evidence">
-              <strong>observed:</strong> z 1.24→3.72; modulus −0.05→−0.08 ± ~0.08–0.17 (95% CI, all span 0) · 
+              <strong>observed:</strong> z 1.24→2.03 (angles off, corrected params); modulus consistent with 0 · 
               
               
               
@@ -1005,7 +1005,7 @@ pass_if: {"note": "all CIs span 0", "op": "consistent_with_zero"}</pre>
     "meadowcroft2025nonequilibrium"
   ],
   "literature_target": 4.0,
-  "observed_value": "z 1.24\u21923.72, modulus \u22120.05\u2192\u22120.08 (all consistent with 0)",
+  "observed_value": "z 1.24\u21922.03 (angles off); modulus consistent with 0",
   "resolution": "model"
 }</pre>
       </details>
@@ -1223,7 +1223,7 @@ pass_if: {"note": "all CIs span 0", "op": "consistent_with_zero"}</pre>
 </section>
 
 </main>
-<script>window.__DASH_CONFIG__ = { mode: "snapshot", interactiveUrl: "https://github.com/vivarium-collective/viva-lumenoid", basePath: "/viva-lumenoid/dashboard", inputsDownloadBase: "https://github.com/vivarium-collective/viva-lumenoid/raw/spec-update-v2", provenance: {"repo_slug": "vivarium-collective/viva-lumenoid", "repo_url": "https://github.com/vivarium-collective/viva-lumenoid", "commit": "51f19f09b0c783c399cd9484dcdf8922172de9cc", "commit_url": "https://github.com/vivarium-collective/viva-lumenoid/commit/51f19f09b0c783c399cd9484dcdf8922172de9cc", "branch": "spec-update-v2", "generated_at": "2026-10-01 22:32 UTC"} };</script>
+<script>window.__DASH_CONFIG__ = { mode: "snapshot", interactiveUrl: "https://github.com/vivarium-collective/viva-lumenoid", basePath: "/viva-lumenoid/dashboard", inputsDownloadBase: "https://github.com/vivarium-collective/viva-lumenoid/raw/spec-update-v2", provenance: {"repo_slug": "vivarium-collective/viva-lumenoid", "repo_url": "https://github.com/vivarium-collective/viva-lumenoid", "commit": "cd18d31af71a49ce3644879c2bc80de243afbbe9", "commit_url": "https://github.com/vivarium-collective/viva-lumenoid/commit/cd18d31af71a49ce3644879c2bc80de243afbbe9", "branch": "spec-update-v2", "generated_at": "2026-10-02 00:34 UTC"} };</script>
 <script src="/viva-lumenoid/dashboard/assets/data-source.js"></script>
 <script>
 window._studyName = "bm-v3-junction-bending-rigidity";

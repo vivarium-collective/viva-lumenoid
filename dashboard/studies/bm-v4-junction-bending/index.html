@@ -568,7 +568,7 @@
 
     <div class="ctr-block">
       <h2 class="overview-label ctr-h">Claim</h2>
-      <p class="ctr-text">Junction bending (harmonic angle restraints pinned to each crosslink&#39;s as-formed geometry) is the constraint that governs the network&#39;s stiffness; bm-v3 showed crosslink connectivity alone cannot (z &lt; 4). Adding bending dominates the mechanics, but a reproducible elastic modulus is not obtainable at v1 network size.
+      <p class="ctr-text">REFRAMED by the 2026-10-01 cross-check. Junction bending is NOT a new ingredient we add — the released model already sets it (NC1 angle k=4.0 @180°, plus 7S angles @155°/60°). This study sweeps bending_k around the released value 4.0. Our as-formed `fix restrain` realization of bending is ill-conditioned at v1 size, and — the key point — bending does not make the network stiff in absolute terms: the released model has these angles and is still soft (≈0.03 Pa). Bending is part of the force field, not the missing source of stiffness.
 </p>
       
     </div>
@@ -748,7 +748,7 @@
   <div class="overview-section" id="model-section">
     <h3>Runnable models <span class="muted" style="font-size:0.85em;font-weight:normal">— the composite(s) this study simulates</span></h3>
     
-    <div class="cond-block" data-model-composite="viva_lumenoid.composites.bending_sweep" data-model-overrides='{"bending_k": 80.0, "box_xy": 20.0, "n_rods": 200, "seed": 12345, "timestep": 0.002}'>
+    <div class="cond-block" data-model-composite="viva_lumenoid.composites.bending_sweep" data-model-overrides='{"bending_k": 4.0, "box_xy": 20.0, "n_rods": 200, "seed": 12345, "timestep": 0.002}'>
       <div class="cond-block-title" style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
         <strong>junction-bending-network</strong>
         
@@ -1353,7 +1353,7 @@ pass_if: {"note": "IQR \u003c 0.5\u00b7|median|", "op": "lt", "value": 0.5}</pre
 </section>
 
 </main>
-<script>window.__DASH_CONFIG__ = { mode: "snapshot", interactiveUrl: "https://github.com/vivarium-collective/viva-lumenoid", basePath: "/viva-lumenoid/dashboard", inputsDownloadBase: "https://github.com/vivarium-collective/viva-lumenoid/raw/spec-update-v2", provenance: {"repo_slug": "vivarium-collective/viva-lumenoid", "repo_url": "https://github.com/vivarium-collective/viva-lumenoid", "commit": "51f19f09b0c783c399cd9484dcdf8922172de9cc", "commit_url": "https://github.com/vivarium-collective/viva-lumenoid/commit/51f19f09b0c783c399cd9484dcdf8922172de9cc", "branch": "spec-update-v2", "generated_at": "2026-10-01 22:32 UTC"} };</script>
+<script>window.__DASH_CONFIG__ = { mode: "snapshot", interactiveUrl: "https://github.com/vivarium-collective/viva-lumenoid", basePath: "/viva-lumenoid/dashboard", inputsDownloadBase: "https://github.com/vivarium-collective/viva-lumenoid/raw/spec-update-v2", provenance: {"repo_slug": "vivarium-collective/viva-lumenoid", "repo_url": "https://github.com/vivarium-collective/viva-lumenoid", "commit": "cd18d31af71a49ce3644879c2bc80de243afbbe9", "commit_url": "https://github.com/vivarium-collective/viva-lumenoid/commit/cd18d31af71a49ce3644879c2bc80de243afbbe9", "branch": "spec-update-v2", "generated_at": "2026-10-02 00:34 UTC"} };</script>
 <script src="/viva-lumenoid/dashboard/assets/data-source.js"></script>
 <script>
 window._studyName = "bm-v4-junction-bending";
