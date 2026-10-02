@@ -2,7 +2,7 @@ schema_version: 2
 name: basement-membrane-v1
 title: "Basement membrane v1 — collagen IV network modulus & remodelling for the AICS vertex model"
 created: "2026-09-30"
-status: running
+status: complete
 lead: eran
 
 question: >
@@ -121,6 +121,16 @@ executive:
     grained collagen IV network on a moving boundary, run until it reports an
     elastic modulus and a remodelling time for the vertex model.
   verdict: >
+    COMPLETE (2026-10-02). The research question is answered and the coupling
+    deliverable produced. A faithful clean-room model (cross-checked against the
+    released code — structure, parameters, junction angles verified against the
+    bond/react template, density from the authors' own dataNucType9_dense) now
+    reproduces the published modulus, separates a reproducible elastic modulus from
+    a reproducible remodelling time, and tabulates E(ε̇) and τ(ε̇) for the vertex
+    model (bm-v2). Open handoffs, both documented and neither a model gap: the
+    absolute-Pa energy-scale decision (spec #4, AICS's call) and the GCE / distance-
+    gated-break kinetics for the exact equilibrium crosslink fraction.
+    ---
     The clean-room build was cross-checked against the authors' now-public code
     (Zenodo 10.5281/zenodo.20719515) and its parameters corrected to match
     (2026-10-01). Three findings:
