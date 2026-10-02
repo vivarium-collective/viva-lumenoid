@@ -107,9 +107,15 @@ class CollagenParams:
     # ---- box / population (quasi-2D slab; spec: rods lie in-plane) --------
     # Density retuned for the corrected 3σ rod: ~250 rods in a 15σ box percolates
     # (~1 crosslink/rod). (CROSS-CHECK CORRECTION 2026-10-01.)
+    # The authors' dense initial config (Assembly/input/dataNucType9_dense) is
+    # 3126 protomers in a 32.27×32.27×12.0 box: areal density 3.0 rods/σ² and a
+    # 12σ-thick slab (several layers), V=12500 (= their InitialVol). The faithful
+    # (use_real_angles) runs use that density/thickness via a smaller box; at it,
+    # make+break and make-only agree and the modulus is reproducible (~3 LJ).
+    # These defaults stay at the lighter quasi-2D geometry for fast angle-off runs.
     n_rods: int = 250                  # percolating default for the 3σ-rod geometry
     box_xy: float = 15.0               # in units of σ
-    slab_thickness: float = 2.0        # thin z; quasi-2D
+    slab_thickness: float = 2.0        # thin z; quasi-2D (authors' dense config = 12σ)
     seed: int = 12345
 
     # ---- stage-1 protocol (spec: stretch, hold, then chemistry on) --------

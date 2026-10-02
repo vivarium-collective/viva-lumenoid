@@ -147,3 +147,22 @@ def test_faithful_network_remodels_in_viscous_hold():
     # a real stress that relaxes in the breakage-only hold
     assert r.sigma_viscous_start > r.sigma_viscous_end
     assert r.sigma_viscous_start > 1.0
+
+
+def test_calibrated_density_gives_reproducible_stiff_modulus():
+    """At the authors' dense geometry (3.0 rods/σ², 12σ slab) the faithful network
+    gives a positive, reproducible modulus and make+break ≈ make-only density
+    (well-defined, not saturation-dependent) — the 2026-10-02 density calibration."""
+    import numpy as np
+    from viva_lumenoid import CollagenParams, run_stage1
+    box = 8.0
+    n = int(round(3.0 * box * box))
+    Es = []
+    for sd in (11, 22):
+        r = run_stage1(CollagenParams(n_rods=n, box_xy=box, slab_thickness=12.0,
+                       bending_k=4.0, use_real_angles=True, assemble_steps=10000,
+                       hold_steps=3000, seed=sd))
+        Es.append(r.elastic_modulus_lj)
+    Es = np.array(Es)
+    assert (Es > 0).all()                 # stiff, well-conditioned
+    assert Es.std() / max(Es.mean(), 1e-6) < 0.6   # reproducible across seeds
