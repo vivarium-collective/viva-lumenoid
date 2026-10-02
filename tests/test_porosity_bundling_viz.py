@@ -114,3 +114,9 @@ def test_modulus_vs_fraction_figure_renders():
     fig = viz.modulus_vs_fraction_figure([(0.72, -0.02), (1.2, 0.44), (1.8, 1.9), (2.5, 3.9)])
     html = viz.figure_to_html(fig)
     assert "reproduces the published modulus" in html
+
+
+def test_coupling_figure_renders():
+    pts = [{"strain_rate": 5e-4, "E_lj": 3.5, "E_lj_std": 0.3, "E_Pa": 7.8, "tau": 50, "n_rods": 300},
+           {"strain_rate": 8e-3, "E_lj": 5.0, "E_lj_std": 0.4, "E_Pa": 11.0, "tau": 50, "n_rods": 300}]
+    assert "Vertex-model coupling" in viz.figure_to_html(viz.coupling_figure(pts))

@@ -13,7 +13,7 @@ from __future__ import annotations
 import os
 
 from viva_lumenoid import run_stage1, CollagenParams
-from viva_lumenoid.stage2 import run_stage2
+from viva_lumenoid.stage2 import run_stage2, run_coupling_sweep
 from viva_lumenoid.rigidity import run_connectivity_sweep
 from viva_lumenoid.bending import run_bending_sweep, run_faithful_comparison
 from viva_lumenoid.stage5 import run_porosity_bundling
@@ -21,7 +21,8 @@ from viva_lumenoid.viz import (stage1_figure, stage2_figure, rigidity_figure,
                                bending_figure, porosity_bundling_figure,
                                evidence_map_figure, network_movie_figure,
                                network_movie_3d_figure, cross_check_figure,
-                               modulus_ladder_figure, faithful_angles_figure, save_html)
+                               modulus_ladder_figure, faithful_angles_figure,
+                               coupling_figure, save_html)
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 STUDIES = os.path.join(ROOT, "workspace", "studies")
@@ -81,6 +82,12 @@ def main():
     save_html(stage2_figure(r2), os.path.join(s2, "stage2_diagnostic.html"),
               "Stage 2 — σ(ε̇) growing substrate")
     print(f"  low-rate η ≈ {r2.viscosity_lowrate:.0f}")
+    # Coupling deliverable: E(ε̇) and τ(ε̇) from the faithful, density-calibrated model.
+    print("Running vertex-model coupling sweep (faithful) …")
+    cpl = run_coupling_sweep(rates=[5e-4, 1e-3, 2e-3, 4e-3, 8e-3], seeds=[11, 22])
+    save_html(coupling_figure(cpl), os.path.join(s2, "coupling.html"),
+              "Vertex-model coupling — E(ε̇) and τ(ε̇)")
+    print(f"  coupling: E(ε̇) {cpl[0]['E_Pa']:.1f}→{cpl[-1]['E_Pa']:.1f} Pa, τ≈{cpl[-1]['tau']:.0f}")
 
     # Stage 3 (follow-up): rigidity-percolation sweep
     s3 = os.path.join(STUDIES, "bm-v3-junction-bending-rigidity", "viz")

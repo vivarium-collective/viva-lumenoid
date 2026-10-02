@@ -1023,6 +1023,48 @@ def modulus_vs_fraction_figure(points, kT_per_a3_Pa: float = 2.2) -> "object":
 
 
 # --------------------------------------------------------------------------- #
+# Vertex-model coupling — E(ε̇) and τ(ε̇), the two numbers to hand off
+# --------------------------------------------------------------------------- #
+def coupling_figure(points) -> "object":
+    """The investigation's output for the AICS vertex model (offline coupling):
+    effective elastic modulus E(ε̇) and remodelling time τ(ε̇) vs growth rate, from
+    the faithful density-calibrated model. ``points`` = run_coupling_sweep output."""
+    from plotly.subplots import make_subplots
+    import plotly.graph_objects as go
+
+    rate = np.asarray([p["strain_rate"] for p in points], dtype=float)
+    e_pa = np.asarray([p["E_Pa"] for p in points], dtype=float)
+    e_std = np.asarray([p.get("E_lj_std", 0.0) * 2.2 for p in points], dtype=float)
+    tau = np.asarray([p["tau"] for p in points], dtype=float)
+
+    fig = make_subplots(rows=1, cols=2, horizontal_spacing=0.12,
+                        subplot_titles=("Effective modulus E(ε̇)",
+                                        "Remodelling time τ(ε̇)"))
+    fig.add_trace(go.Scatter(
+        x=rate, y=e_pa, error_y=dict(type="data", array=e_std, color=_MUTED, thickness=1),
+        mode="lines+markers", line=dict(color=BLUE, width=2),
+        marker=dict(size=11, color=BLUE, line=dict(width=1, color="white")),
+        showlegend=False, hovertemplate="ε̇=%{x:.1e}<br>E=%{y:.1f} Pa<extra></extra>"),
+        row=1, col=1)
+    fig.add_trace(go.Scatter(
+        x=rate, y=tau, mode="lines+markers", line=dict(color=RED, width=2),
+        marker=dict(size=11, color=RED, line=dict(width=1, color="white")),
+        showlegend=False, hovertemplate="ε̇=%{x:.1e}<br>τ=%{y:.0f} τ<extra></extra>"),
+        row=1, col=2)
+    fig.update_xaxes(type="log", title_text="growth rate ε̇ (1/τ)", row=1, col=1)
+    fig.update_yaxes(title_text="E (Pa, kT/σ³≈2.2)", row=1, col=1)
+    fig.update_xaxes(type="log", title_text="growth rate ε̇ (1/τ)", row=1, col=2)
+    fig.update_yaxes(title_text="remodelling time τ (LJ)", row=1, col=2)
+    _layout(fig, height=420)
+    fig.update_layout(title=dict(
+        text=("<b>Vertex-model coupling — E(ε̇) and τ(ε̇) from the faithful model</b>   "
+              f"<span style='font-size:12px;color:{_MUTED}'>the two numbers the AICS "
+              f"vertex model takes (offline coupling); E stiffens with growth rate, "
+              f"τ ≈ constant (crosslink kinetics)</span>"), x=0.01, xanchor="left"))
+    return fig
+
+
+# --------------------------------------------------------------------------- #
 def figure_to_html(fig, title: str = "viva-lumenoid") -> str:
     import plotly.io as pio
     return pio.to_html(fig, full_html=True, include_plotlyjs="cdn",
