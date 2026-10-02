@@ -70,8 +70,10 @@ at_a_glance:
       cross-check and modulus-ladder figures.
   - study: bm-v2-stress-vs-strainrate
     role: >
-      Stage 2. Sweep the equibiaxial strain rate ε̇ on the growing substrate and
-      read σ(ε̇) → the effective viscosity η and the viscous→elastic crossover.
+      Stage 2 + the coupling deliverable. Sweeps the equibiaxial growth rate ε̇ and,
+      from the faithful density-calibrated model, tabulates the effective modulus
+      E(ε̇) (≈7→11 Pa, stiffening with rate) and remodelling time τ(ε̇) (≈36–51 τ,
+      ≈constant) — the two numbers the AICS vertex model takes (offline coupling).
   - study: bm-v3-junction-bending-rigidity
     role: >
       Follow-up (explanation superseded). The rigidity-percolation story is retired

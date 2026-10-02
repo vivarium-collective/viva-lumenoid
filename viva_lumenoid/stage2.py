@@ -122,3 +122,40 @@ def run_stage2(params: CollagenParams | None = None,
         trace={'rates': list(r), 'sigma_steady': [pt.sigma_steady for pt in points],
                'eta_effective': [pt.eta_effective for pt in points]},
     )
+
+
+def run_coupling_sweep(rates=None, seeds=None, box_xy: float = 10.0,
+                       areal_density: float = 3.0, assemble_steps: int = 12000,
+                       hold_steps: int = 8000):
+    """The investigation's OUTPUT for the vertex-model coupling: the effective
+    elastic modulus E(ε̇) AND the remodelling time τ(ε̇) vs growth rate, from the
+    FAITHFUL, density-calibrated model (angles active during assembly, authors'
+    density 3.0 rods/σ², 12σ slab). Returns a list of dicts the coupling figure
+    and any downstream (offline) vertex-model table consume.
+    """
+    from .params import CollagenParams
+    from .stage1 import run_stage1
+    rates = rates or [5e-4, 1e-3, 2e-3, 4e-3, 8e-3]
+    seeds = seeds or [11, 22]
+    n = int(round(areal_density * box_xy * box_xy))
+    out = []
+    for rate in rates:
+        Es, taus = [], []
+        for sd in seeds:
+            r = run_stage1(CollagenParams(
+                n_rods=n, box_xy=box_xy, slab_thickness=12.0, bending_k=4.0,
+                use_real_angles=True, assemble_steps=assemble_steps,
+                hold_steps=hold_steps, strain_rate=rate, target_strain=0.15, seed=sd))
+            Es.append(r.elastic_modulus_lj)
+            if not r.relaxation_noise_limited:
+                taus.append(r.relaxation_time_lj)
+        import numpy as _np
+        out.append({
+            "strain_rate": rate,
+            "E_lj": float(_np.median(Es)),
+            "E_lj_std": float(_np.std(Es)),
+            "E_Pa": float(_np.median(Es)) * CollagenParams().kT_per_a3_Pa,
+            "tau": float(_np.median(taus)) if taus else float("nan"),
+            "n_rods": n,
+        })
+    return out

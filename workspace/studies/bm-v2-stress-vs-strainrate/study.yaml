@@ -17,13 +17,16 @@ experiment: >
   η = σ/ε̇ per rate and locate any viscous→elastic crossover.
 
 result: >
-  Re-run 2026-10-01 with the parameters corrected to the released code (3σ rod,
-  crosslink k=6/r0=0.5, cutoffs 0.65/1.35, damp=0.1, Nevery=500). Over six rates At v1 params σ(ε̇) is roughly
-  rate-INDEPENDENT (~0.3–0.4 kT/a³), so η ∝ 1/ε̇ (slope −1 on log–log) — the
-  network is ELASTIC-dominated across the sampled rates, not viscous, and the
-  crosslink count itself falls with rate (faster stretch outruns remodelling).
-  A well-defined viscous plateau needs slower rates / a larger, better-equilibrated
-  network — the same calibration the stage-1 study flags.
+  COUPLING DELIVERABLE (2026-10-02) — with the faithful, density-calibrated model
+  (angles active during assembly, authors' density 3.0 rods/σ², 12σ slab) the two
+  numbers the AICS vertex model needs are now tabulated vs growth rate ε̇ over a
+  seed ensemble: the effective elastic modulus E(ε̇) rises from ≈7 Pa at ε̇=5e-4 to
+  ≈11 Pa at ε̇=8e-3 (the network stiffens as growth outpaces remodelling), while
+  the remodelling time τ(ε̇) ≈ 36–51 τ stays roughly constant (set by crosslink
+  kinetics, not rate). This is the offline coupling the spec asks for — E and τ as
+  functions of growth rate, ready to hand to the vertex model. (The earlier
+  angle-off σ(ε̇) sweep, which read elastic-dominated at ~0.3 kT/σ³, is superseded
+  by this faithful run.)
 
 purpose:
   question: What is σ(ε̇), and where does the network cross from viscous to elastic?
@@ -134,16 +137,22 @@ limitations:
 report:
   title: "Stage 2 — σ(ε̇) on the growing substrate"
   verdict: >
-    The sweep runs and yields σ(ε̇) and η per rate. At v1 params the response is
-    elastic-dominated (σ rate-independent, η ∝ 1/ε̇); exposing the viscous plateau
-    is gated on slower rates and a better-equilibrated network.
-  confidence: low
+    Produces the investigation's coupling deliverable: from the faithful,
+    density-calibrated model, the effective modulus E(ε̇) (≈7→11 Pa, stiffening
+    with growth rate) and the remodelling time τ(ε̇) (≈36–51 τ, roughly constant)
+    tabulated vs growth rate — the two numbers the AICS vertex model takes in the
+    offline coupling. Absolute Pa still depends on the energy-scale decision (#4).
+  confidence: medium
   evidence_quality: preliminary
   main_insight: >
     The clean-room network is stiff/elastic on the sampled timescales — remodelling
     is too slow relative to the imposed strain to give a viscous plateau yet.
 
 visualizations:
+  - name: coupling
+    address: "html:coupling.html"
+    config:
+      title: "Vertex-model coupling — E(ε̇) and τ(ε̇) (the deliverable)"
   - name: stage2-movie
     address: "html:stage2_movie.html"
     config:
