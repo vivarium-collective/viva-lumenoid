@@ -59,8 +59,8 @@ if _env and Path(_env).is_dir():
     REPO = Path(_env)
 if REPO is None:
     REPO = _find_repo_root(Path.cwd().resolve())
-if REPO is None and Path('/home/runner/work/viva-lumenoid/viva-lumenoid').is_dir():
-    REPO = Path('/home/runner/work/viva-lumenoid/viva-lumenoid')
+if REPO is None and Path('/Users/eranagmon/code/viva-lumenoid--coupling').is_dir():
+    REPO = Path('/Users/eranagmon/code/viva-lumenoid--coupling')
 if REPO is None:
     REPO = Path.cwd()
 sys.path.insert(0, str(REPO))
@@ -272,6 +272,11 @@ print("No recorded runs for this study; nothing to reproduce.")
 # ### Visualizations
 #
 # _Results are shown by the figures below, produced by the run above._
+
+# **coupling**
+
+# coupling
+_save_viz('bm-v2-stress-vs-strainrate', 'coupling', _render_one('html:coupling.html', {'title': 'Vertex-model coupling — E(ε̇) and τ(ε̇) (the deliverable)'}, RUNS_DB, STUDY_YAML))
 
 # **stage2-movie**
 
