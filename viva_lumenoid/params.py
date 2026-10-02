@@ -27,28 +27,32 @@ from typing import Any
 @dataclass
 class CollagenParams:
     # ---- geometry (spec: "has: geometrical structure") -------------------
-    bead_spacing_nm: float = 114.0     # a; supplement mapping a ≈ 114 nm (±6% convention)
-    protomer_length_nm: float = 376.0  # end-to-end; two-bead rod spans this
+    # CROSS-CHECK CORRECTION (2026-10-01): the released rod backbone bond is
+    # `bond_coeff 1 200.0 3.0` — the two beads of a protomer sit 3σ apart. So the
+    # LJ length unit is σ = protomer / 3 = 376 / 3 ≈ 125 nm (NOT 114, which assumed
+    # a 1σ rod). bead_spacing_nm is that σ→nm factor.
+    bead_spacing_nm: float = 125.0     # σ = protomer/3 ≈ 125 nm (released rod = 3σ)
+    protomer_length_nm: float = 376.0  # end-to-end; two-bead rod spans 3σ
     persistence_length_nm: float = 40.0  # semiflexible chain, l_p ≈ 39 nm / ~360 nm contour
     fibril_diameter_nm: float = 8.0    # 5-11 nm individual fibril (readout comparator only)
 
-    # In LJ units the bead spacing IS the length unit -> bond length = 1.0.
-    bond_length: float = 1.0
-    # Intra-rod bond stiffness: stiff so the protomer stays rod-like. Flexibility
-    # in the real model lives at junctions (soft angles); v1-minimal folds it into
-    # a finite (not infinite) rod bond and omits dynamic junction angles — a named
-    # simplification (spec: LAMMPS puts l_p as soft angles where rods join).
-    bond_k_intra: float = 200.0
+    # Rod backbone bond: k=200, r0=3.0 (released `bond_coeff 1 200.0 3.0`).
+    bond_length: float = 3.0           # released rod backbone rest length (3σ)
+    bond_k_intra: float = 200.0        # released rod backbone stiffness (matches)
 
     # ---- connectivity (spec: NC1 end binds 1, 7S end binds 3) -------------
     # atom types: 1 = NC1 end bead, 2 = 7S end bead.
     # bond types:  1 = intra-rod, 2 = NC1-NC1 crosslink, 3 = 7S-7S crosslink.
+    # Released crosslink bonds: `bond_coeff 2/3 6.0 0.5` (NC1 and 7S), formation
+    # cutoff MD=0.65, breaking cutoff BD=1.35 (NC1); the released 7S break cutoff
+    # is 0.95 — our single break cutoff uses the NC1 value (7S-specific cutoff is a
+    # remaining fidelity gap). (CROSS-CHECK CORRECTION 2026-10-01.)
     nc1_max_crosslinks: int = 1
-    svns_max_crosslinks: int = 3       # "7S" end
-    crosslink_k: float = 100.0         # crosslink bond stiffness
-    crosslink_r0: float = 0.30         # crosslink rest length (< bond_length)
-    crosslink_cutoff: float = 0.35     # Rmin for bond/create (form when within this)
-    crosslink_break_cutoff: float = 1.20  # Rmax for bond/break
+    svns_max_crosslinks: int = 3       # "7S" end (released max_bonds_7s = 3)
+    crosslink_k: float = 6.0           # released crosslink bond stiffness
+    crosslink_r0: float = 0.5          # released crosslink rest length (0.5σ ≈ 62 nm)
+    crosslink_cutoff: float = 0.65     # released MD (form when within this)
+    crosslink_break_cutoff: float = 1.35  # released BD (NC1); 7S BD=0.95 not yet split
 
     # ---- junction bending (harmonic angle at each crosslink junction) --------
     # CROSS-CHECK CORRECTION (2026-10-01, see references/cross-check-vs-released-
@@ -67,10 +71,9 @@ class CollagenParams:
     # `MP` sets bond formation; breaking is locked to it at FactorMult = 0.66,
     # giving a make/break ratio of 1.52 in the released input scripts. Calibrated by
     # matching the relaxation time to the ≈20 h collagen IV lifetime (EVD).
-    make_every: int = 100              # Nevery for fix bond/create (LJ steps)
-    # per-attempt formation probability (MP proxy), tuned so the assemble phase
-    # reaches a percolating-but-unsaturated mesh (~0.5 crosslink/rod) without
-    # overflowing LAMMPS's special-neighbor list.
+    make_every: int = 500              # released Nevery (bond reaction interval)
+    # per-attempt formation probability. Released MP = 0.12 / 0.18 / 0.27; we use
+    # the low value 0.12.
     make_prob: float = 0.12
     factor_mult: float = 0.66          # break rate = factor_mult relative to make
     break_every: int = 100
@@ -90,14 +93,16 @@ class CollagenParams:
     excluded_volume: bool = False
 
     # ---- thermodynamics / integrator -------------------------------------
-    temperature: float = 1.0           # kT energy unit
-    langevin_damp: float = 1.0         # overdamped-ish network dynamics
+    temperature: float = 1.0           # kT energy unit (released fix langevin 1.0)
+    langevin_damp: float = 0.1         # released Langevin damp (fix langevin ... 0.1)
     timestep: float = 0.01             # released input scripts use 0.01 (Cell Methods 0.001,
                                        # supplement 0.002 — v1-decision open question)
 
     # ---- box / population (quasi-2D slab; spec: rods lie in-plane) --------
-    n_rods: int = 200                  # small default so stage 1 runs in ~seconds
-    box_xy: float = 20.0               # in units of a (σ)
+    # Density retuned for the corrected 3σ rod: ~250 rods in a 15σ box percolates
+    # (~1 crosslink/rod). (CROSS-CHECK CORRECTION 2026-10-01.)
+    n_rods: int = 250                  # percolating default for the 3σ-rod geometry
+    box_xy: float = 15.0               # in units of σ
     slab_thickness: float = 2.0        # thin z; quasi-2D
     seed: int = 12345
 
@@ -108,7 +113,7 @@ class CollagenParams:
     hold_steps: int = 16000            # relaxation window (spec asks >= 7 tau)
 
     # ---- unit conversions (energy scale still open, spec v1-decision #4) ---
-    kT_per_a3_Pa: float = 2.5          # 1 LJ stress unit ≈ 2-3 Pa at a ≈ 114-125 nm
+    kT_per_a3_Pa: float = 2.2          # 1 LJ stress unit = kT/σ³ ≈ 2.2 Pa at σ ≈ 125 nm
 
     def __post_init__(self):
         # process-bigraph's map[float] config type coerces every value to float;

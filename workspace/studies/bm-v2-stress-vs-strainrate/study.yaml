@@ -17,7 +17,8 @@ experiment: >
   η = σ/ε̇ per rate and locate any viscous→elastic crossover.
 
 result: >
-  Runs the sweep in ~2 s over six rates. At v1 params σ(ε̇) is roughly
+  Re-run 2026-10-01 with the parameters corrected to the released code (3σ rod,
+  crosslink k=6/r0=0.5, cutoffs 0.65/1.35, damp=0.1, Nevery=500). Over six rates At v1 params σ(ε̇) is roughly
   rate-INDEPENDENT (~0.3–0.4 kT/a³), so η ∝ 1/ε̇ (slope −1 on log–log) — the
   network is ELASTIC-dominated across the sampled rates, not viscous, and the
   crosslink count itself falls with rate (faster stretch outruns remodelling).

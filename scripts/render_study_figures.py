@@ -51,8 +51,11 @@ def main():
     s1 = os.path.join(STUDIES, "bm-v1-stage1-modulus-remodelling", "viz")
     os.makedirs(s1, exist_ok=True)
     print("Running stage 1 …")
-    r1 = run_stage1(CollagenParams(n_rods=200, box_xy=20.0,
-                                   assemble_steps=6000, hold_steps=12000),
+    # Corrected to the released parameters (cross-check 2026-10-01): 3σ rod,
+    # crosslink k=6/r0=0.5, cutoffs 0.65/1.35, damp=0.1, Nevery=500. Assembly is
+    # ~4× longer because reactions now fire every 500 steps (was 100).
+    r1 = run_stage1(CollagenParams(n_rods=300, box_xy=13.0,
+                                   assemble_steps=25000, hold_steps=12000),
                     sample_dt=8.0)
     save_html(stage1_figure(r1), os.path.join(s1, "stage1_diagnostic.html"),
               "Stage 1 — modulus & remodelling")
@@ -63,7 +66,7 @@ def main():
     s2 = os.path.join(STUDIES, "bm-v2-stress-vs-strainrate", "viz")
     os.makedirs(s2, exist_ok=True)
     print("Running stage 2 sweep …")
-    r2 = run_stage2(CollagenParams(n_rods=150, box_xy=18.0, assemble_steps=4000),
+    r2 = run_stage2(CollagenParams(n_rods=300, box_xy=13.0, assemble_steps=20000),
                     rates=[5e-4, 1e-3, 2e-3, 4e-3, 8e-3, 1.6e-2], sample_dt=10.0)
     save_html(stage2_figure(r2), os.path.join(s2, "stage2_diagnostic.html"),
               "Stage 2 — σ(ε̇) growing substrate")
@@ -73,7 +76,8 @@ def main():
     s3 = os.path.join(STUDIES, "bm-v3-junction-bending-rigidity", "viz")
     os.makedirs(s3, exist_ok=True)
     print("Running rigidity sweep …")
-    r3 = run_connectivity_sweep()
+    r3 = run_connectivity_sweep(base=CollagenParams(n_rods=300, box_xy=13.0,
+                                                    assemble_steps=20000, hold_steps=8000))
     save_html(rigidity_figure(r3), os.path.join(s3, "rigidity_diagnostic.html"),
               "Rigidity sweep — modulus vs z")
     print(f"  z 1.24→{max(p.z_mean for p in r3.points):.2f}; reached_rigid={r3.reached_rigid}")
@@ -82,7 +86,9 @@ def main():
     s4 = os.path.join(STUDIES, "bm-v4-junction-bending", "viz")
     os.makedirs(s4, exist_ok=True)
     print("Running junction-bending sweep (athermal; dt=0.002) …")
-    r4 = run_bending_sweep(seeds=[11, 22, 33, 44, 55])
+    # Sweep bending_k around the RELEASED NC1 value (4.0), not an arbitrary 80.
+    r4 = run_bending_sweep(bending_ks=[0.0, 2.0, 4.0, 8.0], seeds=[11, 22, 33, 44, 55],
+                           base=CollagenParams(n_rods=300, box_xy=13.0))
     save_html(bending_figure(r4), os.path.join(s4, "bending_diagnostic.html"),
               "FP1 — junction bending")
     print(f"  floppy median {r4.points[0].modulus_median:+.3f}; "
@@ -92,7 +98,8 @@ def main():
     s5 = os.path.join(STUDIES, "bm-v5-porosity-bundling", "viz")
     os.makedirs(s5, exist_ok=True)
     print("Running porosity & bundling density sweep …")
-    r5 = run_porosity_bundling(densities=(150, 250, 350, 500), assemble_steps=8000)
+    r5 = run_porosity_bundling(densities=(200, 300, 400, 550), assemble_steps=20000,
+                               params=CollagenParams(box_xy=13.0))
     save_html(porosity_bundling_figure(r5),
               os.path.join(s5, "porosity_bundling.html"),
               "Stage 5 — porosity & bundling")
@@ -113,30 +120,32 @@ def main():
     # a finely-sampled clip (small dt, periodic-unwrapped, COM-drift removed) of
     # the mode that matters for that study, so the motion is continuous.
     print("Rendering simulation movies …")
+    # All movies use the corrected released params (inherited from CollagenParams
+    # defaults); assembly is longer for Nevery=500.
     render_movie("bm-v1-stage1-modulus-remodelling", "stage1_movie.html",
                  "stage 1 — remodelling: crosslinks break, the network relaxes",
-                 CollagenParams(n_rods=140, box_xy=18.0, assemble_steps=7000),
+                 CollagenParams(n_rods=250, box_xy=13.0, assemble_steps=22000),
                  mode="remodel", n_frames=80, dt=0.15, fname_3d="stage1_movie_3d.html")
     render_movie("bm-v2-stress-vs-strainrate", "stage2_movie.html",
                  "stage 2 — the growing substrate stretches (equibiaxial)",
-                 CollagenParams(n_rods=140, box_xy=18.0, assemble_steps=6000),
+                 CollagenParams(n_rods=250, box_xy=13.0, assemble_steps=20000),
                  mode="stretch", n_frames=80, dt=0.06, strain_rate=0.02,
                  fname_3d="stage2_movie_3d.html")
     render_movie("bm-v3-junction-bending-rigidity", "rigidity_movie.html",
-                 "rigidity — high-connectivity network jiggling (NC1×5 + 7S×8)",
-                 CollagenParams(n_rods=180, box_xy=20.0, assemble_steps=8000,
-                                nc1_max_crosslinks=5, svns_max_crosslinks=8, make_prob=0.6),
+                 "rigidity — raised-connectivity network (NC1×5 + 7S×8)",
+                 CollagenParams(n_rods=250, box_xy=13.0, assemble_steps=20000,
+                                nc1_max_crosslinks=5, svns_max_crosslinks=8, make_prob=0.27),
                  mode="relax", n_frames=80, dt=0.15, fname_3d="rigidity_movie_3d.html")
     render_movie("bm-v4-junction-bending", "bending_movie.html",
-                 "junction bending — rods pinned at crosslink angles",
-                 CollagenParams(n_rods=140, box_xy=18.0, assemble_steps=6000,
-                                bending_k=50.0),
+                 "junction bending at the released NC1 stiffness (k=4.0)",
+                 CollagenParams(n_rods=250, box_xy=13.0, assemble_steps=20000,
+                                bending_k=4.0),
                  mode="relax", n_frames=80, dt=0.15, fname_3d="bending_movie_3d.html")
     # bm-v5 stays 2D-only: its study-charts payload (assembly movie + porosity +
     # evidence map) is already near the 16 MB per-file publish limit.
     render_movie("bm-v5-porosity-bundling", "assembly_movie.html",
                  "assembly — a porous collagen IV mesh forms",
-                 CollagenParams(n_rods=300, box_xy=20.0),
+                 CollagenParams(n_rods=400, box_xy=13.0, assemble_steps=20000),
                  mode="assemble", n_frames=75, dt=0.15)
     print("Figures written.")
 

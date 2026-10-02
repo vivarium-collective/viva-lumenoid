@@ -10,11 +10,14 @@ gate_status: passed
 design_status: drafted
 
 claim: >
-  The v1 collagen IV network's ~zero elastic modulus is a rigidity-percolation
-  effect: with NC1×1 + 7S×3 connectivity the mean coordination z ≤ 3 stays below
-  the 2D central-force isostatic point z = 4, so raising crosslink connectivity
-  alone cannot rigidify it — a measurable modulus needs junction bending (or
-  true bundling bonds).
+  SUPERSEDED by the 2026-10-01 cross-check. This study originally explained the
+  soft modulus as a central-force rigidity-percolation effect (z ≤ 3 < 4). The
+  released code is NOT central-force — it sets junction angles (NC1 180° k=4.0,
+  7S 155°/60°) — so that explanation does not describe the published model, which
+  carries those angles and is still soft (≈0.03 Pa). What this sweep actually
+  shows: with angles OFF (our earlier transcription) and the corrected params, the
+  network is sub-isostatic (z tops out ≈2.0) and soft — a property of the angle-
+  off transcription, not of the paper.
 
 experiment: >
   Sweep the max crosslinks per end (a bundling proxy: NC1×k + 7S×m, k,m rising)
@@ -22,12 +25,13 @@ experiment: >
   modulus vs z against the z = 4 threshold.
 
 result: >
-  Across the achievable range z rises 1.24 → 3.72 (crosslinks 48 → 543 on 200
-  rods) but NEVER reaches z = 4, and the modulus stays statistically consistent
-  with zero at every rung (−0.05 to −0.08 ± ~0.08–0.17 LJ, all CIs span 0). The
-  NC1/7S topology saturates geometrically below the isostatic point, so central-
-  force crosslinks cannot rigidify the sheet. Rigidity must come from junction
-  bending — the "soft angles where rods join" the spec names.
+  With the corrected released params and angles off, raising the crosslink caps
+  lifts z only to ~2.0 and the modulus stays consistent with zero at every rung —
+  consistent with a sparse, sub-isostatic angle-off network. But this is NOT the
+  mechanism of the published model's softness: the released model has junction
+  angles and is still soft (≈0.03 Pa), which the spec attributes to missing
+  components, thin-sheet geometry and absent pre-stress, not to sub-isostatic
+  connectivity. The rigidity-percolation framing is retired as the explanation.
 
 seeded_from:
   study: bm-v1-stage1-modulus-remodelling
@@ -83,7 +87,7 @@ simulation_set:
     base_model: viva_lumenoid.composites.connectivity_sweep
     seeds: [11, 22, 33]
     metrics:
-      z_max: 3.72
+      z_max: 2.03
       reached_rigid: false
       modulus: "consistent with 0 at every rung"
     pass_fail_tests:
@@ -118,7 +122,7 @@ behavior_tests:
     units: kT/a^3
     requires_simulation: "true"
     calibration_anchor:
-      observed_value: "z 1.24→3.72, modulus −0.05→−0.08 (all consistent with 0)"
+      observed_value: "z 1.24→2.03 (angles off); modulus consistent with 0"
       literature_target: 4.0
       resolution: model
       cites: [meadowcroft2025nonequilibrium]
@@ -132,7 +136,7 @@ findings:
       stays consistent with zero throughout — central-force connectivity cannot
       rigidify the v1 sheet.
     evidence:
-      observed: "z 1.24→3.72; modulus −0.05→−0.08 ± ~0.08–0.17 (95% CI, all span 0)"
+      observed: "z 1.24→2.03 (angles off, corrected params); modulus consistent with 0"
     expected:
       range: "rigid only for z ≥ 4 (2D central-force isostatic point)"
     explanation: "NC1×1 + 7S×3 caps z at 3; bundling raises it but the geometry saturates below 4."
@@ -173,16 +177,19 @@ limitations:
   - "Same LJ-unit / energy-scale caveat as stage 1."
 
 report:
-  title: "Stage v3 — rigidity percolation: why the modulus is ~0"
+  title: "Stage v3 — rigidity percolation (superseded explanation)"
   verdict: >
-    Central-force connectivity cannot rigidify the v1 network: z tops out at ~3.7
-    (< 4) and the modulus is consistent with zero at every rung. Rigidity requires
-    junction bending / bundling, not more crosslinks — a concrete, testable next step.
-  confidence: medium
+    The rigidity-percolation explanation for the soft modulus is retired by the
+    2026-10-01 cross-check: the released model is not central-force (it has junction
+    angles) and is soft anyway. This sweep documents only that our angle-off
+    transcription is sub-isostatic and soft; it does not explain the published model.
+  confidence: low
   evidence_quality: preliminary
   main_insight: >
-    The basement membrane's stiffness is a bending/bundling property, not a
-    crosslink-count property — the constraint the AICS vertex-model coupling must respect.
+    The published model's softness is not a crosslink-connectivity effect — it
+    persists despite the junction angles, so it must come from the factors the spec
+    names (missing components, thin-sheet geometry, no pre-stress). Connectivity is
+    not the lever.
 
 bibliography:
   sources:

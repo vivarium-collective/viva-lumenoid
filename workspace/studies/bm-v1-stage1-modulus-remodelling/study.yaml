@@ -25,12 +25,15 @@ experiment: >
   initial volume — the spec flags the all-atom stress as a stage-1 error.
 
 result: >
-  Runs end-to-end in ~4 s. The network assembles ~100 crosslinks from 200 rods,
-  the stress-strain ramp gives a positive but very soft tangent modulus
-  (~0.3–0.8 in LJ units, ~1–2 Pa at kT/a³ ≈ 2.5 Pa) consistent with the paper's
-  ≈0.03 Pa linear modulus, and the chemistry-on hold shows a stress change as
-  crosslinks turn over. The remodelling time is currently noise-limited at this
-  network size (flagged, not silently zeroed) — calibration is spec decision #10.
+  Re-run 2026-10-01 with the parameters corrected to the released code (3σ rod,
+  crosslink k=6/r0=0.5, cutoffs 0.65/1.35, damp=0.1, Nevery=500, σ≈125 nm). The
+  stress-strain ramp gives a very soft tangent modulus consistent with zero at
+  this network size (~−0.5 to +0.5 LJ across seeds, ~±1 Pa at kT/σ³ ≈ 2.2 Pa),
+  consistent with the paper's ≈0.03 Pa linear modulus, and the chemistry-on hold
+  shows a stress change as crosslinks turn over. The remodelling time is noise-
+  limited at this network size (flagged, not silently zeroed) — calibration is
+  spec decision #10. NOTE: the modulus is small/noise-limited, not a clean value;
+  the earlier "floppy because central-force" explanation is retired (see bm-v3).
 
 purpose:
   question: >
@@ -225,24 +228,24 @@ visualizations:
 report:
   title: "Stage 1 — collagen IV modulus & remodelling (clean-room v1)"
   verdict: >
-    The staged protocol runs on real LAMMPS. Over a 6-seed ensemble the elastic
-    modulus is −0.03 ± 0.06 (95% CI) LJ units — statistically CONSISTENT WITH
-    zero. This is understood, not noise: the mean coordination z ≈ 1.2 (and z ≤ 3
-    even at full crosslinking) is below the 2D central-force rigidity threshold
-    z = 4, so the network is floppy — matching the published model's own ≈0.03 Pa
-    modulus. The remodelling mechanism is now correct (crosslinks hold at a
-    make/break steady state, freeze under load, and decay under breakage-only),
-    but the relaxation signal is below detection at v1 scale, so τ is not yet
-    resolved. A non-zero modulus requires the junction bending stiffness the spec
-    calls for (or bundling) — see the follow-up proposals.
+    The staged protocol runs on real LAMMPS with the parameters corrected to the
+    released code (2026-10-01). The elastic modulus is small and consistent with
+    zero at this network size (~±1 Pa across seeds), consistent with the published
+    model's own ≈0.03 Pa linear modulus. The remodelling mechanism is correct
+    (crosslinks hold at a make/break steady state, freeze under load, and decay
+    under breakage-only), but the relaxation signal is below detection at v1 scale,
+    so τ is not yet resolved. The earlier "floppy because central-force z < 4"
+    explanation is retired: the released model carries junction angles and is soft
+    anyway (see bm-v3). The softness is inherent to the published model (missing
+    components, thin-sheet geometry, no pre-stress — spec decision #4), not a
+    connectivity threshold.
   confidence: medium
   evidence_quality: preliminary
   main_insight: >
-    The v1 central-force network is floppy BY THE SPEC'S CONNECTIVITY (NC1×1 +
-    7S×3 → z ≤ 3 < 4), which is why its elastic modulus is ~zero and matches the
-    paper's ≈0.03 Pa. Stiffness in a basement membrane must come from fibre
-    bending / bundling, not crosslink count — a direct constraint on the
-    vertex-model coupling.
+    The network is very soft (consistent with the published ≈0.03 Pa), but not
+    because it is a sub-isostatic central-force network — the released model has
+    junction angles and is still soft. Reporting a modulus in pascals for the
+    vertex coupling awaits the energy-scale decision and a larger, faithful run.
   caveat: >
     Parameters are transcribed from the spec rather than ported from the authors'
     input scripts (now public, Zenodo 10.5281/zenodo.20719515, not yet cross-
