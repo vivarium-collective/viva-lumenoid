@@ -58,6 +58,11 @@ def build_network_data(params: CollagenParams) -> str:
     lines.append(f"{n_bonds} bonds")
     lines.append("2 atom types")
     lines.append("3 bond types")
+    # Declare an angle type so real junction angles can be created during assembly
+    # (create_bonds single/angle) when use_real_angles is on. 0 angles initially.
+    if getattr(params, "use_real_angles", False) and params.bending_k > 0.0:
+        lines.append("0 angles")
+        lines.append("1 angle types")
     lines.append("")
     lines.append(f"0.0 {L:.6f} xlo xhi")
     lines.append(f"0.0 {L:.6f} ylo yhi")

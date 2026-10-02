@@ -97,3 +97,38 @@ def run_bending_sweep(bending_ks=None, seeds=None,
     floppy = abs(points[0].modulus_median)
     rigid = max(abs(p.modulus_median) for p in points)
     return BendingResult(points=points, large_response=bool(rigid > 10 * (floppy + 0.01)))
+
+
+def run_faithful_comparison(seeds=None, base: "CollagenParams | None" = None):
+    """Data for the faithful-angles figure: per-seed modulus for central-force,
+    as-formed restraint, and real-angle-during-assembly (all at the released
+    k=4.0), plus the real-angle modulus vs crosslink density.
+
+    Returns ``(conditions, density_points)`` for viz.faithful_angles_figure.
+    """
+    from .stage1 import run_stage1
+    seeds = seeds or [11, 22, 33]
+    b = base or CollagenParams(n_rods=300, box_xy=13.0)
+    bd = b.to_dict()
+
+    def moduli(**kw):
+        out = []
+        for sd in seeds:
+            r = run_stage1(CollagenParams(**{**bd, "assemble_steps": 20000,
+                                             "hold_steps": 6000, "seed": sd, **kw}))
+            out.append(round(r.elastic_modulus_lj, 2))
+        return out
+
+    conditions = {
+        "central-force (k=0)": moduli(bending_k=0.0),
+        "as-formed restraint (k=4)": moduli(bending_k=4.0),
+        "real angles during assembly (k=4)": moduli(bending_k=4.0, use_real_angles=True),
+    }
+    density_points = []
+    for mp, asm in [(0.03, 8000), (0.06, 12000), (0.12, 20000)]:
+        r = run_stage1(CollagenParams(**{**bd, "bending_k": 4.0, "use_real_angles": True,
+                                         "make_prob": mp, "assemble_steps": asm,
+                                         "hold_steps": 4000, "seed": seeds[0]}))
+        density_points.append((round(r.n_crosslinks_assembled / b.n_rods, 2),
+                               round(r.elastic_modulus_lj, 1)))
+    return conditions, density_points

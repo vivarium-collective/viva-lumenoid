@@ -43,16 +43,20 @@ def base_script(params: CollagenParams, data_path: str) -> str:
     # 0.002 regime). A wider ghost cutoff keeps stretched crosslinks' partners
     # in range once the network stiffens.
     dt = min(p.timestep, 0.002) if p.bending_k > 0.0 else p.timestep
+    real_angles = getattr(p, "use_real_angles", False) and p.bending_k > 0.0
+    angle_extra = " extra/angle/per/atom 20" if real_angles else ""
+    angle_setup = (f"\nangle_style harmonic\nangle_coeff 1 {p.bending_k} {p.bending_theta0}"
+                   if real_angles else "")
     return f"""
 units lj
 atom_style molecular
 boundary p p p
-read_data {data_path} extra/bond/per/atom 12 extra/special/per/atom 200
+read_data {data_path} extra/bond/per/atom 12 extra/special/per/atom 200{angle_extra}
 
 bond_style harmonic
 bond_coeff 1 {p.bond_k_intra} {p.bond_length}
 bond_coeff 2 {p.crosslink_k} {p.crosslink_r0}
-bond_coeff 3 {p.crosslink_k} {p.crosslink_r0}
+bond_coeff 3 {p.crosslink_k} {p.crosslink_r0}{angle_setup}
 
 # No excluded volume (spec: released input scripts set every pair eps=0). pair_style
 # zero still builds the neighbor lists that fix bond/create needs.
@@ -109,6 +113,7 @@ class CollagenNetworkProcess(Process):
         self._break_calls = 0
         self._restrain_on = False   # junction-bending fix restrain active?
         self._chem_was_active = False
+        self._angled = set()        # NC1 crosslinks that already have real angles
         self._lx0 = None  # initial box length, for strain
 
     def inputs(self):
@@ -269,6 +274,40 @@ class CollagenNetworkProcess(Process):
             self._restrain_on = True
         self._fixes_dirty = True
 
+    def _create_junction_angles(self):
+        """FAITHFUL path: create a REAL harmonic angle at each NC1 junction as the
+        crosslink forms, so the network equilibrates with the angles active.
+
+        For an NC1 crosslink u-v, two angles enforce the released model's NC1
+        linearity: partner(u)-u-v and u-v-partner(v), both angle type 1 (the
+        angle_coeff sets k=bending_k, rest=180°). Incremental — only new NC1
+        crosslinks get angles (tracked in self._angled); no deletion, so this is
+        used with make-only assembly (breaking is suppressed while real angles
+        form). Mirrors how the released bond/react templates add angles on bond
+        formation rather than pinning restraints on afterwards.
+        """
+        p = self._params
+        if p.bending_k <= 0.0:
+            return
+        lmp = self._lmp
+        _nb, data = lmp.gather_bonds()
+        arr = np.array(data, dtype=int).reshape(-1, 3)
+        xlinks = arr[arr[:, 0] == 2]          # NC1 crosslinks (bond type 2)
+        created = 0
+        for _bt, u, v in xlinks:
+            u, v = int(u), int(v)
+            key = (min(u, v), max(u, v))
+            if key in self._angled:
+                continue
+            pu, pv = self._rod_partner(u), self._rod_partner(v)
+            if pu and pv and pu != v and pv != u:
+                lmp.command(f'create_bonds single/angle 1 {pu} {u} {v}')
+                lmp.command(f'create_bonds single/angle 1 {u} {v} {pv}')
+                self._angled.add(key)
+                created += 1
+        if created:
+            self._fixes_dirty = True
+
     def _read(self):
         lmp = self._lmp
         nlocal = lmp.extract_setting('nlocal')
@@ -315,17 +354,26 @@ class CollagenNetworkProcess(Process):
     def update(self, state, interval):
         self._build()
         bending = self._params.bending_k > 0.0
+        real_angles = getattr(self._params, 'use_real_angles', False) and bending
         if state:
             self._apply_deform(state.get('strain_rate'))
             self._apply_make(state.get('make_on'))
+            made = bool(state.get('make_on', 0.0) and state['make_on'] >= 0.5)
             broke = bool(state.get('break_on', 0.0) and state['break_on'] >= 0.5)
+            # The real-angle path has no per-angle deletion, so breaking is
+            # suppressed while crosslinks (and their angles) are forming.
+            if real_angles and made:
+                broke = False
             if broke:
                 # Breaking (off-rate deletion) BEFORE integrating so the network
                 # relaxes over the interval after losing bonds.
                 self._break_crosslinks(interval)
-            made = bool(state.get('make_on', 0.0) and state['make_on'] >= 0.5)
             chem_active = made or broke
-            if bending:
+            if real_angles:
+                # Create real angles for any new NC1 crosslinks (during assembly
+                # and thereafter), so the network equilibrates with them active.
+                self._create_junction_angles()
+            elif bending:
                 # Pin junction-bending restraints to the AS-FORMED geometry exactly
                 # ONCE, at the assemble→frozen transition. Rebuilding every assembly
                 # step (assemble runs make+break together) re-pins to unsettled

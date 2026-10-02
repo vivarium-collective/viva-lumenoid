@@ -105,3 +105,20 @@ def test_3d_movie_figure_renders_with_z():
     assert fig.data[0].type == "scatter3d"
     html = viz.figure_to_html(fig)
     assert "3D view" in html and "scatter3d" in html
+
+
+def test_real_angles_give_a_reproducible_positive_modulus():
+    """The faithful real-angle-during-assembly path (create_bonds single/angle)
+    produces a well-conditioned, reproducible, positive modulus — unlike the
+    ill-conditioned as-formed restraint (cross-check follow-up 2026-10-02)."""
+    import numpy as np
+    from viva_lumenoid import CollagenParams, run_stage1
+    Es = []
+    for sd in (11, 22):
+        r = run_stage1(CollagenParams(n_rods=200, box_xy=12.0, bending_k=4.0,
+                       use_real_angles=True, make_prob=0.06, assemble_steps=8000,
+                       hold_steps=2000, seed=sd))
+        Es.append(r.elastic_modulus_lj)
+    Es = np.array(Es)
+    assert (Es > 0).all(), f"expected positive moduli, got {Es}"   # well-conditioned
+    assert Es.min() > 1.0                                          # clearly non-floppy

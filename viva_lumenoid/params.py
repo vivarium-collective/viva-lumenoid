@@ -66,6 +66,12 @@ class CollagenParams:
     # of this omission, pending a re-run with the released angle set.
     bending_k: float = 0.0             # harmonic angle stiffness; RELEASED NC1 value = 4.0
     bending_theta0: float = 180.0      # rest angle (deg); released NC1 angle = 180°
+    # FAITHFUL path (2026-10-02): create REAL angle_style-harmonic angles at each
+    # NC1 junction as the crosslink forms (via create_bonds single/angle), so the
+    # network equilibrates WITH the angles active — matching how the released
+    # bond/react templates add angles during assembly, rather than pinning
+    # as-formed restraints on afterwards. Requires bending_k > 0.
+    use_real_angles: bool = False
 
     # ---- crosslink kinetics (spec: MP make rate, break locked at FactorMult) --
     # `MP` sets bond formation; breaking is locked to it at FactorMult = 0.66,
