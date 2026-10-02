@@ -212,6 +212,14 @@ design_pivot_required:
     requested_response: "Pick the accountable readout before running (spec #10)."
 
 visualizations:
+  - name: cross-check
+    address: "html:cross_check.html"
+    config:
+      title: "Cross-check — clean-room vs the released code (headline)"
+  - name: modulus-ladder
+    address: "html:modulus_ladder.html"
+    config:
+      title: "Modulus ladder — v1 in the published very-soft regime"
   - name: stage1-movie
     address: "html:stage1_movie.html"
     config:

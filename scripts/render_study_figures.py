@@ -20,7 +20,8 @@ from viva_lumenoid.stage5 import run_porosity_bundling
 from viva_lumenoid.viz import (stage1_figure, stage2_figure, rigidity_figure,
                                bending_figure, porosity_bundling_figure,
                                evidence_map_figure, network_movie_figure,
-                               network_movie_3d_figure, save_html)
+                               network_movie_3d_figure, cross_check_figure,
+                               modulus_ladder_figure, save_html)
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 STUDIES = os.path.join(ROOT, "workspace", "studies")
@@ -59,8 +60,17 @@ def main():
                     sample_dt=8.0)
     save_html(stage1_figure(r1), os.path.join(s1, "stage1_diagnostic.html"),
               "Stage 1 — modulus & remodelling")
-    print(f"  E ≈ {r1.elastic_modulus_lj:.3f} kT/a³, "
+    print(f"  E ≈ {r1.elastic_modulus_lj:.3f} kT/σ³, "
           f"τ {'noise-limited' if r1.relaxation_noise_limited else f'{r1.relaxation_time_lj:.0f}'}")
+    # Headline cross-check + modulus-in-context (the corrected-result figures).
+    # The modulus is noise-limited (~±1 Pa); show it as a soft band from the
+    # published 0.03 Pa up to our noise ceiling.
+    save_html(cross_check_figure(model_pa=0.7, model_lo_pa=0.03, model_hi_pa=2.0),
+              os.path.join(s1, "cross_check.html"),
+              "Cross-check — clean-room vs released code")
+    save_html(modulus_ladder_figure(model_pa=0.7, model_lo_pa=0.03, model_hi_pa=2.0),
+              os.path.join(s1, "modulus_ladder.html"),
+              "Modulus ladder — v1 in the published soft regime")
 
     # Stage 2
     s2 = os.path.join(STUDIES, "bm-v2-stress-vs-strainrate", "viz")
