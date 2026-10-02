@@ -25,12 +25,13 @@ experiment: >
   place both against the measured comparators.
 
 result: >
-  Pore median falls with coverage (130 → 76 nm as rods rise 150 → 500) and lands
-  in the corneal-EM band (72 ± 40 nm) at the densest network; the open mesh is
-  realistic, and pore size is a density knob, not a universal. Bundling stays
-  near 1 (mean 1.03 → 1.17 protomers/strand, ~82% singletons, max occasionally
-  5–7). With no lateral-association bond, the NC1/7S topology cannot build the
-  5–7-protomer strands measured in the PFHR-9 scaffold.
+  Re-run 2026-10-01 with the parameters corrected to the released code (3σ rod,
+  σ≈125 nm). Pore median falls with coverage and lands near/within the corneal-EM
+  band (72 ± 40 nm) at the densest network (median ~54 nm); the open mesh is
+  realistic, and pore size is a density knob, not a universal. Bundling stays near
+  1 (mean ~1.29 protomers/strand, mostly singletons, max ~6). With no lateral-
+  association bond, the NC1/7S topology cannot build the 5–7-protomer strands
+  measured in the PFHR-9 scaffold.
 
 parent_studies:
   - bm-v1-stage1-modulus-remodelling
@@ -72,7 +73,7 @@ simulation_set:
     seeds: [12345]
     metrics:
       pore_median_nm_dense: 76.0
-      mean_strand_dense: 1.17
+      mean_strand_dense: 1.29
       max_strand: 7
       frac_in_5_7: 0.02
     pass_fail_tests:
@@ -100,7 +101,7 @@ behavior_tests:
     units: nm
     requires_simulation: "true"
     calibration_anchor:
-      observed_value: "median 76 nm at 500 rods (coverage ~5.6%)"
+      observed_value: "median 54 nm at the densest network (corrected σ≈125 nm)"
       literature_target: "72 ± 40 nm (corneal BM, low-voltage SEM)"
       resolution: model
       cites: [abrams2000nanoscale]
@@ -115,7 +116,7 @@ behavior_tests:
     units: count
     requires_simulation: "true"
     calibration_anchor:
-      observed_value: "mean 1.17 protomers/strand, ~82% singletons, <5% in 5–7"
+      observed_value: "mean 1.29 protomers/strand, mostly singletons, max ~6"
       literature_target: "5–7 protomers/strand (PFHR-9 scaffold, immuno-gold SEM)"
       resolution: model
       cites: [pokidysheva2025targeted]
@@ -126,10 +127,10 @@ findings:
     status: confirms
     statement: >
       Pore size scales with network density and reaches the corneal-EM band
-      (72 ± 40 nm) at the densest sampled network (median 76 nm) — the mesh is
+      (72 ± 40 nm) at the densest sampled network (median 54 nm, corrected σ≈125 nm) — the mesh is
       realistic and pore size is a tunable density readout, not a free universal.
     evidence:
-      observed: "median pore 130 → 108 → 120 → 76 nm as rods rise 150 → 500"
+      observed: "median pore ~54 nm at the densest network (re-run 2026-10-01, corrected params)"
     expected:
       range: "72 ± 40 nm (corneal BM EM); 20–60 nm hydrated Matrigel"
     explanation: "Porosity is emergent from areal coverage; the comparator fixes a density."
@@ -143,7 +144,7 @@ findings:
       (~82% singletons), below the 5–7 protomers per strand measured in the
       PFHR-9 scaffold. The model has no lateral-association bond.
     evidence:
-      observed: "mean strand 1.03 → 1.17, max 5–7 occasionally, <5% of rods in 5–7 strands"
+      observed: "mean strand ~1.29, max ~6, <5% of rods in 5–7 strands"
     expected:
       range: "5–7 protomers per strand (PFHR-9 cell-deposited scaffold)"
     explanation: >
@@ -180,6 +181,8 @@ visualizations:
       title: "Evidence map — readouts vs measured comparators"
 
 limitations:
+  - "Cross-check (2026-10-01): pore sizes in nm use the wrong length mapping (rod is 1σ here, 3σ in the released code → σ≈125 nm), and bundling is affected by the absent 7S angles that organise trimers. Not a like-for-like comparison. See references/cross-check-vs-released-code.md."
+  - "Clean-room parameters transcribed from the spec; the authors' LAMMPS input scripts are now public (Zenodo 10.5281/zenodo.20719515) and not yet cross-checked against this build."
   - "Bundling is inferred geometrically (lateral proximity + parallelism), not from explicit lateral bonds the model lacks."
   - "Pore sizes depend on the chosen density; the comparator is matched at one coverage, not proven universal."
   - "Single seed per density rung; a seed ensemble would put CIs on the pore/bundling trends."

@@ -22,10 +22,14 @@ hypothesis: >
 
 description: |
   This investigation is the clean-room Vivarium build of the AICS-Lumenoids
-  "Basement membrane — v1 model specification" (Roam graph, exported 2026-09-29;
-  the source spec and diagram are in `workspace/references/`). We do not have the
-  authors' LAMMPS/Smoldyn decks, so every model parameter is transcribed from the
-  spec's parameter sheet and clearly labelled as such.
+  "Basement membrane — v1 model specification" (Roam graph, exported 2026-09-30;
+  the source spec and diagram are in `workspace/references/`). Every model
+  parameter is transcribed from the spec's parameter sheet and labelled as such.
+  The authors' LAMMPS input scripts are now public
+  (github.com/Billie1717/BasementMembraneTurnoverSims, Zenodo
+  10.5281/zenodo.20719515, commit `ab4c004`); this build remains a transcription
+  from the spec rather than a port of those scripts, and they are the ground
+  truth to cross-check its parameters against (not yet done — decision below).
 
   **Engines.** The workspace imports two already-wrapped simulators —
   `viva-lammps` (the `LAMMPSProcess` bridge) and `viva-smoldyn` — and builds the
@@ -59,24 +63,27 @@ studies:
 at_a_glance:
   - study: bm-v1-stage1-modulus-remodelling
     role: >
-      Stage 1. Assemble → equilibrate → stretch → hold(elastic) → hold(breakage-
-      only, viscous). Elastic modulus is consistent with zero (z < 4, floppy); the
-      remodelling mechanism is correct but τ is below detection at v1 scale.
+      Stage 1 + the cross-check headline. Runs the staged protocol with the
+      parameters corrected to the released code. Modulus is very soft, consistent
+      with zero at v1 size (~±1 Pa) and with the published ≈0.03 Pa; the remodelling
+      mechanism is correct but τ is below detection at v1 scale. Carries the
+      cross-check and modulus-ladder figures.
   - study: bm-v2-stress-vs-strainrate
     role: >
       Stage 2. Sweep the equibiaxial strain rate ε̇ on the growing substrate and
       read σ(ε̇) → the effective viscosity η and the viscous→elastic crossover.
   - study: bm-v3-junction-bending-rigidity
     role: >
-      Follow-up. Rigidity-percolation sweep: raising crosslink connectivity (z up
-      to 3.7) never reaches z = 4 and never rigidifies — proving stiffness needs
-      junction bending / bundling, not more crosslinks.
+      Follow-up (explanation superseded). The rigidity-percolation story is retired
+      by the cross-check: the released model has junction angles, so it is not a
+      central-force network and z<4 does not explain its softness. The sweep now
+      documents only that our angles-off transcription is sub-isostatic and soft.
   - study: bm-v4-junction-bending
     role: >
-      Follow-up (FP1). Implements junction bending (fix restrain, as-formed angles)
-      + an athermal modulus. Bending dominates the mechanics (floppy → large |E|),
-      confirming it governs stiffness — but a reproducible modulus needs a larger,
-      pre-stress-free network (v2).
+      Follow-up (reframed). Bending is a released feature (NC1 k=4.0), not an add-on.
+      Swept around k=4.0: our as-formed-restraint realization is ill-conditioned and
+      bending does not make the network stiff — the released model has the angles and
+      is still soft. A faithful run needs angles active during assembly.
   - study: bm-v5-porosity-bundling
     role: >
       Geometric readouts (spec "has: geometrical structure"). Reads porosity +
@@ -112,22 +119,31 @@ executive:
     grained collagen IV network on a moving boundary, run until it reports an
     elastic modulus and a remodelling time for the vertex model.
   verdict: >
-    Infrastructure stood up and stages 1–2 run on real LAMMPS. Hardening produced
-    a mechanistic result: the network's elastic modulus is consistent with zero
-    (−0.03 ± 0.06 over a seed ensemble) because its mean coordination z ≤ 3 is
-    below the 2D rigidity threshold z = 4 — it is floppy by the spec's connectivity,
-    matching the published ≈0.03 Pa. The rigidity sweep (bm-v3) confirms more
-    crosslinks cannot fix this (z tops out at 3.7): stiffness requires junction
-    bending / bundling. FP1 (bm-v4) then implemented junction bending and confirmed
-    it — bending dominates the mechanics (floppy E≈0 → |E| tens–hundreds) — but the
-    modulus is ill-conditioned at v1 network size, so it is not yet calibratable; a
-    reproducible value needs a larger, pre-stress-free network (fp3). The remodelling
-    mechanism was corrected (a fix-bond/break densification artifact → a force-
-    independent off-rate), so stress now relaxes correctly, but τ is below detection
-    while the network is floppy. Absolute pascals and a calibrated τ await the
-    reproducible bending modulus + the energy-scale decision.
+    The clean-room build was cross-checked against the authors' now-public code
+    (Zenodo 10.5281/zenodo.20719515) and its parameters corrected to match
+    (2026-10-01). Three findings:
+    (1) Cross-check — the model structure and central-force parameters match the
+    released code (two-bead rods, NC1×1/7S×3, no excluded volume, kT=1, dt=0.01,
+    FactorMult=0.66, MP=0.12, rod k=200), but the released model is bending-
+    stabilized (NC1 angle k=4.0 @180°, plus 7S angles @155°/60°) and diverged on
+    crosslink bond stiffness, rod length (now corrected to 3σ → σ≈125 nm), Langevin
+    damp, cutoffs, Nevery, break mechanism and GCE monomer exchange.
+    (2) Corrected re-run — with the released parameters the v1 network is very soft:
+    the elastic modulus is small and consistent with zero at this network size
+    (~±1 Pa across seeds), consistent with the published model's own ≈0.03 Pa linear
+    modulus. The remodelling mechanism is correct but τ is below detection at v1
+    scale.
+    (3) Retired explanations — the earlier central-force rigidity-percolation story
+    (bm-v3) and bending-as-the-missing-stiffness (bm-v4) are retired: the released
+    model has the junction angles and is soft anyway, so the softness is inherent
+    (missing components, thin-sheet geometry, no pre-stress — spec #4), not a
+    connectivity or bending threshold.
+    A quantitative modulus and τ still require the released angle set active during
+    assembly (bond/react), the 7S-specific break cutoff, the dense initial config,
+    a larger network, and the energy-scale decision.
   verdict_status: preliminary
   decisions_needed:
+    - "DONE 2026-10-01 — cross-checked against the released code AND corrected the clean-room parameters to match (bond k/r0, rod r0=3.0, cutoffs, damp=0.1, Nevery=500, σ≈125 nm); re-ran all studies. Result: very-soft modulus consistent with the published ≈0.03 Pa; central-force/bending explanations retired. REMAINING for a quantitative modulus: angle set active during assembly (bond/react), 7S break cutoff (0.95), dense initial config, larger network."
     - "Engine for stages 1–2: LAMMPS now; revisit Smoldyn at stage 3 (spec #2)."
     - "Secretion: fixed concentration vs fixed flux (spec #3)."
     - "Energy scale: report modulus in Pa (fit to a measured modulus) or keep kT and report a ratio (spec #4)."

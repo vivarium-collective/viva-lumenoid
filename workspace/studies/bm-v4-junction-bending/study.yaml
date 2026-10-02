@@ -10,11 +10,13 @@ gate_status: needs_calibration
 design_status: drafted
 
 claim: >
-  Junction bending (harmonic angle restraints pinned to each crosslink's
-  as-formed geometry) is the constraint that governs the network's stiffness;
-  bm-v3 showed crosslink connectivity alone cannot (z < 4). Adding bending
-  dominates the mechanics, but a reproducible elastic modulus is not obtainable
-  at v1 network size.
+  REFRAMED by the 2026-10-01 cross-check. Junction bending is NOT a new ingredient
+  we add — the released model already sets it (NC1 angle k=4.0 @180°, plus 7S
+  angles @155°/60°). This study sweeps bending_k around the released value 4.0.
+  Our as-formed `fix restrain` realization of bending is ill-conditioned at v1
+  size, and — the key point — bending does not make the network stiff in absolute
+  terms: the released model has these angles and is still soft (≈0.03 Pa). Bending
+  is part of the force field, not the missing source of stiffness.
 
 experiment: >
   Implement bending via LAMMPS `fix restrain` pinned to each junction's as-formed
@@ -63,7 +65,7 @@ baseline:
     params:
       n_rods: 200
       box_xy: 20.0
-      bending_k: 80.0
+      bending_k: 4.0
       timestep: 0.002
       seed: 12345
 
@@ -200,26 +202,28 @@ visualizations:
       title: "FP1 — junction bending response"
 
 limitations:
+  - "Cross-check (2026-10-01): junction bending is NOT a new ingredient — the released code already sets KangNC1=4.0 (@180°) plus two 7S angles. Re-scope as 'match the released angle set', not 'add bending'. See references/cross-check-vs-released-code.md."
+  - "Clean-room parameters transcribed from the spec; the authors' LAMMPS input scripts are now public (Zenodo 10.5281/zenodo.20719515) and not yet cross-checked against this build."
   - "The bending modulus is ill-conditioned at 200 rods (pre-stress + finite-size); not calibratable yet."
   - "Bending targets are pinned from a thermally-noisy as-formed geometry (a pre-stress source)."
   - "Only equibiaxial stress-strain slope is used; a shear or energy-curvature modulus may be better conditioned."
 
 report:
-  title: "Stage v4 — junction bending: mechanism confirmed, modulus not yet calibratable"
+  title: "Stage v4 — junction bending (released feature, not the stiffness source)"
   verdict: >
-    Junction bending is implemented and dominates the network's mechanics (floppy
-    E≈0 → |E| tens–hundreds), confirming that bending, not crosslink count,
-    governs BM stiffness. The modulus is ill-conditioned at v1 network size
-    (sign-flipping scatter from pre-stress and near-degenerate minima), so it is
-    not yet a calibratable input for the vertex model. Next: a larger network and
-    a pre-stress-free reference (fp3).
+    Junction bending is a core feature of the released model (NC1 angle k=4.0),
+    not an add-on, so the earlier "add bending to fix the floppiness" framing is
+    retired. Our as-formed `fix restrain` realization of bending is ill-conditioned
+    at v1 size (sign-flipping athermal modulus), and bending does not make the
+    network stiff in absolute terms — the released model has the angles and is
+    still soft (≈0.03 Pa). A faithful run needs the released angle set active
+    during assembly (bond/react) and a larger network.
   confidence: low
   evidence_quality: preliminary
   main_insight: >
-    Bending is the rigidity mechanism, and the athermal measurement resolves the
-    floppy baseline (E ≈ 0) deterministically. Turning bending into a reproducible
-    modulus is a finite-size and pre-stress problem that needs a larger, relaxed
-    network.
+    Bending is in the published force field but is not the source of a large
+    modulus: the network is soft with the angles present. The remaining fidelity
+    gap is the angle-during-assembly mechanism, not a missing bending term.
 
 bibliography:
   sources:

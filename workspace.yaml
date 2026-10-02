@@ -45,10 +45,18 @@ expert_docs:
     path: workspace/references/basement-membrane-v1-spec.md
     description: >
       AICS-Lumenoids "Basement membrane — v1 model specification" (Roam export
-      2026-09-29). The source of every v1 parameter and open decision.
+      2026-09-30). The source of every v1 parameter and open decision.
   - name: lumenoid-basement-membrane-diagram
     path: workspace/references/lumenoid-basement-membrane-diagram.svg
     description: Diagrammatic version of the same v1 specification.
+  - name: cross-check-vs-released-code
+    path: workspace/references/cross-check-vs-released-code.md
+    description: >
+      Parameter-by-parameter comparison of the clean-room build against the
+      authors' released LAMMPS code (Zenodo 10.5281/zenodo.20719515). Finds the
+      released model is bending-stabilized, not central-force — overturning the
+      floppy premise of bm-v3/bm-v4 — plus bond-stiffness, rod-length, cutoff,
+      break-mechanism and GCE divergences.
 
 # Visualization wiring (address + config). Populated by the Visualizations
 # tab and /viva-viz.

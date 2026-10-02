@@ -91,3 +91,20 @@ def test_evidence_map_overlays_model_values():
     assert len(fig.data) >= 5
     html = viz.figure_to_html(fig)
     assert "Evidence map" in html
+
+
+# --- cross-check + modulus-ladder figures (corrected-model hardening) ------- #
+def test_crosscheck_data_is_consistent():
+    from viva_lumenoid import crosscheck as X
+    assert X.n_match() + X.n_diverge() == len(X.ROWS)
+    assert X.n_match() > X.n_diverge()          # most params now match
+    for r in X.ROWS:
+        assert r.status in ("match", "diverge")
+
+
+def test_cross_check_and_ladder_figures_render():
+    f1 = viz.cross_check_figure(model_pa=0.7, model_lo_pa=0.03, model_hi_pa=2.0)
+    assert len(f1.data) >= 6
+    assert "Cross-check" in viz.figure_to_html(f1)
+    f2 = viz.modulus_ladder_figure(model_pa=0.7, model_lo_pa=0.03, model_hi_pa=2.0)
+    assert "Modulus ladder" in viz.figure_to_html(f2)

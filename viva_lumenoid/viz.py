@@ -227,7 +227,7 @@ def stage1_figure(result: Any) -> "object":
     fig.update_layout(title=dict(
         text=(f"<b>Stage 1 — collagen IV modulus &amp; remodelling</b>"
               f"   <span style='font-size:12px;color:{_MUTED}'>"
-              f"E ≈ {m:.2f} kT/a³ (~{m*2.5:.1f} Pa) · remodelling: {tau} · "
+              f"E ≈ {m:.2f} kT/σ³ (~{m*2.2:.1f} Pa) · remodelling: {tau} · "
               f"{result.n_crosslinks_assembled} crosslinks</span>"),
         x=0.01, xanchor="left"))
     return fig
@@ -333,12 +333,23 @@ def rigidity_figure(result: Any) -> "object":
     fig.update_xaxes(title_text="mean coordination z", range=[min(0.9, float(z.min()) - 0.2),
                                                               max(zc + 0.5, float(z.max()) + 0.3)])
     fig.update_yaxes(title_text="elastic modulus E (kT/a³)")
+    fig.update_xaxes(title_text="mean coordination z")
+    fig.update_yaxes(title_text="elastic modulus E (kT/σ³)")
+    # SUPERSEDED banner — this central-force framing does not describe the released model
+    fig.add_annotation(xref="paper", yref="paper", x=0.5, y=0.5, showarrow=False,
+                       text="SUPERSEDED", font=dict(size=46, color="rgba(228,87,86,0.14)"),
+                       textangle=-18)
+    fig.add_annotation(xref="paper", yref="paper", x=0.98, y=0.04, xanchor="right",
+                       showarrow=False, align="right", font=dict(size=10, color=RED),
+                       text=("cross-check 2026-10-01: the released model has junction<br>"
+                             "angles (not central-force) — this angles-off sweep does<br>"
+                             "not describe the published model"))
     _layout(fig, height=460)
-    reached = "reached rigidity" if result.reached_rigid else "never reaches z = 4 → stays floppy"
     fig.update_layout(title=dict(
-        text=(f"<b>Rigidity sweep — modulus vs connectivity</b>   "
+        text=(f"<b>Rigidity sweep — angles-off network (superseded explanation)</b>   "
               f"<span style='font-size:12px;color:{_MUTED}'>"
-              f"raising NC1/7S crosslinks per end: {reached}</span>"),
+              f"with angles off the network is sub-isostatic &amp; soft; the released "
+              f"model has angles and is soft anyway</span>"),
         x=0.01, xanchor="left"))
     return fig
 
@@ -371,14 +382,19 @@ def bending_figure(result: Any) -> "object":
         marker=dict(size=12, color=GREEN, line=dict(width=1.4, color="white")),
         name="median E", showlegend=False,
         hovertemplate="bending_k=%{x}<br>median E=%{y:.2f} kT/a³<extra></extra>"))
+    # mark the RELEASED NC1 bending stiffness (KangNC1 = 4.0)
+    fig.add_vline(x=4.0, line=dict(color=ORANGE, width=2, dash="dash"),
+                  annotation_text="released NC1 value (k=4.0)",
+                  annotation_position="top", annotation_font_size=11)
     fig.update_xaxes(title_text="junction bending stiffness  bending_k")
-    fig.update_yaxes(title_text="elastic modulus E (kT/a³)")
+    fig.update_yaxes(title_text="elastic modulus E (kT/σ³)")
     _layout(fig, height=470)
     repro = any(getattr(p, "reproducible", False) for p in pts)
     verdict = ("clean, reproducible modulus" if repro else
-               "large but ILL-CONDITIONED response — no reproducible modulus at v1 size")
+               "even at the released k=4.0 the response is ILL-CONDITIONED — no "
+               "reproducible modulus at v1 size")
     fig.update_layout(title=dict(
-        text=(f"<b>FP1 — junction bending: floppy baseline vs bending response</b>   "
+        text=(f"<b>Bending sweep around the released k=4.0 (not the stiffness source)</b>   "
               f"<span style='font-size:12px;color:{_MUTED}'>{verdict}; "
               f"median (line) + per-seed points</span>"),
         x=0.01, xanchor="left"))
@@ -775,6 +791,129 @@ def evidence_map_figure(measured: dict | None = None) -> "object":
               f"<span style='font-size:12px;color:{_MUTED}'>measured literature "
               f"bands (green) from the spec; model values (red ◆) where run</span>"),
         x=0.01, xanchor="left"))
+    return fig
+
+
+# --------------------------------------------------------------------------- #
+# Modulus ladder — where the corrected v1 sits among measured BM moduli
+# --------------------------------------------------------------------------- #
+def modulus_ladder_figure(model_pa: float | None = None,
+                          model_lo_pa: float | None = None,
+                          model_hi_pa: float | None = None) -> "object":
+    """A log-scale ladder (Pa) placing the model's corrected modulus against the
+    measured comparators: the published CG model (≈0.03 Pa) through real BM
+    (10³–10⁵ Pa). Shows the v1 network lives in the published *very-soft* regime,
+    10³–10⁵× below real basement membrane."""
+    import plotly.graph_objects as go
+
+    comps = C.MODULUS_LADDER
+    ys = list(range(len(comps)))
+    fig = go.Figure()
+    for c, y in zip(comps, ys):
+        fig.add_trace(go.Scatter(
+            x=[c.lo, c.hi], y=[y, y], mode="lines",
+            line=dict(color=_BAND_LINE, width=10), opacity=0.5,
+            showlegend=False, hoverinfo="skip"))
+        fig.add_trace(go.Scatter(
+            x=[c.value], y=[y], mode="markers+text",
+            marker=dict(size=13, color=GREEN, line=dict(width=1, color="white")),
+            text=[f"  {c.label}"], textposition="middle right",
+            textfont=dict(size=11), showlegend=False,
+            hovertemplate=f"{c.label}: {c.value:g} Pa<br>{c.method}<extra></extra>"))
+    # the model's corrected modulus (a band if lo/hi given; else a point)
+    if model_pa is not None:
+        my = len(comps)
+        if model_lo_pa is not None and model_hi_pa is not None:
+            lo = max(1e-3, abs(model_lo_pa)); hi = max(lo * 1.2, abs(model_hi_pa))
+            fig.add_trace(go.Scatter(
+                x=[lo, hi], y=[my, my], mode="lines",
+                line=dict(color=RED, width=10), opacity=0.5, showlegend=False,
+                hoverinfo="skip"))
+        fig.add_trace(go.Scatter(
+            x=[max(1e-3, abs(model_pa))], y=[my], mode="markers+text",
+            marker=dict(size=15, color=RED, symbol="diamond", line=dict(width=1.2, color="white")),
+            text=["  corrected v1 (|E|, noise-limited)"], textposition="middle right",
+            textfont=dict(size=11, color=RED), showlegend=False,
+            hovertemplate=f"corrected v1: ~{abs(model_pa):.2g} Pa (consistent with 0)<extra></extra>"))
+        ys = ys + [my]
+    fig.update_xaxes(type="log", title_text="elastic modulus (Pa, log scale)",
+                     range=[-2.2, 5.2])
+    fig.update_yaxes(showticklabels=False, range=[-0.6, len(ys) - 0.4])
+    _layout(fig, height=360)
+    fig.update_layout(
+        margin=dict(l=20, r=20, t=64, b=52),
+        title=dict(text=("<b>Modulus ladder — the v1 network is in the published very-soft regime</b>   "
+                   f"<span style='font-size:12px;color:{_MUTED}'>corrected v1 ≈ "
+                   f"published CG (0.03 Pa); real BM is 10³–10⁵× stiffer</span>"),
+                   x=0.01, xanchor="left"))
+    return fig
+
+
+# --------------------------------------------------------------------------- #
+# Cross-check — clean-room vs released code (headline result)
+# --------------------------------------------------------------------------- #
+def cross_check_figure(model_pa: float | None = None,
+                       model_lo_pa: float | None = None,
+                       model_hi_pa: float | None = None) -> "object":
+    """Headline figure: the parameter comparison (matched vs divergent) next to
+    the modulus ladder, so the cross-check verdict and its consequence read
+    together. Green = matches the released code; red = diverges."""
+    from plotly.subplots import make_subplots
+    import plotly.graph_objects as go
+    from . import crosscheck as X
+
+    fig = make_subplots(
+        rows=1, cols=2, column_widths=[0.56, 0.44],
+        specs=[[{"type": "table"}, {"type": "xy"}]],
+        subplot_titles=(f"Parameters: {X.n_match()} match · {X.n_diverge()} diverge",
+                        "Consequence — modulus vs measured BM"),
+        horizontal_spacing=0.06)
+
+    rows = X.ROWS
+    match_fill = "rgba(84,162,75,0.14)"
+    div_fill = "rgba(228,87,86,0.14)"
+    status_txt = ["✓ match" if r.status == "match" else "✗ diverge" for r in rows]
+    cell_fill = [[match_fill if r.status == "match" else div_fill for r in rows]] * 4
+    fig.add_trace(go.Table(
+        columnwidth=[26, 26, 26, 16],
+        header=dict(values=["<b>Quantity</b>", "<b>Released</b>", "<b>Clean-room</b>", "<b>Status</b>"],
+                    fill_color="#f1f3f5", align="left", font=dict(size=11, color=_INK)),
+        cells=dict(values=[[r.quantity for r in rows], [r.released for r in rows],
+                           [r.ours for r in rows], status_txt],
+                   fill_color=cell_fill, align="left",
+                   font=dict(size=10, color=_INK), height=22)), row=1, col=1)
+
+    # right: the modulus ladder (reuse the comparator bands + model point)
+    comps = C.MODULUS_LADDER
+    for i, c in enumerate(comps):
+        fig.add_trace(go.Scatter(x=[c.lo, c.hi], y=[i, i], mode="lines",
+                      line=dict(color=_BAND_LINE, width=9), opacity=0.5,
+                      showlegend=False, hoverinfo="skip"), row=1, col=2)
+        fig.add_trace(go.Scatter(x=[c.value], y=[i], mode="markers+text",
+                      marker=dict(size=11, color=GREEN, line=dict(width=1, color="white")),
+                      text=[f"  {c.label}"], textposition="middle right",
+                      textfont=dict(size=10), showlegend=False,
+                      hovertemplate=f"{c.label}: {c.value:g} Pa<extra></extra>"), row=1, col=2)
+    if model_pa is not None:
+        my = len(comps)
+        if model_lo_pa is not None and model_hi_pa is not None:
+            fig.add_trace(go.Scatter(x=[max(1e-3, abs(model_lo_pa)), max(2e-3, abs(model_hi_pa))],
+                          y=[my, my], mode="lines", line=dict(color=RED, width=9),
+                          opacity=0.5, showlegend=False, hoverinfo="skip"), row=1, col=2)
+        fig.add_trace(go.Scatter(x=[max(1e-3, abs(model_pa))], y=[my], mode="markers+text",
+                      marker=dict(size=14, color=RED, symbol="diamond", line=dict(width=1.2, color="white")),
+                      text=["  corrected v1"], textposition="middle right",
+                      textfont=dict(size=10, color=RED), showlegend=False,
+                      hovertemplate=f"corrected v1 ~{abs(model_pa):.2g} Pa (consistent with 0)<extra></extra>"),
+                      row=1, col=2)
+    fig.update_xaxes(type="log", title_text="modulus (Pa, log)", range=[-2.2, 5.2], row=1, col=2)
+    fig.update_yaxes(showticklabels=False, range=[-0.6, len(comps) + 0.6], row=1, col=2)
+    _layout(fig, height=520)
+    fig.update_layout(
+        title=dict(text=("<b>Cross-check — clean-room vs the released code</b>   "
+                   f"<span style='font-size:12px;color:{_MUTED}'>structure + "
+                   f"central-force params now match; angles/GCE/break-mechanism diverge; "
+                   f"both are very soft</span>"), x=0.01, xanchor="left"))
     return fig
 
 
