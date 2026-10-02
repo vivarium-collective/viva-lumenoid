@@ -59,8 +59,8 @@ if _env and Path(_env).is_dir():
     REPO = Path(_env)
 if REPO is None:
     REPO = _find_repo_root(Path.cwd().resolve())
-if REPO is None and Path('/home/runner/work/viva-lumenoid/viva-lumenoid').is_dir():
-    REPO = Path('/home/runner/work/viva-lumenoid/viva-lumenoid')
+if REPO is None and Path('/Users/eranagmon/code/viva-lumenoid--bondreact').is_dir():
+    REPO = Path('/Users/eranagmon/code/viva-lumenoid--bondreact')
 if REPO is None:
     REPO = Path.cwd()
 sys.path.insert(0, str(REPO))
@@ -359,7 +359,7 @@ _save_viz('bm-v3-junction-bending-rigidity', 'rigidity-diagnostic', _render_one(
 #
 # **Purpose.** Bending constraints at crosslink junctions lift a sub-isostatic (z < 4) central-force network out of the floppy regime — the physically-expected rigidity source for a semiflexible fiber network.
 #
-# **Claim.** REFRAMED by the 2026-10-01 cross-check. Junction bending is NOT a new ingredient we add — the released model already sets it (NC1 angle k=4.0 @180°, plus 7S angles @155°/60°). This study sweeps bending_k around the released value 4.0. Our as-formed `fix restrain` realization of bending is ill-conditioned at v1 size, and — the key point — bending does not make the network stiff in absolute terms: the released model has these angles and is still soft (≈0.03 Pa). Bending is part of the force field, not the missing source of stiffness.
+# **Claim.** Junction bending is a released feature (NC1 angle k=4.0 @180°, plus 7S angles), not a new ingredient. HOW it is applied decides whether it yields a usable modulus. Our original as-formed `fix restrain` (pinned on AFTER assembly) is ill-conditioned — sign-flipping, no reproducible value. The FAITHFUL path (2026-10-02), creating real harmonic angles as the crosslinks form so the network equilibrates with them active (matching the released bond/react templates), yields a POSITIVE, well-conditioned, reproducible modulus. So the released model is not floppy once the angles are faithfully active; its modulus is finite and strongly density-dependent.
 
 # ### Parameters
 #
@@ -390,6 +390,11 @@ print("No recorded runs for this study; nothing to reproduce.")
 # ### Visualizations
 #
 # _Results are shown by the figures below, produced by the run above._
+
+# **faithful-angles**
+
+# faithful-angles
+_save_viz('bm-v4-junction-bending', 'faithful-angles', _render_one('html:faithful_angles.html', {'title': 'Faithful angles — the modulus becomes reproducible (headline)'}, RUNS_DB, STUDY_YAML))
 
 # **bending-movie**
 
