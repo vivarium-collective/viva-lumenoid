@@ -918,6 +918,66 @@ def cross_check_figure(model_pa: float | None = None,
 
 
 # --------------------------------------------------------------------------- #
+# Faithful angles — the angle-during-assembly fix (reproducibility + density)
+# --------------------------------------------------------------------------- #
+def faithful_angles_figure(per_seed_by_condition: dict,
+                           density_points: list | None = None) -> "object":
+    """Left: per-seed modulus for central-force / as-formed restraint / real
+    angles-during-assembly — shows the real-angle path is reproducible & positive
+    while the others are consistent with zero / sign-flipping. Right: the real-
+    angle modulus vs crosslink density (it is finite and density-dependent)."""
+    from plotly.subplots import make_subplots
+    import plotly.graph_objects as go
+
+    cols = 2 if density_points else 1
+    titles = ["Modulus per seed — the angle-during-assembly fix"]
+    if density_points:
+        titles.append("Real-angle modulus vs crosslink density")
+    fig = make_subplots(rows=1, cols=cols, subplot_titles=titles, horizontal_spacing=0.12)
+
+    palette = {"central-force (k=0)": _MUTED, "as-formed restraint (k=4)": ORANGE,
+               "real angles during assembly (k=4)": GREEN}
+    labels = list(per_seed_by_condition)
+    for i, lab in enumerate(labels):
+        es = np.asarray(per_seed_by_condition[lab], dtype=float)
+        c = palette.get(lab, BLUE)
+        fig.add_trace(go.Scatter(
+            x=[i] * len(es), y=es, mode="markers",
+            marker=dict(size=12, color=c, opacity=0.8, line=dict(width=1, color="white")),
+            name=lab, showlegend=False,
+            hovertemplate=f"{lab}<br>E=%{{y:.2f}} LJ<extra></extra>"), row=1, col=1)
+        fig.add_trace(go.Scatter(
+            x=[i], y=[float(np.median(es))], mode="markers",
+            marker=dict(size=18, color=c, symbol="line-ew", line=dict(width=3, color=c)),
+            showlegend=False, hoverinfo="skip"), row=1, col=1)
+    fig.add_hline(y=0.0, line=dict(color=_MUTED, width=1, dash="dot"), row=1, col=1)
+    fig.update_xaxes(tickmode="array", tickvals=list(range(len(labels))),
+                     ticktext=["central-force<br>(k=0)", "as-formed<br>restraint (k=4)",
+                               "real angles<br>in assembly (k=4)"][:len(labels)],
+                     range=[-0.5, len(labels) - 0.5], row=1, col=1)
+    fig.update_yaxes(title_text="elastic modulus E (kT/σ³)", row=1, col=1)
+
+    if density_points:
+        d = np.asarray([p[0] for p in density_points])
+        e = np.asarray([p[1] for p in density_points])
+        fig.add_trace(go.Scatter(
+            x=d, y=e, mode="lines+markers", line=dict(color=GREEN, width=2),
+            marker=dict(size=11, color=GREEN, line=dict(width=1, color="white")),
+            showlegend=False,
+            hovertemplate="%{x:.2f} crosslinks/rod<br>E=%{y:.1f} LJ<extra></extra>"), row=1, col=2)
+        fig.update_xaxes(title_text="crosslinks per rod", row=1, col=2)
+        fig.update_yaxes(title_text="elastic modulus E (kT/σ³)", row=1, col=2)
+
+    _layout(fig, height=440)
+    fig.update_layout(title=dict(
+        text=("<b>Faithful angles — the modulus becomes reproducible</b>   "
+              f"<span style='font-size:12px;color:{_MUTED}'>angles active during "
+              f"assembly (create_bonds single/angle) → positive, well-conditioned E; "
+              f"density-dependent</span>"), x=0.01, xanchor="left"))
+    return fig
+
+
+# --------------------------------------------------------------------------- #
 def figure_to_html(fig, title: str = "viva-lumenoid") -> str:
     import plotly.io as pio
     return pio.to_html(fig, full_html=True, include_plotlyjs="cdn",

@@ -15,13 +15,13 @@ import os
 from viva_lumenoid import run_stage1, CollagenParams
 from viva_lumenoid.stage2 import run_stage2
 from viva_lumenoid.rigidity import run_connectivity_sweep
-from viva_lumenoid.bending import run_bending_sweep
+from viva_lumenoid.bending import run_bending_sweep, run_faithful_comparison
 from viva_lumenoid.stage5 import run_porosity_bundling
 from viva_lumenoid.viz import (stage1_figure, stage2_figure, rigidity_figure,
                                bending_figure, porosity_bundling_figure,
                                evidence_map_figure, network_movie_figure,
                                network_movie_3d_figure, cross_check_figure,
-                               modulus_ladder_figure, save_html)
+                               modulus_ladder_figure, faithful_angles_figure, save_html)
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 STUDIES = os.path.join(ROOT, "workspace", "studies")
@@ -103,6 +103,14 @@ def main():
               "FP1 — junction bending")
     print(f"  floppy median {r4.points[0].modulus_median:+.3f}; "
           f"large_response={r4.large_response}")
+    # Faithful-angles comparison (the headline fix): central-force vs as-formed
+    # restraint vs real-angles-during-assembly + modulus vs density.
+    print("Running faithful-angles comparison …")
+    conds, dens = run_faithful_comparison()
+    save_html(faithful_angles_figure(conds, dens),
+              os.path.join(s4, "faithful_angles.html"),
+              "Faithful angles — reproducible modulus")
+    print(f"  real-angle per-seed: {conds['real angles during assembly (k=4)']}")
 
     # Stage 5 (bm-v5): porosity & bundling geometric readouts + evidence map
     s5 = os.path.join(STUDIES, "bm-v5-porosity-bundling", "viz")

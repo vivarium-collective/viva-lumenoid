@@ -91,8 +91,42 @@ infrastructure (LAMMPS-backed network, staged protocol, readouts) is sound.
 
 ## Recommended next step
 
-Correct `CollagenParams` to the released values (angles, bond k/r0, rod r0=3.0,
-damp=0.1, cutoffs, Nevery) and re-run the studies, then re-derive the modulus and
-remodelling conclusions. This is a parameter + re-run task, not an infrastructure
-change. Until then, the mechanical conclusions (floppy / bending-as-new) should be
-read as **not representative of the published model**.
+**DONE 2026-10-01** — `CollagenParams` corrected to the released scalar values
+(bond k/r0, rod r0=3.0, cutoffs, damp=0.1, Nevery=500, σ≈125 nm) and all studies
+re-run. Outcome: a very-soft modulus consistent with the published ≈0.03 Pa; the
+central-force / bending-as-new explanations retired.
+
+## Engine note (corrected 2026-10-02)
+
+Both the released code and viva-lumenoid run on **LAMMPS** — this is not an engine
+difference. The released code drives it with `fix bond/react` (the REACTION
+package) + molecule templates, which create the junction angles atomically when a
+bond forms, plus a custom-patched GCE (Nucleation/Death) for monomer exchange.
+viva-lumenoid drives the *same* engine with `fix bond/create` + a Python-side
+off-rate, which does not create angles. **Our LAMMPS build already has
+`fix bond/react` available**, so the remaining fidelity gap is not the engine but:
+
+  1. **Junction angles active during assembly** — **CLOSED (2026-10-02).** Real
+     `angle_style harmonic` angles are now created incrementally as NC1 crosslinks
+     form (`create_bonds single/angle`, NC1 180° k=4.0; `CollagenParams.
+     use_real_angles`), so the network equilibrates compatible with them rather
+     than having them pinned on afterwards. This fixes the ill-conditioning: the
+     modulus becomes **reproducible and positive** across seeds (e.g. per-seed
+     36.7 / 27.6 / 37.5 LJ) instead of the sign-flipping as-formed-restraint result
+     (0.9 / −2.5 / −0.5). So the released model, run faithfully, is **not floppy** —
+     it has a well-defined finite modulus.
+  2. **Crosslink density / make+break balance** — still a gap. The real-angle path
+     has no per-angle deletion, so it runs **make-only** assembly, which
+     over-crosslinks (≈2.9 vs the make+break steady-state ≈0.35 crosslinks/rod).
+     The modulus is strongly density-dependent (≈79 Pa at 2.9/rod → ≈7 Pa at
+     1.0/rod), so matching the released modulus needs make+break **with** angle
+     deletion (or the GCE) to hit the right density. This is why the earlier
+     "very soft, ≈0.03 Pa" reading was incomplete — it came from the angle-off runs.
+  3. **The custom GCE** (Nucleation/Death with the density penalty) — still a gap;
+     it needs the authors' patched `fix_bond_react`.
+  4. **The 7S-specific break cutoff** (0.95), the 7S angles (155°/60°), and the
+     dense initial configuration.
+
+Smoldyn is not used by the released model; it appears only in the AICS spec
+(decision #2) as a *future* engine option for stage 3 (surface binders / flexible
+fibers).

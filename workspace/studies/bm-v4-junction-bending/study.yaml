@@ -10,13 +10,15 @@ gate_status: needs_calibration
 design_status: drafted
 
 claim: >
-  REFRAMED by the 2026-10-01 cross-check. Junction bending is NOT a new ingredient
-  we add — the released model already sets it (NC1 angle k=4.0 @180°, plus 7S
-  angles @155°/60°). This study sweeps bending_k around the released value 4.0.
-  Our as-formed `fix restrain` realization of bending is ill-conditioned at v1
-  size, and — the key point — bending does not make the network stiff in absolute
-  terms: the released model has these angles and is still soft (≈0.03 Pa). Bending
-  is part of the force field, not the missing source of stiffness.
+  Junction bending is a released feature (NC1 angle k=4.0 @180°, plus 7S angles),
+  not a new ingredient. HOW it is applied decides whether it yields a usable
+  modulus. Our original as-formed `fix restrain` (pinned on AFTER assembly) is
+  ill-conditioned — sign-flipping, no reproducible value. The FAITHFUL path
+  (2026-10-02), creating real harmonic angles as the crosslinks form so the
+  network equilibrates with them active (matching the released bond/react
+  templates), yields a POSITIVE, well-conditioned, reproducible modulus. So the
+  released model is not floppy once the angles are faithfully active; its modulus
+  is finite and strongly density-dependent.
 
 experiment: >
   Implement bending via LAMMPS `fix restrain` pinned to each junction's as-formed
@@ -26,15 +28,16 @@ experiment: >
   stiffness bending_k.
 
 result: >
-  The floppy baseline (bending_k = 0) is reproducible: E ≈ 0 (per-seed −0.006,
-  0.0, 0.015). Turning bending on produces a large mechanical response (|E|
-  reaches tens to hundreds; the network is no longer floppy), but the stiff,
-  pre-stressed, disordered network has many near-degenerate minima, so the
-  modulus is ill-conditioned: it scatters across seeds and changes sign (k=80
-  per-seed −570 … +54, median −210). FP1 therefore establishes that bending
-  dominates the mechanics but does not yet yield a calibratable modulus. A
-  reproducible value needs a larger network (self-averaging) and a pre-stress-
-  free reference state; this is scoped as a v2 task.
+  Three ways of applying the released NC1 bending (k=4.0), 3 seeds each at the
+  corrected params: central-force (angles off) E per-seed −0.54/−1.32/−1.14
+  (consistent with zero); as-formed `fix restrain` 0.9/−2.53/−0.47 (ill-
+  conditioned, sign-flipping); REAL angles created during assembly
+  36.7/27.6/37.5 LJ — positive, same sign, reproducible. The angle-during-
+  assembly fix resolves the ill-conditioning. The modulus is strongly density-
+  dependent (≈79 Pa at 2.9 crosslinks/rod → ≈7 Pa at 1.0/rod). One caveat: the
+  real-angle path has no per-angle deletion, so it runs make-only and
+  over-crosslinks (≈2.9 vs the make+break steady-state ≈0.35/rod); matching the
+  released absolute modulus needs make+break with angle deletion (or the GCE).
 
 seeded_from:
   study: bm-v3-junction-bending-rigidity
@@ -188,6 +191,10 @@ discovery_implications:
     - {id: fp3-largescale-prestressfree-modulus, title: "Reproducible bending modulus at scale"}
 
 visualizations:
+  - name: faithful-angles
+    address: "html:faithful_angles.html"
+    config:
+      title: "Faithful angles — the modulus becomes reproducible (headline)"
   - name: bending-movie
     address: "html:bending_movie.html"
     config:
@@ -209,21 +216,26 @@ limitations:
   - "Only equibiaxial stress-strain slope is used; a shear or energy-curvature modulus may be better conditioned."
 
 report:
-  title: "Stage v4 — junction bending (released feature, not the stiffness source)"
+  title: "Stage v4 — junction bending: the angle-during-assembly fix"
   verdict: >
-    Junction bending is a core feature of the released model (NC1 angle k=4.0),
-    not an add-on, so the earlier "add bending to fix the floppiness" framing is
-    retired. Our as-formed `fix restrain` realization of bending is ill-conditioned
-    at v1 size (sign-flipping athermal modulus), and bending does not make the
-    network stiff in absolute terms — the released model has the angles and is
-    still soft (≈0.03 Pa). A faithful run needs the released angle set active
-    during assembly (bond/react) and a larger network.
-  confidence: low
+    Applying the released NC1 bending (k=4.0) via real harmonic angles created as
+    the crosslinks form — matching how the released bond/react templates add
+    angles during assembly — resolves the ill-conditioning: the modulus is
+    positive, reproducible across seeds (36.7/27.6/37.5 LJ) and well-conditioned,
+    where the as-formed restraint sign-flipped. So the released model is not floppy
+    once its angles are faithfully active; the modulus is finite and strongly
+    density-dependent. The remaining gap for an absolute value is matching the
+    make+break crosslink density (the real-angle path runs make-only and
+    over-crosslinks), which needs per-angle deletion or the GCE.
+  confidence: medium
   evidence_quality: preliminary
   main_insight: >
-    Bending is in the published force field but is not the source of a large
-    modulus: the network is soft with the angles present. The remaining fidelity
-    gap is the angle-during-assembly mechanism, not a missing bending term.
+    With the junction angles active during assembly — the way the released model
+    builds them — the network has a reproducible, well-conditioned, finite modulus.
+    The earlier ill-conditioned/soft readings were artifacts of applying bending
+    after assembly (as-formed restraints) and of the angle-off runs. The absolute
+    value now hinges on crosslink density, which the make-only real-angle path
+    over-shoots; matching the released make+break density is the remaining step.
 
 bibliography:
   sources:
