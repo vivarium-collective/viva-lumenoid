@@ -183,7 +183,7 @@ print("No recorded runs for this study; nothing to reproduce.")
 #
 # _Results are shown by the figures below, produced by the run above._
 
-# **stage1-movie**
+# **cross-check**
 
 def _save_viz(study, slug, html):
     d = REPO / 'reports/notebooks/figures' / study
@@ -192,6 +192,16 @@ def _save_viz(study, slug, html):
     out.write_text(html, encoding='utf-8')
     print('  wrote', out)
 
+
+# cross-check
+_save_viz('bm-v1-stage1-modulus-remodelling', 'cross-check', _render_one('html:cross_check.html', {'title': 'Cross-check — clean-room vs the released code (headline)'}, RUNS_DB, STUDY_YAML))
+
+# **modulus-ladder**
+
+# modulus-ladder
+_save_viz('bm-v1-stage1-modulus-remodelling', 'modulus-ladder', _render_one('html:modulus_ladder.html', {'title': 'Modulus ladder — v1 in the published very-soft regime'}, RUNS_DB, STUDY_YAML))
+
+# **stage1-movie**
 
 # stage1-movie
 _save_viz('bm-v1-stage1-modulus-remodelling', 'stage1-movie', _render_one('html:stage1_movie.html', {'title': 'Simulation movie — the staged protocol unfolding'}, RUNS_DB, STUDY_YAML))
@@ -471,7 +481,7 @@ _save_viz('bm-v5-porosity-bundling', 'evidence-map', _render_one('html:evidence_
 # | bundling-under-shoots-5-7 | kind=mean field=protomers_per_strand | op lt value 2.0 field mean_strand |
 
 # ## Open decisions
-# - DONE 2026-10-01 — cross-checked against the released code (references/cross-check-vs-released-code.md): structure matches, but the released model is bending-stabilized (NC1/7S angles) and diverges on bond stiffness (6.0 vs 100), rod length (3σ vs 1σ), cutoffs, Nevery, break mechanism and GCE. NEXT: correct CollagenParams to the released values (add the angle set, bond k/r0, rod r0=3.0, damp=0.1) and re-run bm-v1/v3/v4 before reporting any modulus.
+# - DONE 2026-10-01 — cross-checked against the released code AND corrected the clean-room parameters to match (bond k/r0, rod r0=3.0, cutoffs, damp=0.1, Nevery=500, σ≈125 nm); re-ran all studies. Result: very-soft modulus consistent with the published ≈0.03 Pa; central-force/bending explanations retired. REMAINING for a quantitative modulus: angle set active during assembly (bond/react), 7S break cutoff (0.95), dense initial config, larger network.
 # - Engine for stages 1–2: LAMMPS now; revisit Smoldyn at stage 3 (spec #2).
 # - Secretion: fixed concentration vs fixed flux (spec #3).
 # - Energy scale: report modulus in Pa (fit to a measured modulus) or keep kT and report a ratio (spec #4).

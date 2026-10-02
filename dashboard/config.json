@@ -2,6 +2,6 @@
   "mode": "snapshot",
   "smsApiBase": "",
   "repo": "https://github.com/vivarium-collective/viva-lumenoid.git",
-  "commit": "cd18d31af71a49ce3644879c2bc80de243afbbe9",
+  "commit": "489a0ae27ede95fbea6398ca8badc905709ea19c",
   "generated_from_ref": "spec-update-v2"
 }
