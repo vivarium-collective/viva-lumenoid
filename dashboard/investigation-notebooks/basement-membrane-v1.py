@@ -59,8 +59,8 @@ if _env and Path(_env).is_dir():
     REPO = Path(_env)
 if REPO is None:
     REPO = _find_repo_root(Path.cwd().resolve())
-if REPO is None and Path('/home/runner/work/viva-lumenoid/viva-lumenoid').is_dir():
-    REPO = Path('/home/runner/work/viva-lumenoid/viva-lumenoid')
+if REPO is None and Path('/Users/eranagmon/code/viva-lumenoid--fraction').is_dir():
+    REPO = Path('/Users/eranagmon/code/viva-lumenoid--fraction')
 if REPO is None:
     REPO = Path.cwd()
 sys.path.insert(0, str(REPO))
@@ -195,6 +195,11 @@ def _save_viz(study, slug, html):
 
 # cross-check
 _save_viz('bm-v1-stage1-modulus-remodelling', 'cross-check', _render_one('html:cross_check.html', {'title': 'Cross-check — clean-room vs the released code (headline)'}, RUNS_DB, STUDY_YAML))
+
+# **modulus-vs-fraction**
+
+# modulus-vs-fraction
+_save_viz('bm-v1-stage1-modulus-remodelling', 'modulus-vs-fraction', _render_one('html:modulus_vs_fraction.html', {'title': 'The faithful model reproduces the published modulus (vs crosslink fraction)'}, RUNS_DB, STUDY_YAML))
 
 # **modulus-ladder**
 
