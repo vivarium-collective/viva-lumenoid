@@ -142,16 +142,16 @@ executive:
     becomes positive, reproducible across seeds, and well-conditioned (bm-v4). So
     once the angles are faithfully active the network is NOT floppy — its modulus
     is finite and strongly density-dependent.
-    (5) Elastic/viscous separation achieved — with per-angle deletion the stiff
-    faithful network also REMODELS in the viscous hold (crosslinks break with
-    angles staying valid), so the study's core goal is met: it separates a
-    reproducible elastic modulus (E ≈ 30–42 LJ ≈ 65–95 Pa) from a reproducible
-    remodelling time (τ ≈ 38–40 τ), both measurable where before both were
-    noise-limited.
-    A calibrated absolute modulus and τ still require matching the released
-    crosslink density (its dense initial config + GCE — make+break at our scale is
-    too sparse), the 7S angles + break cutoff, a larger network, and the
-    energy-scale decision.
+    (5) Elastic/viscous separation + density calibration — with per-angle deletion
+    the stiff faithful network REMODELS in the viscous hold, and with the geometry
+    set to the authors' dense initial config (3.0 rods/σ², 12σ-thick slab, read
+    from Assembly/input/dataNucType9_dense) the result is well-defined: make+break
+    and make-only AGREE (≈2.6 crosslinks/rod), and the model separates a
+    reproducible elastic modulus (E ≈ 3 LJ ≈ 6 Pa) from a reproducible remodelling
+    time (τ ≈ 40–60 τ) — the study's core goal, where both were noise-limited before.
+    Remaining: the ABSOLUTE modulus in Pa depends on the open energy-scale decision
+    (spec #4; ~6 Pa at kT/σ³≈2.2), plus the 7S angles/break cutoff and the GCE-
+    maintained monomer pool for exact fidelity.
   verdict_status: preliminary
   decisions_needed:
     - "DONE 2026-10-01 — cross-checked against the released code AND corrected the clean-room parameters to match (bond k/r0, rod r0=3.0, cutoffs, damp=0.1, Nevery=500, σ≈125 nm); re-ran all studies. Result: very-soft modulus consistent with the published ≈0.03 Pa; central-force/bending explanations retired. REMAINING for a quantitative modulus: angle set active during assembly (bond/react), 7S break cutoff (0.95), dense initial config, larger network."

@@ -121,14 +121,19 @@ off-rate, which does not create angles. **Our LAMMPS build already has
      reproducible remodelling time (τ ≈ 40 τ) alongside the modulus — the
      elastic/viscous separation the investigation set out to do (both were
      noise-limited before).
-  2b. **Crosslink density / dense config + GCE** — still a gap. Assembly runs
-     make-only because the make+break balance at our scale is too sparse to
-     percolate (≈0.18 vs the make-only ≈2.9 crosslinks/rod). The modulus is
-     strongly density-dependent (≈79 Pa at 2.9/rod → ≈7 Pa at 1.0/rod), so a
-     calibrated absolute modulus needs the authors' **dense initial configuration +
-     GCE** (which maintain the dense physiological monomer pool) and their
-     distance-gated break mechanism. This is why the earlier "very soft, ≈0.03 Pa"
-     reading was incomplete — it came from the angle-off runs.
+  2b. **Crosslink density** — **CLOSED (2026-10-02).** The authors' dense initial
+     config (`Assembly/input/dataNucType9_dense`) is 3126 protomers in a
+     32.27×32.27×12.0 box → **areal density 3.0 rods/σ², a 12σ-thick slab**
+     (several layers), V=12500. Matching that density + thickness in our builder,
+     **make+break and make-only AGREE** (≈2.6 crosslinks/rod) and the modulus is
+     reproducible (E ≈ 3 LJ ≈ 6 Pa). The earlier sparsity and the 79-vs-7 Pa
+     spread were artifacts of a too-thin (2σ), too-sparse geometry. The remaining
+     refinements are the GCE-maintained monomer pool and the distance-gated break
+     mechanism (for exact turnover), not the gross density.
+  2c. **Absolute Pa / energy scale** — open by the spec's own decision #4: the
+     modulus is reported in reduced units (E ≈ 3 LJ); ~6 Pa uses kT/σ³ ≈ 2.2 Pa.
+     The published ≈0.03 Pa figure assumes the authors' own energy scale (s_E),
+     so an absolute Pa comparison is only meaningful once that is fixed.
   3. **The custom GCE** (Nucleation/Death with the density penalty) — still a gap;
      it needs the authors' patched `fix_bond_react`.
   4. **The 7S-specific break cutoff** (0.95), the 7S angles (155°/60°), and the
