@@ -34,10 +34,12 @@ result: >
   conditioned, sign-flipping); REAL angles created during assembly
   36.7/27.6/37.5 LJ — positive, same sign, reproducible. The angle-during-
   assembly fix resolves the ill-conditioning. The modulus is strongly density-
-  dependent (≈79 Pa at 2.9 crosslinks/rod → ≈7 Pa at 1.0/rod). One caveat: the
-  real-angle path has no per-angle deletion, so it runs make-only and
-  over-crosslinks (≈2.9 vs the make+break steady-state ≈0.35/rod); matching the
-  released absolute modulus needs make+break with angle deletion (or the GCE).
+  dependent (≈79 Pa at 2.9 crosslinks/rod → ≈7 Pa at 1.0/rod). Per-angle deletion
+  is now implemented (delete-all + recreate on break), so the stiff network also
+  REMODELS in the viscous hold — giving a reproducible remodelling time (τ ≈ 40 τ,
+  bm-v1) alongside the modulus. Assembly stays make-only because make+break at
+  this scale is too sparse to percolate (≈0.18/rod); matching the released dense
+  make+break balance needs the authors' dense initial config + GCE.
 
 seeded_from:
   study: bm-v3-junction-bending-rigidity

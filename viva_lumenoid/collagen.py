@@ -308,6 +308,30 @@ class CollagenNetworkProcess(Process):
         if created:
             self._fixes_dirty = True
 
+    def _rebuild_real_angles(self):
+        """Sync real junction angles to the CURRENT NC1 crosslink set when breaking
+        is active: delete all type-1 angles and recreate them for the crosslinks
+        that still exist. Robust (no per-angle bookkeeping) and lets the real-angle
+        path run make+break assembly — the released balance — rather than make-only.
+        """
+        p = self._params
+        if p.bending_k <= 0.0:
+            return
+        lmp = self._lmp
+        lmp.command('delete_bonds all angle 1 remove')
+        _nb, data = lmp.gather_bonds()
+        arr = np.array(data, dtype=int).reshape(-1, 3)
+        xlinks = arr[arr[:, 0] == 2]
+        self._angled = set()
+        for _bt, u, v in xlinks:
+            u, v = int(u), int(v)
+            pu, pv = self._rod_partner(u), self._rod_partner(v)
+            if pu and pv and pu != v and pv != u:
+                lmp.command(f'create_bonds single/angle 1 {pu} {u} {v}')
+                lmp.command(f'create_bonds single/angle 1 {u} {v} {pv}')
+                self._angled.add((min(u, v), max(u, v)))
+        self._fixes_dirty = True
+
     def _read(self):
         lmp = self._lmp
         nlocal = lmp.extract_setting('nlocal')
@@ -360,8 +384,11 @@ class CollagenNetworkProcess(Process):
             self._apply_make(state.get('make_on'))
             made = bool(state.get('make_on', 0.0) and state['make_on'] >= 0.5)
             broke = bool(state.get('break_on', 0.0) and state['break_on'] >= 0.5)
-            # The real-angle path has no per-angle deletion, so breaking is
-            # suppressed while crosslinks (and their angles) are forming.
+            # Real-angle ASSEMBLY is make-only (breaking suppressed while making),
+            # which reaches a dense, reproducible, angled network — the make+break
+            # balance at this scale is too sparse to percolate without the authors'
+            # dense initial config + GCE. Breaking is still handled in a break-only
+            # phase (the viscous hold), where angles are re-synced by deletion.
             if real_angles and made:
                 broke = False
             if broke:
@@ -370,9 +397,15 @@ class CollagenNetworkProcess(Process):
                 self._break_crosslinks(interval)
             chem_active = made or broke
             if real_angles:
-                # Create real angles for any new NC1 crosslinks (during assembly
-                # and thereafter), so the network equilibrates with them active.
-                self._create_junction_angles()
+                # Keep real junction angles synced to the crosslink set: rebuild
+                # (delete-all + recreate) after breaking so no angle references a
+                # deleted crosslink; otherwise create angles for new crosslinks
+                # incrementally. This lets the real-angle network remodel (break
+                # crosslinks) in the viscous hold with the angles staying valid.
+                if broke:
+                    self._rebuild_real_angles()
+                else:
+                    self._create_junction_angles()
             elif bending:
                 # Pin junction-bending restraints to the AS-FORMED geometry exactly
                 # ONCE, at the assemble→frozen transition. Rebuilding every assembly
