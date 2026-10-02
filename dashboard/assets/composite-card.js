@@ -145,11 +145,8 @@
     var frame = card.querySelector('.ccard-loom-frame');
     if (frame) {
       var fr = frame.getBoundingClientRect();
-      var cs = getComputedStyle(document.documentElement);
-      // Leave room for a bottom-docked panel — chat OR the process-code rail.
-      var aiBottom = parseFloat(cs.getPropertyValue('--viv-ai-bottom')) || 0;
-      var codeBottom = parseFloat(cs.getPropertyValue('--viv-code-bottom')) || 0;
-      frame.style.height = Math.max(360, window.innerHeight - fr.top - 16 - aiBottom - codeBottom) + 'px';
+      var aiBottom = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--viv-ai-bottom')) || 0;
+      frame.style.height = Math.max(360, window.innerHeight - fr.top - 16 - aiBottom) + 'px';
       frame.style.maxHeight = 'none';
     }
   }

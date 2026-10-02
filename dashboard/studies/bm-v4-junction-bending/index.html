@@ -587,7 +587,7 @@
 
     <div class="ctr-block">
       <h2 class="overview-label ctr-h">Result</h2>
-      <p class="ctr-text">Three ways of applying the released NC1 bending (k=4.0), 3 seeds each at the corrected params: central-force (angles off) E per-seed −0.54/−1.32/−1.14 (consistent with zero); as-formed `fix restrain` 0.9/−2.53/−0.47 (ill- conditioned, sign-flipping); REAL angles created during assembly 36.7/27.6/37.5 LJ — positive, same sign, reproducible. The angle-during- assembly fix resolves the ill-conditioning. The modulus is strongly density- dependent (≈79 Pa at 2.9 crosslinks/rod → ≈7 Pa at 1.0/rod). One caveat: the real-angle path has no per-angle deletion, so it runs make-only and over-crosslinks (≈2.9 vs the make+break steady-state ≈0.35/rod); matching the released absolute modulus needs make+break with angle deletion (or the GCE).
+      <p class="ctr-text">Three ways of applying the released NC1 bending (k=4.0), 3 seeds each at the corrected params: central-force (angles off) E per-seed −0.54/−1.32/−1.14 (consistent with zero); as-formed `fix restrain` 0.9/−2.53/−0.47 (ill- conditioned, sign-flipping); REAL angles created during assembly 36.7/27.6/37.5 LJ — positive, same sign, reproducible. The angle-during- assembly fix resolves the ill-conditioning. The modulus is strongly density- dependent (≈79 Pa at 2.9 crosslinks/rod → ≈7 Pa at 1.0/rod). Per-angle deletion is now implemented (delete-all + recreate on break), so the stiff network also REMODELS in the viscous hold — giving a reproducible remodelling time (τ ≈ 40 τ, bm-v1) alongside the modulus. Assembly stays make-only because make+break at this scale is too sparse to percolate (≈0.18/rod); matching the released dense make+break balance needs the authors&#39; dense initial config + GCE.
 </p>
       
       
@@ -1353,7 +1353,7 @@ pass_if: {"note": "IQR \u003c 0.5\u00b7|median|", "op": "lt", "value": 0.5}</pre
 </section>
 
 </main>
-<script>window.__DASH_CONFIG__ = { mode: "snapshot", interactiveUrl: "https://github.com/vivarium-collective/viva-lumenoid", basePath: "/viva-lumenoid/dashboard", inputsDownloadBase: "https://github.com/vivarium-collective/viva-lumenoid/raw/main", provenance: {"repo_slug": "vivarium-collective/viva-lumenoid", "repo_url": "https://github.com/vivarium-collective/viva-lumenoid", "commit": "6c9c963106e016c7e8ffa36046caf071040bedab", "commit_url": "https://github.com/vivarium-collective/viva-lumenoid/commit/6c9c963106e016c7e8ffa36046caf071040bedab", "branch": "main", "generated_at": "2026-10-02 13:20 UTC"} };</script>
+<script>window.__DASH_CONFIG__ = { mode: "snapshot", interactiveUrl: "https://github.com/vivarium-collective/viva-lumenoid", basePath: "/viva-lumenoid/dashboard", inputsDownloadBase: "https://github.com/vivarium-collective/viva-lumenoid/raw/makebreak-angles", provenance: {"repo_slug": "vivarium-collective/viva-lumenoid", "repo_url": "https://github.com/vivarium-collective/viva-lumenoid", "commit": "6e055c3df80349e57bdb1f6f97c864a8ca98c0d2", "commit_url": "https://github.com/vivarium-collective/viva-lumenoid/commit/6e055c3df80349e57bdb1f6f97c864a8ca98c0d2", "branch": "makebreak-angles", "generated_at": "2026-10-02 14:00 UTC"} };</script>
 <script src="/viva-lumenoid/dashboard/assets/data-source.js"></script>
 <script>
 window._studyName = "bm-v4-junction-bending";

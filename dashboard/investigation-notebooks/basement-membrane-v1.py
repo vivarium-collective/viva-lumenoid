@@ -59,8 +59,8 @@ if _env and Path(_env).is_dir():
     REPO = Path(_env)
 if REPO is None:
     REPO = _find_repo_root(Path.cwd().resolve())
-if REPO is None and Path('/home/runner/work/viva-lumenoid/viva-lumenoid').is_dir():
-    REPO = Path('/home/runner/work/viva-lumenoid/viva-lumenoid')
+if REPO is None and Path('/Users/eranagmon/code/viva-lumenoid--makebreak-angles').is_dir():
+    REPO = Path('/Users/eranagmon/code/viva-lumenoid--makebreak-angles')
 if REPO is None:
     REPO = Path.cwd()
 sys.path.insert(0, str(REPO))
@@ -211,10 +211,15 @@ _save_viz('bm-v1-stage1-modulus-remodelling', 'stage1-movie', _render_one('html:
 # stage1-movie-3d
 _save_viz('bm-v1-stage1-modulus-remodelling', 'stage1-movie-3d', _render_one('html:stage1_movie_3d.html', {'title': '3D view — the quasi-2D slab, rotatable'}, RUNS_DB, STUDY_YAML))
 
+# **stage1-faithful**
+
+# stage1-faithful
+_save_viz('bm-v1-stage1-modulus-remodelling', 'stage1-faithful', _render_one('html:stage1_faithful.html', {'title': 'Stage 1 (faithful angles) — modulus AND remodelling separated'}, RUNS_DB, STUDY_YAML))
+
 # **stage1-diagnostic**
 
 # stage1-diagnostic
-_save_viz('bm-v1-stage1-modulus-remodelling', 'stage1-diagnostic', _render_one('html:stage1_diagnostic.html', {'title': 'Stage 1 — modulus & remodelling diagnostic'}, RUNS_DB, STUDY_YAML))
+_save_viz('bm-v1-stage1-modulus-remodelling', 'stage1-diagnostic', _render_one('html:stage1_diagnostic.html', {'title': 'Stage 1 (angle-off) — modulus & remodelling diagnostic'}, RUNS_DB, STUDY_YAML))
 
 # ### Acceptance criteria
 #
