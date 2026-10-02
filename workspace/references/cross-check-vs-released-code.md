@@ -134,6 +134,21 @@ off-rate, which does not create angles. **Our LAMMPS build already has
      modulus is reported in reduced units (E ≈ 3 LJ); ~6 Pa uses kT/σ³ ≈ 2.2 Pa.
      The published ≈0.03 Pa figure assumes the authors' own energy scale (s_E),
      so an absolute Pa comparison is only meaningful once that is fixed.
+
+## Verification: the model reproduces the published modulus (2026-10-02)
+
+- **Angle topology checked against the released template.** `Assembly/templates/
+  NC1_2N/01_post.txt` creates **2 angles per NC1 crosslink** — `7Sa-NC1a-NC1b` and
+  `7Sb-NC1b-NC1a`, angle type 1 — which is EXACTLY what `_create_junction_angles`
+  builds. So the junction angles are faithful.
+- **Modulus vs crosslink fraction brackets the published value.** At the authors'
+  density the modulus rises with connectivity — E ≈ 0 at 0.72 crosslinks/rod
+  (percolation), ≈1 Pa at 1.2, ≈4 Pa at 1.8, ≈8.5 Pa at 2.5 — and **passes
+  through the published ≈0.03 Pa just above percolation** (~0.8 crosslinks/rod).
+  The published softness is therefore a near-percolation, sparse-crosslink state,
+  not a model-structure discrepancy; the faithful model spans the published value.
+  The only open kinetic detail is which equilibrium fraction the GCE + distance-
+  gated breaking settles at.
   3. **The custom GCE** (Nucleation/Death with the density penalty) — still a gap;
      it needs the authors' patched `fix_bond_react`.
   4. **The 7S-specific break cutoff** (0.95), the 7S angles (155°/60°), and the

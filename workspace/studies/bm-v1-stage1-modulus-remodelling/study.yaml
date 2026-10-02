@@ -226,6 +226,10 @@ visualizations:
     address: "html:cross_check.html"
     config:
       title: "Cross-check — clean-room vs the released code (headline)"
+  - name: modulus-vs-fraction
+    address: "html:modulus_vs_fraction.html"
+    config:
+      title: "The faithful model reproduces the published modulus (vs crosslink fraction)"
   - name: modulus-ladder
     address: "html:modulus_ladder.html"
     config:

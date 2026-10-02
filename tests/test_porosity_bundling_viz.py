@@ -108,3 +108,9 @@ def test_cross_check_and_ladder_figures_render():
     assert "Cross-check" in viz.figure_to_html(f1)
     f2 = viz.modulus_ladder_figure(model_pa=0.7, model_lo_pa=0.03, model_hi_pa=2.0)
     assert "Modulus ladder" in viz.figure_to_html(f2)
+
+
+def test_modulus_vs_fraction_figure_renders():
+    fig = viz.modulus_vs_fraction_figure([(0.72, -0.02), (1.2, 0.44), (1.8, 1.9), (2.5, 3.9)])
+    html = viz.figure_to_html(fig)
+    assert "reproduces the published modulus" in html

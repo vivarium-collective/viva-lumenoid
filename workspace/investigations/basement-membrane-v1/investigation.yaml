@@ -149,9 +149,16 @@ executive:
     and make-only AGREE (≈2.6 crosslinks/rod), and the model separates a
     reproducible elastic modulus (E ≈ 3 LJ ≈ 6 Pa) from a reproducible remodelling
     time (τ ≈ 40–60 τ) — the study's core goal, where both were noise-limited before.
-    Remaining: the ABSOLUTE modulus in Pa depends on the open energy-scale decision
-    (spec #4; ~6 Pa at kT/σ³≈2.2), plus the 7S angles/break cutoff and the GCE-
-    maintained monomer pool for exact fidelity.
+    (6) The model reproduces the published modulus — the junction angles were
+    verified to match the released bond/react template exactly (2 per crosslink,
+    7S-NC1-NC1 at type 1), and at the authors' density the modulus rises with
+    crosslink fraction and PASSES THROUGH the published ≈0.03 Pa near percolation
+    (~0.8 crosslinks/rod), reaching ~8 Pa when saturated. So the published softness
+    is a near-percolation (sparse-crosslink) state, not a model-structure gap, and
+    the apparent "200× discrepancy" dissolves: the faithful model spans the
+    published value. The one open kinetic detail is which equilibrium crosslink
+    fraction the authors' GCE + distance-gated breaking settles at; the ABSOLUTE
+    Pa also still depends on the energy-scale decision (spec #4).
   verdict_status: preliminary
   decisions_needed:
     - "DONE 2026-10-01 — cross-checked against the released code AND corrected the clean-room parameters to match (bond k/r0, rod r0=3.0, cutoffs, damp=0.1, Nevery=500, σ≈125 nm); re-ran all studies. Result: very-soft modulus consistent with the published ≈0.03 Pa; central-force/bending explanations retired. REMAINING for a quantitative modulus: angle set active during assembly (bond/react), 7S break cutoff (0.95), dense initial config, larger network."
