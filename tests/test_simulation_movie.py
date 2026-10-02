@@ -122,3 +122,28 @@ def test_real_angles_give_a_reproducible_positive_modulus():
     Es = np.array(Es)
     assert (Es > 0).all(), f"expected positive moduli, got {Es}"   # well-conditioned
     assert Es.min() > 1.0                                          # clearly non-floppy
+
+
+def test_real_angles_support_make_break():
+    """make+break real-angle path runs with per-angle deletion (angles stay
+    synced to the crosslink set) — no crash, produces a network."""
+    from viva_lumenoid import CollagenParams, run_stage1
+    r = run_stage1(CollagenParams(n_rods=120, box_xy=11.0, bending_k=4.0,
+                   use_real_angles=True, assemble_steps=6000, hold_steps=2000,
+                   seed=11))  # make+break both on in assembly
+    assert r.n_crosslinks_assembled >= 1
+    assert r.snapshot is not None
+
+
+def test_faithful_network_remodels_in_viscous_hold():
+    """With per-angle deletion the stiff faithful network has a real viscous
+    stress that decays as crosslinks break — separating E from the remodelling
+    time (both were noise-limited for the angle-off network)."""
+    from viva_lumenoid import CollagenParams, run_stage1
+    r = run_stage1(CollagenParams(n_rods=250, box_xy=12.0, bending_k=4.0,
+                   use_real_angles=True, assemble_steps=16000, hold_steps=10000,
+                   seed=11))
+    assert r.elastic_modulus_lj > 1.0                      # stiff (not floppy)
+    # a real stress that relaxes in the breakage-only hold
+    assert r.sigma_viscous_start > r.sigma_viscous_end
+    assert r.sigma_viscous_start > 1.0
