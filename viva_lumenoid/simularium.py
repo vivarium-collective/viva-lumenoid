@@ -66,10 +66,15 @@ def write_trajectory(frames: list[dict], params: CollagenParams, output_path: st
     box = [float(b) * nm for b in frames[-1]["box"]]
     # time is in LJ (reduced) units; simulariumio's time_unit must be a pint unit,
     # so we leave it at the writer's default and note the LJ scale in the title.
+    # fmt="json": the workbench's built-in Simularium viewer parses the JSON
+    # (spatialData.bundleData + trajectoryInfo) directly; its hand-rolled BINARY
+    # parser does NOT match simulariumio's SIMULARIUMBINARY v3 layout (it reads the
+    # header as garbage → "spatialFrames is null"). JSON also opens at
+    # simularium.allencell.org.
     out = write_simularium(
         times, agent_frames, box, output_path,
         display={k: {"color": v["color"], "radius": radius} for k, v in DISPLAY.items()},
-        spatial_unit="nm", title=(title + " (time in LJ units)").strip(), fmt="binary",
+        spatial_unit="nm", title=(title + " (time in LJ units)").strip(), fmt="json",
         default_radius=radius)
     return str(out)
 

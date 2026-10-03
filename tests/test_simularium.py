@@ -28,5 +28,9 @@ def test_write_trajectory_produces_a_simularium_file(tmp_path):
                        "box": [10.0, 10.0, 2.0], "t": float(t)})
     out = write_trajectory(frames, CollagenParams(), str(tmp_path / "traj"), title="test")
     assert out.endswith(".simularium")
-    data = open(out, "rb").read(16)
-    assert data[:16] == b"SIMULARIUMBINARY"      # valid binary container
+    import json
+    doc = json.load(open(out))   # JSON format — the workbench viewer parses this
+    assert "trajectoryInfo" in doc and "bundleData" in doc["spatialData"]
+    assert len(doc["spatialData"]["bundleData"]) == 5
+    tm = doc["trajectoryInfo"]["typeMapping"]
+    assert {v["name"] for v in tm.values()} == {"NC1", "7S"}
