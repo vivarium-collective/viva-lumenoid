@@ -111,6 +111,8 @@ def capture_clip(params: CollagenParams | None = None, mode: str = "stretch",
             "n_crosslinks": int(last["n_crosslinks"]), "phase": phase,
             "positions": np.asarray(last["positions"], dtype=float),
             "atom_types": np.asarray(last["atom_types"]),
+            "atom_ids": np.asarray(last["atom_ids"]),
+            "bonds": last["bonds"],  # [bond_type, atom_id_1, atom_id_2]
             "box": list(last["box_dimensions"]),
         })
     proc.close()
