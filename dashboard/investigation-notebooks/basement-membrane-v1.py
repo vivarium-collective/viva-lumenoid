@@ -59,8 +59,8 @@ if _env and Path(_env).is_dir():
     REPO = Path(_env)
 if REPO is None:
     REPO = _find_repo_root(Path.cwd().resolve())
-if REPO is None and Path('/Users/eranagmon/code/viva-lumenoid--decisions').is_dir():
-    REPO = Path('/Users/eranagmon/code/viva-lumenoid--decisions')
+if REPO is None and Path('/Users/eranagmon/code/viva-lumenoid--pub2').is_dir():
+    REPO = Path('/Users/eranagmon/code/viva-lumenoid--pub2')
 if REPO is None:
     REPO = Path.cwd()
 sys.path.insert(0, str(REPO))
