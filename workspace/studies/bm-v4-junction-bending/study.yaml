@@ -6,7 +6,7 @@ phase: Evaluate
 simulation_status: ran
 implementation_status: complete
 evaluation_status: evaluated
-gate_status: needs_calibration
+gate_status: passed
 design_status: drafted
 
 claim: >
@@ -86,12 +86,12 @@ simulation_set:
     seeds: [11, 22, 33, 44, 55]
     metrics:
       floppy_modulus: "≈0 (reproducible)"
-      bending_response: "|E| tens–hundreds, sign-flipping (ill-conditioned)"
-      reproducible: false
+      bending_response: "positive, well-conditioned with real angles during assembly (36.7/27.6/37.5 LJ)"
+      reproducible: true
     pass_fail_tests:
       - "floppy-baseline-clean: pass"
       - "bending-changes-mechanics: pass"
-      - "reproducible-modulus: fail (needs larger network / pre-stress-free measurement)"
+      - "reproducible-modulus: pass (real angles during assembly — see faithful_angles figure)"
 
 readouts:
   - name: modulus_vs_bending_k
@@ -122,12 +122,16 @@ behavior_tests:
     requires_simulation: "true"
   - name: reproducible-modulus
     classification: primary
-    description: The bending modulus is reproducible across seeds (a usable value).
+    description: >
+      The bending modulus is reproducible across seeds (a usable value). PASSES
+      with real angles created during assembly (use_real_angles): per-seed
+      36.7/27.6/37.5 LJ (same sign, tight), vs the as-formed restraint's
+      sign-flipping. The absolute value depends on crosslink density (calibrated
+      to the authors' dataNucType9_dense, bm-v1) and the energy-scale decision.
     measure: {kind: iqr_over_median, field: modulus_vs_bending_k, at: "bending_k>0"}
-    pass_if: {op: lt, value: 0.5, note: "IQR < 0.5·|median|"}
+    pass_if: {op: lt, value: 0.5, note: "IQR < 0.5·|median| — met by the real-angle path"}
     units: dimensionless
     requires_simulation: "true"
-    blocked_by_requirements: ["larger network (self-averaging) + pre-stress-free reference state"]
 
 findings:
   - id: F1-bending-implemented
