@@ -43,7 +43,7 @@
   let pop = null;                 // the open popover
   const prefs = {
     mode: lsGet('viv.ai.mode', 'manual'),
-    manifest: lsGet('viv.ai.manifest', '1') !== '0',
+    manifest: lsGet('viv.ai.manifest', '') === '' ? null : lsGet('viv.ai.manifest', '') !== '0',   // null: let the server decide
   };
   if (!C.validMode(prefs.mode)) prefs.mode = 'manual';
   const el = {};
@@ -51,7 +51,7 @@
   const layout = document.querySelector('.viv-layout');
   const mainEl = layout && layout.querySelector('.viv-main');
   const codeRail = document.getElementById('viv-code-rail');
-  let dock = C.validDock(lsGet('viv.ai.dock', 'left')) ? lsGet('viv.ai.dock', 'left') : 'left';
+  let dock = C.validDock(lsGet('viv.ai.dock', 'right')) ? lsGet('viv.ai.dock', 'right') : 'right';
 
   function lsGet(k, d) { try { const v = localStorage.getItem(k); return v === null ? d : v; } catch (x) { return d; } }
   function lsSet(k, v) { try { localStorage.setItem(k, v); } catch (x) { /* private mode */ } }
@@ -119,6 +119,7 @@
     down: S('<path d="M12 5v14M6 13l6 6 6-6"/>'),
     check: S('<path d="M5 12.5l4.5 4.5L19 7.5"/>'),
     dock: S('<rect x="3" y="4" width="18" height="16" rx="2"/><path d="M9 4v16"/>'),
+    popout: S('<path d="M14 3h7v7"/><path d="M10 14L21 3"/><path d="M21 14v5a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5"/>'),
   };
   const statusIcon = (s) => s === 'done' ? ICON.done : s === 'error' ? ICON.error : s === 'denied' ? ICON.denied : ICON.spin;
   const e = C.esc;
@@ -131,6 +132,18 @@
   }
   const toolName = (p) => (p.args && p.args.operation_id) || (p.approval && p.approval.operation_id) || p.name;
 
+  // What the server resolved the request to (shell commands, package and source, uploaded file size/hash).
+  function effectHtml(ef) {
+    if (!ef) return '';
+    let h = '<div class="vp-effect"><div class="vp-k">' + e(ef.summary || 'What this does') + '</div>';
+    (ef.commands || []).forEach(function (c) { h += '<div class="vp-k">' + e(c.check) + '</div><pre>' + e((c.run || []).join('\n') || '(no install command for this platform)') + '</pre>'; });
+    (ef.import_checks || []).forEach(function (c) { h += '<div class="vp-k">then runs (' + e(c.check) + ')</div><pre>' + e(c.import_check) + '</pre>'; });
+    if (ef.package || ef.source) h += '<pre>' + e([ef.package && 'package: ' + ef.package, ef.source && 'source: ' + ef.source, ef.mode && 'install: ' + ef.mode,
+      ef.system_deps_check && 'system-dependency check: ' + ef.system_deps_check].filter(Boolean).join('\n')) + '</pre>';
+    (ef.files || []).forEach(function (f) { h += '<pre>' + e(f.field + ': ' + f.bytes + ' bytes, sha256 ' + f.sha256) + '</pre>'; });
+    return h + '</div>';
+  }
+
   function renderTool(p) {
     if (p.status === 'awaiting') {
       const a = C.describeApproval(p);
@@ -138,8 +151,10 @@
         '<div class="vp-approve-h">' + ICON.shield + '<span>Approval required: <code>' + e(a.title) + '</code></span></div>' +
         '<div class="vp-req"><span class="vp-method">' + e(a.method) + '</span><code>' + e(a.path) + '</code>' +
           (a.summary ? '<span class="vp-sum">' + e(a.summary) + '</span>' : '') + '</div>' +
+        (a.hidden ? '<div class="vp-note vp-warn">This request contains invisible or direction-changing characters; they are shown as \\uXXXX below.</div>' : '') +
+        effectHtml(a.effect) +
         (a.query ? '<div><div class="vp-k">Query</div><pre>' + e(a.query) + '</pre></div>' : '') +
-        (a.body ? '<div><div class="vp-k">Request body</div><pre>' + e(a.body) + '</pre></div>' : '') +
+        (a.body ? '<div><div class="vp-k">Request body <span class="vp-size">(' + a.stats.lines + ' lines, ' + a.stats.chars + ' characters)</span></div><pre>' + e(a.body) + '</pre></div>' : '') +
         '<div class="vp-actions"><button class="vp-btn" data-act="deny">Deny</button>' +
         '<button class="vp-btn vp-primary" data-act="approve">Approve</button></div></div>';
     }
@@ -177,7 +192,9 @@
     const listed = waiting >= 2 ? state.pending.map(function (id) {
       const t = C.findTool(state, id);
       const a = t ? C.describeApproval(t) : null;
-      return '<li><code>' + e(a ? (a.method + ' ' + (a.path || a.title)).trim() : id) + '</code></li>';
+      const what = a ? (a.effect && a.effect.commands ? ' — runs: ' + a.effect.commands.map(function (c) { return (c.run || []).join('; '); }).join('; ')
+        : a.body ? ' — ' + a.body.replace(/\s+/g, ' ').slice(0, 160) + (a.body.length > 160 ? '…' : '') : '') : '';
+      return '<li><code>' + e(a ? (a.method + ' ' + (a.path || a.title)).trim() : id) + '</code><span class="vp-sum">' + e(what) + '</span></li>';
     }).join('') : '';
     const bulk = waiting >= 2
       ? '<div class="vp-bulk"><span>' + waiting + ' actions are waiting for your approval</span><ul class="vp-bulk-list">' + listed + '</ul>' +
@@ -252,7 +269,7 @@
     if (el.composer.parentNode !== target) target.appendChild(el.composer);
     el.newCopy.innerHTML = status && !ready
       ? '<h3>Chat with AI</h3><p>' + e(status.error || (status.available ? 'No AI provider configured or Chat model not selected' :
-          "The chat needs the optional extra: pip install 'vivarium-workbench[chat]'")) + '</p>' +
+          (status.reason || "The chat needs the optional extra: pip install 'vivarium-workbench[chat]'"))) + '</p>' +
         (status.available ? '<button class="vp-callout" data-act="settings">Edit AI settings</button>' : '')
       : '<h3>Chat with AI</h3>';
     el.composer.hidden = !!(fresh && status && !ready);
@@ -512,8 +529,9 @@
   // as a note in that provider's submenu rather than blocking the picker.
   function ollamaInstalled(baseUrl) {
     const ctl = new AbortController(), timer = setTimeout(function () { ctl.abort(); }, 4000);
-    const q = baseUrl ? '?base_url=' + encodeURIComponent(baseUrl) : '';
-    return fetch(api('/api/ai/ollama-models' + q), { signal: ctl.signal })
+    return fetch(api('/api/ai/ollama-models'), {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(baseUrl ? { base_url: baseUrl } : {}), signal: ctl.signal })
       .then(function (r) { return r.json().catch(function () { return {}; }).then(function (j) { if (!r.ok) throw new Error(j.error || r.status); return j; }); })
       .then(function (j) { return { ollama: { models: j.models || [], note: (j.models || []).length ? '' : 'No models installed yet — run `ollama pull <model>`.' } }; },
             function (err) { return { ollama: { models: [], note: (err && err.name === 'AbortError') ? 'Ollama did not answer — is it running? (`ollama serve`)' : String((err && err.message) || 'Ollama is not reachable') } }; })
@@ -551,10 +569,17 @@
       .then(refreshStatus, function (err) { flash(err.message); });
   }
 
+  // Where a message goes: the chosen provider's endpoint (S-26 — say what leaves the machine, and to whom).
+  function providerWhere() {
+    const sel = status && status.selected, p = sel && (status.providers || []).find(function (x) { return x.id === sel.provider; });
+    if (!sel) return 'the AI provider you pick';
+    return (p && p.base_url) ? p.base_url : sel.provider + "'s servers";
+  }
+
   function openCapabilities(anchor) {
     const n = div('<label class="vp-switch"><span><strong>Workspace summary</strong><small>Include a live summary of the workspace in every message ' +
-      '(uses more tokens). <a href="' + DOCS + 'ai-chat.md" target="_blank" rel="noopener noreferrer">Learn more</a></small></span>' +
-      '<input type="checkbox" id="vp-cap-manifest"' + (prefs.manifest ? ' checked' : '') + '></label>' +
+      '(uses more tokens). It is sent to ' + e(providerWhere()) + '. <a href="' + DOCS + 'ai-chat.md" target="_blank" rel="noopener noreferrer">Learn more</a></small></span>' +
+      '<input type="checkbox" id="vp-cap-manifest"' + ((prefs.manifest === null ? !!(status && status.storage_mode === 'keyring') : prefs.manifest) ? ' checked' : '') + '></label>' +
       '<hr><div class="vp-caps" id="vp-caps">Loading…</div>');
     openPop(anchor, n, { width: 300 });
     n.querySelector('#vp-cap-manifest').addEventListener('change', function (ev) {
@@ -702,7 +727,7 @@
       try { if (typeof window[fn] === 'function') window[fn](); } catch (x) { /* best effort */ }
     });
   }
-  const withPrefs = (body) => Object.assign({}, body, { mode: prefs.mode, include_manifest: prefs.manifest });
+  const withPrefs = (body) => Object.assign({}, body, { mode: prefs.mode }, prefs.manifest === null ? {} : { include_manifest: prefs.manifest });
 
   function streamTurn(rawBody) {
     const body = withPrefs(rawBody);
@@ -982,6 +1007,7 @@
   function build() {
     root.innerHTML =
       '<div class="vp-head" title="Drag to dock left, right or bottom"><span>VivaChat</span><span class="vp-spacer"></span>' +
+        '<button class="vp-icon" data-act="popout" title="Open in a separate window" aria-label="Pop out">' + ICON.popout + '</button>' +
         '<button class="vp-icon" data-act="dock" title="Move panel" aria-label="Move panel">' + ICON.dock + '</button>' +
         '<button class="vp-icon" data-act="close" title="Close" aria-label="Close">' + ICON.x + '</button></div>' +
       '<div class="vp-toolbar">' +
@@ -1075,6 +1101,7 @@
       const host = b.closest('[data-id]');
       switch (act) {
         case 'close': setOpen(false); break;
+        case 'popout': if (window.VivPanelDock) VivPanelDock.popout('chat'); setOpen(false); break;
         case 'dock': openDockMenu(b); break;
         case 'new': newChat(); break;
         case 'settings': openSettings(); break;
@@ -1120,7 +1147,7 @@
     }, true);
 
     el.toggle.addEventListener('click', function (ev) { ev.preventDefault(); if (justDragged) return; setOpen(panel.hidden); });
-    el.toggle.title = 'VivaChat — click to toggle, drag to dock left, right or bottom';
+    el.toggle.title = 'Chat — click to toggle, drag to dock left, right or bottom';
     document.getElementById('viv-ai-back').addEventListener('click', closeSettings);
     window.addEventListener('viv:ai-changed', function () { refreshStatus(); });
     initResize();
