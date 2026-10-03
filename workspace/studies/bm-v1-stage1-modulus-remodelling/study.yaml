@@ -369,6 +369,11 @@ conclusion_verdicts:
       Identifies WHY the BM network is soft — connectivity below rigidity percolation —
       telling the vertex model that BM stiffness comes from bending/bundling, not crosslink count.
 
+expert_review_status: requested
+expert_questions:
+  - "Energy scale (spec decision #4): should the elastic modulus be reported in absolute pascals — by fitting the LJ energy unit to a measured BM modulus — or kept in reduced units / reported as the ratio s_E? Our faithful value is ~3 LJ (\u2248 6 Pa at kT/\u03c3\u00b3\u22482.2 Pa); the published figure is \u22480.03 Pa under the authors' own s_E. Which convention should the AICS vertex-model coupling use?"
+  - "Equilibrium crosslink fraction / GCE: the absolute modulus scales strongly with crosslink fraction (E\u22480 at 0.72 crosslinks/rod \u2192 \u22488 Pa at 2.5/rod). Our make-only path saturates at ~2.6/rod, while the authors' GCE (Nucleation/Death) + distance-gated breaking sets a specific equilibrium fraction. What equilibrium crosslink fraction (or free-monomer concentration / off-rate) should we target to match the published network?"
+
 bibliography:
   sources:
     - key: meadowcroft2025nonequilibrium
