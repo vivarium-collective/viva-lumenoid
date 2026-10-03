@@ -59,8 +59,8 @@ if _env and Path(_env).is_dir():
     REPO = Path(_env)
 if REPO is None:
     REPO = _find_repo_root(Path.cwd().resolve())
-if REPO is None and Path('/home/runner/work/viva-lumenoid/viva-lumenoid').is_dir():
-    REPO = Path('/home/runner/work/viva-lumenoid/viva-lumenoid')
+if REPO is None and Path('/Users/eranagmon/code/viva-lumenoid--fixv4').is_dir():
+    REPO = Path('/Users/eranagmon/code/viva-lumenoid--fixv4')
 if REPO is None:
     REPO = Path.cwd()
 sys.path.insert(0, str(REPO))
@@ -434,7 +434,7 @@ _save_viz('bm-v4-junction-bending', 'bending-diagnostic', _render_one('html:bend
 # | --- | --- | --- |
 # | floppy-baseline-clean | kind=value field=modulus_vs_bending_k at=bending_k=0 | op near_zero tol 0.1 |
 # | bending-changes-mechanics | kind=magnitude field=modulus_vs_bending_k at=bending_k>0 | op gt value 1.0 note |E| jumps orders of magnitude above floppy |
-# | reproducible-modulus | kind=iqr_over_median field=modulus_vs_bending_k at=bending_k>0 | op lt value 0.5 note IQR < 0.5·|median| |
+# | reproducible-modulus | kind=iqr_over_median field=modulus_vs_bending_k at=bending_k>0 | op lt value 0.5 note IQR < 0.5·|median| — met by the real-angle path |
 
 # ## Study: `bm-v5-porosity-bundling`
 #

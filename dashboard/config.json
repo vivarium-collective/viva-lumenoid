@@ -1,7 +1,7 @@
 {
   "mode": "snapshot",
   "smsApiBase": "",
-  "repo": "https://github.com/vivarium-collective/viva-lumenoid",
-  "commit": "1e3e8440bcd9d2142cf9051dfd49f52a6cecdeb8",
-  "generated_from_ref": "main"
+  "repo": "https://github.com/vivarium-collective/viva-lumenoid.git",
+  "commit": "3637e2a630a8123fc05b89066039c5d24a970c8d",
+  "generated_from_ref": "fix-bm-v4-gate"
 }
