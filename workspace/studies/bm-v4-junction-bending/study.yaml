@@ -243,6 +243,11 @@ report:
     value now hinges on crosslink density, which the make-only real-angle path
     over-shoots; matching the released make+break density is the remaining step.
 
+expert_review_status: requested
+expert_questions:
+  - "Exact turnover (cross-check gap): to reproduce the authors' equilibrium crosslink fraction and remodelling kinetics, do we need their custom-patched GCE (Nucleation/Death with the density penalty) + distance-gated bond/react breaking, or is matching the free-monomer concentration / a force-independent off-rate sufficient for the modulus and \u03c4 the vertex model needs?"
+  - "Engine for stage 3 (spec decision #2): stages 1\u20132 run on LAMMPS. Should stage 3 (surface-attached linkers / flexible fibers) stay on LAMMPS or move to Smoldyn, and when do the Smoldyn surface binders land?"
+
 bibliography:
   sources:
     - key: meadowcroft2025nonequilibrium

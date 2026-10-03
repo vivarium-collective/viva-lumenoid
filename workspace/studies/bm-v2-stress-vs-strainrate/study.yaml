@@ -166,6 +166,11 @@ visualizations:
     config:
       title: "Stage 2 — σ(ε̇) diagnostic"
 
+expert_review_status: requested
+expert_questions:
+  - "Coupling units (spec decision #4): the E(\u03b5\u0307) handed to the vertex model is in reduced units (~3\u20135 LJ, \u22487\u201311 Pa at kT/\u03c3\u00b3\u22482.2). Should the coupling pass absolute pascals (requiring the energy-scale fit) or reduced units \u2014 which does the AICS vertex model expect?"
+  - "Coupling contract (spec decision #5): which vertex-model term receives the BM \u2014 a basal surface tension, a basal friction (vertex mobility), or an elastic basal spring? This decides whether we hand over a viscosity, a modulus, or both, and over what \u03b5\u0307 range the (E(\u03b5\u0307), \u03c4(\u03b5\u0307)) table should span."
+
 bibliography:
   sources:
     - key: barrientos2026basement
