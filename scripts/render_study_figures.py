@@ -22,7 +22,7 @@ from viva_lumenoid.viz import (stage1_figure, stage2_figure, rigidity_figure,
                                evidence_map_figure, network_movie_figure,
                                network_movie_3d_figure, cross_check_figure,
                                modulus_ladder_figure, faithful_angles_figure,
-                               coupling_figure, save_html)
+                               coupling_figure, modulus_vs_fraction_figure, save_html)
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 STUDIES = os.path.join(ROOT, "workspace", "studies")
@@ -72,6 +72,24 @@ def main():
     save_html(modulus_ladder_figure(model_pa=0.7, model_lo_pa=0.03, model_hi_pa=2.0),
               os.path.join(s1, "modulus_ladder.html"),
               "Modulus ladder — v1 in the published soft regime")
+    # Faithful + density-calibrated bm-v1 figures (authors' density 3.0 rods/σ², 12σ)
+    print("Running faithful + calibrated bm-v1 figures …")
+    _box = 10.0; _n = int(round(3.0 * _box * _box))
+    _rf = run_stage1(CollagenParams(n_rods=_n, box_xy=_box, slab_thickness=12.0,
+                     bending_k=4.0, use_real_angles=True, assemble_steps=16000,
+                     hold_steps=10000, seed=11), sample_dt=8.0)
+    save_html(stage1_figure(_rf), os.path.join(s1, "stage1_faithful.html"),
+              "Stage 1 (faithful, authors' density) — modulus & remodelling")
+    _pts = []
+    for _asm in (1500, 3000, 6000, 12000):
+        _r = run_stage1(CollagenParams(n_rods=_n, box_xy=_box, slab_thickness=12.0,
+                        bending_k=4.0, use_real_angles=True, assemble_steps=_asm,
+                        hold_steps=2000, seed=11))
+        _pts.append((round(_r.n_crosslinks_assembled / _n, 2), round(_r.elastic_modulus_lj, 3)))
+    save_html(modulus_vs_fraction_figure(_pts),
+              os.path.join(s1, "modulus_vs_fraction.html"),
+              "Faithful model reproduces the published modulus")
+    print(f"  faithful E={_rf.elastic_modulus_lj:+.2f} LJ; fraction points {_pts}")
 
     # Stage 2
     s2 = os.path.join(STUDIES, "bm-v2-stress-vs-strainrate", "viz")
