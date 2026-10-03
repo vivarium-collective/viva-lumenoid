@@ -100,6 +100,15 @@ def _frame_agents(frame: dict, nm: float, radii: dict[str, float],
     return agents
 
 
+# The Simularium viewer frames a scene with a fixed, near camera (~120 units from
+# the origin); it does NOT fit the camera to the data. So the mesh has to be
+# centred on the origin AND scaled into that comfort zone — a raw ~3000 nm network
+# left the viewer looking at an empty patch. We pre-scale geometry to this target
+# half-extent and record the real nm-per-unit as the spatial-unit magnitude, so
+# hover values still read in nm.
+_TARGET_HALF = 70.0
+
+
 def _build_network_trajectory(frames: list[dict], params: CollagenParams,
                               title: str):
     """Assemble a simulariumio TrajectoryData (fibers + spheres + camera)."""
@@ -114,11 +123,16 @@ def _build_network_trajectory(frames: list[dict], params: CollagenParams,
     T = len(per_frame)
     width = max((len(a) for a in per_frame), default=1)
 
-    # Recentre on the network centroid (mean node position over all frames) so the
-    # mesh sits at the origin — the viewer's box is origin-centred.
+    # Centroid + in-plane half-extent of the node cloud (over all frames), then a
+    # uniform scale that maps the larger of x/y to the viewer's comfort zone.
     node_pts = np.array([a["pos"] for fr in per_frame for a in fr
                          if a["viz"] == _DEFAULT], dtype=float)
-    centroid = node_pts.mean(axis=0) if len(node_pts) else np.zeros(3)
+    if len(node_pts):
+        centroid = node_pts.mean(axis=0)
+        half = np.maximum((node_pts.max(axis=0) - node_pts.min(axis=0)) / 2.0, 1.0)
+        s = _TARGET_HALF / max(half[0], half[1])
+    else:
+        centroid, half, s = np.zeros(3), np.ones(3), 1.0
 
     viz = np.full((T, width), _DEFAULT)
     uids = np.zeros((T, width))
@@ -135,27 +149,26 @@ def _build_network_trajectory(frames: list[dict], params: CollagenParams,
         for i, a in enumerate(agents):
             viz[t, i] = a["viz"]
             uids[t, i] = i
-            rad[t, i] = a["radius"]
+            rad[t, i] = a["radius"] * s
             row.append(a["type"])
             if a["sub"]:
-                s = np.asarray(a["sub"], dtype=float)
-                s[0::3] -= centroid[0]
-                s[1::3] -= centroid[1]
-                s[2::3] -= centroid[2]
-                nsub[t, i] = len(s)
-                sub[t, i, :len(s)] = s
+                sp = np.asarray(a["sub"], dtype=float)
+                sp[0::3] = (sp[0::3] - centroid[0]) * s
+                sp[1::3] = (sp[1::3] - centroid[1]) * s
+                sp[2::3] = (sp[2::3] - centroid[2]) * s
+                nsub[t, i] = len(sp)
+                sub[t, i, :len(sp)] = sp
             else:
-                posm[t, i] = np.asarray(a["pos"], dtype=float) - centroid
+                posm[t, i] = (np.asarray(a["pos"], dtype=float) - centroid) * s
         types_ll.append(row)
 
-    # Camera: frame the whole recentred cloud (node bbox) head-on down +z.
-    if len(node_pts):
-        rc = node_pts - centroid
-        span = np.maximum(rc.max(axis=0) - rc.min(axis=0), 1.0)
-        box = [float(max(span[0], span[1]) * 1.1)] * 2 + [float(max(span[2], 1.0) * 2)]
-        dist = (max(span[0], span[1]) / 2) / math.tan(math.radians(75 / 2)) * 1.3
-    else:
-        box, dist = [1000.0, 1000.0, 200.0], 1500.0
+    # Box + camera in the scaled frame. The camera sits head-on down +z, far enough
+    # to frame the scaled cloud; it also lands near the viewer's own default, so the
+    # scene is visible whether or not the viewer honours cameraDefault.
+    bx = max(half[0], half[1]) * s * 2.2
+    bz = max(half[2] * s * 2.2, 10.0)
+    box = [float(bx), float(bx), float(bz)]
+    dist = _TARGET_HALF / math.tan(math.radians(75 / 2)) * 1.25
     camera = CameraData(
         position=np.array([0.0, 0.0, float(dist)]),
         look_at_position=np.array([0.0, 0.0, 0.0]),
@@ -166,7 +179,7 @@ def _build_network_trajectory(frames: list[dict], params: CollagenParams,
             name=name,
             display_type=(DISPLAY_TYPE.FIBER if spec["display"] == "FIBER"
                           else DISPLAY_TYPE.SPHERE),
-            radius=radii[name], color=spec["color"])
+            radius=radii[name] * s, color=spec["color"])
         for name, spec in DISPLAY.items()
     }
 
@@ -181,7 +194,8 @@ def _build_network_trajectory(frames: list[dict], params: CollagenParams,
             scale_factor=1.0,
             trajectory_title=(title + " (time in LJ units)").strip()),
         agent_data=agent_data,
-        time_units=UnitData("s"), spatial_units=UnitData("nm"))
+        # one scaled unit = (1/s) nm, so the viewer reports real nm on hover.
+        time_units=UnitData("s"), spatial_units=UnitData("nm", magnitude=float(1.0 / s)))
 
 
 def write_trajectory(frames: list[dict], params: CollagenParams, output_path: str,
