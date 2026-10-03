@@ -129,6 +129,7 @@ class CollagenNetworkProcess(Process):
             'pzz': 'overwrite[float]', 'pressure': 'overwrite[float]',
             'volume': 'overwrite[float]', 'box_dimensions': 'overwrite[list]',
             'positions': 'overwrite[list]', 'atom_types': 'overwrite[list]',
+            'atom_ids': 'overwrite[list]', 'bonds': 'overwrite[list]',
             'num_atoms': 'overwrite[integer]',
             'n_crosslinks': 'overwrite[integer]',
             'sigma_inplane': 'overwrite[float]',
@@ -341,6 +342,9 @@ class CollagenNetworkProcess(Process):
         lx, ly, lz = (boxhi[i] - boxlo[i] for i in range(3))
         nbonds = int(lmp.extract_global('nbonds'))
         n_crosslinks = max(0, nbonds - self._params.n_rods)  # total minus intra-rod
+        ids = lmp.numpy.extract_atom('id')[:nlocal].copy()
+        nb, bdata = lmp.gather_bonds()
+        bonds = (np.array(bdata, dtype=int).reshape(-1, 3).tolist() if nb else [])
         pxx = float(lmp.get_thermo('pxx'))
         pyy = float(lmp.get_thermo('pyy'))
         # Network stress: bond-virial pressure tensor (compute netP), converted
@@ -363,6 +367,10 @@ class CollagenNetworkProcess(Process):
             'volume': float(lmp.get_thermo('vol')),
             'box_dimensions': [lx, ly, lz],
             'positions': x.tolist(), 'atom_types': types.tolist(),
+            'atom_ids': ids.tolist(),
+            # bond topology for network viz: [bond_type, atom_id_1, atom_id_2].
+            # type 1 = intra-rod, 2 = NC1-NC1 crosslink, 3 = 7S-7S crosslink.
+            'bonds': bonds,
             'num_atoms': int(lmp.get_natoms()),
             'n_crosslinks': n_crosslinks,
             'sigma_inplane': sigma_inplane,
