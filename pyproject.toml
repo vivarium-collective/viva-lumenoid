@@ -13,6 +13,12 @@ dependencies = [
     "pypdf>=4.0",
     "matplotlib",
     "plotly",
+    # Simularium: turn emitted bead positions into .simularium trajectories the
+    # workbench's Analysis tab → Simularium Viewer browses. `viva-simularium` is
+    # the generic viva seam (write_simularium + SimulariumAnalysis); `simulariumio`
+    # does the encoding.
+    "simulariumio",
+    "viva-simularium",
     # Web-based workspace dashboard (server + templates + assets + lib helpers).
     # Extracted from viva-template as of v0.4.16; provides the `vivarium-workbench
     # serve` CLI invoked by scripts/serve.sh.
@@ -52,3 +58,4 @@ packages = ["viva_lumenoid"]
 vivarium-workbench = { git = "https://github.com/vivarium-collective/vivarium-workbench.git", branch = "main" }
 pbg-lammps = { git = "https://github.com/vivarium-collective/viva-lammps.git", branch = "main" }
 viva-smoldyn = { git = "https://github.com/vivarium-collective/viva-smoldyn.git", branch = "main" }
+viva-simularium = { git = "https://github.com/vivarium-collective/viva-simularium.git", branch = "main" }

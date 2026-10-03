@@ -92,3 +92,24 @@ into the read-only dashboard:
 holds the research question, the study sequence, and the eight open decisions
 carried from the spec. The stage-1 study is
 [`workspace/studies/bm-v1-stage1-modulus-remodelling/`](workspace/studies/bm-v1-stage1-modulus-remodelling/).
+
+## Browse outputs in Simularium
+
+Every study ships a `.simularium` trajectory under
+`workspace/studies/<study>/simularium/`, so the workbench's **Analysis tab →
+Simularium Viewer** opens any study's network evolving in the
+[Simularium](https://simularium.allencell.org/) viewer (NC1 beads blue, 7S
+orange). The seam is the generic `viva-simularium` adapter: `viva_lumenoid.
+simularium.write_trajectory` turns a run's captured bead positions into point
+agents and writes the `.simularium` via `simulariumio`.
+
+Regenerate the trajectories from fresh runs:
+
+```bash
+python scripts/render_simularium.py
+```
+
+(The live `SimulariumAnalysis` post-sim step from `viva-simularium` additionally
+needs `viva_superpowers.post_sim`; until that module ships in the installed
+`viva-superpowers`, use the script above to produce the files, which the Analysis
+tab then discovers automatically.)
