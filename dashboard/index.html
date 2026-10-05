@@ -1039,9 +1039,7 @@ a.viv-bs-commit:hover { text-decoration: underline; }
 
     </div><!-- /.viv-rail-scroll -->
 
-    <!-- Light / dark theme toggle (pinned to the rail bottom). Low-priority
-         control: hidden until the rail corner is hovered (see .viv-rail-theme-footer)
-         so it stays out of the studies list's way. -->
+    <!-- Light / dark theme toggle (pinned to the rail bottom, always visible). -->
     <div class="viv-rail-footer viv-rail-theme-footer">
       <button class="viv-theme-toggle" id="viv-theme-toggle" type="button" role="switch" aria-checked="false"
               title="Toggle dark / light mode" aria-label="Toggle dark mode" onclick="_toggleTheme()">
@@ -1310,6 +1308,15 @@ a.viv-bs-commit:hover { text-decoration: underline; }
           </select>
         </span>
       </div>
+      <details class="find-candidates" id="find-candidates">
+        <summary>Find candidates</summary>
+        <div class="fc-form">
+          <input type="text" id="fc-inputs" placeholder="inputs: port or port:type, comma-separated">
+          <input type="text" id="fc-outputs" placeholder="outputs: port or port:type, comma-separated">
+          <button type="button" onclick="_findCandidates()">Find candidates</button>
+        </div>
+        <div id="fc-results"></div>
+      </details>
     </div>
 
     <div class="registry-tab-panel active" data-kind="composite"     id="registry-composites-container"><div class="viv-loading"><span class="viv-loading-spin" aria-hidden="true"></span><span>Loading&hellip;</span></div></div>
@@ -2510,7 +2517,7 @@ Nothing on <code id="pr-base-display-2">main</code> changes until someone presse
      DataSource global that renderers call to fetch narrative data.
      local-server mode (default) fetches from the same-origin /api/* endpoints.
      Hosted mode (sub-projects #2/#3) will set a different config here. -->
-<script>window.__DASH_CONFIG__ = { mode: "snapshot", interactiveUrl: "https://github.com/vivarium-collective/viva-lumenoid", basePath: "/viva-lumenoid/dashboard", inputsDownloadBase: "https://github.com/vivarium-collective/viva-lumenoid/raw/main", provenance: {"repo_slug": "vivarium-collective/viva-lumenoid", "repo_url": "https://github.com/vivarium-collective/viva-lumenoid", "commit": "9906510fe1c96de65d60a8a13fad31dd12e9930b", "commit_url": "https://github.com/vivarium-collective/viva-lumenoid/commit/9906510fe1c96de65d60a8a13fad31dd12e9930b", "branch": "main", "generated_at": "2026-10-03 17:12 UTC"} };</script>
+<script>window.__DASH_CONFIG__ = { mode: "snapshot", interactiveUrl: "https://github.com/vivarium-collective/viva-lumenoid", basePath: "/viva-lumenoid/dashboard", inputsDownloadBase: "https://github.com/vivarium-collective/viva-lumenoid/raw/main", provenance: {"repo_slug": "vivarium-collective/viva-lumenoid", "repo_url": "https://github.com/vivarium-collective/viva-lumenoid", "commit": "7fbc80f1e0c42e2ba631513551fb2312e7337508", "commit_url": "https://github.com/vivarium-collective/viva-lumenoid/commit/7fbc80f1e0c42e2ba631513551fb2312e7337508", "branch": "main", "generated_at": "2026-10-05 15:16 UTC"} };</script>
 <!-- Derive the global URL prefix from the (possibly publish-injected) config.
      Many renderers prefix workspace-root-absolute links (/studies/, /api/)
      with window.__BASE_PATH__ so they resolve when the read-only bundle is
