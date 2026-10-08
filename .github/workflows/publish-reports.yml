@@ -15,10 +15,10 @@
 name: Publish investigation reports
 
 # Regenerate every investigation's self-contained HTML report and publish it to
-# the gh-pages branch at investigations/<slug>.html. The report is built by the
-# vivarium-workbench SPA CLIENT-SIDE, so we serve the dashboard headlessly and
-# drive its "Generate report" button via Playwright
-# (scripts/publish_investigation_reports.py).
+# the gh-pages branch at investigations/<slug>.html. The report is built
+# SERVER-SIDE by vivarium-workbench (GET /api/investigation-report/<slug>); this
+# workflow serves the dashboard and fetches that route for each investigation
+# (scripts/publish_investigation_reports.py — no browser/Playwright).
 #
 # Ships with every workspace scaffolded from the template. DEPLOY job
 # (post-merge to main), not a PR gate — a failure here never blocks a merge.
@@ -65,16 +65,11 @@ jobs:
           source .venv/bin/activate
           bash scripts/ci_install_publish_env.sh
 
-      - name: Install Playwright + Chromium
-        run: |
-          source .venv/bin/activate
-          uv pip install playwright
-          playwright install --with-deps chromium
-
       - name: Generate investigation reports
         id: gen
-        # Serves the dashboard, drives each investigation's report export
-        # headlessly, writes reports/published/investigations/<slug>.html.
+        # Serves the dashboard and fetches each investigation's report from the
+        # server route GET /api/investigation-report/<slug> (generation moved
+        # SERVER-SIDE; no browser). Writes reports/published/investigations/<slug>.html.
         # Keep going on a per-report failure so good reports still publish.
         run: |
           source .venv/bin/activate
