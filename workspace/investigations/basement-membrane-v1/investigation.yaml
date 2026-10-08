@@ -53,6 +53,14 @@ description: |
   Then direct: vertex-mesh surface velocities drive the BM substrate, BM stress
   feeds back, exchanged every N vertex steps.
 
+  **Visualization (reviewer round 1, 2026-10-07).** Each study's Simularium
+  trajectory now embeds its diagnostic plots directly (stress-vs-strain, the
+  stress/strain time series, crosslinks) and draws the periodic simulation box
+  as a per-frame outline that deforms with the imposed strain. The stretch
+  movies are made coherent (each bead at its nearest periodic image of the
+  network centroid), so boundary crossings no longer teleport across timepoints.
+  See `feedback/` for the imported reviewer file.
+
 studies:
   - bm-v1-stage1-modulus-remodelling
   - bm-v2-stress-vs-strainrate

@@ -31,6 +31,10 @@ DISPLAY = {
     "crosslink":    {"color": "#4FA65B", "display": "FIBER"},
     "NC1":          {"color": "#4C78A8", "display": "SPHERE"},
     "7S":           {"color": "#F58518", "display": "SPHERE"},
+    # The periodic simulation box, drawn per-frame as a closed outline so its
+    # deformation (equibiaxial stretch) is visible in the viewer — the reviewer
+    # asked to "visualize this with the box itself showing the strain".
+    "simulation box": {"color": "#B9C0CC", "display": "FIBER"},
 }
 
 # viz_type codes (simulariumio.constants.VIZ_TYPE)
@@ -47,6 +51,7 @@ def _radii_nm(params: CollagenParams) -> dict[str, float]:
         "crosslink":    max(4.0, 0.04 * rod_len),
         "NC1":          max(5.0, 0.06 * rod_len),
         "7S":           max(6.0, 0.075 * rod_len),
+        "simulation box": max(2.0, 0.02 * rod_len),
     }
 
 
@@ -97,6 +102,23 @@ def _frame_agents(frame: dict, nm: float, radii: dict[str, float],
             "pos": (float(pos[i, 0]), float(pos[i, 1]), float(pos[i, 2])),
             "radius": radii[kind], "sub": [],
         })
+
+    # The periodic box as a closed-loop fiber (in nm), at the slab mid-plane. It is
+    # rebuilt from THIS frame's box dimensions, so under equibiaxial stretch the
+    # outline grows frame-to-frame and the strain reads directly off the box.
+    box = frame.get("box")
+    if box is not None and len(box) >= 2:
+        lx, ly = float(box[0]) * nm, float(box[1]) * nm
+        lz = (float(box[2]) * nm) if len(box) >= 3 else 0.0
+        zc = lz / 2.0
+        corners = [(0.0, 0.0), (lx, 0.0), (lx, ly), (0.0, ly), (0.0, 0.0)]
+        sub: list[float] = []
+        for cx, cy in corners:
+            sub += [cx, cy, zc]
+        agents.append({
+            "type": "simulation box", "viz": _FIBER, "pos": (0.0, 0.0, 0.0),
+            "radius": radii["simulation box"], "sub": sub,
+        })
     return agents
 
 
@@ -134,12 +156,17 @@ def _build_network_trajectory(frames: list[dict], params: CollagenParams,
     else:
         centroid, half, s = np.zeros(3), np.ones(3), 1.0
 
+    # Widest subpoint vector across all agents: rods/crosslinks are 2-point fibers
+    # (6 values); the box outline is a 5-point loop (15). Size to the max so the
+    # box fiber is not truncated.
+    max_sub = max((len(a["sub"]) for fr in per_frame for a in fr if a["sub"]),
+                  default=6)
     viz = np.full((T, width), _DEFAULT)
     uids = np.zeros((T, width))
     posm = np.zeros((T, width, 3))
     rad = np.zeros((T, width))
     nsub = np.zeros((T, width))
-    sub = np.zeros((T, width, 6))
+    sub = np.zeros((T, width, max_sub))
     types_ll: list[list[str]] = []
     n_agents = np.zeros(T)
 
@@ -209,7 +236,7 @@ def write_trajectory(frames: list[dict], params: CollagenParams, output_path: st
     """
     from pathlib import Path
 
-    from simulariumio import JsonWriter
+    from simulariumio import JsonWriter, TrajectoryConverter
 
     if not frames:
         raise ValueError("no frames to write")
@@ -218,8 +245,61 @@ def write_trajectory(frames: list[dict], params: CollagenParams, output_path: st
     if stem.suffix == ".simularium":
         stem = stem.with_suffix("")
     stem.parent.mkdir(parents=True, exist_ok=True)
+
+    # Embed the diagnostic traces as plots carried INSIDE the .simularium, so the
+    # viewer's plot panel shows the stress/strain/crosslink time series alongside
+    # the 3D network (reviewer: "add the plots to the simularium visualizations
+    # themselves"). Falls back to a plain JSON write if there are no traces (e.g.
+    # a bare snapshot) or simulariumio can't build the converter.
+    plots = _scatter_plots(frames)
+    if plots:
+        try:
+            conv = TrajectoryConverter(traj)
+            for plot in plots:
+                conv.add_plot(plot, "scatter")
+            conv.save(str(stem), binary=False, validate_ids=False)
+            return str(stem.with_suffix(".simularium"))
+        except Exception:  # noqa: BLE001 — never fail the trajectory over a plot
+            pass
     JsonWriter.save(traj, str(stem), validate_ids=False)
     return str(stem.with_suffix(".simularium"))
+
+
+def _scatter_plots(frames: list[dict]) -> list:
+    """Scatter plots (stress–strain, stress/strain vs time, crosslinks vs time)
+    built from the clip's per-frame traces, to embed in the ``.simularium``.
+
+    Returns an empty list when the frames carry no σ/ε traces (a bare snapshot),
+    so a single-frame write stays plot-free.
+    """
+    import numpy as _np
+    from simulariumio import ScatterPlotData
+
+    have = frames and all("sigma" in f and "strain" in f for f in frames)
+    if not have or len(frames) < 2:
+        return []
+    t = _np.array([float(f.get("t", i)) for i, f in enumerate(frames)])
+    sigma = _np.array([float(f["sigma"]) for f in frames])
+    strain = _np.array([float(f["strain"]) for f in frames])
+    plots = [
+        # The literal "stress vs strain" the reviewer referenced, as its own panel.
+        ScatterPlotData(
+            title="Network stress vs strain",
+            xaxis_title="strain ε", yaxis_title="σ (kT/a³)",
+            xtrace=strain, ytraces={"σ(ε)": sigma}, render_mode="lines"),
+        ScatterPlotData(
+            title="Stress & strain through the clip",
+            xaxis_title="LJ time", yaxis_title="value",
+            xtrace=t, ytraces={"σ (kT/a³)": sigma, "strain ε": strain},
+            render_mode="lines"),
+    ]
+    if all("n_crosslinks" in f for f in frames):
+        nx = _np.array([float(f["n_crosslinks"]) for f in frames])
+        plots.append(ScatterPlotData(
+            title="Crosslinks through the clip",
+            xaxis_title="LJ time", yaxis_title="n crosslinks",
+            xtrace=t, ytraces={"crosslinks": nx}, render_mode="lines"))
+    return plots
 
 
 def write_snapshot(snapshot: dict, params: CollagenParams, output_path: str,
