@@ -1,15 +1,16 @@
-# >>> viva-template-provenance >>>
-# This GitHub Actions workflow is GENERATED from viva-template. Do not edit
-# it by hand: your changes are lost the next time it is regenerated, and a
-# hand-edit is invisible to the drift guard.
+# REPO-SPECIFIC (intentionally de-stamped from viva-template).
 #
-# If viva-template's copy of this workflow changes, this file becomes STALE
-# and workspace CI flags it (scripts/check-workflow-freshness.py). Refresh by
-# re-scaffolding, or by copying the current source from
-#   vivarium-collective/viva-template/template/.github/workflows/<template>
-# template: publish-reports.yml
-# sha256: f62fab75fe45ba0b9fc752b589e7a27779074bd7e7b2a4df6b0c19daf0c2b465
-# <<< viva-template-provenance <<<
+# The template's publish workflow installs deps with `uv sync --extra dev`, which
+# currently ABORTS because the pbg-*→viva-* rebrand left `vivarium-workbench` and
+# `viva-superpowers` requiring `pbg-basic-processes`, whose repo now publishes
+# metadata name `viva-basic-processes` (uv: "Package metadata name … does not
+# match given name"). Until the ecosystem's requirements are re-pinned to the
+# viva-* names, this workspace installs the publish environment resiliently via
+# scripts/ci_install_publish_env.sh (leaf deps by correct name + siblings with
+# --no-deps) — the SAME fix already applied to publish-dashboard.yml. The
+# viva-template provenance stamp is deliberately removed so
+# scripts/check-workflow-freshness.py treats this as a repo-specific workflow and
+# skips the drift check. Re-stamp + re-sync once the upstream deps are fixed.
 
 name: Publish investigation reports
 
@@ -32,6 +33,7 @@ on:
     paths:
       - 'workspace/**'
       - 'scripts/publish_investigation_reports.py'
+      - 'scripts/ci_install_publish_env.sh'
       - '.github/workflows/publish-reports.yml'
   workflow_dispatch:
 
@@ -57,13 +59,17 @@ jobs:
       - name: Set up Python
         run: uv python install 3.12.9
 
-      - name: Install dependencies (incl. vivarium-workbench)
-        run: uv sync --extra dev || uv sync
+      - name: Install publish environment (resilient to pbg-*→viva-* rebrand)
+        run: |
+          uv venv .venv --python 3.12.9
+          source .venv/bin/activate
+          bash scripts/ci_install_publish_env.sh
 
       - name: Install Playwright + Chromium
         run: |
+          source .venv/bin/activate
           uv pip install playwright
-          uv run playwright install --with-deps chromium
+          playwright install --with-deps chromium
 
       - name: Generate investigation reports
         id: gen
@@ -71,8 +77,9 @@ jobs:
         # headlessly, writes reports/published/investigations/<slug>.html.
         # Keep going on a per-report failure so good reports still publish.
         run: |
+          source .venv/bin/activate
           set +e
-          uv run python scripts/publish_investigation_reports.py \
+          PYTHONPATH="$PWD" python scripts/publish_investigation_reports.py \
             --workspace . --out reports/published
           echo "exit_code=$?" >> "$GITHUB_OUTPUT"
 
