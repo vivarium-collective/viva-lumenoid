@@ -1,0 +1,16 @@
+feedback_report:
+  investigation: basement-membrane-v1
+  title: "Basement membrane v1 — collagen IV network modulus & remodelling for the AICS vertex model"
+  reviewer: ""
+  date: ""
+  overall:
+    note: "Could we also add the plots to the simularium visualizations themselves?"
+  studies:
+    - study: bm-v1-stage1-modulus-remodelling
+      verdict: pass
+      disposition: ok
+    - study: bm-v2-stress-vs-strainrate
+      verdict: warn
+      sections:
+        - section: visualizations
+          note: "The stress vs strain movie seems to be jumping across timepoints? Can we visualize this with the box itself showing the strain?"

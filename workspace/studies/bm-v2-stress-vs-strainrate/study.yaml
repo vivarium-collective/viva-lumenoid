@@ -157,10 +157,19 @@ visualizations:
     address: "html:stage2_movie.html"
     config:
       title: "Simulation movie — the growing substrate stretches"
+      caption: >
+        The box outline grows with the imposed equibiaxial strain (the strain
+        reads off the box), synced to the σ(t) trace. Frames are made coherent —
+        each bead is drawn at its nearest periodic image of the network centroid —
+        so boundary crossings no longer teleport a box width across timepoints.
   - name: stage2-movie-3d
     address: "html:stage2_movie_3d.html"
     config:
       title: "3D view — the slab stretching, rotatable"
+      caption: >
+        Same coherent, box-deforming clip in 3D. The Simularium trajectory
+        (Analysis tab) additionally embeds the stress-vs-strain and time-series
+        plots and the per-frame deforming box.
   - name: stage2-diagnostic
     address: "html:stage2_diagnostic.html"
     config:

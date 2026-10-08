@@ -43,30 +43,40 @@ class ClipResult:
 
 def _unwrap_and_detrend(frames: list, unwrap: bool = True) -> list:
     """Make the clip's motion continuous (in place): remove whole-network COM
-    drift always, and — for a STATIC box — unwrap periodic-image jumps so a bead
-    crossing an edge doesn't teleport a box width.
+    drift always, and unwrap periodic-image jumps so a bead crossing an edge
+    doesn't teleport a box width.
 
-    ``unwrap`` is left off for the stretch mode: its box deforms with a shifting
-    origin (``fix deform remap``), so a box-relative unwrap is unreliable; the raw
-    remapped coordinates there are already continuous (≈0 real wraps per frame),
-    needing only COM-drift removal.
+    The coherence step wraps every bead to its **nearest periodic image of the
+    network centroid**, in box-fractional coordinates. This is what a DEFORMING
+    box needs:
+
+    - *Teleport-free.* A bead that crosses the periodic boundary is drawn at the
+      image closest to the (smoothly moving) network, so it no longer jumps a
+      full box width between frames — the artefact the reviewer saw as the
+      stress-vs-strain movie "jumping across timepoints".
+    - *Bounded.* Unlike a true unwrap (which accumulates the unbounded random-walk
+      of a freely-diffusing floppy bead and blows the extent far outside the box),
+      the min-image-about-centroid keeps the whole network within one box, so the
+      camera stays framed as the substrate stretches.
+    - *Strain-faithful.* Fractional coordinates are mapped back through *this*
+      frame's box, so the cloud grows with the box and the strain reads off the
+      geometry.
+
+    Fractional (reduced) coordinates make this box-size-independent, so it is
+    correct whether the box is static or deforming. ``unwrap=False`` keeps the raw
+    coordinates (only COM-drift removed).
     """
-    prev_wrapped = None
-    unwrapped = None
     com0 = None
     for fr in frames:
         pos = np.asarray(fr["positions"], dtype=float).copy()
         box = np.asarray(fr["box"][:2], dtype=float)
         xy = pos[:, :2]
         if unwrap:
-            if prev_wrapped is None:
-                unwrapped = xy.copy()
-            else:
-                d = xy - prev_wrapped
-                d -= box * np.round(d / box)       # minimum-image step
-                unwrapped = unwrapped + d
-            prev_wrapped = xy.copy()
-            xy = unwrapped
+            frac = xy / box                        # reduced (box-fractional) coords
+            com_frac = frac.mean(axis=0)
+            rel = frac - com_frac
+            rel -= np.round(rel)                   # nearest image of the centroid
+            xy = (com_frac + rel) * box            # back to real coords in this box
         com = xy.mean(axis=0)
         if com0 is None:
             com0 = com.copy()
@@ -116,7 +126,9 @@ def capture_clip(params: CollagenParams | None = None, mode: str = "stretch",
             "box": list(last["box_dimensions"]),
         })
     proc.close()
-    _unwrap_and_detrend(frames, unwrap=(mode != "stretch"))
+    # Unwrap every mode (per-frame box handles the deforming stretch box too) so a
+    # bead crossing the periodic boundary doesn't teleport a box width between frames.
+    _unwrap_and_detrend(frames, unwrap=True)
 
     trace = {"t": [f["t"] for f in frames], "sigma": [f["sigma"] for f in frames],
              "strain": [f["strain"] for f in frames],
