@@ -281,12 +281,12 @@ _save_viz('bm-v2-stress-vs-strainrate', 'coupling', _render_one('html:coupling.h
 # **stage2-movie**
 
 # stage2-movie
-_save_viz('bm-v2-stress-vs-strainrate', 'stage2-movie', _render_one('html:stage2_movie.html', {'title': 'Simulation movie — the growing substrate stretches'}, RUNS_DB, STUDY_YAML))
+_save_viz('bm-v2-stress-vs-strainrate', 'stage2-movie', _render_one('html:stage2_movie.html', {'title': 'Simulation movie — the growing substrate stretches', 'caption': 'The box outline grows with the imposed equibiaxial strain (the strain reads off the box), synced to the σ(t) trace. Frames are made coherent — each bead is drawn at its nearest periodic image of the network centroid — so boundary crossings no longer teleport a box width across timepoints.\n'}, RUNS_DB, STUDY_YAML))
 
 # **stage2-movie-3d**
 
 # stage2-movie-3d
-_save_viz('bm-v2-stress-vs-strainrate', 'stage2-movie-3d', _render_one('html:stage2_movie_3d.html', {'title': '3D view — the slab stretching, rotatable'}, RUNS_DB, STUDY_YAML))
+_save_viz('bm-v2-stress-vs-strainrate', 'stage2-movie-3d', _render_one('html:stage2_movie_3d.html', {'title': '3D view — the slab stretching, rotatable', 'caption': 'Same coherent, box-deforming clip in 3D. The Simularium trajectory (Analysis tab) additionally embeds the stress-vs-strain and time-series plots and the per-frame deforming box.\n'}, RUNS_DB, STUDY_YAML))
 
 # **stage2-diagnostic**
 
