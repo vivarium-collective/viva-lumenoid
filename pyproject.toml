@@ -59,3 +59,22 @@ vivarium-workbench = { git = "https://github.com/vivarium-collective/vivarium-wo
 viva-lammps = { git = "https://github.com/vivarium-collective/viva-lammps.git", branch = "main" }
 viva-smoldyn = { git = "https://github.com/vivarium-collective/viva-smoldyn.git", branch = "main" }
 viva-simularium = { git = "https://github.com/vivarium-collective/viva-simularium.git", branch = "main" }
+
+# REBRAND (pbg-* → viva-*): viva-lammps (pulled in by the `engines` extra) still
+# declares a dependency on `pbg-superpowers` AND points it at the old
+# `pbg-superpowers.git` repo, which was renamed to publish the `viva-superpowers`
+# distribution. uv honours that transitive git source and then fails its metadata
+# name check ("Package metadata name `viva-superpowers` does not match given name
+# `pbg-superpowers`"), aborting resolution of the full graph (every extra) and
+# breaking `uv lock` and the Docker `uv sync`. Redirecting the requirement to the
+# viva-superpowers repo is impossible — uv rejects any git/direct source whose
+# built metadata name differs from the requested name. So drop the stale git
+# source with a bare override and let the requirement resolve from PyPI, where
+# `pbg-superpowers` is still published as a rebrand alias (currently 0.23.0, the
+# same release as viva-superpowers) with a matching metadata name. It is only
+# ever pulled in via the optional `engines` extra; the default image never
+# installs it. Remove this override once viva-lammps re-pins to `viva-superpowers`.
+[tool.uv]
+override-dependencies = [
+    "pbg-superpowers",
+]
