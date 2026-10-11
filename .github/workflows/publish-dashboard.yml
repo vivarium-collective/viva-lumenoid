@@ -1,15 +1,6 @@
-# REPO-SPECIFIC (intentionally de-stamped from viva-template).
-#
-# The template's publish workflow installs deps with `uv sync --extra dev`, which
-# currently ABORTS because the pbg-*→viva-* rebrand left `vivarium-workbench` and
-# `viva-superpowers` requiring `pbg-basic-processes`, whose repo now publishes
-# metadata name `viva-basic-processes` (uv: "Package metadata name … does not
-# match given name"). Until the ecosystem's requirements are re-pinned to the
-# viva-* names, this workspace installs the publish environment resiliently via
-# scripts/ci_install_publish_env.sh (leaf deps by correct name + siblings with
-# --no-deps). The viva-template provenance stamp is deliberately removed so
-# scripts/check-workflow-freshness.py treats this as a repo-specific workflow and
-# skips the drift check. Re-stamp + re-sync once the upstream deps are fixed.
+# REPO-SPECIFIC (intentionally de-stamped from viva-template): this workspace
+# publishes its dashboard/reports with a plain `uv sync --extra dev`. The
+# provenance stamp is removed so check-workflow-freshness.py skips it.
 
 name: Publish read-only dashboard
 
@@ -31,7 +22,6 @@ on:
       - 'viva_lumenoid/**'
       - 'pyproject.toml'
       - 'scripts/publish_dashboard.sh'
-      - 'scripts/ci_install_publish_env.sh'
       - '.github/workflows/publish-dashboard.yml'
   workflow_dispatch:
 
@@ -57,11 +47,11 @@ jobs:
       - name: Set up Python
         run: uv python install 3.12.9
 
-      - name: Install publish environment (resilient to pbg-*→viva-* rebrand)
+      - name: Install publish environment
         run: |
           uv venv .venv --python 3.12.9
           source .venv/bin/activate
-          bash scripts/ci_install_publish_env.sh
+          uv sync --extra dev
 
       - name: Build dashboard snapshot
         # base-path / interactive-url are derived from the GitHub repo.
