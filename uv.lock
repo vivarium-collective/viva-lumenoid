@@ -13,9 +13,6 @@ resolution-markers = [
     "python_full_version < '3.12' and sys_platform != 'emscripten' and sys_platform != 'win32'",
 ]
 
-[manifest]
-overrides = [{ name = "pbg-superpowers" }]
-
 [[package]]
 name = "annotated-doc"
 version = "0.0.5"
@@ -1682,18 +1679,6 @@ wheels = [
 ]
 
 [[package]]
-name = "pbg-superpowers"
-version = "0.23.0"
-source = { registry = "https://pypi.org/simple" }
-dependencies = [
-    { name = "viva-superpowers" },
-]
-sdist = { url = "https://files.pythonhosted.org/packages/74/ee/e90a37017ee8ee930cf4d95b070b54790171d58abb584d29cab2390672b1/pbg_superpowers-0.23.0.tar.gz", hash = "sha256:b19429450dd6c41161467706f7c1b19fe894d5e2ce5cc363e5de47dabfd0c3bc", size = 786, upload-time = "2026-09-24T23:02:33.495Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/0c/d8/6e315448fe9983a5128bcd98548f8d4ba34737c1432339c33b40e1b05b13/pbg_superpowers-0.23.0-py3-none-any.whl", hash = "sha256:35b1e67b27d794f72f1d508f8a80762acf289929e06d654dffe3a44ea4135ae4", size = 1237, upload-time = "2026-09-24T23:02:31.473Z" },
-]
-
-[[package]]
 name = "pillow"
 version = "12.3.0"
 source = { registry = "https://pypi.org/simple" }
@@ -2992,16 +2977,16 @@ xarray = [
 [[package]]
 name = "viva-lammps"
 version = "0.1.1"
-source = { git = "https://github.com/vivarium-collective/viva-lammps.git?branch=main#286c2988ae0d673da78c734ab0271dc738811d9c" }
+source = { git = "https://github.com/vivarium-collective/viva-lammps.git?branch=main#3e86547e0f8a5b59cf24cdebba5e5069117e7919" }
 dependencies = [
     { name = "bigraph-schema" },
     { name = "lammps" },
     { name = "matplotlib" },
     { name = "numpy", version = "2.4.6", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.12'" },
     { name = "numpy", version = "2.5.3", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.12'" },
-    { name = "pbg-superpowers" },
     { name = "process-bigraph" },
     { name = "pyyaml" },
+    { name = "viva-superpowers" },
 ]
 
 [[package]]
