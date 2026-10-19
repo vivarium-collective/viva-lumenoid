@@ -22,7 +22,14 @@ byte-for-byte reproduction.
 - **Engines.** Imports two already-wrapped simulators — [`viva-lammps`](https://github.com/vivarium-collective/viva-lammps)
   (`LAMMPSProcess`) and [`viva-smoldyn`](https://github.com/vivarium-collective/viva-smoldyn).
   The collagen IV network runs on **real LAMMPS**; Smoldyn is held for stage 3
-  (surface binders / flexible fibers).
+  (surface binders / flexible fibers). [`vivarium-tyssue`](https://github.com/vivarium-collective/vivarium-tyssue)
+  (the epithelial **vertex model**, the downstream consumer of the BM modulus +
+  remodelling readouts — see the coupling route below) is available as an
+  **optional dev sibling**: install it editable (Quick start). It is not yet a
+  locked engine because its upstream branch still declares the pre-rebrand
+  `pbg-superpowers` (now published as `viva-superpowers`), so `uv lock` rejects
+  it; promote it to a locked engine once vivarium-tyssue ships a lock-clean
+  release.
 - **Model** (`viva_lumenoid/`). One collagen IV protomer = one **two-bead rod**
   (bead spacing ≈114 nm); stochastic **NC1/7S crosslinks** (`fix bond/create` +
   `fix bond/break`, NC1 binds 1, 7S binds 3); **no excluded volume** (the released
@@ -52,6 +59,8 @@ against growth rate and hand them to the vertex model; then a direct two-way loo
 uv venv .venv && source .venv/bin/activate
 # workspace + engines (see the pyproject note on the pbg-superpowers rebrand):
 uv pip install --no-deps -e . -e ../viva-lammps -e ../viva-smoldyn
+# optional: the tyssue vertex-model engine (dev sibling; not a locked engine yet):
+uv pip install --no-deps -e ../vivarium-tyssue
 uv pip install process-bigraph numpy matplotlib
 # LAMMPS Python bindings — the PyPI wheel is MPICH-linked; on macOS point it at
 # homebrew's MPI-free serial lib:
