@@ -28,6 +28,8 @@ result: >
   angle-off σ(ε̇) sweep, which read elastic-dominated at ~0.3 kT/σ³, is superseded
   by this faithful run.)
 
+question: What is σ(ε̇), and where does the network cross from viscous to elastic?
+
 purpose:
   question: What is σ(ε̇), and where does the network cross from viscous to elastic?
   mechanism: >

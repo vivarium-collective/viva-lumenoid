@@ -55,6 +55,10 @@ pipeline_gate:
     A stable (if soft) stage-1 modulus + a correct remodelling mechanism unblock
     the rigidity (bm-v3), bending (bm-v4) and geometric-readout (bm-v5) follow-ups.
 
+question: >
+  Can the clean-room collagen IV network separate an elastic modulus from a
+  viscous remodelling time, as the paper's staged protocol does?
+
 purpose:
   question: >
     Can the clean-room collagen IV network separate an elastic modulus from a
