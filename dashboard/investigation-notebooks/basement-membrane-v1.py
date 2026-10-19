@@ -743,7 +743,7 @@ _save_viz('bm-v5-porosity-bundling', 'evidence-map', _render_one('html:evidence_
 # | bundling-under-shoots-5-7 _(primary)_ | kind=mean field=protomers_per_strand | op lt value 2.0 field mean_strand |
 
 # ## Open decisions
-# - DONE 2026-10-01 — cross-checked against the released code AND corrected the clean-room parameters to match (bond k/r0, rod r0=3.0, cutoffs, damp=0.1, Nevery=500, σ≈125 nm); re-ran all studies. Result: very-soft modulus consistent with the published ≈0.03 Pa; central-force/bending explanations retired. REMAINING for a quantitative modulus: angle set active during assembly (bond/react), 7S break cutoff (0.95), dense initial config, larger network.
+# - Absolute (Pa) modulus path: the faithful angle-stabilized model now reproduces the published ≈0.03 Pa and gives a reproducible reduced-unit modulus (bm-v4, E≈3 LJ). An EXACT absolute value additionally needs the released GCE + distance-gated 7S break (0.95) + dense initial config — implement these, or accept the reduced-unit value and resolve via the energy-scale decision (#4)? (Cross-check + param correction already DONE 2026-10-01; see references/cross-check-vs-released-code.md.)
 # - Engine for stages 1–2: LAMMPS now; revisit Smoldyn at stage 3 (spec #2).
 # - Secretion: fixed concentration vs fixed flux (spec #3).
 # - Energy scale: report modulus in Pa (fit to a measured modulus) or keep kT and report a ratio (spec #4).
