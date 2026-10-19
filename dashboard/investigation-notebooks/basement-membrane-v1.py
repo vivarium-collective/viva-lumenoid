@@ -246,6 +246,8 @@ def _render_one(address, config, runs_db, study_yaml, overrides=None):
 
 # ## Study: `bm-v1-stage1-modulus-remodelling`
 #
+# **Question.** Can the clean-room collagen IV network separate an elastic modulus from a viscous remodelling time, as the paper's staged protocol does?
+#
 # **Purpose.** A crosslinked semiflexible rod network stores elastic energy in stretched bonds under fast load (crosslinks frozen), and dissipates it over the crosslink turnover time when make/break is switched on.
 #
 # **Claim.** A coarse-grained collagen IV network (two-bead rods, stochastic NC1/7S crosslinks, no excluded volume) run through the spec's stage-1 protocol — stretch, hold, then switch the chemistry on — yields a separable elastic modulus and remodelling (stress-relaxation) time on real LAMMPS.
@@ -365,6 +367,8 @@ _save_viz('bm-v1-stage1-modulus-remodelling', 'stage1-diagnostic', _render_one('
 
 # ## Study: `bm-v2-stress-vs-strainrate`
 #
+# **Question.** What is σ(ε̇), and where does the network cross from viscous to elastic?
+#
 # **Purpose.** At ε̇ below the crosslink turnover rate the network remodels fast enough to flow (σ ∝ ε̇, constant η); above it, bonds cannot relax between deformation increments and the response stiffens.
 #
 # **Claim.** Imposing an equibiaxial in-plane strain rate ε̇ on the growing collagen IV network and reading the steady-state stress σ(ε̇) gives the effective viscosity η = σ/ε̇ (viscous at slow rates) and the rate at which the response turns elastic — the σ(ε̇) relation the vertex model needs.
@@ -459,6 +463,8 @@ _save_viz('bm-v2-stress-vs-strainrate', 'stage2-diagnostic', _render_one('html:s
 # | viscous-plateau-vs-elastic _(secondary)_ | kind=slope field=eta_effective versus=strain_rate scale=log | op plateau note η ~ const at slow ε̇ |
 
 # ## Study: `bm-v3-junction-bending-rigidity`
+#
+# **Question.** Can more crosslink connectivity rigidify the v1 network, or is bending required?
 #
 # **Purpose.** Maxwell rigidity percolation: a central-force network is floppy below z = 2d (= 4 in 2D). Bond-bending constraints lower the threshold and rigidify sub- isostatic networks.
 #
@@ -556,6 +562,8 @@ _save_viz('bm-v3-junction-bending-rigidity', 'rigidity-diagnostic', _render_one(
 
 # ## Study: `bm-v4-junction-bending`
 #
+# **Question.** Does junction bending yield the measurable modulus the vertex model needs?
+#
 # **Purpose.** Bending constraints at crosslink junctions lift a sub-isostatic (z < 4) central-force network out of the floppy regime — the physically-expected rigidity source for a semiflexible fiber network.
 #
 # **Claim.** Junction bending is a released feature (NC1 angle k=4.0 @180°, plus 7S angles), not a new ingredient. HOW it is applied decides whether it yields a usable modulus. Our original as-formed `fix restrain` (pinned on AFTER assembly) is ill-conditioned — sign-flipping, no reproducible value. The FAITHFUL path (2026-10-02), creating real harmonic angles as the crosslinks form so the network equilibrates with them active (matching the released bond/react templates), yields a POSITIVE, well-conditioned, reproducible modulus. So the released model is not floppy once the angles are faithfully active; its modulus is finite and strongly density-dependent.
@@ -650,6 +658,8 @@ _save_viz('bm-v4-junction-bending', 'bending-diagnostic', _render_one('html:bend
 # | reproducible-modulus _(primary)_ | kind=iqr_over_median field=modulus_vs_bending_k at=bending_k>0 | op lt value 0.5 note IQR < 0.5·|median| — met by the real-angle path |
 
 # ## Study: `bm-v5-porosity-bundling`
+#
+# **Question.** Does the v1 network reproduce the measured pore-size and bundling of a real BM?
 #
 # **Purpose.** Porosity is set by the areal density of rods (an emergent mesh); bundling requires lateral association of 5–7 protomers into a strand, a bond the released NC1/7S model does not have (it can bundle only through 7S branching).
 #
