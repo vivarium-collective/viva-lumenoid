@@ -33,8 +33,14 @@ result: >
   association bond, the NC1/7S topology cannot build the 5–7-protomer strands
   measured in the PFHR-9 scaffold.
 
-parent_studies:
-  - bm-v1-stage1-modulus-remodelling
+# Canonical DAG edge (supersedes the legacy parent_studies shim).
+pipeline_gate:
+  prerequisites:
+    - study: bm-v1-stage1-modulus-remodelling
+      condition: tests-passed
+  enables: []
+  proceed_condition: >
+    Diagnostic readout study; gates nothing. Motivates a v2 lateral-association bond.
 
 purpose:
   question: Does the v1 network reproduce the measured pore-size and bundling of a real BM?
@@ -66,19 +72,53 @@ variants:
     description: Assemble at coverage rungs (150, 250, 350, 500 rods) to place pore size vs density.
     params: {box_xy: 20.0}
 
+# v4 grouped Build-tab inputs (mirrors baseline + variants above).
+conditions:
+  baseline:
+    composite: viva_lumenoid.composites.porosity_bundling
+    params:
+      n_rods: 500
+      box_xy: 20.0
+      assemble_steps: 8000
+  variants:
+    - name: density-sweep
+      description: Coverage rungs (150, 250, 350, 500 rods) to place pore size vs density.
+  model_settings:
+    - name: n_rods
+      default: 500
+      current: 500
+      range: [150, 500]
+      units: count
+      cites: [abrams2000nanoscale]
+      notes: "Areal rod coverage; sets emergent pore size. Densest rung lands pore median in the EM band."
+
 simulation_set:
   - name: porosity-bundling-density-sweep
     status: completed
     base_model: viva_lumenoid.composites.porosity_bundling
     seeds: [12345]
     metrics:
-      pore_median_nm_dense: 76.0
+      pore_median_nm_dense: 54.0
       mean_strand_dense: 1.29
       max_strand: 7
       frac_in_5_7: 0.02
     pass_fail_tests:
       - "porosity-reaches-EM-band: pass"
       - "bundling-under-shoots-5-7: pass"
+
+# Canonical run record — feeds the dashboard's Ran · Tests · Verdict strip.
+runs:
+  - name: porosity-bundling-density-sweep
+    base_model: viva_lumenoid.composites.porosity_bundling
+    seeds: [12345]
+    status: completed
+    outcomes:
+      porosity-reaches-EM-band:
+        result: PASS
+        observed: "median pore ~54 nm at the densest network (within 72 ± 40 nm band)"
+      bundling-under-shoots-5-7:
+        result: PASS
+        observed: "mean ~1.29 protomers/strand (mostly singletons); below measured 5–7"
 
 readouts:
   - name: pore_diameter
@@ -100,6 +140,7 @@ behavior_tests:
     pass_if: {op: between, lo: 32.0, hi: 112.0, field: median_pore_nm}
     units: nm
     requires_simulation: "true"
+    cites: [abrams2000nanoscale]
     calibration_anchor:
       observed_value: "median 54 nm at the densest network (corrected σ≈125 nm)"
       literature_target: "72 ± 40 nm (corneal BM, low-voltage SEM)"
@@ -115,6 +156,7 @@ behavior_tests:
     pass_if: {op: lt, value: 2.0, field: mean_strand}
     units: count
     requires_simulation: "true"
+    cites: [pokidysheva2025targeted]
     calibration_anchor:
       observed_value: "mean 1.29 protomers/strand, mostly singletons, max ~6"
       literature_target: "5–7 protomers/strand (PFHR-9 scaffold, immuno-gold SEM)"
@@ -130,8 +172,11 @@ findings:
       (72 ± 40 nm) at the densest sampled network (median 54 nm, corrected σ≈125 nm) — the mesh is
       realistic and pore size is a tunable density readout, not a free universal.
     evidence:
+      from_run: porosity-bundling-density-sweep
+      from_test: porosity-reaches-EM-band
       observed: "median pore ~54 nm at the densest network (re-run 2026-10-01, corrected params)"
     expected:
+      cites: [abrams2000nanoscale]
       range: "72 ± 40 nm (corneal BM EM); 20–60 nm hydrated Matrigel"
     explanation: "Porosity is emergent from areal coverage; the comparator fixes a density."
     provenance:
@@ -144,14 +189,18 @@ findings:
       (~82% singletons), below the 5–7 protomers per strand measured in the
       PFHR-9 scaffold. The model has no lateral-association bond.
     evidence:
+      from_run: porosity-bundling-density-sweep
+      from_test: bundling-under-shoots-5-7
       observed: "mean strand ~1.29, max ~6, <5% of rods in 5–7 strands"
     expected:
+      cites: [pokidysheva2025targeted]
       range: "5–7 protomers per strand (PFHR-9 cell-deposited scaffold)"
     explanation: >
       The released model bundles only through 7S branching; the lateral-
       association bond that builds strands is absent (spec: a lateral term would
       itself under-bundle ~2× if calibrated in vitro).
     next_action: "add an explicit lateral-association bond (v2) and re-measure bundling"
+    next_action_type: refine_representation
     provenance:
       run_ids: [porosity-bundling-density-sweep]
 

@@ -45,6 +45,16 @@ result: >
   the elastic/viscous separation the study set out to do. The absolute Pa still
   depends on the open energy-scale decision (spec #4); ~6 Pa uses kT/σ³ ≈ 2.2 Pa.
 
+# Canonical DAG edge — bm-v1 is the root stage-1 study.
+pipeline_gate:
+  prerequisites: []
+  enables:
+    - bm-v3-junction-bending-rigidity
+    - bm-v5-porosity-bundling
+  proceed_condition: >
+    A stable (if soft) stage-1 modulus + a correct remodelling mechanism unblock
+    the rigidity (bm-v3), bending (bm-v4) and geometric-readout (bm-v5) follow-ups.
+
 purpose:
   question: >
     Can the clean-room collagen IV network separate an elastic modulus from a
@@ -88,6 +98,44 @@ variants:
     description: Published v1 parameter set (NC1×1, 7S×3, off_rate 0.02); the ensemble baseline.
     params: {}
 
+# v4 grouped Build-tab inputs (mirrors baseline + variants above).
+conditions:
+  baseline:
+    composite: viva_lumenoid.composites.stage1_composite
+    params:
+      n_rods: 200
+      box_xy: 20.0
+      make_prob: 0.12
+      factor_mult: 0.66
+      target_strain: 0.15
+      strain_rate: 0.0015
+      seed: 12345
+  variants:
+    - name: reference
+      description: Published v1 parameter set (NC1×1, 7S×3, off_rate 0.02).
+  model_settings:
+    - name: make_prob
+      default: 0.12
+      current: 0.12
+      range: [0.12, 0.27]
+      units: probability
+      cites: [barrientos2026code]
+      notes: "Crosslink make probability MP (released range 0.12/0.18/0.27; low value used)."
+    - name: factor_mult
+      default: 0.66
+      current: 0.66
+      range: [0.0, 1.0]
+      units: ratio
+      cites: [barrientos2026code]
+      notes: "Break/make ratio FactorMult (released value 0.66)."
+    - name: off_rate
+      default: 0.02
+      current: 0.02
+      range: [0.0, 0.1]
+      units: 1/step
+      cites: [source-spec]
+      notes: "Force-independent crosslink off-rate (random-deletion remodelling; spec v1)."
+
 simulation_set:
   - name: stage1-seed-ensemble
     status: completed
@@ -101,6 +149,25 @@ simulation_set:
       - "elastic-modulus-consistent-with-floppy: pass"
       - "relaxation-decays-not-densifies: pass"
       - "network-assembles: pass"
+
+# Canonical run record — feeds the dashboard's Ran · Tests · Verdict strip.
+# remodelling-time-calibratable is intentionally omitted (τ below detection at
+# v1 scale) so it correctly renders as pending, not a faked pass.
+runs:
+  - name: stage1-seed-ensemble
+    base_model: viva_lumenoid.composites.stage1_composite
+    seeds: [11, 22, 33, 44, 55, 66]
+    status: completed
+    outcomes:
+      network-assembles:
+        result: PASS
+        observed: "crosslinked network forms from bare rods (n_crosslinks > 0)"
+      elastic-modulus-consistent-with-floppy:
+        result: PASS
+        observed: "modulus −0.03 ± 0.06 LJ (6 seeds); consistent with the published ≈0.03 Pa"
+      relaxation-decays-not-densifies:
+        result: PASS
+        observed: "held stress decays as crosslinks break (46→3), not densifies"
 
 readouts:
   - name: elastic_modulus_lj
@@ -153,6 +220,7 @@ behavior_tests:
     pass_if: {op: consistent_with_zero, note: "floppy network; z < 4"}
     units: kT/a^3
     requires_simulation: "true"
+    cites: [meadowcroft2025nonequilibrium]
     calibration_anchor:
       observed_value: -0.03
       literature_target: 0.03
@@ -174,6 +242,7 @@ behavior_tests:
     pass_if: {op: calibratable, target_hours: 20, range_hours: "3-30 across systems"}
     units: LJ time / hours
     requires_simulation: "true"
+    cites: [barrientos2026basement]
     blocked_by_requirements: ["rigid (bending) network or larger ensemble — signal below detection while floppy"]
     calibration_anchor:
       observed_value: "below detection (τ ≈ 1/off_rate by construction; not resolvable while floppy)"
@@ -288,9 +357,12 @@ findings:
       it. Replacing it with a controlled random-deletion off-rate gives a make/break
       steady state and crosslink turnover.
     evidence:
+      from_run: stage1-seed-ensemble
+      from_test: relaxation-decays-not-densifies
       observed: "crosslinks 45→401 (old, densifies) vs steady ~54 then decay 46→3 (off-rate)"
     explanation: "Breaking must be length-independent to be a controllable rate (spec: force-independent in v1)."
     next_action: "adopted in viva_lumenoid/collagen.py; guarded by a regression test"
+    next_action_type: refine_representation
     provenance:
       run_ids: [stage1-seed-ensemble]
   - id: F2-floppy-below-rigidity-percolation
@@ -301,13 +373,18 @@ findings:
       so its elastic modulus is statistically consistent with zero — matching the
       published ≈0.03 Pa.
     evidence:
+      from_run: stage1-seed-ensemble
+      from_test: elastic-modulus-consistent-with-floppy
       observed: "modulus −0.03 ± 0.06 LJ (95% CI, 6 seeds); mean z ≈ 1.2; z_max = 3"
     expected:
+      cites: [meadowcroft2025nonequilibrium]
       range: "≈0.03 Pa (Meadowcroft supplement, near-floppy)"
     explanation: >
       Maxwell counting: NC1 beads reach z = 2, 7S beads z = 4, mean ≤ 3 < 4 → floppy
-      regardless of crosslink density. Rigidity must come from bending / bundling.
+      regardless of crosslink density. (Scoped to the ANGLE-OFF transcription; the
+      released model carries junction angles and is soft for other reasons — bm-v3.)
     next_action: "seed FP1 (junction-bending rigidity study)"
+    next_action_type: escalate_model
     provenance:
       run_ids: [stage1-seed-ensemble]
   - id: F3-tau-below-detection
@@ -318,8 +395,11 @@ findings:
       but the relaxable stress is small in a floppy network, so τ is below detection
       at v1 scale.
     evidence:
+      from_run: stage1-seed-ensemble
+      from_test: remodelling-time-calibratable
       observed: "ensemble viscous decay ~0.29→0.25; s0 < 2·noise → τ unresolved"
     next_action: "resolve on a rigid (bending) network or a much larger ensemble"
+    next_action_type: replicate
     provenance:
       run_ids: [stage1-seed-ensemble]
 

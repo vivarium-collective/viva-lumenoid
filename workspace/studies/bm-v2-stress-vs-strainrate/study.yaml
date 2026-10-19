@@ -43,8 +43,15 @@ key_assumptions:
   - "Chemistry ON during the stretch (growing, remodelling substrate) — unlike stage 1."
   - "Steady stress read after a settle strain; network state at each rate depends on ε̇."
 
-parent_studies:
-  - bm-v1-stage1-modulus-remodelling
+# Canonical DAG edge (supersedes the legacy parent_studies shim).
+pipeline_gate:
+  prerequisites:
+    - study: bm-v1-stage1-modulus-remodelling
+      condition: tests-passed
+  enables: []
+  proceed_condition: >
+    Produces the offline coupling table E(ε̇)/τ(ε̇); exploratory until re-run
+    against the released stretch protocol (see limitations / cross-check).
 
 baseline:
   - name: collagen-iv-network-stage2
@@ -62,6 +69,29 @@ variants:
     description: Equibiaxial ε̇ swept over six rates (5e-4 … 1.6e-2) on the growing substrate.
     params: {}
 
+# v4 grouped Build-tab inputs (mirrors baseline + variants above).
+conditions:
+  baseline:
+    composite: viva_lumenoid.composites.stage2_sweep
+    params:
+      n_rods: 150
+      box_xy: 18.0
+      assemble_steps: 4000
+      make_prob: 0.12
+      strain_rates: "[5e-4, 1e-3, 2e-3, 4e-3, 8e-3, 1.6e-2]"
+      seed: 12345
+  variants:
+    - name: rate-sweep
+      description: Equibiaxial ε̇ swept over six rates on the growing substrate.
+  model_settings:
+    - name: strain_rate
+      default: 1.0e-3
+      current: 1.0e-3
+      range: [5.0e-4, 1.6e-2]
+      units: 1/τ
+      cites: [barrientos2026basement]
+      notes: "Imposed equibiaxial growth rate ε̇; swept over a decade to read σ(ε̇)/η."
+
 simulation_set:
   - name: stage2-strainrate-sweep
     status: completed
@@ -73,6 +103,22 @@ simulation_set:
     pass_fail_tests:
       - "sweep-runs: pass"
       - "viscosity-defined: pass"
+
+# Canonical run record — feeds the dashboard's Ran · Tests · Verdict strip.
+# viscous-plateau-vs-elastic is omitted (blocked — viscous regime not yet
+# exposed) so it correctly renders as pending, not a faked pass.
+runs:
+  - name: stage2-strainrate-sweep
+    base_model: viva_lumenoid.composites.stage2_sweep
+    seeds: [12345]
+    status: completed
+    outcomes:
+      sweep-runs:
+        result: PASS
+        observed: "σ and η returned for every rate in the ε̇ sweep"
+      viscosity-defined:
+        result: PASS
+        observed: "low-rate effective viscosity computed (elastic-dominated at these rates)"
 
 readouts:
   - name: sigma_steady
