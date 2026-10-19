@@ -207,43 +207,9 @@ def stage1_composite_spec(params: CollagenParams | None = None) -> dict:
 
     This is the dashboard/`/viva-run` form of stage 1: a Composite that runs the
     staged protocol on a shared timeline. The direct ``run_stage1`` driver above
-    is the analysis path; this is the reproducible spec.
+    is the analysis path; this is the reproducible spec. Thin wrapper over the
+    shared builder (``composites.builders.collagen_network_spec``) so the composite
+    wiring lives in exactly one place and is reused by every collagen composite.
     """
-    p = params or CollagenParams()
-    rate = p.strain_rate
-    return {
-        'controller': {
-            '_type': 'process', 'address': 'local:StagedStretchController',
-            'config': {
-                'strain_rate': rate,
-                't_assemble': p.assemble_steps * p.timestep,
-                't_relax': p.hold_steps * p.timestep,
-                't_stretch': p.target_strain / rate,
-                't_hold_elastic': p.hold_steps * p.timestep,
-            },
-            'inputs': {},
-            'outputs': {'strain_rate': ['strain_rate'], 'make_on': ['make_on'],
-                        'break_on': ['break_on'], 'phase': ['phase']},
-        },
-        'network': {
-            '_type': 'process', 'address': 'local:CollagenNetworkProcess',
-            'config': {'params': p.to_dict()},
-            'inputs': {'strain_rate': ['strain_rate'], 'make_on': ['make_on'],
-                       'break_on': ['break_on']},
-            'outputs': {
-                'sigma_inplane': ['sigma_inplane'], 'strain': ['strain'],
-                'n_crosslinks': ['n_crosslinks'], 'pxx': ['pxx'], 'pyy': ['pyy'],
-                'volume': ['volume'], 'positions': ['positions'],
-                'atom_types': ['atom_types'], 'box_dimensions': ['box_dimensions'],
-            },
-        },
-        'emitter': {
-            '_type': 'step', 'address': 'local:ram-emitter',
-            'config': {'emit': {
-                'sigma_inplane': 'float', 'strain': 'float', 'n_crosslinks': 'integer',
-                'phase': 'string'}},
-            'inputs': {'sigma_inplane': ['sigma_inplane'], 'strain': ['strain'],
-                       'n_crosslinks': ['n_crosslinks'], 'phase': ['phase']},
-            'outputs': {},
-        },
-    }
+    from .composites.builders import collagen_network_spec
+    return collagen_network_spec(params, emit="rheology", chemistry_during_stretch=False)

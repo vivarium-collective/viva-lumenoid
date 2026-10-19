@@ -1,24 +1,34 @@
 schema_version: 2
 name: basement-membrane-v1
-title: "Basement membrane v1 — collagen IV network modulus & remodelling for the AICS vertex model"
+title: "From collagen IV turnover to multiscale epithelial morphogenesis (BM v1 → lumenoid)"
 created: "2026-09-30"
-status: complete
+status: running
 lead: eran
 
 question: >
-  What effective elastic modulus and remodelling (stress-relaxation) time does a
-  coarse-grained collagen IV basement-membrane network produce on a growing
-  (biaxially stretching) boundary — the two numbers the AICS 3D vertex model
-  needs to couple to a basement membrane?
+  How does collagen IV molecular turnover set basement-membrane (BM) stress
+  relaxation, and how do BM mechanics, epithelial growth and actomyosin mechanics
+  jointly determine epithelial cell height and lumenoid morphology? (The original
+  v1 sub-question — the effective modulus E(ε̇) and remodelling time τ(ε̇) a growing
+  boundary produces, the two numbers the AICS vertex model couples to — is the
+  P0/P1 reproduction core this campaign now builds on.)
 
 hypothesis: >
-  A standalone collagen IV network, coarse-grained at the fiber scale (one
-  protomer = one two-bead rod, stochastic NC1/7S crosslinks, no excluded volume),
-  reproduces the Meadowcroft/Barrientos regime: a very soft elastic modulus
-  (the published network's own linear modulus is ≈0.03 Pa) and a crosslink-
-  turnover-limited stress-relaxation time that can be calibrated to the ≈20 h
-  collagen IV lifetime. Its effective modulus and remodelling time, tabulated
-  against growth rate ε̇, become inputs to the vertex model (offline coupling first).
+  Molecular collagen IV turnover sets the BM's viscoelastic relaxation time, and
+  that relaxation — relative to the epithelial doubling time — controls growth-
+  dependent cell confinement (Barrientos et al., Cell 2026). Replacing homogeneous
+  tissue mechanics with spatially-resolved 2D/3D Tyssue epithelia, bidirectional
+  LAMMPS–Tyssue coupling and explicit actomyosin should connect these quantities
+  through forces rather than imposed constitutive assumptions, and predict when
+  growth rate, BM supply, contractility and curvature change cell height and
+  lumenoid growth beyond the paper.
+  ---
+  Reproduction core (P0/P1): a standalone collagen IV network, coarse-grained at
+  the fiber scale (one protomer = one two-bead rod, stochastic NC1/7S crosslinks,
+  no excluded volume), reproduces the Meadowcroft/Barrientos regime — a very soft
+  elastic modulus (≈0.03 Pa published) and a crosslink-turnover-limited relaxation
+  time calibratable to the ≈20 h collagen IV lifetime — and its E(ε̇)/τ(ε̇) feed the
+  vertex model (offline coupling first).
 
 description: |
   This investigation is the clean-room Vivarium build of the AICS-Lumenoids
@@ -61,12 +71,58 @@ description: |
   network centroid), so boundary crossings no longer teleport across timepoints.
   See `feedback/` for the imported reviewer file.
 
+  **Upgrade campaign (2026-10-19) — from BM reproduction to multiscale
+  morphogenesis.** With Barrientos et al. ("Basement membrane turnover controls
+  cell shape", Cell 2026, 189:5611–5624) now published, this investigation is
+  reframed from "the two numbers the vertex model needs" into a staged
+  reproduction+extension campaign. Strategy: first reproduce the published tissue
+  and collagen-network results quantitatively (R1–R3), then replace homogeneous
+  tissue mechanics with spatial 2D/3D Tyssue models and bidirectional LAMMPS–Tyssue
+  coupling (R4–R6), then add explicitly-modelled actomyosin and a closed lumenoid
+  geometry (E1–E4). Reproduction, verification and new predictions are reported
+  separately.
+
+  **Coupling hierarchy (interchangeable, not additive).** 2D planar Tyssue sheet
+  (+ BM traction/area law, height via a prism relation) → 2D cross-section → 3D
+  monolayer (apical/basal/lateral surfaces + volume constraints) → closed 3D
+  lumenoid (lumen volume/pressure + BM shell). Mechanical contract: epithelial
+  basal geometry/displacements pass to the BM; the BM returns reaction
+  forces/traction to the basal DOFs. Effective constitutive BM and explicit LAMMPS
+  BM are interchangeable alternatives, never additive parallel forces.
+
+  **Execution gates.** P0 — retire superseded BM claims; frozen faithful reference
+  settings + reproducible R2 stress tests. P1 — direct numerical reproduction of
+  Figures 1–2 (R1–R3). P2 — verified 2D/3D Tyssue studies (R4–R5); cell-height and
+  area response. P3 — bidirectional basal-force coupling with convergence and
+  reduced-order agreement. P4 — actin (E1–E2), closed lumenoid (E3), new predictive
+  perturbations (E4). The existing bm-v1…v5 studies are the P0 reproduction core:
+  bm-v3 is retained as a counterfactual (central-force) control, and bm-v4's native
+  junction angles fold into the faithful reference rather than being a novel
+  ingredient. The superseded "floppy because junction angles are absent" narrative
+  is retired by the released-code cross-check (see executive findings 3–6).
+
+  **Engine note.** The downstream epithelial vertex model is `vivarium-tyssue`,
+  imported into the workspace as an optional dev sibling engine (R4–R6, E3–E4 build
+  on it). The collagen/actin LAMMPS processes run on `viva-lammps`.
+
 studies:
   - bm-v1-stage1-modulus-remodelling
   - bm-v2-stress-vs-strainrate
   - bm-v3-junction-bending-rigidity
   - bm-v4-junction-bending
   - bm-v5-porosity-bundling
+  # --- Reproduction campaign (Barrientos et al., Cell 2026) — gates P0→P2 ---
+  - bm-r1-published-tissue-baseline
+  - bm-r2-collagen-network-rheology
+  - bm-r3-network-expansion-supply
+  - bm-r4-coupled-2d-epithelium
+  - bm-r5-explicit-3d-confinement
+  - bm-r6-perlecan-growth-perturbations
+  # --- Mechanistic extension campaign (new predictions) — gates P3→P4 ---
+  - bm-e1-actomyosin-cortex
+  - bm-e2-actin-adhesion-collagen
+  - bm-e3-closed-3d-lumenoid
+  - bm-e4-feedback-predictions
 
 at_a_glance:
   - study: bm-v1-stage1-modulus-remodelling
@@ -101,6 +157,58 @@ at_a_glance:
       corneal-EM band (72 ± 40 nm) at realistic density; the NC1/7S-only topology
       under-bundles (mean ~1 protomer/strand, below the measured 5–7), because the
       released model has no lateral-association bond. Carries the evidence map.
+  # --- Reproduction campaign (design-only / planned) ---
+  - study: bm-r1-published-tissue-baseline
+    role: >
+      R1 (planned). Reimplements the paper's fixed-volume prism/surface-tension
+      tissue model + viscoelastic BM; sweeps stiffness and relaxation/doubling ratio
+      to recover Fig 1G regime topology. The homogeneous reference for R4–R5.
+  - study: bm-r2-collagen-network-rheology
+    role: >
+      R2 (planned; reuses the collagen-network composite). Paper-matched staged
+      loading at several turnover rates; independently tracks molecule residence and
+      stress relaxation to reproduce Fig 2D/2E. The frozen P0 reference stress test.
+  - study: bm-r3-network-expansion-supply
+    role: >
+      R3 (planned; reuses the collagen-network composite). no-remodel vs
+      remodel-without-supply vs remodel-with-supply from one initial state; matches
+      Fig 2B–C ordering in area, concentration and connectivity.
+  - study: bm-r4-coupled-2d-epithelium
+    role: >
+      R4 (planned). Tyssue 2D sheet with a BM traction/area law calibrated from R2;
+      homogeneous reference must match R1; tests whether the regimes survive explicit
+      topology and heterogeneous growth.
+  - study: bm-r5-explicit-3d-confinement
+    role: >
+      R5 (planned). Tyssue 3D monolayer; no-BM / elastic-BM / relaxing-BM controls
+      isolate the BM-relaxation contribution to cell height. Establishes the
+      cell-height + area response for the lumenoid.
+  - study: bm-r6-perlecan-growth-perturbations
+    role: >
+      R6 (planned). Propagates inferred collagen-lifetime distributions (control,
+      perlecan gain/loss, growth-rate) through relaxation→shape; compares the
+      intervention ordering + uncertainty to Fig 7, keeping inferred vs predicted distinct.
+  # --- Extension campaign (new predictions; design-only / planned) ---
+  - study: bm-e1-actomyosin-cortex
+    role: >
+      E1 (planned; NEW — not in the paper). Coarse LAMMPS filament/crosslink/motor
+      cortex on a 2D patch; maps tension/strain/relaxation onto Tyssue cortical-energy
+      parameters so the effective term can be replaced by explicit actin.
+  - study: bm-e2-actin-adhesion-collagen
+    role: >
+      E2 (planned; NEW). Couples active cortex → reversible basal linkers → collagen
+      BM patch on a single cell; measures traction, linker occupancy, deformation and
+      work balance before multicellular coupling.
+  - study: bm-e3-closed-3d-lumenoid
+    role: >
+      E3 (planned; NEW). Closed curved Tyssue + lumen pressure/volume + BM shell;
+      reduced-order BM first, then resolved LAMMPS patches; predicts curvature-dependent
+      lumen growth and cell shape.
+  - study: bm-e4-feedback-predictions
+    role: >
+      E4 (planned; NEW). Tests growth-driven turnover, BM heterogeneity,
+      contractility-dependent confinement, partial adhesion and network failure against
+      one-way / uncoupled / uniform-material controls — the campaign's novel predictions.
 
 acceptance_criteria:
   - study: bm-v1-stage1-modulus-remodelling
@@ -127,7 +235,12 @@ executive:
   what_is_this: >
     The first Vivarium build of the AICS lumenoid basement membrane: a coarse-
     grained collagen IV network on a moving boundary, run until it reports an
-    elastic modulus and a remodelling time for the vertex model.
+    elastic modulus and a remodelling time for the vertex model. EXPANDED
+    2026-10-19 into a staged reproduction+extension campaign of Barrientos et al.
+    (Cell 2026): R1–R6 reproduce Figures 1–2 and extend to spatial 2D/3D Tyssue
+    epithelia + coupling; E1–E4 add actomyosin, a closed lumenoid and new
+    predictions. The BM-reproduction core (bm-v1…v5) is complete; the R/E studies
+    are design-only (planned) under gates P0→P4.
   verdict: >
     COMPLETE (2026-10-02). The research question is answered and the coupling
     deliverable produced. A faithful clean-room model (cross-checked against the
@@ -179,8 +292,14 @@ executive:
     published value. The one open kinetic detail is which equilibrium crosslink
     fraction the authors' GCE + distance-gated breaking settles at; the ABSOLUTE
     Pa also still depends on the energy-scale decision (spec #4).
-  verdict_status: preliminary
+  verdict_status: in-progress
   decisions_needed:
+    - "Reproduction conventions: acquire the supplemental tissue-model equations and precise Figure 1 parameter values — the article alone does not fix every reproduction convention (gates R1)."
+    - "Released turnover kinetics: resolve the full GCE-style monomer-exchange / distance-gated-break implementation, the 7S-specific mechanics, and the original stress/energy conversion before freezing the R2 reference (P0)."
+    - "Collagen supply law: fixed-concentration (reference reproduction, R3) vs secretion-flux-driven (new lumenoid hypothesis, E3/E4) — decide per study."
+    - "3D calibration data: obtain lumenoid geometry timecourses, cell height/volume, BM thickness and collagen-vs-laminin staining before calibrating R5/E3."
+    - "Actin fidelity: use a validated reduced cortical model (Tyssue cortical energy) unless molecularly-resolved actin (E1) changes a measurable prediction — explicit go/no-go decision."
+    - "Process/composite modularity: converge the collagen-network composites on ONE general, parameterized network builder reused across stage1/stage2/R2/R3 (chemistry, bending_k, density, strain protocol as config) rather than near-duplicate generators."
     - "Absolute (Pa) modulus path: the faithful angle-stabilized model now reproduces the published ≈0.03 Pa and gives a reproducible reduced-unit modulus (bm-v4, E≈3 LJ). An EXACT absolute value additionally needs the released GCE + distance-gated 7S break (0.95) + dense initial config — implement these, or accept the reduced-unit value and resolve via the energy-scale decision (#4)? (Cross-check + param correction already DONE 2026-10-01; see references/cross-check-vs-released-code.md.)"
     - "Engine for stages 1–2: LAMMPS now; revisit Smoldyn at stage 3 (spec #2)."
     - "Secretion: fixed concentration vs fixed flux (spec #3)."
@@ -203,3 +322,41 @@ glossary:
 
 expert_docs:
   - basement-membrane-v1-spec
+
+# Investigation-provided inputs (expert-sanctioned). The Barrientos Cell paper and
+# the collagen-network sources back the reproduction campaign; joined against
+# references/papers.bib.
+inputs:
+  references:
+    - barrientos2026cellshape       # Basement membrane turnover controls cell shape (Cell 2026)
+    - barrientos2026basement        # BM growth under fixed stress (stage-2 framing)
+    - barrientos2026code            # released LAMMPS input scripts (Zenodo)
+    - meadowcroft2025nonequilibrium # coarse-grained collagen IV network the build is based on
+  datasets: []
+  expert_docs:
+    - basement-membrane-v1-spec
+
+# Comparative framing (rigor): name the alternative interpretive lenses.
+competing_frameworks:
+  - name: "Effective constitutive BM (reduced-order viscoelastic law)"
+    relation: "interchangeable reduced-order alternative to the explicit LAMMPS collagen BM; used where resolved mechanics are unnecessary (R1, R4, E3 first pass)"
+  - name: "Imposed one-way / uniform-material tissue mechanics (the paper's homogeneous model)"
+    relation: "baseline that the spatial + bidirectionally-coupled models (R4–R6, E4) must beat or recover as a limit"
+  - name: "Molecularly-resolved actomyosin (explicit filaments/motors)"
+    relation: "fidelity alternative to the effective Tyssue cortical-energy term; adopted (E1) only if it changes a measurable prediction"
+
+# Controls / validation / reporting contract (plan §7). Investigation-wide rules.
+guidelines:
+  controls:
+    - "Mechanistic controls: no BM, purely elastic BM, remodeling BM, no supply, no crosslink turnover, inactive actin, fixed basal linkers, one-way vs two-way coupling."
+    - "Numerical verification: unit tests, angle/topology checks, network connectivity, force + energy balance, coupling convergence, timestep sensitivity, ≥ several random seeds."
+  validation_distinction:
+    - "Reproduce source panels with the ORIGINAL parameter conventions; treat unrelated BM material measurements as analog comparators, not direct biological validation."
+    - "Keep INFERRED quantities (from the fluorescent-timer observation model) distinct from INDEPENDENTLY PREDICTED quantities (from the mechanical model). Do not claim to simulate the timer experiment biologically unless its observation model is included."
+  readouts:
+    - "height/basal-area distributions, area expansion, cell division, force maps, BM connectivity, mass/area, molecule ages, stress relaxation, lumen radius."
+  evidence_format:
+    - "Every study records: question, model version, parameters, protocols, controls, outcome figures, uncertainty, and a conclusion tagged reproduction | verification | prediction."
+  modularity:
+    - "Reuse existing processes across composites (one general CollagenNetworkProcess + StagedStretchController, config-driven); composites are thin wirings that select processes + params, never duplicated logic. Tyssue/actin processes are new modular units with the same discipline."
+

@@ -1,0 +1,51 @@
+schema_version: 3
+name: bm-r5-explicit-3d-confinement
+status: planned
+title: "R5 — Explicit 3D cell confinement"
+kind: reproduction
+phase: Design
+confidence: Planned
+
+question: >
+  Do growing 3D epithelial cells become taller when the basement membrane relaxes slowly?
+
+hypothesis: >
+  In a Tyssue 3D monolayer with apical/lateral/basal energies and cell-volume targets, cells
+  confined by a slowly-relaxing BM grow taller (smaller basal area, larger height) than under
+  elastic or absent BM, reproducing the core morphology ordering of the paper.
+
+objective: >
+  Build a Tyssue 3D monolayer with apical/lateral/basal energies and cell-volume targets; run
+  no-BM, elastic-BM and relaxing-BM controls; measure height, basal/apical area, their
+  distributions and growth trajectories against the paper's morphology ordering.
+
+description: |
+  The explicit 3D reproduction (plan section 3, 3D monolayer level). Real cell heights and
+  basal expansion emerge from apical/basal/lateral surface energies and volume constraints
+  rather than an inferred prism relation. The no-BM / elastic-BM / relaxing-BM controls
+  isolate the BM-relaxation contribution to cell height. Establishing the cell-height and area
+  response here gates P2 and is the substrate for the closed lumenoid (E3).
+
+parent_studies:
+  - {study: bm-r4-coupled-2d-epithelium, relation: leads-to, condition: tests-passed}
+
+cites: [barrientos2026cellshape]
+
+expected_behavior:
+  - name: taller-under-slow-relaxation
+    observable: cell height / basal area distribution vs BM relaxation
+    condition: no-BM vs elastic-BM vs relaxing-BM
+    rationale: >
+      Reproducing the morphology ordering (taller cells under slow BM relaxation) across the
+      three BM controls is the P2 success criterion.
+
+baseline:
+  - name: bm-r5-explicit-3d-confinement
+    composite: viva_lumenoid.composites.tyssue_3d_monolayer
+    composite_status: planned
+    params: {}
+    note: >
+      PLANNED composite — design target, not yet implemented (expected unresolved-composite lint gap)
+variants: []
+interventions: []
+runs: []

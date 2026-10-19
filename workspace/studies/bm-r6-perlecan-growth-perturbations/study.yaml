@@ -1,0 +1,56 @@
+schema_version: 3
+name: bm-r6-perlecan-growth-perturbations
+status: planned
+title: "R6 — Perlecan and growth perturbations"
+kind: reproduction
+phase: Design
+confidence: Planned
+
+question: >
+  Does the inferred chain lifetime -> relaxation -> shape reproduce the paper's perlecan and
+  growth-rate intervention ordering?
+
+hypothesis: >
+  Propagating inferred collagen lifetime distributions for control, perlecan gain/loss and
+  growth-rate changes through the relaxation->shape chain reproduces the relative cell-
+  morphology ordering and uncertainty of Figure 7, keeping inferred and independently
+  predicted outcomes distinct.
+
+objective: >
+  Use inferred collagen lifetime distributions for control, perlecan gain/loss and growth-rate
+  conditions; propagate parameter uncertainty through relaxation and shape; compare relative
+  cell morphology and uncertainty to Fig 7 while keeping inferred vs predicted outcomes
+  distinct.
+
+description: |
+  Closes the reproduction campaign by propagating the turnover-inference results (Fig 3-6)
+  into predicted shapes (Fig 7). Collagen lifetime distributions for control, perlecan
+  gain/loss and growth-rate perturbations drive the relaxation->shape chain with explicit
+  uncertainty propagation. The study must keep quantities that are INFERRED from the timer
+  observation model distinct from quantities INDEPENDENTLY PREDICTED by the mechanical model,
+  per the plan's validation distinction.
+
+parent_studies:
+  - {study: bm-r5-explicit-3d-confinement, relation: leads-to, condition: tests-passed}
+  - {study: bm-r3-network-expansion-supply, relation: supports, condition: tests-passed}
+
+cites: [barrientos2026cellshape]
+
+expected_behavior:
+  - name: intervention-ordering-matches-fig7
+    observable: relative basal area / morphology rank-order + uncertainty
+    condition: control vs perlecan gain/loss vs growth-rate change
+    rationale: >
+      Reproducing Fig 7's intervention rank-order and uncertainty, with inferred vs predicted
+      outcomes kept separate, completes P1-era reproduction.
+
+baseline:
+  - name: bm-r6-perlecan-growth-perturbations
+    composite: viva_lumenoid.composites.turnover_shape_pipeline
+    composite_status: planned
+    params: {}
+    note: >
+      PLANNED composite — design target, not yet implemented (expected unresolved-composite lint gap)
+variants: []
+interventions: []
+runs: []

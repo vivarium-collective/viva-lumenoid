@@ -1,0 +1,56 @@
+schema_version: 3
+name: bm-r4-coupled-2d-epithelium
+status: planned
+title: "R4 — Coupled 2D epithelium"
+kind: reproduction
+phase: Design
+confidence: Planned
+
+question: >
+  Do the paper's confinement regimes survive explicit cell topology and heterogeneous growth
+  in a spatial 2D epithelium?
+
+hypothesis: >
+  A Tyssue 2D polygonal sheet with a BM traction/area law calibrated from R2 reproduces R1's
+  confinement response in the homogeneous limit, and explicit topology, cell division and
+  varying cortical tensions introduce spatial force/area heterogeneity without destroying the
+  regime structure.
+
+objective: >
+  Build a Tyssue 2D sheet with a BM response calibrated from R2 (traction/area law, height via
+  an explicit volume/prism relation); include a reference homogeneous case, cell division and
+  varying cortical tensions; compare the confinement response to R1 and quantify topology
+  sensitivity.
+
+description: |
+  The first spatial model (plan section 3, 2D planar level). A Tyssue polygonal sheet carries
+  a BM traction/area law calibrated from the R2 network rheology; cell height is inferred
+  through an explicit volume/prism relation. A homogeneous reference case must reproduce R1;
+  heterogeneous growth, division and cortical-tension variation then test whether the
+  confinement phase diagram is robust to explicit topology. Effective constitutive BM and
+  explicit LAMMPS BM are interchangeable alternatives here, not additive forces.
+
+parent_studies:
+  - {study: bm-r1-published-tissue-baseline, relation: leads-to, condition: tests-passed}
+  - {study: bm-r2-collagen-network-rheology, relation: supports, condition: tests-passed}
+
+cites: [barrientos2026cellshape]
+
+expected_behavior:
+  - name: confinement-robust-to-topology
+    observable: confinement response vs R1; spatial force/area heterogeneity
+    condition: homogeneous reference + heterogeneous growth / division
+    rationale: >
+      The homogeneous case must match R1; the regimes must survive explicit topology for P2 to
+      advance.
+
+baseline:
+  - name: bm-r4-coupled-2d-epithelium
+    composite: viva_lumenoid.composites.tyssue_2d_sheet
+    composite_status: planned
+    params: {}
+    note: >
+      PLANNED composite — design target, not yet implemented (expected unresolved-composite lint gap)
+variants: []
+interventions: []
+runs: []

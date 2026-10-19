@@ -1,0 +1,60 @@
+schema_version: 3
+name: bm-r2-collagen-network-rheology
+status: planned
+title: "R2 — Faithful collagen-network rheology"
+kind: reproduction
+phase: Design
+confidence: Planned
+
+question: >
+  Is basement-membrane stress relaxation proportional to collagen IV molecular residence
+  (turnover) time?
+
+hypothesis: >
+  In the LAMMPS NC1/7S network under paper-matched staged loading, the measured stress-
+  relaxation time scales linearly with the collagen molecular residence time set by the
+  turnover rate, reproducing Figure 2D traces and the 2E slope within run-to-run variance.
+
+objective: >
+  Run the LAMMPS NC1/7S network under paper-matched staged loading and chemistry switches
+  across several turnover rates; independently track molecule residence time and stress
+  relaxation; reproduce Fig 2D stress traces and the 2E slope with error bars.
+
+description: |
+  The molecular-scale reproduction (Barrientos Fig 2D-E) and the frozen R2 stress-test that
+  gate P0. The faithful collagen IV network (released NC1/7S angles, density and turnover
+  controls established in bm-v1/bm-v4) is driven through staged loading with the crosslink
+  chemistry switched on at several turnover rates. Molecule residence time and the macroscopic
+  stress-relaxation time are measured independently so their proportionality (Fig 2E) is a
+  genuine prediction, not an identity. Engine-level mechanics and run-to-run variance are
+  benchmarked here.
+
+parent_studies:
+  - {study: bm-v1-stage1-modulus-remodelling, relation: leads-to, condition: tests-passed}
+  - {study: bm-v2-stress-vs-strainrate, relation: supports, condition: tests-passed}
+
+cites: [barrientos2026cellshape]
+
+expected_behavior:
+  - name: relaxation-scales-with-residence-time
+    observable: stress-relaxation time vs collagen molecular residence time
+    condition: turnover-rate sweep, >= several seeds
+    rationale: >
+      Matching the Fig 2E slope with error bars (not just direction) is the quantitative P1
+      criterion and the frozen reference stress test for P0.
+  - name: stress-traces-match-fig2d
+    observable: staged-loading stress trace
+    condition: paper-matched staged loading + chemistry switch
+    rationale: >
+      Fig 2D stress traces must reproduce in shape and magnitude within benchmarked variance.
+
+baseline:
+  - name: bm-r2-collagen-network-rheology
+    composite: viva_lumenoid.composites.stage2_sweep
+    composite_status: existing
+    params: {}
+    note: >
+      reuses the existing collagen-network composite; this study refines its protocol/measurements
+variants: []
+interventions: []
+runs: []

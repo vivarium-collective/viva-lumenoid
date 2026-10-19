@@ -1,0 +1,54 @@
+schema_version: 3
+name: bm-e3-closed-3d-lumenoid
+status: planned
+title: "E3 — Closed 3D lumenoid"
+kind: extension
+phase: Design
+confidence: Planned
+
+question: >
+  How do lumen pressure/volume and a basement-membrane shell set cell shape and curvature-
+  dependent growth in a closed 3D lumenoid?
+
+hypothesis: >
+  A closed curved Tyssue epithelium with a lumen volume/pressure constraint and a BM shell
+  predicts lumen growth and curvature-dependent cell shapes that depend on BM relaxation,
+  first with a validated reduced-order BM law and then with resolved LAMMPS patches or a
+  curved-network realization.
+
+objective: >
+  Introduce a 3D closed-shell Tyssue geometry with lumen pressure/volume and a BM shell; first
+  use the validated reduced-order BM law, then test resolved LAMMPS patches or a curved-
+  network realization; predict lumen growth, cell shape and curvature effects.
+
+description: |
+  The closed lumenoid extension (plan section 5, 3D lumenoid level). A closed curved
+  epithelium with lumen volume/pressure and a BM shell is the full morphogenesis target. The
+  reduced-order BM law (validated in R4-R5) is used first; resolved LAMMPS patches or a
+  curved-network BM are tested second. Curvature-dependent effects on lumen growth and cell
+  shape are the new predictions beyond the flat-substrate paper.
+
+parent_studies:
+  - {study: bm-r5-explicit-3d-confinement, relation: leads-to, condition: tests-passed}
+  - {study: bm-e2-actin-adhesion-collagen, relation: supports, condition: tests-passed}
+
+cites: [barrientos2026cellshape]
+
+expected_behavior:
+  - name: lumenoid-shape-depends-on-bm
+    observable: lumen radius / cell shape / curvature
+    condition: reduced-order BM shell vs resolved LAMMPS patch
+    rationale: >
+      Consistency between reduced-order and resolved BM in their overlap, plus a curvature-
+      dependent cell-shape prediction, gates the lumenoid extension (P4).
+
+baseline:
+  - name: bm-e3-closed-3d-lumenoid
+    composite: viva_lumenoid.composites.closed_lumenoid
+    composite_status: planned
+    params: {}
+    note: >
+      PLANNED composite — design target, not yet implemented (expected unresolved-composite lint gap)
+variants: []
+interventions: []
+runs: []

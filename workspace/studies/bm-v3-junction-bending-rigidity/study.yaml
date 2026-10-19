@@ -1,6 +1,7 @@
 schema_version: 4
 name: bm-v3-junction-bending-rigidity
 created: "2026-09-30"
+kind: adversarial   # counterfactual (central-force) control: it should NOT reproduce the released angle-stabilized model; retained per upgrade-plan §2
 status: in-progress
 phase: Evaluate
 simulation_status: ran
