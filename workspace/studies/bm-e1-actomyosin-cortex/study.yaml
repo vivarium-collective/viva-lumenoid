@@ -47,10 +47,14 @@ expected_behavior:
 baseline:
   - name: bm-e1-actomyosin-cortex
     composite: viva_lumenoid.composites.actomyosin_cortex
-    composite_status: planned
+    composite_status: implemented
     params: {}
     note: >
-      PLANNED composite — design target, not yet implemented (expected unresolved-composite lint gap)
+      Implemented over the viva-lammps model seam (LammpsModelProcess + the
+      actomyosin-cortex plugin): resolves ready and runs in real LAMMPS; the
+      contractility knob tunes cortical tension. v0 coarse cortex — not yet
+      filament-resolved; mapping to a Tyssue cortical-energy parameter is the
+      next step (E2).
 variants: []
 interventions: []
 runs: []

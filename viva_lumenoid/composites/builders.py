@@ -98,3 +98,33 @@ def collagen_network_spec(
             "outputs": {},
         },
     }
+
+
+def lammps_model_spec(
+    model: str,
+    params: "dict | None" = None,
+    *,
+    emit: dict,
+) -> dict[str, Any]:
+    """General composite over the viva-lammps seam: ``LammpsModelProcess`` + emitter.
+
+    One wiring reused by every LAMMPS-model composite (actomyosin cortex now;
+    collagen/actin plugins later) — the composite differs only by the registered
+    ``model`` name + ``params``. The process exposes the model's output ports; the
+    emitter records ``emit`` (a ``{store_path: type}`` subset of them).
+    """
+    emit_inputs = {k: [k] for k in emit}
+    return {
+        "model": {
+            "_type": "process", "address": "local:LammpsModelProcess",
+            "config": {"model": model, "params": dict(params or {})},
+            "inputs": {},
+            "outputs": {k: [k] for k in emit},
+        },
+        "emitter": {
+            "_type": "step", "address": "local:ram-emitter",
+            "config": {"emit": emit},
+            "inputs": emit_inputs,
+            "outputs": {},
+        },
+    }

@@ -16,7 +16,8 @@ from viva_superpowers.composite_generator import composite_generator
 
 from ..params import CollagenParams
 from ..collagen import register_viva_lumenoid
-from .builders import collagen_network_spec
+from ..actomyosin import register_actomyosin
+from .builders import collagen_network_spec, lammps_model_spec
 
 
 def _params(**kw) -> CollagenParams:
@@ -117,3 +118,32 @@ def bending_sweep(core=None, **kw) -> dict:
 def porosity_bundling(core=None, **kw) -> dict:
     # Geometric readout of the assembled network.
     return collagen_network_spec(_params(**kw), emit="geometry")
+
+
+# --- Extension campaign composites (reuse the engine seams) ---
+
+_CORTEX_PARAMS = {
+    "n": {"type": "integer", "default": 8,
+          "description": "Cortex patch size (lattice replications per side)."},
+    "contractility": {"type": "float", "default": 1.0,
+                      "description": "Myosin activity proxy (LJ well depth); higher = more cortical tension."},
+    "temperature": {"type": "float", "default": 0.2, "description": "Langevin temperature (LJ units)."},
+    "seed": {"type": "integer", "default": 12345, "description": "RNG seed."},
+}
+
+_CORTEX_EMIT = {"cortical_tension": "float", "pressure_xx": "float",
+                "pressure_yy": "float", "temperature": "float"}
+
+
+@composite_generator(
+    name="actomyosin_cortex",
+    description="E1 (extension) — a coarse 2D actomyosin cortex on the viva-lammps "
+                "model seam (LammpsModelProcess + the actomyosin-cortex plugin). "
+                "Contractility (LJ ε, a myosin-activity proxy) tunes the cortical "
+                "tension that will map onto a Tyssue cortical-energy parameter.",
+    parameters=_CORTEX_PARAMS,
+    core_extensions=[register_actomyosin],
+)
+def actomyosin_cortex(core=None, **kw) -> dict:
+    params = {k: v for k, v in kw.items() if k in _CORTEX_PARAMS}
+    return lammps_model_spec("actomyosin-cortex", params, emit=_CORTEX_EMIT)
