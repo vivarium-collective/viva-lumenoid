@@ -77,7 +77,7 @@ wheels = [
 
 [[package]]
 name = "bigraph-schema"
-version = "1.7.0"
+version = "1.8.1"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "numpy", version = "2.4.6", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.12'" },
@@ -88,9 +88,9 @@ dependencies = [
     { name = "pint", version = "0.26.1", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.12'" },
     { name = "plum-dispatch" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/9c/11/81195272ac43485123ac486028da54ad3a6c74e81b76ad5565e85606eec4/bigraph_schema-1.7.0.tar.gz", hash = "sha256:ceb3c7d9c72eb8b3f9c42f1ced704b498b9e32fb7a28a4008922917a04bb48b6", size = 184929, upload-time = "2026-10-04T18:16:41.109Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/1e/af/b98986bab188aa4a1280591bd180febbc718fa834866d9d2f76df7b269b7/bigraph_schema-1.8.1.tar.gz", hash = "sha256:8bad19838454b6468ac4db10cf06b085da192aac9ddb3de65181655347c4061b", size = 185919, upload-time = "2026-10-12T16:01:10.701Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/12/ec/5386cd413066f6a5b1500a3599c9bd30c5e247b96a3f1f032b03325ae5a5/bigraph_schema-1.7.0-py3-none-any.whl", hash = "sha256:406a87bdd5d4f259b1082c820a45930643cda72969cc89719408a404efbae40d", size = 184400, upload-time = "2026-10-04T18:16:39.356Z" },
+    { url = "https://files.pythonhosted.org/packages/44/ca/69528f16860eafee020efa0ff0a5017c60d9c13189da2f02548197336f35/bigraph_schema-1.8.1-py3-none-any.whl", hash = "sha256:826b75e5df8ab60079a0f3adc529abb51ab955daf0f0ddc9be02c2444d60b3df", size = 185499, upload-time = "2026-10-12T16:01:09.133Z" },
 ]
 
 [[package]]
@@ -1893,7 +1893,7 @@ wheels = [
 
 [[package]]
 name = "process-bigraph"
-version = "1.8.5"
+version = "1.9.1"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "bigraph-schema" },
@@ -1906,9 +1906,9 @@ dependencies = [
     { name = "scipy", version = "1.18.1", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.12'" },
     { name = "sympy" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/43/49/91c08f372e1fb03ffddbc50904db28603a95ff7c6536c321ce60a92eda9f/process_bigraph-1.8.5.tar.gz", hash = "sha256:96b19249c9fd7f2bf0239a85f65104ecdf29126810a327f1b82bd87b09f7d1ad", size = 235456, upload-time = "2026-09-30T13:51:08.571Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/1f/6a/b2c1620fdfab048c6de03d4f5a092aaf8177294b8dadfcfc0750499fa6a9/process_bigraph-1.9.1.tar.gz", hash = "sha256:9b476fa963688811a2c485ea2b17d683e61fa687b018921a44a159a85d53b7d0", size = 253316, upload-time = "2026-10-13T14:16:30.927Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/f2/9d/65d95bf42ba8e926006e754ec5627ad39ef70e622f05d281a0b8fe2c62ea/process_bigraph-1.8.5-py3-none-any.whl", hash = "sha256:16802ed4b4930adbfb437cd1e7f78a316f5bd4e08fecc792de38032fc1688aa9", size = 255434, upload-time = "2026-09-30T13:51:07.048Z" },
+    { url = "https://files.pythonhosted.org/packages/ec/59/f7cae4aebe79797d984b03ba07b7424053f1430d9c773e1c47c102f0e96f/process_bigraph-1.9.1-py3-none-any.whl", hash = "sha256:5a464e1cc8799cc2751e2f4e0c5128f542bbef34be95a40867d00fe7f864db0a", size = 274023, upload-time = "2026-10-13T14:16:28.438Z" },
 ]
 
 [[package]]
@@ -3021,7 +3021,7 @@ dependencies = [
 [[package]]
 name = "viva-superpowers"
 version = "0.23.0"
-source = { git = "https://github.com/vivarium-collective/viva-superpowers.git?branch=main#5e7da29c9126a2199e71d4a5e52fd219468c74b7" }
+source = { git = "https://github.com/vivarium-collective/viva-superpowers.git?branch=main#ce58519c0acc5795ce9cf06110609a6d5ac2e375" }
 dependencies = [
     { name = "bigraph-schema" },
     { name = "click" },
@@ -3053,7 +3053,7 @@ dependencies = [
 [[package]]
 name = "vivarium-workbench"
 version = "0.4.1"
-source = { git = "https://github.com/vivarium-collective/vivarium-workbench.git?branch=main#150bc4bf9d7f7c04c290ff12fa363065527c0e48" }
+source = { git = "https://github.com/vivarium-collective/vivarium-workbench.git?branch=main#8aa886764bace86dc49429fdf3e3c96490c75661" }
 dependencies = [
     { name = "bigraph-schema" },
     { name = "boto3" },
