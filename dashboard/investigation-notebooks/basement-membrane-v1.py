@@ -17,13 +17,13 @@ if _os.environ.get("PYTHONUTF8") != "1":
     _os.execv(_sys.executable, [_sys.executable, *_sys.argv])
 
 
-# # Basement membrane v1 — collagen IV network modulus & remodelling for the AICS vertex model
+# # From collagen IV turnover to multiscale epithelial morphogenesis (BM v1 → lumenoid)
 #
 # _Investigation `basement-membrane-v1` — coder reproduction notebook._
 #
-# **Question.** What effective elastic modulus and remodelling (stress-relaxation) time does a coarse-grained collagen IV basement-membrane network produce on a growing (biaxially stretching) boundary — the two numbers the AICS 3D vertex model needs to couple to a basement membrane?
+# **Question.** How does collagen IV molecular turnover set basement-membrane (BM) stress relaxation, and how do BM mechanics, epithelial growth and actomyosin mechanics jointly determine epithelial cell height and lumenoid morphology? (The original v1 sub-question — the effective modulus E(ε̇) and remodelling time τ(ε̇) a growing boundary produces, the two numbers the AICS vertex model couples to — is the P0/P1 reproduction core this campaign now builds on.)
 #
-# The first Vivarium build of the AICS lumenoid basement membrane: a coarse- grained collagen IV network on a moving boundary, run until it reports an elastic modulus and a remodelling time for the vertex model.
+# The first Vivarium build of the AICS lumenoid basement membrane: a coarse- grained collagen IV network on a moving boundary, run until it reports an elastic modulus and a remodelling time for the vertex model. EXPANDED 2026-10-19 into a staged reproduction+extension campaign of Barrientos et al. (Cell 2026): R1–R6 reproduce Figures 1–2 and extend to spatial 2D/3D Tyssue epithelia + coupling; E1–E4 add actomyosin, a closed lumenoid and new predictions. The BM-reproduction core (bm-v1…v5) is complete; the R/E studies are design-only (planned) under gates P0→P4.
 #
 # ---
 #
@@ -34,6 +34,12 @@ if _os.environ.get("PYTHONUTF8") != "1":
 # 3. The **Setup** cell at the top is collapsed scaffolding (environment + render helpers); expand it only to inspect. Set `RERUN = False` there to render the committed `runs.db` without re-simulating.
 #
 # The prose states the **question and parameters**; the figures each run produces are the results.
+
+# **Competing frameworks**
+#
+# - **Effective constitutive BM (reduced-order viscoelastic law)**
+# - **Imposed one-way / uniform-material tissue mechanics (the paper's homogeneous model)**
+# - **Molecularly-resolved actomyosin (explicit filaments/motors)**
 
 """Setup — environment & helpers (runs automatically; open only to inspect).
 
@@ -264,7 +270,7 @@ def _render_one(address, config, runs_db, study_yaml, overrides=None):
 
 # **The model — `viva_lumenoid.composites.stage1_composite`**
 #
-# Stage 1 — collagen IV network staged protocol (assemble → relax → stretch → hold elastic → hold viscous). StagedStretchController drives the LAMMPS-backed CollagenNetworkProcess.
+# Stage 1 — staged protocol (assemble → relax → stretch FROZEN → hold elastic → hold viscous). Separates a reproducible elastic modulus from a crosslink-turnover remodelling time.
 
 # === Parameters — edit any value, then re-run from the Run cell below ===
 # Each entry is the composite's current default; the comment explains it.
@@ -385,7 +391,7 @@ _save_viz('bm-v1-stage1-modulus-remodelling', 'stage1-diagnostic', _render_one('
 
 # **The model — `viva_lumenoid.composites.stage2_sweep`**
 #
-# Stage 2 — the collagen IV network on a growing (biaxially stretching) substrate; the σ(ε̇) sweep runs this composite at a range of strain rates with the crosslink chemistry on.
+# Stage 2 / R2 — growth rheology: the collagen IV network on a growing (biaxially stretching) substrate with the crosslink chemistry ON during the stretch; the σ(ε̇) sweep runs this at a range of strain rates.
 
 # === Parameters — edit any value, then re-run from the Run cell below ===
 # Each entry is the composite's current default; the comment explains it.
@@ -489,7 +495,7 @@ _save_viz('bm-v2-stress-vs-strainrate', 'stage2-diagnostic', _render_one('html:s
 
 # **The model — `viva_lumenoid.composites.connectivity_sweep`**
 #
-# Rigidity (bm-v3) — the collagen IV network whose crosslink connectivity (z) is swept to test rigidity percolation.
+# Rigidity (bm-v3, adversarial) — the CENTRAL-FORCE counterfactual: bending_k forced to 0, crosslink connectivity (z) swept to test rigidity percolation. A control that should NOT reproduce the released angle-stabilized model.
 
 # === Parameters — edit any value, then re-run from the Run cell below ===
 # Each entry is the composite's current default; the comment explains it.
@@ -580,7 +586,7 @@ _save_viz('bm-v3-junction-bending-rigidity', 'rigidity-diagnostic', _render_one(
 
 # **The model — `viva_lumenoid.composites.bending_sweep`**
 #
-# FP1 (bm-v4) — the collagen IV network WITH junction bending (fix restrain pinned to each crosslink's as-formed angle). The athermal modulus is swept vs bending_k.
+# FP1 (bm-v4) — the collagen IV network WITH junction bending (released NC1 value, as-formed angle restraints created during assembly). The athermal modulus is swept vs bending_k.
 
 # === Parameters — edit any value, then re-run from the Run cell below ===
 # Each entry is the composite's current default; the comment explains it.
@@ -681,7 +687,7 @@ _save_viz('bm-v4-junction-bending', 'bending-diagnostic', _render_one('html:bend
 
 # **The model — `viva_lumenoid.composites.porosity_bundling`**
 #
-# Stage 5 (bm-v5) — the assembled collagen IV network, read for its geometric readouts: pore-size distribution (porosity) and protomers-per-strand (bundling), against the measured BM comparators.
+# Stage 5 (bm-v5) — the assembled collagen IV network read for its geometric readouts (pore-size distribution, protomers-per-strand) against the measured BM comparators; emits the assembly observables, not the stress trace.
 
 # === Parameters — edit any value, then re-run from the Run cell below ===
 # Each entry is the composite's current default; the comment explains it.
@@ -752,7 +758,619 @@ _save_viz('bm-v5-porosity-bundling', 'evidence-map', _render_one('html:evidence_
 # | porosity-reaches-EM-band _(primary)_ | kind=median field=pore_diameter | op between lo 32.0 hi 112.0 field median_pore_nm |
 # | bundling-under-shoots-5-7 _(primary)_ | kind=mean field=protomers_per_strand | op lt value 2.0 field mean_strand |
 
+# ## Study: R1 — Published tissue-mechanics baseline (`bm-r1-published-tissue-baseline`)
+#
+# **Question.** How do basement-membrane stiffness and relaxation, relative to the proliferation (doubling) time, control growth-dependent epithelial confinement?
+#
+# **Objective.** Reimplement the paper's fixed-volume prism/surface-tension tissue model and viscoelastic BM; sweep relative stiffness and the relaxation/doubling-time ratio; compare qualitatively and quantitatively to Barrientos et al. Figure 1G-J.
+#
+# **Hypothesis.** Reimplementing the paper's fixed-volume prism / surface-tension tissue model with a viscoelastic BM reproduces Figure 1G's four stiffness-relaxation regimes and the 1H-J confinement trajectories, with the regime boundary set by the ratio of BM relaxation time to doubling time.
+
+# ### Parameters
+#
+# | simulation | composite | steps | params |
+# | --- | --- | --- | --- |
+# | `bm-r1-published-tissue-baseline` | `viva_lumenoid.composites.tissue_prism_baseline` | 0 | — |
+
+# ### The model & its parameters
+#
+# Each composite is a process-bigraph *document* — named processes wired by `inputs`/`outputs` ports over shared stores. Below, each composite shows what it does, then a **parameter cell** with its tunable knobs (the current default and what each one means). Edit any value, then re-run the **Run** section to rebuild and re-simulate with your changes.
+
+# **Composite `viva_lumenoid.composites.tissue_prism_baseline`** — `spec_viva_lumenoid_composites_tissue_prism_baseline` (materialized from its `@composite_generator`)
+
+spec_viva_lumenoid_composites_tissue_prism_baseline = materialize_composite('viva_lumenoid.composites.tissue_prism_baseline')
+describe_spec(spec_viva_lumenoid_composites_tissue_prism_baseline)
+
+# === Edit parameters for this composite, then run the Run cell ===
+# ov_viva_lumenoid_composites_tissue_prism_baseline maps each tunable parameter to its current value (the generator's
+# defaults). Edit any entry; the Run cell rebuilds the composite with it.
+ov_viva_lumenoid_composites_tissue_prism_baseline = dict(spec_viva_lumenoid_composites_tissue_prism_baseline['_overrides'])
+import json as _json; print(_json.dumps(ov_viva_lumenoid_composites_tissue_prism_baseline, indent=2, default=str))
+# e.g.:  ov_viva_lumenoid_composites_tissue_prism_baseline['<parameter>'] = <value>
+
+# ### Run
+#
+# _Set `STEPS`, then run. Each composite is built live from its (edited) spec above and run; a composite whose module processes aren't implemented yet reports the error instead of crashing. Set `RERUN = False` to skip re-simulating._
+
+# === Study: bm-r1-published-tissue-baseline ===
+STUDY = 'bm-r1-published-tissue-baseline'
+STUDY_DIR = REPO / 'workspace/studies' / STUDY
+STUDY_YAML = str(STUDY_DIR / "study.yaml")
+RUNS_DB = str(STUDY_DIR / "runs.db")
+
+# This study has no *recorded* runs yet. RERUN builds its declared
+# composite(s) live and runs them; a composite whose module processes
+# are not implemented yet reports the error instead of crashing.
+STEPS_bm_r1_published_tissue_baseline = 100
+INTERVAL_bm_r1_published_tissue_baseline = 1.0
+
+if RERUN:
+    from process_bigraph import Composite
+    try:
+        with quiet():  # keep per-step stdout out of the notebook
+            _ov = ov_viva_lumenoid_composites_tissue_prism_baseline if 'ov_viva_lumenoid_composites_tissue_prism_baseline' in dir() else None  # edits from the panel cell, if any
+            spec_viva_lumenoid_composites_tissue_prism_baseline = materialize_composite('viva_lumenoid.composites.tissue_prism_baseline', _ov)
+            _comp = Composite({'state': spec_viva_lumenoid_composites_tissue_prism_baseline['state']}, core=core)
+            _comp.run(STEPS_bm_r1_published_tissue_baseline)
+        print('ran', 'bm-r1-published-tissue-baseline', f'(viva_lumenoid.composites.tissue_prism_baseline) for', STEPS_bm_r1_published_tissue_baseline, 'steps')
+    except Exception as _e:
+        print(f"bm-r1-published-tissue-baseline not runnable yet: {type(_e).__name__}: {_e}")
+else:
+    print("RERUN=False — not re-simulating.")
+
+# ## Study: R2 — Faithful collagen-network rheology (`bm-r2-collagen-network-rheology`)
+#
+# **Question.** Is basement-membrane stress relaxation proportional to collagen IV molecular residence (turnover) time?
+#
+# **Objective.** Run the LAMMPS NC1/7S network under paper-matched staged loading and chemistry switches across several turnover rates; independently track molecule residence time and stress relaxation; reproduce Fig 2D stress traces and the 2E slope with error bars.
+#
+# **Hypothesis.** In the LAMMPS NC1/7S network under paper-matched staged loading, the measured stress- relaxation time scales linearly with the collagen molecular residence time set by the turnover rate, reproducing Figure 2D traces and the 2E slope within run-to-run variance.
+
+# ### Parameters
+#
+# | simulation | composite | steps | params |
+# | --- | --- | --- | --- |
+# | `bm-r2-collagen-network-rheology` | `viva_lumenoid.composites.stage2_sweep` | 0 | — |
+
+# ### The model & its parameters
+#
+# Each composite is a process-bigraph *document* — named processes wired by `inputs`/`outputs` ports over shared stores. Below, each composite shows what it does, then a **parameter cell** with its tunable knobs (the current default and what each one means). Edit any value, then re-run the **Run** section to rebuild and re-simulate with your changes.
+
+# **The model — `viva_lumenoid.composites.stage2_sweep`**
+#
+# Stage 2 / R2 — growth rheology: the collagen IV network on a growing (biaxially stretching) substrate with the crosslink chemistry ON during the stretch; the σ(ε̇) sweep runs this at a range of strain rates.
+
+# === Parameters — edit any value, then re-run from the Run cell below ===
+# Each entry is the composite's current default; the comment explains it.
+ov_viva_lumenoid_composites_stage2_sweep = {
+    'n_rods'   : 200,   # Number of two-bead collagen IV rods.
+    'box_xy'   : 20.0,   # In-plane box size (units of the bead spacing a).
+    'make_prob': 0.12,   # Per-attempt crosslink formation probability (MP proxy).
+    'off_rate' : 0.02,   # Force-independent crosslink off-rate (per LJ time).
+    'bending_k': 0.0,   # Junction bending stiffness (0 = floppy central-force network).
+    'seed'     : 12345,   # RNG seed.
+}
+
+# ### Run
+#
+# _Set `STEPS`, then run. Each composite is built live from its (edited) spec above and run; a composite whose module processes aren't implemented yet reports the error instead of crashing. Set `RERUN = False` to skip re-simulating._
+
+# === Study: bm-r2-collagen-network-rheology ===
+STUDY = 'bm-r2-collagen-network-rheology'
+STUDY_DIR = REPO / 'workspace/studies' / STUDY
+STUDY_YAML = str(STUDY_DIR / "study.yaml")
+RUNS_DB = str(STUDY_DIR / "runs.db")
+
+# This study has no *recorded* runs yet. RERUN builds its declared
+# composite(s) live and runs them; a composite whose module processes
+# are not implemented yet reports the error instead of crashing.
+STEPS_bm_r2_collagen_network_rheology = 100
+INTERVAL_bm_r2_collagen_network_rheology = 1.0
+
+if RERUN:
+    from process_bigraph import Composite
+    try:
+        with quiet():  # keep per-step stdout out of the notebook
+            _ov = ov_viva_lumenoid_composites_stage2_sweep if 'ov_viva_lumenoid_composites_stage2_sweep' in dir() else None  # edits from the panel cell, if any
+            spec_viva_lumenoid_composites_stage2_sweep = materialize_composite('viva_lumenoid.composites.stage2_sweep', _ov)
+            _comp = Composite({'state': spec_viva_lumenoid_composites_stage2_sweep['state']}, core=core)
+            _comp.run(STEPS_bm_r2_collagen_network_rheology)
+        print('ran', 'bm-r2-collagen-network-rheology', f'(viva_lumenoid.composites.stage2_sweep) for', STEPS_bm_r2_collagen_network_rheology, 'steps')
+    except Exception as _e:
+        print(f"bm-r2-collagen-network-rheology not runnable yet: {type(_e).__name__}: {_e}")
+else:
+    print("RERUN=False — not re-simulating.")
+
+# ## Study: R3 — Network expansion and collagen supply (`bm-r3-network-expansion-supply`)
+#
+# **Question.** Why are both crosslink remodeling and collagen replacement (insertion) necessary for sustained basement-membrane growth?
+#
+# **Objective.** From identical initial states, compare no remodeling, remodeling without insertion, and remodeling with insertion under matched forcing; measure area expansion, collagen density and largest-connected-network size; match the direction and ordering of Fig 2B-C.
+#
+# **Hypothesis.** From identical initial states, no-remodeling, remodeling-without-insertion and remodeling- with-insertion diverge in network area, collagen concentration and integrity in the direction and ordering of Figure 2B-C: only remodeling with supply sustains growth without loss of the largest connected network.
+
+# ### Parameters
+#
+# | simulation | composite | steps | params |
+# | --- | --- | --- | --- |
+# | `bm-r3-network-expansion-supply` | `viva_lumenoid.composites.stage2_sweep` | 0 | — |
+
+# ### The model & its parameters
+#
+# Each composite is a process-bigraph *document* — named processes wired by `inputs`/`outputs` ports over shared stores. Below, each composite shows what it does, then a **parameter cell** with its tunable knobs (the current default and what each one means). Edit any value, then re-run the **Run** section to rebuild and re-simulate with your changes.
+
+# **The model — `viva_lumenoid.composites.stage2_sweep`**
+#
+# Stage 2 / R2 — growth rheology: the collagen IV network on a growing (biaxially stretching) substrate with the crosslink chemistry ON during the stretch; the σ(ε̇) sweep runs this at a range of strain rates.
+
+# === Parameters — edit any value, then re-run from the Run cell below ===
+# Each entry is the composite's current default; the comment explains it.
+ov_viva_lumenoid_composites_stage2_sweep = {
+    'n_rods'   : 200,   # Number of two-bead collagen IV rods.
+    'box_xy'   : 20.0,   # In-plane box size (units of the bead spacing a).
+    'make_prob': 0.12,   # Per-attempt crosslink formation probability (MP proxy).
+    'off_rate' : 0.02,   # Force-independent crosslink off-rate (per LJ time).
+    'bending_k': 0.0,   # Junction bending stiffness (0 = floppy central-force network).
+    'seed'     : 12345,   # RNG seed.
+}
+
+# ### Run
+#
+# _Set `STEPS`, then run. Each composite is built live from its (edited) spec above and run; a composite whose module processes aren't implemented yet reports the error instead of crashing. Set `RERUN = False` to skip re-simulating._
+
+# === Study: bm-r3-network-expansion-supply ===
+STUDY = 'bm-r3-network-expansion-supply'
+STUDY_DIR = REPO / 'workspace/studies' / STUDY
+STUDY_YAML = str(STUDY_DIR / "study.yaml")
+RUNS_DB = str(STUDY_DIR / "runs.db")
+
+# This study has no *recorded* runs yet. RERUN builds its declared
+# composite(s) live and runs them; a composite whose module processes
+# are not implemented yet reports the error instead of crashing.
+STEPS_bm_r3_network_expansion_supply = 100
+INTERVAL_bm_r3_network_expansion_supply = 1.0
+
+if RERUN:
+    from process_bigraph import Composite
+    try:
+        with quiet():  # keep per-step stdout out of the notebook
+            _ov = ov_viva_lumenoid_composites_stage2_sweep if 'ov_viva_lumenoid_composites_stage2_sweep' in dir() else None  # edits from the panel cell, if any
+            spec_viva_lumenoid_composites_stage2_sweep = materialize_composite('viva_lumenoid.composites.stage2_sweep', _ov)
+            _comp = Composite({'state': spec_viva_lumenoid_composites_stage2_sweep['state']}, core=core)
+            _comp.run(STEPS_bm_r3_network_expansion_supply)
+        print('ran', 'bm-r3-network-expansion-supply', f'(viva_lumenoid.composites.stage2_sweep) for', STEPS_bm_r3_network_expansion_supply, 'steps')
+    except Exception as _e:
+        print(f"bm-r3-network-expansion-supply not runnable yet: {type(_e).__name__}: {_e}")
+else:
+    print("RERUN=False — not re-simulating.")
+
+# ## Study: R4 — Coupled 2D epithelium (`bm-r4-coupled-2d-epithelium`)
+#
+# **Question.** Do the paper's confinement regimes survive explicit cell topology and heterogeneous growth in a spatial 2D epithelium?
+#
+# **Objective.** Build a Tyssue 2D sheet with a BM response calibrated from R2 (traction/area law, height via an explicit volume/prism relation); include a reference homogeneous case, cell division and varying cortical tensions; compare the confinement response to R1 and quantify topology sensitivity.
+#
+# **Hypothesis.** A Tyssue 2D polygonal sheet with a BM traction/area law calibrated from R2 reproduces R1's confinement response in the homogeneous limit, and explicit topology, cell division and varying cortical tensions introduce spatial force/area heterogeneity without destroying the regime structure.
+
+# ### Parameters
+#
+# | simulation | composite | steps | params |
+# | --- | --- | --- | --- |
+# | `bm-r4-coupled-2d-epithelium` | `viva_lumenoid.composites.tyssue_2d_sheet` | 0 | — |
+
+# ### The model & its parameters
+#
+# Each composite is a process-bigraph *document* — named processes wired by `inputs`/`outputs` ports over shared stores. Below, each composite shows what it does, then a **parameter cell** with its tunable knobs (the current default and what each one means). Edit any value, then re-run the **Run** section to rebuild and re-simulate with your changes.
+
+# **Composite `viva_lumenoid.composites.tyssue_2d_sheet`** — `spec_viva_lumenoid_composites_tyssue_2d_sheet` (materialized from its `@composite_generator`)
+
+spec_viva_lumenoid_composites_tyssue_2d_sheet = materialize_composite('viva_lumenoid.composites.tyssue_2d_sheet')
+describe_spec(spec_viva_lumenoid_composites_tyssue_2d_sheet)
+
+# === Edit parameters for this composite, then run the Run cell ===
+# ov_viva_lumenoid_composites_tyssue_2d_sheet maps each tunable parameter to its current value (the generator's
+# defaults). Edit any entry; the Run cell rebuilds the composite with it.
+ov_viva_lumenoid_composites_tyssue_2d_sheet = dict(spec_viva_lumenoid_composites_tyssue_2d_sheet['_overrides'])
+import json as _json; print(_json.dumps(ov_viva_lumenoid_composites_tyssue_2d_sheet, indent=2, default=str))
+# e.g.:  ov_viva_lumenoid_composites_tyssue_2d_sheet['<parameter>'] = <value>
+
+# ### Run
+#
+# _Set `STEPS`, then run. Each composite is built live from its (edited) spec above and run; a composite whose module processes aren't implemented yet reports the error instead of crashing. Set `RERUN = False` to skip re-simulating._
+
+# === Study: bm-r4-coupled-2d-epithelium ===
+STUDY = 'bm-r4-coupled-2d-epithelium'
+STUDY_DIR = REPO / 'workspace/studies' / STUDY
+STUDY_YAML = str(STUDY_DIR / "study.yaml")
+RUNS_DB = str(STUDY_DIR / "runs.db")
+
+# This study has no *recorded* runs yet. RERUN builds its declared
+# composite(s) live and runs them; a composite whose module processes
+# are not implemented yet reports the error instead of crashing.
+STEPS_bm_r4_coupled_2d_epithelium = 100
+INTERVAL_bm_r4_coupled_2d_epithelium = 1.0
+
+if RERUN:
+    from process_bigraph import Composite
+    try:
+        with quiet():  # keep per-step stdout out of the notebook
+            _ov = ov_viva_lumenoid_composites_tyssue_2d_sheet if 'ov_viva_lumenoid_composites_tyssue_2d_sheet' in dir() else None  # edits from the panel cell, if any
+            spec_viva_lumenoid_composites_tyssue_2d_sheet = materialize_composite('viva_lumenoid.composites.tyssue_2d_sheet', _ov)
+            _comp = Composite({'state': spec_viva_lumenoid_composites_tyssue_2d_sheet['state']}, core=core)
+            _comp.run(STEPS_bm_r4_coupled_2d_epithelium)
+        print('ran', 'bm-r4-coupled-2d-epithelium', f'(viva_lumenoid.composites.tyssue_2d_sheet) for', STEPS_bm_r4_coupled_2d_epithelium, 'steps')
+    except Exception as _e:
+        print(f"bm-r4-coupled-2d-epithelium not runnable yet: {type(_e).__name__}: {_e}")
+else:
+    print("RERUN=False — not re-simulating.")
+
+# ## Study: R5 — Explicit 3D cell confinement (`bm-r5-explicit-3d-confinement`)
+#
+# **Question.** Do growing 3D epithelial cells become taller when the basement membrane relaxes slowly?
+#
+# **Objective.** Build a Tyssue 3D monolayer with apical/lateral/basal energies and cell-volume targets; run no-BM, elastic-BM and relaxing-BM controls; measure height, basal/apical area, their distributions and growth trajectories against the paper's morphology ordering.
+#
+# **Hypothesis.** In a Tyssue 3D monolayer with apical/lateral/basal energies and cell-volume targets, cells confined by a slowly-relaxing BM grow taller (smaller basal area, larger height) than under elastic or absent BM, reproducing the core morphology ordering of the paper.
+
+# ### Parameters
+#
+# | simulation | composite | steps | params |
+# | --- | --- | --- | --- |
+# | `bm-r5-explicit-3d-confinement` | `viva_lumenoid.composites.tyssue_3d_monolayer` | 0 | — |
+
+# ### The model & its parameters
+#
+# Each composite is a process-bigraph *document* — named processes wired by `inputs`/`outputs` ports over shared stores. Below, each composite shows what it does, then a **parameter cell** with its tunable knobs (the current default and what each one means). Edit any value, then re-run the **Run** section to rebuild and re-simulate with your changes.
+
+# **Composite `viva_lumenoid.composites.tyssue_3d_monolayer`** — `spec_viva_lumenoid_composites_tyssue_3d_monolayer` (materialized from its `@composite_generator`)
+
+spec_viva_lumenoid_composites_tyssue_3d_monolayer = materialize_composite('viva_lumenoid.composites.tyssue_3d_monolayer')
+describe_spec(spec_viva_lumenoid_composites_tyssue_3d_monolayer)
+
+# === Edit parameters for this composite, then run the Run cell ===
+# ov_viva_lumenoid_composites_tyssue_3d_monolayer maps each tunable parameter to its current value (the generator's
+# defaults). Edit any entry; the Run cell rebuilds the composite with it.
+ov_viva_lumenoid_composites_tyssue_3d_monolayer = dict(spec_viva_lumenoid_composites_tyssue_3d_monolayer['_overrides'])
+import json as _json; print(_json.dumps(ov_viva_lumenoid_composites_tyssue_3d_monolayer, indent=2, default=str))
+# e.g.:  ov_viva_lumenoid_composites_tyssue_3d_monolayer['<parameter>'] = <value>
+
+# ### Run
+#
+# _Set `STEPS`, then run. Each composite is built live from its (edited) spec above and run; a composite whose module processes aren't implemented yet reports the error instead of crashing. Set `RERUN = False` to skip re-simulating._
+
+# === Study: bm-r5-explicit-3d-confinement ===
+STUDY = 'bm-r5-explicit-3d-confinement'
+STUDY_DIR = REPO / 'workspace/studies' / STUDY
+STUDY_YAML = str(STUDY_DIR / "study.yaml")
+RUNS_DB = str(STUDY_DIR / "runs.db")
+
+# This study has no *recorded* runs yet. RERUN builds its declared
+# composite(s) live and runs them; a composite whose module processes
+# are not implemented yet reports the error instead of crashing.
+STEPS_bm_r5_explicit_3d_confinement = 100
+INTERVAL_bm_r5_explicit_3d_confinement = 1.0
+
+if RERUN:
+    from process_bigraph import Composite
+    try:
+        with quiet():  # keep per-step stdout out of the notebook
+            _ov = ov_viva_lumenoid_composites_tyssue_3d_monolayer if 'ov_viva_lumenoid_composites_tyssue_3d_monolayer' in dir() else None  # edits from the panel cell, if any
+            spec_viva_lumenoid_composites_tyssue_3d_monolayer = materialize_composite('viva_lumenoid.composites.tyssue_3d_monolayer', _ov)
+            _comp = Composite({'state': spec_viva_lumenoid_composites_tyssue_3d_monolayer['state']}, core=core)
+            _comp.run(STEPS_bm_r5_explicit_3d_confinement)
+        print('ran', 'bm-r5-explicit-3d-confinement', f'(viva_lumenoid.composites.tyssue_3d_monolayer) for', STEPS_bm_r5_explicit_3d_confinement, 'steps')
+    except Exception as _e:
+        print(f"bm-r5-explicit-3d-confinement not runnable yet: {type(_e).__name__}: {_e}")
+else:
+    print("RERUN=False — not re-simulating.")
+
+# ## Study: R6 — Perlecan and growth perturbations (`bm-r6-perlecan-growth-perturbations`)
+#
+# **Question.** Does the inferred chain lifetime -> relaxation -> shape reproduce the paper's perlecan and growth-rate intervention ordering?
+#
+# **Objective.** Use inferred collagen lifetime distributions for control, perlecan gain/loss and growth-rate conditions; propagate parameter uncertainty through relaxation and shape; compare relative cell morphology and uncertainty to Fig 7 while keeping inferred vs predicted outcomes distinct.
+#
+# **Hypothesis.** Propagating inferred collagen lifetime distributions for control, perlecan gain/loss and growth-rate changes through the relaxation->shape chain reproduces the relative cell- morphology ordering and uncertainty of Figure 7, keeping inferred and independently predicted outcomes distinct.
+
+# ### Parameters
+#
+# | simulation | composite | steps | params |
+# | --- | --- | --- | --- |
+# | `bm-r6-perlecan-growth-perturbations` | `viva_lumenoid.composites.turnover_shape_pipeline` | 0 | — |
+
+# ### The model & its parameters
+#
+# Each composite is a process-bigraph *document* — named processes wired by `inputs`/`outputs` ports over shared stores. Below, each composite shows what it does, then a **parameter cell** with its tunable knobs (the current default and what each one means). Edit any value, then re-run the **Run** section to rebuild and re-simulate with your changes.
+
+# **Composite `viva_lumenoid.composites.turnover_shape_pipeline`** — `spec_viva_lumenoid_composites_turnover_shape_pipeline` (materialized from its `@composite_generator`)
+
+spec_viva_lumenoid_composites_turnover_shape_pipeline = materialize_composite('viva_lumenoid.composites.turnover_shape_pipeline')
+describe_spec(spec_viva_lumenoid_composites_turnover_shape_pipeline)
+
+# === Edit parameters for this composite, then run the Run cell ===
+# ov_viva_lumenoid_composites_turnover_shape_pipeline maps each tunable parameter to its current value (the generator's
+# defaults). Edit any entry; the Run cell rebuilds the composite with it.
+ov_viva_lumenoid_composites_turnover_shape_pipeline = dict(spec_viva_lumenoid_composites_turnover_shape_pipeline['_overrides'])
+import json as _json; print(_json.dumps(ov_viva_lumenoid_composites_turnover_shape_pipeline, indent=2, default=str))
+# e.g.:  ov_viva_lumenoid_composites_turnover_shape_pipeline['<parameter>'] = <value>
+
+# ### Run
+#
+# _Set `STEPS`, then run. Each composite is built live from its (edited) spec above and run; a composite whose module processes aren't implemented yet reports the error instead of crashing. Set `RERUN = False` to skip re-simulating._
+
+# === Study: bm-r6-perlecan-growth-perturbations ===
+STUDY = 'bm-r6-perlecan-growth-perturbations'
+STUDY_DIR = REPO / 'workspace/studies' / STUDY
+STUDY_YAML = str(STUDY_DIR / "study.yaml")
+RUNS_DB = str(STUDY_DIR / "runs.db")
+
+# This study has no *recorded* runs yet. RERUN builds its declared
+# composite(s) live and runs them; a composite whose module processes
+# are not implemented yet reports the error instead of crashing.
+STEPS_bm_r6_perlecan_growth_perturbations = 100
+INTERVAL_bm_r6_perlecan_growth_perturbations = 1.0
+
+if RERUN:
+    from process_bigraph import Composite
+    try:
+        with quiet():  # keep per-step stdout out of the notebook
+            _ov = ov_viva_lumenoid_composites_turnover_shape_pipeline if 'ov_viva_lumenoid_composites_turnover_shape_pipeline' in dir() else None  # edits from the panel cell, if any
+            spec_viva_lumenoid_composites_turnover_shape_pipeline = materialize_composite('viva_lumenoid.composites.turnover_shape_pipeline', _ov)
+            _comp = Composite({'state': spec_viva_lumenoid_composites_turnover_shape_pipeline['state']}, core=core)
+            _comp.run(STEPS_bm_r6_perlecan_growth_perturbations)
+        print('ran', 'bm-r6-perlecan-growth-perturbations', f'(viva_lumenoid.composites.turnover_shape_pipeline) for', STEPS_bm_r6_perlecan_growth_perturbations, 'steps')
+    except Exception as _e:
+        print(f"bm-r6-perlecan-growth-perturbations not runnable yet: {type(_e).__name__}: {_e}")
+else:
+    print("RERUN=False — not re-simulating.")
+
+# ## Study: E1 — Explicit LAMMPS actomyosin cortex (`bm-e1-actomyosin-cortex`)
+#
+# **Question.** Can a coarse explicit actomyosin filament/crosslink/motor model reproduce the cortical tension, strain response and relaxation that an effective Tyssue cortical-energy term represents?
+#
+# **Objective.** Build a coarse filament/crosslink/motor LAMMPS model on a 2D cell-sized patch; measure tension, strain response and relaxation; map these onto Tyssue cortical-energy parameters. NEW extension - the paper does not explicitly simulate actin.
+#
+# **Hypothesis.** A 2D cell-sized coarse filament/crosslink/motor LAMMPS patch produces a tunable active tension and a strain response/relaxation that map onto Tyssue cortical-energy parameters, so the effective cortical term can be replaced by explicit actin without changing the measured confinement in the overlap regime.
+
+# ### Parameters
+#
+# | simulation | composite | steps | params |
+# | --- | --- | --- | --- |
+# | `bm-e1-actomyosin-cortex` | `viva_lumenoid.composites.actomyosin_cortex` | 0 | — |
+
+# ### The model & its parameters
+#
+# Each composite is a process-bigraph *document* — named processes wired by `inputs`/`outputs` ports over shared stores. Below, each composite shows what it does, then a **parameter cell** with its tunable knobs (the current default and what each one means). Edit any value, then re-run the **Run** section to rebuild and re-simulate with your changes.
+
+# **Composite `viva_lumenoid.composites.actomyosin_cortex`** — `spec_viva_lumenoid_composites_actomyosin_cortex` (materialized from its `@composite_generator`)
+
+spec_viva_lumenoid_composites_actomyosin_cortex = materialize_composite('viva_lumenoid.composites.actomyosin_cortex')
+describe_spec(spec_viva_lumenoid_composites_actomyosin_cortex)
+
+# === Edit parameters for this composite, then run the Run cell ===
+# ov_viva_lumenoid_composites_actomyosin_cortex maps each tunable parameter to its current value (the generator's
+# defaults). Edit any entry; the Run cell rebuilds the composite with it.
+ov_viva_lumenoid_composites_actomyosin_cortex = dict(spec_viva_lumenoid_composites_actomyosin_cortex['_overrides'])
+import json as _json; print(_json.dumps(ov_viva_lumenoid_composites_actomyosin_cortex, indent=2, default=str))
+# e.g.:  ov_viva_lumenoid_composites_actomyosin_cortex['<parameter>'] = <value>
+
+# ### Run
+#
+# _Set `STEPS`, then run. Each composite is built live from its (edited) spec above and run; a composite whose module processes aren't implemented yet reports the error instead of crashing. Set `RERUN = False` to skip re-simulating._
+
+# === Study: bm-e1-actomyosin-cortex ===
+STUDY = 'bm-e1-actomyosin-cortex'
+STUDY_DIR = REPO / 'workspace/studies' / STUDY
+STUDY_YAML = str(STUDY_DIR / "study.yaml")
+RUNS_DB = str(STUDY_DIR / "runs.db")
+
+# This study has no *recorded* runs yet. RERUN builds its declared
+# composite(s) live and runs them; a composite whose module processes
+# are not implemented yet reports the error instead of crashing.
+STEPS_bm_e1_actomyosin_cortex = 100
+INTERVAL_bm_e1_actomyosin_cortex = 1.0
+
+if RERUN:
+    from process_bigraph import Composite
+    try:
+        with quiet():  # keep per-step stdout out of the notebook
+            _ov = ov_viva_lumenoid_composites_actomyosin_cortex if 'ov_viva_lumenoid_composites_actomyosin_cortex' in dir() else None  # edits from the panel cell, if any
+            spec_viva_lumenoid_composites_actomyosin_cortex = materialize_composite('viva_lumenoid.composites.actomyosin_cortex', _ov)
+            _comp = Composite({'state': spec_viva_lumenoid_composites_actomyosin_cortex['state']}, core=core)
+            _comp.run(STEPS_bm_e1_actomyosin_cortex)
+        print('ran', 'bm-e1-actomyosin-cortex', f'(viva_lumenoid.composites.actomyosin_cortex) for', STEPS_bm_e1_actomyosin_cortex, 'steps')
+    except Exception as _e:
+        print(f"bm-e1-actomyosin-cortex not runnable yet: {type(_e).__name__}: {_e}")
+else:
+    print("RERUN=False — not re-simulating.")
+
+# ## Study: E2 — Actin-adhesion-collagen force transfer (`bm-e2-actin-adhesion-collagen`)
+#
+# **Question.** How does active cortical contractility transfer force through reversible basal adhesions into the collagen IV basement membrane?
+#
+# **Objective.** Couple active cortical contractility (E1) to reversible basal linkers and a collagen IV BM patch; measure traction, linker occupation, network deformation and relative relaxation; begin with a single-cell patch before multicellular coupling.
+#
+# **Hypothesis.** Coupling an active cortex to reversible basal linkers and a collagen-IV BM patch produces a traction, linker occupancy and network deformation whose relative relaxation is set jointly by linker off-rate and crosslink turnover, measurable on a single-cell patch before multicellular coupling.
+
+# ### Parameters
+#
+# | simulation | composite | steps | params |
+# | --- | --- | --- | --- |
+# | `bm-e2-actin-adhesion-collagen` | `viva_lumenoid.composites.actin_adhesion_bm` | 0 | — |
+
+# ### The model & its parameters
+#
+# Each composite is a process-bigraph *document* — named processes wired by `inputs`/`outputs` ports over shared stores. Below, each composite shows what it does, then a **parameter cell** with its tunable knobs (the current default and what each one means). Edit any value, then re-run the **Run** section to rebuild and re-simulate with your changes.
+
+# **Composite `viva_lumenoid.composites.actin_adhesion_bm`** — `spec_viva_lumenoid_composites_actin_adhesion_bm` (materialized from its `@composite_generator`)
+
+spec_viva_lumenoid_composites_actin_adhesion_bm = materialize_composite('viva_lumenoid.composites.actin_adhesion_bm')
+describe_spec(spec_viva_lumenoid_composites_actin_adhesion_bm)
+
+# === Edit parameters for this composite, then run the Run cell ===
+# ov_viva_lumenoid_composites_actin_adhesion_bm maps each tunable parameter to its current value (the generator's
+# defaults). Edit any entry; the Run cell rebuilds the composite with it.
+ov_viva_lumenoid_composites_actin_adhesion_bm = dict(spec_viva_lumenoid_composites_actin_adhesion_bm['_overrides'])
+import json as _json; print(_json.dumps(ov_viva_lumenoid_composites_actin_adhesion_bm, indent=2, default=str))
+# e.g.:  ov_viva_lumenoid_composites_actin_adhesion_bm['<parameter>'] = <value>
+
+# ### Run
+#
+# _Set `STEPS`, then run. Each composite is built live from its (edited) spec above and run; a composite whose module processes aren't implemented yet reports the error instead of crashing. Set `RERUN = False` to skip re-simulating._
+
+# === Study: bm-e2-actin-adhesion-collagen ===
+STUDY = 'bm-e2-actin-adhesion-collagen'
+STUDY_DIR = REPO / 'workspace/studies' / STUDY
+STUDY_YAML = str(STUDY_DIR / "study.yaml")
+RUNS_DB = str(STUDY_DIR / "runs.db")
+
+# This study has no *recorded* runs yet. RERUN builds its declared
+# composite(s) live and runs them; a composite whose module processes
+# are not implemented yet reports the error instead of crashing.
+STEPS_bm_e2_actin_adhesion_collagen = 100
+INTERVAL_bm_e2_actin_adhesion_collagen = 1.0
+
+if RERUN:
+    from process_bigraph import Composite
+    try:
+        with quiet():  # keep per-step stdout out of the notebook
+            _ov = ov_viva_lumenoid_composites_actin_adhesion_bm if 'ov_viva_lumenoid_composites_actin_adhesion_bm' in dir() else None  # edits from the panel cell, if any
+            spec_viva_lumenoid_composites_actin_adhesion_bm = materialize_composite('viva_lumenoid.composites.actin_adhesion_bm', _ov)
+            _comp = Composite({'state': spec_viva_lumenoid_composites_actin_adhesion_bm['state']}, core=core)
+            _comp.run(STEPS_bm_e2_actin_adhesion_collagen)
+        print('ran', 'bm-e2-actin-adhesion-collagen', f'(viva_lumenoid.composites.actin_adhesion_bm) for', STEPS_bm_e2_actin_adhesion_collagen, 'steps')
+    except Exception as _e:
+        print(f"bm-e2-actin-adhesion-collagen not runnable yet: {type(_e).__name__}: {_e}")
+else:
+    print("RERUN=False — not re-simulating.")
+
+# ## Study: E3 — Closed 3D lumenoid (`bm-e3-closed-3d-lumenoid`)
+#
+# **Question.** How do lumen pressure/volume and a basement-membrane shell set cell shape and curvature- dependent growth in a closed 3D lumenoid?
+#
+# **Objective.** Introduce a 3D closed-shell Tyssue geometry with lumen pressure/volume and a BM shell; first use the validated reduced-order BM law, then test resolved LAMMPS patches or a curved- network realization; predict lumen growth, cell shape and curvature effects.
+#
+# **Hypothesis.** A closed curved Tyssue epithelium with a lumen volume/pressure constraint and a BM shell predicts lumen growth and curvature-dependent cell shapes that depend on BM relaxation, first with a validated reduced-order BM law and then with resolved LAMMPS patches or a curved-network realization.
+
+# ### Parameters
+#
+# | simulation | composite | steps | params |
+# | --- | --- | --- | --- |
+# | `bm-e3-closed-3d-lumenoid` | `viva_lumenoid.composites.closed_lumenoid` | 0 | — |
+
+# ### The model & its parameters
+#
+# Each composite is a process-bigraph *document* — named processes wired by `inputs`/`outputs` ports over shared stores. Below, each composite shows what it does, then a **parameter cell** with its tunable knobs (the current default and what each one means). Edit any value, then re-run the **Run** section to rebuild and re-simulate with your changes.
+
+# **Composite `viva_lumenoid.composites.closed_lumenoid`** — `spec_viva_lumenoid_composites_closed_lumenoid` (materialized from its `@composite_generator`)
+
+spec_viva_lumenoid_composites_closed_lumenoid = materialize_composite('viva_lumenoid.composites.closed_lumenoid')
+describe_spec(spec_viva_lumenoid_composites_closed_lumenoid)
+
+# === Edit parameters for this composite, then run the Run cell ===
+# ov_viva_lumenoid_composites_closed_lumenoid maps each tunable parameter to its current value (the generator's
+# defaults). Edit any entry; the Run cell rebuilds the composite with it.
+ov_viva_lumenoid_composites_closed_lumenoid = dict(spec_viva_lumenoid_composites_closed_lumenoid['_overrides'])
+import json as _json; print(_json.dumps(ov_viva_lumenoid_composites_closed_lumenoid, indent=2, default=str))
+# e.g.:  ov_viva_lumenoid_composites_closed_lumenoid['<parameter>'] = <value>
+
+# ### Run
+#
+# _Set `STEPS`, then run. Each composite is built live from its (edited) spec above and run; a composite whose module processes aren't implemented yet reports the error instead of crashing. Set `RERUN = False` to skip re-simulating._
+
+# === Study: bm-e3-closed-3d-lumenoid ===
+STUDY = 'bm-e3-closed-3d-lumenoid'
+STUDY_DIR = REPO / 'workspace/studies' / STUDY
+STUDY_YAML = str(STUDY_DIR / "study.yaml")
+RUNS_DB = str(STUDY_DIR / "runs.db")
+
+# This study has no *recorded* runs yet. RERUN builds its declared
+# composite(s) live and runs them; a composite whose module processes
+# are not implemented yet reports the error instead of crashing.
+STEPS_bm_e3_closed_3d_lumenoid = 100
+INTERVAL_bm_e3_closed_3d_lumenoid = 1.0
+
+if RERUN:
+    from process_bigraph import Composite
+    try:
+        with quiet():  # keep per-step stdout out of the notebook
+            _ov = ov_viva_lumenoid_composites_closed_lumenoid if 'ov_viva_lumenoid_composites_closed_lumenoid' in dir() else None  # edits from the panel cell, if any
+            spec_viva_lumenoid_composites_closed_lumenoid = materialize_composite('viva_lumenoid.composites.closed_lumenoid', _ov)
+            _comp = Composite({'state': spec_viva_lumenoid_composites_closed_lumenoid['state']}, core=core)
+            _comp.run(STEPS_bm_e3_closed_3d_lumenoid)
+        print('ran', 'bm-e3-closed-3d-lumenoid', f'(viva_lumenoid.composites.closed_lumenoid) for', STEPS_bm_e3_closed_3d_lumenoid, 'steps')
+    except Exception as _e:
+        print(f"bm-e3-closed-3d-lumenoid not runnable yet: {type(_e).__name__}: {_e}")
+else:
+    print("RERUN=False — not re-simulating.")
+
+# ## Study: E4 — New feedback predictions (`bm-e4-feedback-predictions`)
+#
+# **Question.** When do growth-driven turnover, spatial BM heterogeneity, contractility-dependent confinement, partial adhesion and network failure change cell height and lumenoid growth beyond the original paper?
+#
+# **Objective.** Test growth-driven turnover, spatial BM heterogeneity, contractility-dependent confinement, partial adhesion and network failure, each against one-way, uncoupled and uniform-material controls, and report where the bidirectionally coupled predictions depart from the paper.
+#
+# **Hypothesis.** With one-way, uncoupled and uniform-material controls, the fully coupled system predicts regimes - growth-driven turnover, spatial BM heterogeneity, contractility-dependent confinement, partial adhesion/network failure - in which cell height and lumenoid growth depart measurably from the paper's homogeneous, one-way predictions.
+
+# ### Parameters
+#
+# | simulation | composite | steps | params |
+# | --- | --- | --- | --- |
+# | `bm-e4-feedback-predictions` | `viva_lumenoid.composites.coupled_lumenoid` | 0 | — |
+
+# ### The model & its parameters
+#
+# Each composite is a process-bigraph *document* — named processes wired by `inputs`/`outputs` ports over shared stores. Below, each composite shows what it does, then a **parameter cell** with its tunable knobs (the current default and what each one means). Edit any value, then re-run the **Run** section to rebuild and re-simulate with your changes.
+
+# **Composite `viva_lumenoid.composites.coupled_lumenoid`** — `spec_viva_lumenoid_composites_coupled_lumenoid` (materialized from its `@composite_generator`)
+
+spec_viva_lumenoid_composites_coupled_lumenoid = materialize_composite('viva_lumenoid.composites.coupled_lumenoid')
+describe_spec(spec_viva_lumenoid_composites_coupled_lumenoid)
+
+# === Edit parameters for this composite, then run the Run cell ===
+# ov_viva_lumenoid_composites_coupled_lumenoid maps each tunable parameter to its current value (the generator's
+# defaults). Edit any entry; the Run cell rebuilds the composite with it.
+ov_viva_lumenoid_composites_coupled_lumenoid = dict(spec_viva_lumenoid_composites_coupled_lumenoid['_overrides'])
+import json as _json; print(_json.dumps(ov_viva_lumenoid_composites_coupled_lumenoid, indent=2, default=str))
+# e.g.:  ov_viva_lumenoid_composites_coupled_lumenoid['<parameter>'] = <value>
+
+# ### Run
+#
+# _Set `STEPS`, then run. Each composite is built live from its (edited) spec above and run; a composite whose module processes aren't implemented yet reports the error instead of crashing. Set `RERUN = False` to skip re-simulating._
+
+# === Study: bm-e4-feedback-predictions ===
+STUDY = 'bm-e4-feedback-predictions'
+STUDY_DIR = REPO / 'workspace/studies' / STUDY
+STUDY_YAML = str(STUDY_DIR / "study.yaml")
+RUNS_DB = str(STUDY_DIR / "runs.db")
+
+# This study has no *recorded* runs yet. RERUN builds its declared
+# composite(s) live and runs them; a composite whose module processes
+# are not implemented yet reports the error instead of crashing.
+STEPS_bm_e4_feedback_predictions = 100
+INTERVAL_bm_e4_feedback_predictions = 1.0
+
+if RERUN:
+    from process_bigraph import Composite
+    try:
+        with quiet():  # keep per-step stdout out of the notebook
+            _ov = ov_viva_lumenoid_composites_coupled_lumenoid if 'ov_viva_lumenoid_composites_coupled_lumenoid' in dir() else None  # edits from the panel cell, if any
+            spec_viva_lumenoid_composites_coupled_lumenoid = materialize_composite('viva_lumenoid.composites.coupled_lumenoid', _ov)
+            _comp = Composite({'state': spec_viva_lumenoid_composites_coupled_lumenoid['state']}, core=core)
+            _comp.run(STEPS_bm_e4_feedback_predictions)
+        print('ran', 'bm-e4-feedback-predictions', f'(viva_lumenoid.composites.coupled_lumenoid) for', STEPS_bm_e4_feedback_predictions, 'steps')
+    except Exception as _e:
+        print(f"bm-e4-feedback-predictions not runnable yet: {type(_e).__name__}: {_e}")
+else:
+    print("RERUN=False — not re-simulating.")
+
 # ## Open decisions
+# - Reproduction conventions: acquire the supplemental tissue-model equations and precise Figure 1 parameter values — the article alone does not fix every reproduction convention (gates R1).
+# - Released turnover kinetics: resolve the full GCE-style monomer-exchange / distance-gated-break implementation, the 7S-specific mechanics, and the original stress/energy conversion before freezing the R2 reference (P0).
+# - Collagen supply law: fixed-concentration (reference reproduction, R3) vs secretion-flux-driven (new lumenoid hypothesis, E3/E4) — decide per study.
+# - 3D calibration data: obtain lumenoid geometry timecourses, cell height/volume, BM thickness and collagen-vs-laminin staining before calibrating R5/E3.
+# - Actin fidelity: use a validated reduced cortical model (Tyssue cortical energy) unless molecularly-resolved actin (E1) changes a measurable prediction — explicit go/no-go decision.
+# - Process/composite modularity: converge the collagen-network composites on ONE general, parameterized network builder reused across stage1/stage2/R2/R3 (chemistry, bending_k, density, strain protocol as config) rather than near-duplicate generators.
 # - Absolute (Pa) modulus path: the faithful angle-stabilized model now reproduces the published ≈0.03 Pa and gives a reproducible reduced-unit modulus (bm-v4, E≈3 LJ). An EXACT absolute value additionally needs the released GCE + distance-gated 7S break (0.95) + dense initial config — implement these, or accept the reduced-unit value and resolve via the energy-scale decision (#4)? (Cross-check + param correction already DONE 2026-10-01; see references/cross-check-vs-released-code.md.)
 # - Engine for stages 1–2: LAMMPS now; revisit Smoldyn at stage 3 (spec #2).
 # - Secretion: fixed concentration vs fixed flux (spec #3).
