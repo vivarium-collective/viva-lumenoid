@@ -1,0 +1,56 @@
+schema_version: 3
+name: bm-e4-feedback-predictions
+status: planned
+title: "E4 — New feedback predictions"
+kind: extension
+phase: Design
+confidence: Planned
+
+question: >
+  When do growth-driven turnover, spatial BM heterogeneity, contractility-dependent
+  confinement, partial adhesion and network failure change cell height and lumenoid growth
+  beyond the original paper?
+
+hypothesis: >
+  With one-way, uncoupled and uniform-material controls, the fully coupled system predicts
+  regimes - growth-driven turnover, spatial BM heterogeneity, contractility-dependent
+  confinement, partial adhesion/network failure - in which cell height and lumenoid growth
+  depart measurably from the paper's homogeneous, one-way predictions.
+
+objective: >
+  Test growth-driven turnover, spatial BM heterogeneity, contractility-dependent confinement,
+  partial adhesion and network failure, each against one-way, uncoupled and uniform-material
+  controls, and report where the bidirectionally coupled predictions depart from the paper.
+
+description: |
+  The novel-prediction extension (plan section 5, E4) and the end state of the campaign. Each
+  new feedback hypothesis (growth-driven turnover, spatial BM heterogeneity, contractility-
+  dependent confinement, partial adhesion, network failure) is tested against matched one-way
+  / uncoupled / uniform-material controls so that any departure from the paper is attributable
+  to the mechanism rather than to added complexity. These are predictions, explicitly
+  distinguished from reproductions.
+
+parent_studies:
+  - {study: bm-e3-closed-3d-lumenoid, relation: leads-to, condition: tests-passed}
+  - {study: bm-r6-perlecan-growth-perturbations, relation: supports, condition: tests-passed}
+
+cites: [barrientos2026cellshape]
+
+expected_behavior:
+  - name: coupled-departs-from-controls
+    observable: cell height / lumenoid growth vs matched controls
+    condition: full coupling vs one-way / uncoupled / uniform-material
+    rationale: >
+      A measurable, control-isolated departure from the paper's one-way homogeneous prediction
+      is the deliverable; null results against controls are reported, not hidden.
+
+baseline:
+  - name: bm-e4-feedback-predictions
+    composite: viva_lumenoid.composites.coupled_lumenoid
+    composite_status: planned
+    params: {}
+    note: >
+      PLANNED composite — design target, not yet implemented (expected unresolved-composite lint gap)
+variants: []
+interventions: []
+runs: []

@@ -1,0 +1,54 @@
+schema_version: 3
+name: bm-r1-published-tissue-baseline
+status: planned
+title: "R1 — Published tissue-mechanics baseline"
+kind: reproduction
+phase: Design
+confidence: Planned
+
+question: >
+  How do basement-membrane stiffness and relaxation, relative to the proliferation (doubling)
+  time, control growth-dependent epithelial confinement?
+
+hypothesis: >
+  Reimplementing the paper's fixed-volume prism / surface-tension tissue model with a
+  viscoelastic BM reproduces Figure 1G's four stiffness-relaxation regimes and the 1H-J
+  confinement trajectories, with the regime boundary set by the ratio of BM relaxation time to
+  doubling time.
+
+objective: >
+  Reimplement the paper's fixed-volume prism/surface-tension tissue model and viscoelastic BM;
+  sweep relative stiffness and the relaxation/doubling-time ratio; compare qualitatively and
+  quantitatively to Barrientos et al. Figure 1G-J.
+
+description: |
+  Direct reproduction of the paper's homogeneous tissue-mechanics result (Barrientos Fig 1). A
+  fixed-volume prism/surface-tension cell model is coupled to a viscoelastic BM; the relative
+  BM stiffness and the relaxation/doubling-time ratio are swept to recover the regime topology
+  (reconstructed basal area and cell height, reversibility, regime boundaries). This is the P1
+  homogeneous reference the spatial Tyssue studies (R4-R5) are later compared against; it uses
+  an effective constitutive BM, not the explicit collagen network.
+
+parent_studies:
+  - {study: bm-v1-stage1-modulus-remodelling, relation: supports, condition: tests-passed}
+
+cites: [barrientos2026cellshape]
+
+expected_behavior:
+  - name: tissue-regimes-match-fig1g
+    observable: basal-area / reconstructed-height regime map
+    condition: stiffness x relaxation/doubling sweep
+    rationale: >
+      Recovering Fig 1G's qualitative regime topology and 1H-J trajectories (within documented
+      numerical tolerances) is the gating success criterion for P1.
+
+baseline:
+  - name: bm-r1-published-tissue-baseline
+    composite: viva_lumenoid.composites.tissue_prism_baseline
+    composite_status: planned
+    params: {}
+    note: >
+      PLANNED composite — design target, not yet implemented (expected unresolved-composite lint gap)
+variants: []
+interventions: []
+runs: []

@@ -1,0 +1,56 @@
+schema_version: 3
+name: bm-e1-actomyosin-cortex
+status: planned
+title: "E1 — Explicit LAMMPS actomyosin cortex"
+kind: extension
+phase: Design
+confidence: Planned
+
+question: >
+  Can a coarse explicit actomyosin filament/crosslink/motor model reproduce the cortical
+  tension, strain response and relaxation that an effective Tyssue cortical-energy term
+  represents?
+
+hypothesis: >
+  A 2D cell-sized coarse filament/crosslink/motor LAMMPS patch produces a tunable active
+  tension and a strain response/relaxation that map onto Tyssue cortical-energy parameters, so
+  the effective cortical term can be replaced by explicit actin without changing the measured
+  confinement in the overlap regime.
+
+objective: >
+  Build a coarse filament/crosslink/motor LAMMPS model on a 2D cell-sized patch; measure
+  tension, strain response and relaxation; map these onto Tyssue cortical-energy parameters.
+  NEW extension - the paper does not explicitly simulate actin.
+
+description: |
+  First mechanistic extension beyond the paper (plan section 5). A coarse actomyosin cortex
+  (filaments, crosslinks, motors) is built as a LAMMPS patch and characterised (tension,
+  strain response, relaxation), then mapped to the effective Tyssue cortical-energy
+  parameters. This is explicitly a NEW extension, not a reproduction target; its fidelity
+  decision (reduced cortical model vs molecularly-resolved actin) is an open decision in the
+  plan. Care is taken not to double-count tension when the effective cortical term is replaced
+  by explicit actin.
+
+parent_studies:
+  - {study: bm-r5-explicit-3d-confinement, relation: supports, condition: tests-passed}
+
+cites: [barrientos2026cellshape]
+
+expected_behavior:
+  - name: actin-maps-to-cortical-energy
+    observable: cortical tension / strain response / relaxation of the patch
+    condition: coarse filament/crosslink/motor sweep
+    rationale: >
+      The explicit cortex must reproduce the effective cortical-energy behaviour in an overlap
+      regime before it can replace the Tyssue term (P4).
+
+baseline:
+  - name: bm-e1-actomyosin-cortex
+    composite: viva_lumenoid.composites.actomyosin_cortex
+    composite_status: planned
+    params: {}
+    note: >
+      PLANNED composite — design target, not yet implemented (expected unresolved-composite lint gap)
+variants: []
+interventions: []
+runs: []

@@ -1,0 +1,55 @@
+schema_version: 3
+name: bm-e2-actin-adhesion-collagen
+status: planned
+title: "E2 — Actin-adhesion-collagen force transfer"
+kind: extension
+phase: Design
+confidence: Planned
+
+question: >
+  How does active cortical contractility transfer force through reversible basal adhesions
+  into the collagen IV basement membrane?
+
+hypothesis: >
+  Coupling an active cortex to reversible basal linkers and a collagen-IV BM patch produces a
+  traction, linker occupancy and network deformation whose relative relaxation is set jointly
+  by linker off-rate and crosslink turnover, measurable on a single-cell patch before
+  multicellular coupling.
+
+objective: >
+  Couple active cortical contractility (E1) to reversible basal linkers and a collagen IV BM
+  patch; measure traction, linker occupation, network deformation and relative relaxation;
+  begin with a single-cell patch before multicellular coupling.
+
+description: |
+  The actin-adhesion-collagen force-transfer extension (plan section 5). Active cortical
+  contractility from E1 is coupled through reversible basal linkers (attachment sites,
+  occupancy, forces, work) to a collagen IV BM patch from R2. Readouts are traction, linker
+  occupancy, network deformation and the relative relaxation set by linker and crosslink
+  kinetics. A single-cell patch is validated with prescribed-displacement and imposed-traction
+  tests before any multicellular coupling, avoiding double-counting of BM mechanics.
+
+parent_studies:
+  - {study: bm-e1-actomyosin-cortex, relation: leads-to, condition: tests-passed}
+  - {study: bm-r2-collagen-network-rheology, relation: supports, condition: tests-passed}
+
+cites: [barrientos2026cellshape]
+
+expected_behavior:
+  - name: force-transfer-conserves-work
+    observable: traction / linker occupancy / network deformation / work balance
+    condition: single-cell patch, prescribed-displacement + imposed-traction tests
+    rationale: >
+      Work consistency and force balance across the cortex->adhesion->BM chain must hold before
+      multicellular coupling (P3/P4).
+
+baseline:
+  - name: bm-e2-actin-adhesion-collagen
+    composite: viva_lumenoid.composites.actin_adhesion_bm
+    composite_status: planned
+    params: {}
+    note: >
+      PLANNED composite — design target, not yet implemented (expected unresolved-composite lint gap)
+variants: []
+interventions: []
+runs: []

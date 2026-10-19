@@ -506,6 +506,11 @@ class StagedStretchController(Process):
         't_relax': {'_type': 'float', '_default': 200.0},
         't_stretch': {'_type': 'float', '_default': 100.0},
         't_hold_elastic': {'_type': 'float', '_default': 200.0},
+        # Growth-rheology mode (stage 2 / R2): keep the crosslink chemistry ON
+        # during the stretch, so the network remodels WHILE it is strained (a
+        # growing, remodelling substrate) instead of being loaded frozen.
+        # Default False preserves the staged stage-1 protocol exactly.
+        'chemistry_during_stretch': {'_type': 'boolean', '_default': False},
     }
 
     def __init__(self, config=None, core=None):
@@ -536,7 +541,9 @@ class StagedStretchController(Process):
         if t < t1:
             return out(0.0, 0.0, 0.0, 'relax')
         if t < t2:
-            return out(c['strain_rate'], 0.0, 0.0, 'stretch')
+            # Frozen (staged, stage 1) or remodelling-while-stretched (growth, R2).
+            chem = 1.0 if c.get('chemistry_during_stretch') else 0.0
+            return out(c['strain_rate'], chem, chem, 'stretch')
         if t < t3:
             return out(0.0, 0.0, 0.0, 'hold_elastic')
         return out(0.0, 0.0, 1.0, 'hold_viscous')
