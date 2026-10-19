@@ -42,6 +42,8 @@ pipeline_gate:
   proceed_condition: >
     Diagnostic readout study; gates nothing. Motivates a v2 lateral-association bond.
 
+question: Does the v1 network reproduce the measured pore-size and bundling of a real BM?
+
 purpose:
   question: Does the v1 network reproduce the measured pore-size and bundling of a real BM?
   mechanism: >

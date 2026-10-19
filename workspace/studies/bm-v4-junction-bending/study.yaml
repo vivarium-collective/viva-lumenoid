@@ -56,6 +56,8 @@ pipeline_gate:
     Once a reproducible bending modulus exists, the absolute-Pa value (energy
     scale #4) + make+break density match unblock the vertex-model coupling.
 
+question: Does junction bending yield the measurable modulus the vertex model needs?
+
 purpose:
   question: Does junction bending yield the measurable modulus the vertex model needs?
   mechanism: >

@@ -48,6 +48,8 @@ pipeline_gate:
   proceed_condition: >
     Motivates (does not gate) the junction-bending implementation in bm-v4.
 
+question: Can more crosslink connectivity rigidify the v1 network, or is bending required?
+
 purpose:
   question: Can more crosslink connectivity rigidify the v1 network, or is bending required?
   mechanism: >
