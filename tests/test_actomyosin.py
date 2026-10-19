@@ -38,6 +38,7 @@ def test_contractility_raises_cortical_tension():
 
 
 def test_model_is_registered():
+    pytest.importorskip("pbg_lammps")
     from pbg_lammps.model import get_model
     import viva_lumenoid.actomyosin  # noqa: F401
     assert get_model("actomyosin-cortex").__name__ == "ActomyosinCortexModel"

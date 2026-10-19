@@ -16,8 +16,15 @@ from viva_superpowers.composite_generator import composite_generator
 
 from ..params import CollagenParams
 from ..collagen import register_viva_lumenoid
-from ..actomyosin import register_actomyosin
 from .builders import collagen_network_spec, lammps_model_spec
+
+
+def _register_actomyosin(core):
+    """Lazy core extension: import the actomyosin plugin (→ pbg_lammps) only at
+    composite-BUILD time, so this module imports cleanly when the optional
+    viva-lammps engine isn't installed (CI without the engines extra)."""
+    from ..actomyosin import register_actomyosin as _r
+    return _r(core)
 
 
 def _params(**kw) -> CollagenParams:
@@ -142,7 +149,7 @@ _CORTEX_EMIT = {"cortical_tension": "float", "pressure_xx": "float",
                 "Contractility (LJ ε, a myosin-activity proxy) tunes the cortical "
                 "tension that will map onto a Tyssue cortical-energy parameter.",
     parameters=_CORTEX_PARAMS,
-    core_extensions=[register_actomyosin],
+    core_extensions=[_register_actomyosin],
 )
 def actomyosin_cortex(core=None, **kw) -> dict:
     params = {k: v for k, v in kw.items() if k in _CORTEX_PARAMS}
