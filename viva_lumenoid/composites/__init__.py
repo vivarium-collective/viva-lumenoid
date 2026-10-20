@@ -398,3 +398,50 @@ def coupled_lumenoid(core=None, **kw) -> dict:
             "outputs": {},
         },
     }
+
+
+def _register_tissue_prism(core):
+    """Lazy core extension for the reduced-order tissue baseline (R1)."""
+    from ..tissue_prism import register_tissue_prism
+    return register_tissue_prism(core)
+
+
+_PRISM_PARAMS = {
+    "bm_stiffness": {"type": "float", "default": 1.0,
+                     "description": "BM area elasticity (stiffness)."},
+    "bm_relaxation": {"type": "float", "default": 5.0,
+                      "description": "BM relaxation time tau_bm."},
+    "doubling_time": {"type": "float", "default": 5.0,
+                      "description": "Proliferation timescale (cell doubling)."},
+}
+
+_PRISM_EMIT = {"basal_area": "float", "cell_height": "float",
+               "bm_stress": "float", "confinement": "float"}
+
+
+@composite_generator(
+    name="tissue_prism_baseline",
+    description="R1 — reduced-order homogeneous tissue mechanics: a fixed-volume "
+                "prism cell whose basal area is set by proliferation against a "
+                "viscoelastic BM (stiffness + relaxation). Cell height = volume/area; "
+                "the paper's Fig 1 confinement regimes emerge from BM stiffness vs the "
+                "relaxation/doubling ratio. The effective-BM reference for R4/R5.",
+    parameters=_PRISM_PARAMS,
+    core_extensions=[_register_tissue_prism],
+)
+def tissue_prism_baseline(core=None, **kw) -> dict:
+    cfg = {k: v for k, v in kw.items() if k in _PRISM_PARAMS}
+    return {
+        "tissue": {
+            "_type": "process", "address": "local:TissuePrismProcess",
+            "config": cfg,
+            "inputs": {},
+            "outputs": {k: [k] for k in _PRISM_EMIT},
+        },
+        "emitter": {
+            "_type": "step", "address": "local:ram-emitter",
+            "config": {"emit": _PRISM_EMIT},
+            "inputs": {k: [k] for k in _PRISM_EMIT},
+            "outputs": {},
+        },
+    }
