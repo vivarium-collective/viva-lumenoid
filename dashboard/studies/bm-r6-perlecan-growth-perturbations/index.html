@@ -20,7 +20,7 @@
   <div style="display:flex; align-items:center; gap:14px; justify-content:space-between;">
   <div style="display:flex; align-items:center; gap:12px; min-width:0; flex-wrap:wrap">
   <h1 class="study-title" style="margin:0">
-    <span class="study-name" id="study-name" data-slug="bm-r6-perlecan-growth-perturbations" data-study-kind="computational" title="bm-r6-perlecan-growth-perturbations">Perlecan &amp; growth perturbations on cell shape</span>
+    <span class="study-name" id="study-name" data-slug="bm-r6-perlecan-growth-perturbations" data-study-kind="biological" title="bm-r6-perlecan-growth-perturbations">Perlecan &amp; growth perturbations on cell shape</span>
     
   </h1>
     
@@ -50,7 +50,7 @@
 
 
 
-<p id="study-question-headline" class="study-question-headline"><span class="q-glyph">Q</span> Does the inferred chain lifetime -&gt; relaxation -&gt; shape reproduce the paper&#39;s perlecan and growth-rate intervention ordering?
+<p id="study-question-headline" class="study-question-headline"><span class="q-glyph">Q</span> Does the inferred chain (collagen lifetime -&gt; BM relaxation -&gt; cell shape) reproduce the paper&#39;s perlecan and growth-rate intervention ordering, keeping inferred and predicted quantities distinct?
 </p>
 
 <nav class="study-tabs" aria-label="Study sections">
@@ -77,7 +77,7 @@
   </button>
   <button class="study-pillar" data-kind="conclusions" onclick="_setStudyTab('conclusions')">
     <svg class="pillar-icon" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="6" cy="6" r="2.2"/><circle cx="6" cy="18" r="2.2"/><circle cx="18" cy="9" r="2.2"/><path d="M6 8.2v7.6"/><path d="M6 12h6a4 4 0 0 0 4-4V11"/></svg>
-    <span class="pillar-label">Conclusions</span>
+    <span class="pillar-label">Decide</span>
   </button>
   
   <span class="study-dl study-export-wrap" style="margin-left:auto; align-self:center; position:relative; display:inline-flex">
@@ -538,7 +538,7 @@
 
     <div class="ctr-block">
       <h2 class="overview-label ctr-h">Claim</h2>
-      <p class="ctr-text">Carrying an inferred collagen lifetime through membrane relaxation to cell shape reproduces the intervention ordering: perlecan gain gives taller cells than control, and loss gives flatter ones.
+      <p class="ctr-text">Carrying an inferred collagen lifetime through BM relaxation to cell shape reproduces the paper&#39;s intervention ordering: perlecan gain gives taller cells than control, and loss gives flatter ones, with the inferred relaxation time (turnover) kept distinct from the predicted cell height (mechanics).
 </p>
       
     </div>
@@ -557,12 +557,12 @@
 
     <div class="ctr-block">
       <h2 class="overview-label ctr-h">Model &amp; approach</h2>
-      <p class="ctr-text">Use inferred collagen lifetime distributions for control, perlecan gain/loss and growth-rate conditions; propagate parameter uncertainty through relaxation and shape; compare relative cell morphology and uncertainty to Fig 7 while keeping inferred vs predicted outcomes distinct.
+      <p class="ctr-text">Run the TurnoverShapeProcess pipeline for four conditions -- control, perlecan gain, perlecan loss, and fast growth. The inferred collagen IV lifetime (modulated by a perlecan factor) sets the BM relaxation time (inferred_relaxation = collagen_lifetime x perlecan_factor); that relaxation drives the reduced-order prism mechanics (R1) to a predicted cell height. Read inferred_relaxation (the turnover/inference quantity) and cell_height / confinement (the independent mechanical prediction) at the end of each 40-step run (dt 0.2), and check the rank-order against Barrientos Figure 7.
 </p>
       <div class="ctr-meta">
         <div class="ctr-meta-row"><span class="ctr-meta-k">Model</span> <code>bm-r6-perlecan-growth-perturbations</code><a class="ov-tablink" href="#" onclick="_setStudyTab('compose');return false;">model →</a></div>
         
-        <div class="ctr-meta-row"><span class="ctr-meta-k">Measures</span> <span class="ctr-meta-item">1 behavior test</span><a class="ov-tablink" href="#" onclick="_setStudyTab('audit');return false;">see Tests →</a></div>
+        <div class="ctr-meta-row"><span class="ctr-meta-k">Measures</span> <span class="ctr-meta-item">4 behavior tests</span><a class="ov-tablink" href="#" onclick="_setStudyTab('audit');return false;">see Tests →</a></div>
         
       </div>
     </div>
@@ -571,26 +571,246 @@
     
     
     
+    <div class="ctr-block ov-prov">
+      <h2 class="overview-label ctr-h">Provenance &amp; sources</h2>
+      <div class="ctr-meta-k" style="margin-top:12px">Sources (1)</div>
+      <div class="ov-sources">
+      
+        
+        <div class="ov-src" id="sref-barrientos2026cellshape">
+          <b class="ov-src-t">Barrientos 2026</b> <span class="ov-src-k">barrientos2026cellshape</span>
+          <div class="ov-src-t">Basement membrane turnover controls cell shape</div>
+          <div class="ctr-meta-k" style="text-transform:none">Barrientos, Rodrigo and Meadowcroft, Billie and Sánchez-Sánchez, Beatriz and others · 2026 · <a href="https://www.cell.com/cell/fulltext/S0092-8674(26)00808-1" target="_blank" rel="noopener">source ↗</a></div>
+        </div>
+      
+      </div>
+    </div>
+    
 
     <div class="ctr-block">
       <h2 class="overview-label ctr-h">Result</h2>
-      <p class="ctr-text"></p>
+      <p class="ctr-text">The intervention ordering reproduces exactly. Predicted cell height is tallest under perlecan gain (0.4386), then control (0.4287), then perlecan loss (0.4043) -- a strict gain &gt; control &gt; loss ordering, matching Figure 7. The inferred relaxation time scales exactly linearly with the perlecan factor (inferred_relaxation = 5.0 x perlecan_factor: 1.5 at loss, 5.0 at control, 10.0 at gain, 15.0 at a factor of 3), and is reported as a separate output from the predicted height, so the inferred (turnover) and predicted (mechanics) quantities stay distinct as the plan requires. The fast-growth condition (shorter doubling time) collapses the cell to height 0.134 -- faster proliferation spreads the cell far more strongly than perlecan changes it. The perlecan-driven height differences are small in magnitude (~2-3% gain-vs-control at these parameters) while strictly ordered; the growth-rate axis dominates cell shape.
+</p>
+      
+      
+      <div class="ov-metrics">
+        
+        <div class="ov-metric ov-metric-pass">
+          <div class="ov-metric-v">cell height 0.4386 (gain) &gt; 0.4287 (control) &gt; 0.4043 (loss) -- strict Fig 7 ordering</div>
+          <div class="ov-metric-k">perlecan-intervention-ordering</div>
+        </div>
+        
+        <div class="ov-metric ov-metric-pass">
+          <div class="ov-metric-v">inferred_relaxation = 5.0 x perlecan_factor: 1.5 / 5.0 / 10.0 / 15.0 for factor 0.3 / 1.0 / 2.0 / 3.0</div>
+          <div class="ov-metric-k">inferred-relaxation-scales-with-perlecan</div>
+        </div>
+        
+        <div class="ov-metric ov-metric-pass">
+          <div class="ov-metric-v">inferred_relaxation (turnover) and cell_height (mechanics) emitted as separate outputs; perlecan acts on height only via relaxation</div>
+          <div class="ov-metric-k">inferred-and-predicted-distinct</div>
+        </div>
+        
+        <div class="ov-metric ov-metric-pass">
+          <div class="ov-metric-v">fast-growth height 0.1343 &lt;&lt; control 0.4287 -- growth rate dominates shape</div>
+          <div class="ov-metric-k">faster-growth-spreads</div>
+        </div>
+        
+      </div>
+      
+      
+      
+      
+    <div class="overview-section findings-section">
+      <h2 class="overview-label">🔬 Findings — what this study taught us</h2>
       
       
       
       
       
+      
+      
+      
+      <div class="finding-card finding-kind-biological finding-status-confirms">
+        <details class="finding-details">
+          <summary class="finding-row">
+            <span class="finding-status-glyph">✓</span>
+            <span class="finding-claim finding-statement">The pipeline reproduces Figure 7&#39;s intervention ordering: predicted cell height is tallest under perlecan gain (0.4386), then control (0.4287), then perlecan loss (0.4043) -- a strict gain &gt; control &gt; loss ordering.
+</span>
+            
+            <span class="finding-chip">via <code>perlecan-intervention-ordering</code></span>
+            
+          </summary>
+          <div class="finding-drawer">
+            <div class="finding-header">
+              <span class="finding-id">F1-fig7-ordering-reproduced</span>
+              <span class="finding-kind">biological</span>
+              <span class="finding-status-text">confirms literature</span>
+            </div>
+            
+            
+            <div class="finding-evidence">
+              <strong>observed:</strong> 0.4386 &gt; 0.4287 &gt; 0.4043 (perlecan gain / control / loss) · 
+              
+              via test <a href="#bt-perlecan-intervention-ordering" onclick="_gotoStudyTab('audit','bt-perlecan-intervention-ordering');return false;"><code>perlecan-intervention-ordering</code></a> · 
+              in run <a href="#run-r6-perlecan-growth-conditions"><code>r6-perlecan-growth-conditions</code></a>
+              
+              
+            </div>
+            
+            
+            <div class="finding-traceability" style="font-size:0.84em;color:#475569;padding:4px 10px;margin:4px 0">
+              
+              
+              runs: <a href="#run-r6-perlecan-growth-conditions"><code>r6-perlecan-growth-conditions</code></a>
+            </div>
+            
+            
+            
+            <div class="pass_if-band muted small" style="font-size:0.82em;padding:2px 10px">judged against <code>pass_if: op: strictly_decreasing · note: height(gain) &gt; height(control) &gt; height(loss)</code></div>
+            
+            
+            
+            <div class="finding-expected">
+              <strong>expected:</strong> perlecan gain taller, loss flatter (Fig 7) · 
+              
+              cites: <a class="ov-cite" href="#sref-barrientos2026cellshape" title="Basement membrane turnover controls cell shape">Barrientos 2026</a>
+            </div>
+            
+            
+            <div class="finding-explanation"><em>Why:</em> Perlecan gain lengthens the inferred collagen lifetime, slowing BM relaxation, so the R1 mechanics keep the cell taller; perlecan loss does the reverse.
+</div>
+            
+            <div class="finding-next"><strong>→ Next:</strong> feed the closed reproduction campaign into the E4 predictive-feedback study</div>
+          </div>
+        </details>
+      </div>
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      <div class="finding-card finding-kind-methodological finding-status-confirms">
+        <details class="finding-details">
+          <summary class="finding-row">
+            <span class="finding-status-glyph">✓</span>
+            <span class="finding-claim finding-statement">The inferred BM relaxation time (turnover) and the predicted cell height (mechanics) are distinct pipeline outputs; the inferred relaxation scales exactly linearly with the perlecan factor (5.0 x factor: 1.5 / 5.0 / 10.0 / 15.0), and perlecan reaches the predicted shape only through that relaxation time.
+</span>
+            
+            <span class="finding-chip">via <code>inferred-relaxation-scales-with-perlecan</code></span>
+            
+          </summary>
+          <div class="finding-drawer">
+            <div class="finding-header">
+              <span class="finding-id">F2-inferred-predicted-distinct</span>
+              <span class="finding-kind">methodological</span>
+              <span class="finding-status-text">confirms literature</span>
+            </div>
+            
+            
+            <div class="finding-evidence">
+              <strong>observed:</strong> inferred_relaxation = 5.0 x perlecan_factor, exact; emitted separately from cell_height · 
+              
+              via test <a href="#bt-inferred-relaxation-scales-with-perlecan" onclick="_gotoStudyTab('audit','bt-inferred-relaxation-scales-with-perlecan');return false;"><code>inferred-relaxation-scales-with-perlecan</code></a> · 
+              in run <a href="#run-r6-perlecan-growth-conditions"><code>r6-perlecan-growth-conditions</code></a>
+              
+              
+            </div>
+            
+            
+            <div class="finding-traceability" style="font-size:0.84em;color:#475569;padding:4px 10px;margin:4px 0">
+              
+              
+              runs: <a href="#run-r6-perlecan-growth-conditions"><code>r6-perlecan-growth-conditions</code></a>
+            </div>
+            
+            
+            
+            <div class="pass_if-band muted small" style="font-size:0.82em;padding:2px 10px">judged against <code>pass_if: op: increasing · note: inferred_relaxation = 5.0 x perlecan_factor; strictly increasing in perlecan</code></div>
+            
+            
+            
+            <div class="finding-explanation"><em>Why:</em> The pipeline reports inferred_relaxation and cell_height as separate outputs, satisfying the plan&#39;s inferred-vs-predicted validation distinction.</div>
+            
+            
+          </div>
+        </details>
+      </div>
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      <div class="finding-card finding-kind-biological finding-status-partial">
+        <details class="finding-details">
+          <summary class="finding-row">
+            <span class="finding-status-glyph">◐</span>
+            <span class="finding-claim finding-statement">The growth-rate axis dominates cell shape (fast growth collapses height to 0.134 vs control 0.429), while the perlecan-driven height differences are small in magnitude (~2-3% gain vs control). The Fig 7 ordering is robust, but the model&#39;s perlecan sensitivity is modest.
+</span>
+            
+            <span class="finding-chip">via <code>faster-growth-spreads</code></span>
+            
+          </summary>
+          <div class="finding-drawer">
+            <div class="finding-header">
+              <span class="finding-id">F3-growth-dominates-magnitude-modest</span>
+              <span class="finding-kind">biological</span>
+              <span class="finding-status-text">partial literature</span>
+            </div>
+            
+            
+            <div class="finding-evidence">
+              <strong>observed:</strong> fast-growth 0.1343 vs control 0.4287; gain-vs-control gap ~2.3% · 
+              
+              via test <a href="#bt-faster-growth-spreads" onclick="_gotoStudyTab('audit','bt-faster-growth-spreads');return false;"><code>faster-growth-spreads</code></a> · 
+              in run <a href="#run-r6-perlecan-growth-conditions"><code>r6-perlecan-growth-conditions</code></a>
+              
+              
+            </div>
+            
+            
+            <div class="finding-traceability" style="font-size:0.84em;color:#475569;padding:4px 10px;margin:4px 0">
+              
+              
+              runs: <a href="#run-r6-perlecan-growth-conditions"><code>r6-perlecan-growth-conditions</code></a>
+            </div>
+            
+            
+            
+            <div class="pass_if-band muted small" style="font-size:0.82em;padding:2px 10px">judged against <code>pass_if: op: lt · note: height(fast_growth) &lt; height(control)</code></div>
+            
+            
+            
+            
+            
+            <div class="finding-next"><strong>→ Next:</strong> propagate the inferred-lifetime uncertainty bands to test whether the perlecan ordering survives the distribution width</div>
+          </div>
+        </details>
+      </div>
+      
+      
+    </div>
+    
       
       
       
       <div class="ctr-meta ctr-assess">
         
         <div class="ctr-meta-row"><span class="ctr-meta-k">Confidence</span>
-          <span class="ctr-badge ctr-badge-investigating">Investigating</span>
-          
-          
+          <span class="ctr-badge ctr-badge-accepted">Accepted</span>
+          <span class="ctr-vch">biology&nbsp;PASS</span>
+          <span class="ctr-vch">insight&nbsp;POSITIVE</span>
         </div>
         
+        
+        <div class="ctr-meta-row"><span class="ctr-meta-k">Caveat</span> <span class="ctr-meta-item">Reduced units; the claim is the RELATIVE morphology ordering, not absolute cell height.</span></div>
         
       </div>
       
@@ -656,7 +876,7 @@
   <div class="overview-section" id="model-section">
     <h3>Runnable models <span class="muted" style="font-size:0.85em;font-weight:normal">— the composite(s) this study simulates</span></h3>
     
-    <div class="cond-block" data-model-composite="viva_lumenoid.composites.turnover_shape_pipeline" data-model-overrides='{}'>
+    <div class="cond-block" data-model-composite="viva_lumenoid.composites.turnover_shape_pipeline" data-model-overrides='{"collagen_lifetime": 5.0, "doubling_time": 5.0, "perlecan_factor": 1.0}'>
       <div class="cond-block-title" style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
         <strong>bm-r6-perlecan-growth-perturbations</strong>
         
@@ -681,10 +901,29 @@
       
       
       
+      
+      
+      
+        
+      
+        
+      
+        
+      
+      
+      
+      
       <div class="model-config-mount" style="margin-top:8px">
         <div class="viv-loading"><span class="viv-loading-spin" aria-hidden="true"></span><span>Loading configuration…</span></div></div>
       
       
+      
+      <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;font-size:0.8em">
+        <span class="cond-pill"><span class="cond-pill-k">seeds</span>=4 (sweep)</span>
+        
+        
+        <span class="cond-pill"><span class="cond-pill-k">status</span>=completed</span>
+      </div>
       
     </div>
     
@@ -693,6 +932,190 @@
   
 
   
+  
+  <div class="overview-section" id="conditions-section">
+    <h3>Conditions <span class="muted" style="font-size:0.85em;font-weight:normal">— what we set up to test it</span></h3>
+    <p class="muted" style="font-size:0.88em">The experimental knobs: how variants perturb the baseline, and which model settings still need a human-set value.</p>
+
+    
+    <div class="cond-block">
+      <div class="cond-block-title">Variants <span class="muted" style="font-weight:normal;font-size:0.85em">(3)</span></div>
+      <table class="cond-table">
+        <thead><tr><th>Variant</th><th>Composite / base</th><th>Parameter overrides</th><th>Notes</th></tr></thead>
+        <tbody>
+          
+          
+          
+          
+          <tr data-model-composite="" data-model-overrides='{}'>
+            <td><code>perlecan-gain</code></td>
+            <td>
+              <em class="muted">(inherits baseline)</em>
+            </td>
+            <td>
+              
+                <em class="muted">(no overrides)</em>
+              
+            </td>
+            <td>Perlecan gain -&gt; taller.</td>
+          </tr>
+          
+          
+          
+          
+          <tr data-model-composite="" data-model-overrides='{}'>
+            <td><code>perlecan-loss</code></td>
+            <td>
+              <em class="muted">(inherits baseline)</em>
+            </td>
+            <td>
+              
+                <em class="muted">(no overrides)</em>
+              
+            </td>
+            <td>Perlecan loss -&gt; flatter.</td>
+          </tr>
+          
+          
+          
+          
+          <tr data-model-composite="" data-model-overrides='{}'>
+            <td><code>fast-growth</code></td>
+            <td>
+              <em class="muted">(inherits baseline)</em>
+            </td>
+            <td>
+              
+                <em class="muted">(no overrides)</em>
+              
+            </td>
+            <td>Faster growth -&gt; flatter.</td>
+          </tr>
+          
+        </tbody>
+      </table>
+    </div>
+    
+
+    
+    <div class="cond-block">
+      
+      <div class="cond-block-title">
+        Model settings <span class="muted" style="font-weight:normal;font-size:0.85em">(3)</span>
+        
+      </div>
+      <p class="muted" style="font-size:0.85em;margin:0 0 6px 0">Edit a value in the Current column and click <strong>Save</strong>. The next <code>pbg_runner</code> invocation for this study reads the updated value from <code>study.yaml</code>.</p>
+      <table class="cond-table cond-expert-table" data-study="bm-r6-perlecan-growth-perturbations">
+        <thead><tr><th>Name</th><th>Type</th><th>Default</th><th>Current</th><th>Range</th><th>Gate</th><th></th></tr></thead>
+        <tbody>
+          
+          
+          
+          
+          <tr data-ei-name="perlecan_factor">
+            <td title=""><code>perlecan_factor</code></td>
+            <td></td>
+            <td><code>1.0</code></td>
+            <td>
+              
+              <input class="cond-ei-input"
+                     type="text"
+                     value="1.0"
+                     placeholder="(awaiting expert)"
+                     min="0.3" max="2.0"
+                     step="any"
+                     style="width:100%;padding:3px 6px;border:1px solid #cbd5e1;border-radius:3px;font:inherit">
+              
+              
+              
+            </td>
+            <td>
+              <code>[0.3, 2.0]</code>
+              
+            </td>
+            <td>
+              <span class="cond-ei-gate-opt">optional</span>
+            </td>
+            <td>
+              <button class="action-btn cond-ei-save" type="button"
+                      onclick="_saveExpertInput('bm-r6-perlecan-growth-perturbations', 'perlecan_factor', this)">Save</button>
+              <span class="cond-ei-flash" style="display:none;margin-left:6px;font-size:0.85em"></span>
+            </td>
+          </tr>
+          
+          
+          
+          
+          <tr data-ei-name="collagen_lifetime">
+            <td title=""><code>collagen_lifetime</code></td>
+            <td></td>
+            <td><code>5.0</code></td>
+            <td>
+              
+              <input class="cond-ei-input"
+                     type="text"
+                     value="5.0"
+                     placeholder="(awaiting expert)"
+                     min="1.5" max="10.0"
+                     step="any"
+                     style="width:100%;padding:3px 6px;border:1px solid #cbd5e1;border-radius:3px;font:inherit">
+              
+              
+              
+            </td>
+            <td>
+              <code>[1.5, 10.0]</code>
+              
+            </td>
+            <td>
+              <span class="cond-ei-gate-opt">optional</span>
+            </td>
+            <td>
+              <button class="action-btn cond-ei-save" type="button"
+                      onclick="_saveExpertInput('bm-r6-perlecan-growth-perturbations', 'collagen_lifetime', this)">Save</button>
+              <span class="cond-ei-flash" style="display:none;margin-left:6px;font-size:0.85em"></span>
+            </td>
+          </tr>
+          
+          
+          
+          
+          <tr data-ei-name="doubling_time">
+            <td title=""><code>doubling_time</code></td>
+            <td></td>
+            <td><code>5.0</code></td>
+            <td>
+              
+              <input class="cond-ei-input"
+                     type="text"
+                     value="5.0"
+                     placeholder="(awaiting expert)"
+                     min="2.5" max="5.0"
+                     step="any"
+                     style="width:100%;padding:3px 6px;border:1px solid #cbd5e1;border-radius:3px;font:inherit">
+              
+              
+              
+            </td>
+            <td>
+              <code>[2.5, 5.0]</code>
+              
+            </td>
+            <td>
+              <span class="cond-ei-gate-opt">optional</span>
+            </td>
+            <td>
+              <button class="action-btn cond-ei-save" type="button"
+                      onclick="_saveExpertInput('bm-r6-perlecan-growth-perturbations', 'doubling_time', this)">Save</button>
+              <span class="cond-ei-flash" style="display:none;margin-left:6px;font-size:0.85em"></span>
+            </td>
+          </tr>
+          
+        </tbody>
+      </table>
+    </div>
+    
+  </div>
   
 
   
@@ -721,15 +1144,6 @@
       <div class="viv-loading"><span class="viv-loading-spin" aria-hidden="true"></span><span>Loading readouts from the composite emit plan…</span></div>
     </div>
 
-    
-    <details style="margin-top: 1.4em;">
-      <summary class="muted">How observables tie to Expected Behavior</summary>
-      <p style="font-size: 0.9em;">Observables can be referenced by name in an
-      <code>expected_behavior[i].measure</code> block (e.g. <code>kind: bulk_count, id:
-      "MONOMER0-160[c]"</code>). When the dashboard validates a study, it cross-checks
-      that every <code>measure</code> resolves to a declared observable, or to a
-      built-in helper.</p>
-    </details>
     
   </div>
   </div>
@@ -876,23 +1290,194 @@
     
     
     
-    <li class="expected-behavior-item" id="bt-intervention-ordering-matches-fig7"
+    <li class="expected-behavior-item" id="bt-perlecan-intervention-ordering"
         data-test-kind="behavioral"
         
-        data-pytest-node="intervention-ordering-matches-fig7"
-        data-classification="unclassified"
-        data-result="pending"
+        data-pytest-node="perlecan-intervention-ordering"
+        data-classification="primary"
+        data-result="PASS"
+        style="margin: 0 0 10px 0; padding: 10px 12px; border-left: 4px solid #10b981; background: #f8fafc; border-radius: 4px;">
+      
+        
+      <div style="display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;">
+        <span class="bt-result" style="font-size: 0.75em; font-family: monospace; padding: 2px 8px; border-radius: 9999px; background: #d1fae5; color: #065f46">✓ PASS</span>
+        <span class="classification-pill classification-primary">primary</span>
+        <strong style="font-size: 0.9em;">perlecan-intervention-ordering</strong>
+        
+        <span class="muted" style="font-size:0.78em">requires: <code>r6-perlecan-growth-conditions</code></span>
+        
+      </div>
+      <div style="margin-top: 6px; font-size: 0.95em;">Predicted cell height follows the Fig 7 intervention ordering: perlecan gain &gt; control &gt; perlecan loss.
+</div>
+      
+      <div style="margin-top:6px;font-size:0.85em;padding:6px 10px;background:#fff;border:1px solid #e2e8f0;border-radius:3px">
+        <strong>Latest result:</strong>
+        
+          <code style="font-family:ui-monospace,monospace;color:#475569;margin-right:8px">observed: cell height 0.4386 (gain) &gt; 0.4287 (control) &gt; 0.4043 (loss) -- strict Fig 7 ordering</code>
+        
+      </div>
+      
+      
+      <details style="margin-top: 6px; font-size: 0.82em;">
+        <summary class="muted" style="cursor: pointer;">Assertion</summary>
+        
+        <pre style="background:#fff; padding:8px; margin:4px 0 0 0; border:1px solid #e2e8f0; border-radius:3px; overflow-x:auto;">measure: {"cases": ["perlecan_gain", "control", "perlecan_loss"], "field": "cell_height", "kind": "order"}
+pass_if: {"note": "height(gain) \u003e height(control) \u003e height(loss)", "op": "strictly_decreasing"}
+cites:   ["barrientos2026cellshape"]</pre>
+      </details>
+      
+      
+      <details style="margin-top: 6px; font-size: 0.82em">
+        <summary class="muted" style="cursor:pointer; color:#92400e">⚠ Calibration anchor</summary>
+        <pre style="background:#fff7ed; padding:8px; margin:4px 0 0 0; border:1px solid #fdba74; border-radius:3px; overflow-x:auto">{
+  "cites": [
+    "barrientos2026cellshape"
+  ],
+  "literature_target": "perlecan gain taller, loss flatter (Fig 7 ordering)",
+  "observed_value": "0.4386 \u003e 0.4287 \u003e 0.4043",
+  "resolution": "concept"
+}</pre>
+      </details>
+      
+      
+      
+    </li>
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="expected-behavior-item" id="bt-inferred-relaxation-scales-with-perlecan"
+        data-test-kind="behavioral"
+        
+        data-pytest-node="inferred-relaxation-scales-with-perlecan"
+        data-classification="primary"
+        data-result="PASS"
+        style="margin: 0 0 10px 0; padding: 10px 12px; border-left: 4px solid #10b981; background: #f8fafc; border-radius: 4px;">
+      
+        
+      <div style="display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;">
+        <span class="bt-result" style="font-size: 0.75em; font-family: monospace; padding: 2px 8px; border-radius: 9999px; background: #d1fae5; color: #065f46">✓ PASS</span>
+        <span class="classification-pill classification-primary">primary</span>
+        <strong style="font-size: 0.9em;">inferred-relaxation-scales-with-perlecan</strong>
+        
+        <span class="muted" style="font-size:0.78em">requires: <code>r6-perlecan-growth-conditions</code></span>
+        
+      </div>
+      <div style="margin-top: 6px; font-size: 0.95em;">The inferred BM relaxation time scales with the perlecan factor (turnover -&gt; relaxation), linearly as collagen_lifetime x perlecan_factor.
+</div>
+      
+      <div style="margin-top:6px;font-size:0.85em;padding:6px 10px;background:#fff;border:1px solid #e2e8f0;border-radius:3px">
+        <strong>Latest result:</strong>
+        
+          <code style="font-family:ui-monospace,monospace;color:#475569;margin-right:8px">observed: inferred_relaxation = 5.0 x perlecan_factor: 1.5 / 5.0 / 10.0 / 15.0 for factor 0.3 / 1.0 / 2.0 / 3.0</code>
+        
+      </div>
+      
+      
+      <details style="margin-top: 6px; font-size: 0.82em;">
+        <summary class="muted" style="cursor: pointer;">Assertion</summary>
+        
+        <pre style="background:#fff; padding:8px; margin:4px 0 0 0; border:1px solid #e2e8f0; border-radius:3px; overflow-x:auto;">measure: {"field": "inferred_relaxation", "kind": "monotonicity", "versus": "perlecan_factor"}
+pass_if: {"note": "inferred_relaxation = 5.0 x perlecan_factor; strictly increasing in perlecan", "op": "increasing"}</pre>
+      </details>
+      
+      
+      
+      
+    </li>
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="expected-behavior-item" id="bt-inferred-and-predicted-distinct"
+        data-test-kind="behavioral"
+        
+        data-pytest-node="inferred-and-predicted-distinct"
+        data-classification="secondary"
+        data-result="PASS"
         style="margin: 0 0 10px 0; padding: 10px 12px; border-left: 4px solid #cbd5e1; background: #f8fafc; border-radius: 4px;">
       
         
       <div style="display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;">
-        <span class="bt-result" style="font-size: 0.75em; font-family: monospace; padding: 2px 8px; border-radius: 9999px; background: #f1f5f9; color: #475569">⏳ pending</span>
-        <span class="classification-pill classification-unclassified">unclassified</span>
-        <strong style="font-size: 0.9em;">intervention-ordering-matches-fig7</strong>
+        <span class="bt-result" style="font-size: 0.75em; font-family: monospace; padding: 2px 8px; border-radius: 9999px; background: #d1fae5; color: #065f46">✓ PASS</span>
+        <span class="classification-pill classification-secondary">secondary</span>
+        <strong style="font-size: 0.9em;">inferred-and-predicted-distinct</strong>
+        
+        <span class="muted" style="font-size:0.78em">requires: <code>r6-perlecan-growth-conditions</code></span>
         
       </div>
-      <div style="margin-top: 6px; font-size: 0.95em;"></div>
+      <div style="margin-top: 6px; font-size: 0.95em;">The inferred (turnover) relaxation and the predicted (mechanics) cell height are distinct outputs -- the validation distinction the plan requires.
+</div>
       
+      <div style="margin-top:6px;font-size:0.85em;padding:6px 10px;background:#fff;border:1px solid #e2e8f0;border-radius:3px">
+        <strong>Latest result:</strong>
+        
+          <code style="font-family:ui-monospace,monospace;color:#475569;margin-right:8px">observed: inferred_relaxation (turnover) and cell_height (mechanics) emitted as separate outputs; perlecan acts on height only via relaxation</code>
+        
+      </div>
+      
+      
+      <details style="margin-top: 6px; font-size: 0.82em;">
+        <summary class="muted" style="cursor: pointer;">Assertion</summary>
+        
+        <pre style="background:#fff; padding:8px; margin:4px 0 0 0; border:1px solid #e2e8f0; border-radius:3px; overflow-x:auto;">measure: {"fields": ["inferred_relaxation", "cell_height"], "kind": "structure"}
+pass_if: {"note": "both are emitted independently; perlecan drives height only through the relaxation time", "op": "both_emitted"}</pre>
+      </details>
+      
+      
+      
+      
+    </li>
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="expected-behavior-item" id="bt-faster-growth-spreads"
+        data-test-kind="behavioral"
+        
+        data-pytest-node="faster-growth-spreads"
+        data-classification="secondary"
+        data-result="PASS"
+        style="margin: 0 0 10px 0; padding: 10px 12px; border-left: 4px solid #cbd5e1; background: #f8fafc; border-radius: 4px;">
+      
+        
+      <div style="display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;">
+        <span class="bt-result" style="font-size: 0.75em; font-family: monospace; padding: 2px 8px; border-radius: 9999px; background: #d1fae5; color: #065f46">✓ PASS</span>
+        <span class="classification-pill classification-secondary">secondary</span>
+        <strong style="font-size: 0.9em;">faster-growth-spreads</strong>
+        
+        <span class="muted" style="font-size:0.78em">requires: <code>r6-perlecan-growth-conditions</code></span>
+        
+      </div>
+      <div style="margin-top: 6px; font-size: 0.95em;">A faster growth rate (shorter doubling time) spreads the cell flat, independent of perlecan -- the growth-rate intervention of Fig 7.
+</div>
+      
+      <div style="margin-top:6px;font-size:0.85em;padding:6px 10px;background:#fff;border:1px solid #e2e8f0;border-radius:3px">
+        <strong>Latest result:</strong>
+        
+          <code style="font-family:ui-monospace,monospace;color:#475569;margin-right:8px">observed: fast-growth height 0.1343 &lt;&lt; control 0.4287 -- growth rate dominates shape</code>
+        
+      </div>
+      
+      
+      <details style="margin-top: 6px; font-size: 0.82em;">
+        <summary class="muted" style="cursor: pointer;">Assertion</summary>
+        
+        <pre style="background:#fff; padding:8px; margin:4px 0 0 0; border:1px solid #e2e8f0; border-radius:3px; overflow-x:auto;">measure: {"cases": ["fast_growth", "control"], "field": "cell_height", "kind": "compare"}
+pass_if: {"note": "height(fast_growth) \u003c height(control)", "op": "lt"}</pre>
+      </details>
       
       
       
@@ -944,37 +1529,37 @@
       
       <span class="status-step  gate-status-not-assessed gate-current">
         <span class="dot"></span>1 · Plan
-        
+        <span class="step-val">drafted</span>
         <span class="gate-current-tag">you are here</span>
       </span>
       
-      <span class="status-step  gate-status-not-assessed">
+      <span class="status-step set gate-status-passed">
         <span class="dot"></span>2 · Execution
-        
+        <span class="step-val">ran</span>
         
       </span>
       
-      <span class="status-step  gate-status-not-assessed">
+      <span class="status-step set gate-status-passed">
         <span class="dot"></span>3 · Evidence
-        
+        <span class="step-val">evaluated</span>
         
       </span>
       
-      <span class="status-step  gate-status-not-assessed">
+      <span class="status-step set gate-status-passed">
         <span class="dot"></span>4 · Quality
-        
+        <span class="step-val">evaluated</span>
         
       </span>
       
-      <span class="status-step  gate-status-not-assessed">
+      <span class="status-step set gate-status-passed">
         <span class="dot"></span>5 · Decision
-        
+        <span class="step-val">passed</span>
         
       </span>
       
       <span class="status-step  gate-status-not-assessed">
         <span class="dot"></span>6 · Release
-        
+        <span class="step-val">requested</span>
         
       </span>
       
@@ -1018,40 +1603,42 @@
           <span class="narrative-label">Regression compatibility</span>
           <span class="narrative-input verdict-badge-computed" data-verdict-track="regression_compatibility"
                 title="Computed from run status (read-only)"
-                style="display:inline-block;padding:2px 12px;border-radius:9999px;font-weight:700;font-size:0.85em;background:#f1f5f9;color:#475569">PENDING</span>
+                style="display:inline-block;padding:2px 12px;border-radius:9999px;font-weight:700;font-size:0.85em;background:#f1f5f9;color:#475569">PASS</span>
           <span class="muted small" style="margin-left:6px">computed from run status</span>
         </label>
         <label class="narrative-row narrative-row-wide">
           <span class="narrative-label">Regression basis</span>
           <textarea class="narrative-input narrative-textarea" rows="2"
                     data-narrative-path="conclusion_verdicts.regression_compatibility.basis"
-                    placeholder="e.g. Builds cleanly; tests pass; pyproject deps unchanged."></textarea>
+                    placeholder="e.g. Builds cleanly; tests pass; pyproject deps unchanged.">The turnover_shape_pipeline composite is registered and the pipeline runs cleanly; the behavior-test contracts pass deterministically in CI.</textarea>
         </label>
         <label class="narrative-row">
           <span class="narrative-label">Empirical validation</span>
           <span class="narrative-input verdict-badge-computed" data-verdict-track="biological_validation"
                 title="Computed from the gate evaluator (read-only)"
-                style="display:inline-block;padding:2px 12px;border-radius:9999px;font-weight:700;font-size:0.85em;background:#f1f5f9;color:#475569">PENDING</span>
+                style="display:inline-block;padding:2px 12px;border-radius:9999px;font-weight:700;font-size:0.85em;background:#f1f5f9;color:#475569">PASS</span>
           <span class="muted small" style="margin-left:6px">computed from gate evaluator</span>
         </label>
         <label class="narrative-row narrative-row-wide">
           <span class="narrative-label">Empirical basis</span>
           <textarea class="narrative-input narrative-textarea" rows="2"
                     data-narrative-path="conclusion_verdicts.biological_validation.basis"
-                    placeholder="e.g. atp_fraction = 0.997, outside Boesen 2024 band [0.2, 0.5]."></textarea>
+                    placeholder="e.g. atp_fraction = 0.997, outside Boesen 2024 band [0.2, 0.5].">Reproduces Fig 7&#39;s intervention ordering (perlecan gain &gt; control &gt; loss) with the inferred relaxation kept distinct from the predicted shape. Magnitude of the perlecan effect is modest (noted as a limitation), but the ordering and the inferred/predicted split are robust.
+</textarea>
         </label>
         <label class="narrative-row">
           <span class="narrative-label">Explanatory gain</span>
           <span class="narrative-input verdict-badge-computed" data-verdict-track="explanatory_gain"
                 title="Computed from interpretation-tier findings (read-only)"
-                style="display:inline-block;padding:2px 12px;border-radius:9999px;font-weight:700;font-size:0.85em;background:#f1f5f9;color:#475569">PENDING</span>
+                style="display:inline-block;padding:2px 12px;border-radius:9999px;font-weight:700;font-size:0.85em;background:#f1f5f9;color:#475569">POSITIVE</span>
           <span class="muted small" style="margin-left:6px">computed from interpretation-tier findings</span>
         </label>
         <label class="narrative-row narrative-row-wide">
           <span class="narrative-label">Explanatory basis</span>
           <textarea class="narrative-input narrative-textarea" rows="2"
                     data-narrative-path="conclusion_verdicts.explanatory_gain.basis"
-                    placeholder="e.g. Three findings worth keeping; design_pivot_required closed."></textarea>
+                    placeholder="e.g. Three findings worth keeping; design_pivot_required closed.">Shows the growth-rate axis dominates cell shape over the perlecan axis, and provides the closed turnover-&gt;shape chain the predictive-feedback study (E4) builds on.
+</textarea>
         </label>
       </div>
     </div>
@@ -1065,19 +1652,101 @@
         evaluator's result from the behavior-test outcomes — the evaluation the
         conclusion rests on.</p>
       <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
-        <span class="gate-status-not_started" style="padding:2px 12px;border-radius:9999px;font-weight:700;font-size:0.85em">not_started</span>
+        <span class="gate-status-passed" style="padding:2px 12px;border-radius:9999px;font-weight:700;font-size:0.85em">passed</span>
         <span class="muted small">evaluated by code</span>
-        <span class="muted small">0/1 passed</span>
+        <span class="muted small">4/4 passed</span>
       </div>
       
     </div>
     
 
     
+    
+    
+    
+    <div class="decide-section" style="margin-top:18px">
+      <h3 class="overview-label">Conclusion logic — gate decision</h3>
+      
+      <div style="padding:10px 14px;background:#f0fdf4;border-left:4px solid #10b981;border-radius:4px;margin-bottom:8px">
+        <strong>✓ If primary tests pass:</strong>
+        
+        <div style="margin-top:4px"><em>Implementation:</em> The turnover-&gt;shape pipeline runs end-to-end and reproduces the Fig 7 ordering.</div>
+        
+        
+        <div style="margin-top:4px"><em>Empirical validation:</em> Perlecan gain &gt; control &gt; loss reproduced; inferred relaxation scales with perlecan; inferred vs predicted kept distinct.</div>
+        
+        
+        <div style="margin-top:4px"><em>Pipeline unblocks:</em>
+          <ul style="margin:4px 0 0 18px"><li>E4 predictive-feedback study -- this closes the reproduction campaign it builds on.</li></ul>
+        </div>
+        
+      </div>
+      
+      
+      <div style="padding:10px 14px;background:#fef2f2;border-left:4px solid #dc2626;border-radius:4px">
+        <strong>✗ If primary tests fail:</strong>
+        
+        <div style="margin-top:4px"><em>Diagnose:</em>
+          <ul style="margin:4px 0 0 18px"><li>Ordering inverted -- check the sign of the perlecan modulation (&gt;1 must lengthen the lifetime).</li><li>Inferred and predicted collapsed into one -- the pipeline must emit inferred_relaxation separately from cell_height.</li></ul>
+        </div>
+        
+        
+        <div style="margin-top:4px"><em>Block downstream:</em> Do not advance to the predictive-feedback study until the ordering + the inferred/predicted split hold.</div>
+        
+      </div>
+      
+    </div>
+    
+
+    
+    
+    
 
   </div>
 
   
+  
+  <div class="overview-section"><h2 class="overview-label">Plan &amp; assumptions</h2>
+
+    
+    <div class="overview-section">
+      <h3 class="overview-label">Pipeline gate</h3>
+      <p class="muted" style="margin: 0 0 8px 0;font-size:0.88em">
+        Each study is a model-building gate: it answers <em>"Can we safely build the next layer?"</em>
+      </p>
+      
+      <div style="margin-bottom:6px"><strong>Prerequisites:</strong>
+        <code>bm-r1-published-tissue-baseline</code>
+      </div>
+      
+      
+      
+      <div><strong>Proceed when:</strong> <span class="muted">A reproduced intervention ordering (perlecan gain &gt; control &gt; loss) with the inferred relaxation kept distinct from the predicted shape closes the P1-era reproduction and feeds the predictive-feedback study (E4).
+</span></div>
+      
+    </div>
+    
+
+    
+    <div class="overview-section">
+      <h3 class="overview-label">Key assumptions</h3>
+      <ul style="margin:0 0 0 18px;padding:0;font-size:0.93em">
+        <li style="margin:2px 0">Perlecan modulates the collagen IV lifetime multiplicatively (perlecan_factor); &gt;1 stabilizes (longer lifetime), &lt;1 destabilizes.</li><li style="margin:2px 0">The inferred collagen lifetime, times the perlecan factor, IS the BM relaxation time (turnover -&gt; relaxation).</li><li style="margin:2px 0">The predicted cell shape is the R1 reduced-order prism mechanics run with that relaxation (perlecan does not act on the mechanics except through the relaxation time).</li><li style="margin:2px 0">inferred_relaxation (turnover/inference) and cell_height (mechanics prediction) are kept as distinct outputs; the inferred quantity is not re-derived from the predicted one.</li><li style="margin:2px 0">Reduced units; relative morphology ordering is the claim, not absolute cell height. Uncertainty bands over the inferred lifetime distribution are a documented follow-up (point estimates recorded here).</li>
+      </ul>
+    </div>
+    
+
+    
+    <div class="overview-section">
+      <h3 class="overview-label">Limitations</h3>
+      <p class="muted" style="margin:0 0 6px 0;font-size:0.85em">What this study explicitly does NOT validate (prevents overclaim).</p>
+      <ul style="margin:0 0 0 18px;padding:0;font-size:0.93em">
+        <li style="margin:2px 0">Reduced units; the claim is the RELATIVE morphology ordering, not absolute cell height.</li><li style="margin:2px 0">Perlecan-driven height differences are small in magnitude (~2-3% gain vs control at these parameters); the ordering is strict but the sensitivity is modest, while the growth-rate axis dominates shape.</li><li style="margin:2px 0">Point estimates only: the Fig 7 result propagates an inferred-lifetime DISTRIBUTION with uncertainty bands; this study records the point-estimate ordering and leaves the uncertainty propagation as a documented follow-up.</li><li style="margin:2px 0">The inferred collagen lifetime is an input parameter here, not re-inferred from a turnover observation model (Fig 3-6); the inference step is upstream (R3-era) and assumed.</li><li style="margin:2px 0">Homogeneous single cell via the R1 endpoint; no spatial epithelium.</li>
+      </ul>
+    </div>
+    
+
+  </div>
   
 
   
@@ -1085,22 +1754,29 @@
 
     
     
-    <p class="muted" style="margin:0 0 10px 0;font-size:0.85em">
-      Synthesised read-only from canonical fields — edit <code>findings</code>,
-      <code>limitations</code>, and <code>discovery_implications</code> to change
-      this (and the generated report) together.
-    </p>
-    <div class="conclusions-grid conclusions-synthesis">
-      <div class="conclusion-field">
-        <h3>Claims <span class="muted small">(from findings)</span></h3>
-        <p class="muted">No findings recorded yet.</p>
+    
+    
+    <div class="decide-section">
+      <h3 class="overview-label">Latest run outcomes</h3>
+      <div style="font-size:0.88em;color:#64748b;margin-bottom:8px">
+        baseline · seed ? ·
+        ?s simulated ·
+        ? history rows ·
+        started ?
       </div>
-      <div class="conclusion-field">
-        <h3>Evidence <span class="muted small">(from findings)</span></h3>
-        
-        <p class="muted">No evidence recorded on findings yet.</p>
-      </div>
+      
+      
+      
+      <p class="muted" style="margin:0;font-size:0.9em">
+        <strong>4</strong> test outcomes
+        — <span style="color:#065f46;font-weight:600">4 PASS</span> ·
+        <span style="color:#991b1b;font-weight:600">0 FAIL</span>.
+        Per-test outcomes (measured value · evaluator · band) are canonical on the
+        <a onclick="_setStudyTab('audit')" style="cursor:pointer;color:#3b82f6;text-decoration:underline">Tests (in Audit) →</a>.
+      </p>
+      
     </div>
+    
     
 
   </div>
@@ -1113,32 +1789,79 @@
 
     
     
+    
+    <div class="overview-section" id="discovery-implications-section" style="margin-top:18px">
+      <h3 class="overview-label">Discovery implications</h3>
+      <p class="muted" style="margin:0 0 10px 0;font-size:0.88em">Where this study's results leave the mechanism model — and what to investigate next.</p>
 
+      
+      <div class="di-uncertainties">
+        
+        <div class="di-unc di-unc-resolved">
+          <h4>✓ Resolved uncertainties</h4>
+          <ul><li>The turnover-&gt;shape pipeline reproduces the Fig 7 perlecan intervention ordering.</li><li>Inferred (turnover) and predicted (mechanics) quantities are kept distinct, as the plan requires.</li></ul>
+        </div>
+        
+        
+        <div class="di-unc di-unc-remaining">
+          <h4>● Remaining uncertainties</h4>
+          <ul><li>Whether the perlecan ordering survives uncertainty-band propagation given the modest ~2-3% effect.</li><li>Absolute cell shape in physical units.</li></ul>
+        </div>
+        
+      </div>
+      
+
+      
+
+      
+
+      
+      
+      
+      <div class="di-group">
+        <h3>Follow-up study proposals
+          <span class="muted" style="font-weight:normal;font-size:0.82em">(discovered)</span>
+          <span class="muted" style="font-weight:normal;font-size:0.85em">(1)</span></h3>
+        <p class="muted" style="margin:0 0 8px 0;font-size:0.85em">Click <strong>➕ Add to investigation</strong> to spawn a new study node in the investigation graph.</p>
+        <div class="followup-list">
+          
+          
+          <div class="di-card di-fup-card">
+            <div class="followup-header">
+              <strong class="followup-title">Inferred-lifetime uncertainty-band propagation</strong>
+              
+              
+              
+              
+            </div>
+            
+            
+            <div class="followup-actions" style="margin-top:8px">
+              <button class="btn-seed-followup"
+                      onclick="_seedFollowupProposal('bm-r6-perlecan-growth-perturbations', "fp-r6-uncertainty-bands")">➕ Add to investigation</button>
+            </div>
+          </div>
+          
+        </div>
+      </div>
+      
+    </div>
+    
+
+    
+    
+    
     
 
   </div>
 
   
   
-  <details class="overview-section"><summary class="overview-label">Limitations &amp; provenance</summary>
-
-    
-    
-    
-    <div class="conclusions-grid conclusions-synthesis">
-      <div class="conclusion-field">
-        <h3>Next steps <span class="muted small">(from discovery implications)</span></h3>
-        <p class="muted">No follow-up proposals recorded yet.</p>
-      </div>
-    </div>
-
-  </details>
-  
 
 </section>
 
 </main>
-<script>window.__DASH_CONFIG__ = { mode: "snapshot", interactiveUrl: "https://github.com/vivarium-collective/viva-lumenoid", basePath: "/viva-lumenoid/dashboard", inputsDownloadBase: "https://github.com/vivarium-collective/viva-lumenoid/raw/main", provenance: {"repo_slug": "vivarium-collective/viva-lumenoid", "repo_url": "https://github.com/vivarium-collective/viva-lumenoid", "commit": "b378c10fdb7bffd2aa334539e97c0068c0eba126", "commit_url": "https://github.com/vivarium-collective/viva-lumenoid/commit/b378c10fdb7bffd2aa334539e97c0068c0eba126", "branch": "main", "lockfile": "uv.lock@796aed340563", "generated_at": "2026-10-20 02:44 UTC"} };</script>
+<script>window.__DASH_CONFIG__ = { mode: "snapshot", interactiveUrl: "https://github.com/vivarium-collective/viva-lumenoid", basePath: "/viva-lumenoid/dashboard", inputsDownloadBase: "https://github.com/vivarium-collective/viva-lumenoid/raw/main", provenance: {"repo_slug": "vivarium-collective/viva-lumenoid", "repo_url": "https://github.com/vivarium-collective/viva-lumenoid", "commit": "47eb5acca7d9ff0e0944482a977bacb4ecfb3806", "commit_url": "https://github.com/vivarium-collective/viva-lumenoid/commit/47eb5acca7d9ff0e0944482a977bacb4ecfb3806", "branch": "main", "lockfile": "uv.lock@796aed340563", "generated_at": "2026-10-20 03:43 UTC"} };</script>
 <script src="/viva-lumenoid/dashboard/assets/data-source.js"></script>
 <script src="/viva-lumenoid/dashboard/assets/toast.js"></script>
 <script>

@@ -766,13 +766,20 @@ _save_viz('bm-v5-porosity-bundling', 'evidence-map', _render_one('html:evidence_
 #
 # **Hypothesis.** Reimplementing the paper's fixed-volume prism / surface-tension tissue model with a viscoelastic BM reproduces Figure 1G's four stiffness-relaxation regimes and the 1H-J confinement trajectories, with the regime boundary set by the ratio of BM relaxation time to doubling time.
 #
-# **Claim.** The homogeneous prism model recovers the four confinement regimes: cells grow tall under a stiff, slowly-relaxing membrane and spread under a soft, fast-relaxing one.
+# **Purpose.** A fixed-volume prism cell proliferates (its preferred basal area grows), pushing against a viscoelastic BM whose rest area relaxes toward the current area over a relaxation time. A stiffer or slower-relaxing BM builds more reaction stress, resisting spreading, so the cell stays tall (confined); a soft or fast-relaxing BM lets the area grow and the cell spread flat.
+#
+# **Claim.** The homogeneous prism model recovers the paper's confinement regimes: a fixed-volume cell grows TALL under a stiff, slowly-relaxing basement membrane and SPREADS flat under a soft, fast-relaxing one, with cell height rising monotonically along both the BM stiffness and the BM relaxation axes of the Figure 1G map.
 
 # ### Parameters
 #
 # | simulation | composite | steps | params |
 # | --- | --- | --- | --- |
-# | `bm-r1-published-tissue-baseline` | `viva_lumenoid.composites.tissue_prism_baseline` | 0 | — |
+# | `bm-r1-published-tissue-baseline` | `viva_lumenoid.composites.tissue_prism_baseline` | 0 | bm_stiffness=1.0, bm_relaxation=5.0, doubling_time=5.0 |
+#
+# Declared parameter sets (`study.yaml` variants):
+#
+# - **confined-stiff-slow** — `bm_stiffness=5.0`, `bm_relaxation=50.0`
+# - **spread-soft-fast** — `bm_stiffness=0.1`, `bm_relaxation=1.0`
 
 # ### The model & its parameters
 #
@@ -827,7 +834,18 @@ else:
 # **r1_regime**
 
 # r1_regime
-_save_viz('bm-r1-published-tissue-baseline', 'r1_regime', _render_one('html:r1_regime.html', {'title': 'Confinement regimes — cell height vs BM stiffness × relaxation (Fig 1G reproduction)', 'caption': "Cell height across basement-membrane stiffness and relaxation time (relative to the doubling time), reproducing the paper's Figure 1G. The confinement regimes appear: cells are tall where the membrane is stiff and slow to relax, and flat where it is soft or fast.\n"}, RUNS_DB, STUDY_YAML))
+_save_viz('bm-r1-published-tissue-baseline', 'r1_regime', _render_one('html:r1_regime.html', {'title': 'Confinement regimes -- cell height vs BM stiffness x relaxation (Fig 1G reproduction)', 'caption': "Cell height across basement-membrane stiffness and relaxation time (relative to the doubling time), reproducing the paper's Figure 1G. The confinement regimes appear: cells are tall where the membrane is stiff and slow to relax, and flat where it is soft or fast.\n"}, RUNS_DB, STUDY_YAML))
+
+# ### Acceptance criteria
+#
+# _Pre-registered checks (criteria/thresholds only — run the cells above to evaluate them)._
+#
+# | test | measures | passes if |
+# | --- | --- | --- |
+# | confinement-regime-separates _(primary)_ | kind=compare field=cell_height cases=['stiff_slow(5.0,50.0)', 'soft_fast(0.1,1.0)'] | op gt note cell_height(stiff,slow) > cell_height(soft,fast) > 0 |
+# | height-monotonic-in-stiffness _(primary)_ | kind=monotonicity field=cell_height versus=bm_stiffness over=bm_relaxation | op nondecreasing note height non-decreasing along the stiffness axis for all 4 relaxation columns |
+# | height-monotonic-in-relaxation _(primary)_ | kind=monotonicity field=cell_height versus=bm_relaxation over=bm_stiffness | op nondecreasing note height non-decreasing along the relaxation axis for all 5 stiffness rows |
+# | confinement-tracks-bm-stress _(secondary)_ | kind=compare field=bm_stress cases=['stiff_slow', 'soft_fast'] | op gt note bm_stress(confined) >> bm_stress(spread) |
 
 # ## Study: Faithful collagen IV network rheology (`bm-r2-collagen-network-rheology`)
 #
@@ -1125,13 +1143,21 @@ _save_viz('bm-r5-explicit-3d-confinement', 'r5_monolayer', _render_one('html:r5_
 #
 # **Hypothesis.** Propagating inferred collagen lifetime distributions for control, perlecan gain/loss and growth-rate changes through the relaxation->shape chain reproduces the relative cell- morphology ordering and uncertainty of Figure 7, keeping inferred and independently predicted outcomes distinct.
 #
-# **Claim.** Carrying an inferred collagen lifetime through membrane relaxation to cell shape reproduces the intervention ordering: perlecan gain gives taller cells than control, and loss gives flatter ones.
+# **Purpose.** Perlecan stabilizes collagen IV, lengthening its inferred molecular lifetime; a longer lifetime is a slower BM relaxation time, which the reduced-order prism mechanics (R1) turns into a taller (more confined) cell. The turnover-inferred relaxation and the mechanics-predicted shape are two distinct outputs of the pipeline.
+#
+# **Claim.** Carrying an inferred collagen lifetime through BM relaxation to cell shape reproduces the paper's intervention ordering: perlecan gain gives taller cells than control, and loss gives flatter ones, with the inferred relaxation time (turnover) kept distinct from the predicted cell height (mechanics).
 
 # ### Parameters
 #
 # | simulation | composite | steps | params |
 # | --- | --- | --- | --- |
-# | `bm-r6-perlecan-growth-perturbations` | `viva_lumenoid.composites.turnover_shape_pipeline` | 0 | — |
+# | `bm-r6-perlecan-growth-perturbations` | `viva_lumenoid.composites.turnover_shape_pipeline` | 0 | collagen_lifetime=5.0, perlecan_factor=1.0, doubling_time=5.0 |
+#
+# Declared parameter sets (`study.yaml` variants):
+#
+# - **perlecan-gain** — `perlecan_factor=2.0`
+# - **perlecan-loss** — `perlecan_factor=0.3`
+# - **fast-growth** — `doubling_time=2.5`
 
 # ### The model & its parameters
 #
@@ -1187,6 +1213,17 @@ else:
 
 # r6_intervention
 _save_viz('bm-r6-perlecan-growth-perturbations', 'r6_intervention', _render_one('html:r6_intervention.html', {'title': 'Intervention ordering on cell height (Fig 7 reproduction)', 'caption': "Predicted cell height for each perlecan and growth-rate condition, with the inferred membrane relaxation time marked on each bar, reproducing the paper's Figure 7. Perlecan gain gives the tallest cells, then the control, then perlecan loss.\n"}, RUNS_DB, STUDY_YAML))
+
+# ### Acceptance criteria
+#
+# _Pre-registered checks (criteria/thresholds only — run the cells above to evaluate them)._
+#
+# | test | measures | passes if |
+# | --- | --- | --- |
+# | perlecan-intervention-ordering _(primary)_ | kind=order field=cell_height cases=['perlecan_gain', 'control', 'perlecan_loss'] | op strictly_decreasing note height(gain) > height(control) > height(loss) |
+# | inferred-relaxation-scales-with-perlecan _(primary)_ | kind=monotonicity field=inferred_relaxation versus=perlecan_factor | op increasing note inferred_relaxation = 5.0 x perlecan_factor; strictly increasing in perlecan |
+# | inferred-and-predicted-distinct _(secondary)_ | kind=structure fields=['inferred_relaxation', 'cell_height'] | op both_emitted note both are emitted independently; perlecan drives height only through the relaxation time |
+# | faster-growth-spreads _(secondary)_ | kind=compare field=cell_height cases=['fast_growth', 'control'] | op lt note height(fast_growth) < height(control) |
 
 # ## Study: Explicit actomyosin cortex mechanics (`bm-e1-actomyosin-cortex`)
 #
