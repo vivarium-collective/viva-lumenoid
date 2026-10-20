@@ -7,7 +7,7 @@ warnings.filterwarnings("ignore")
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent.parent))
 
 from viva_lumenoid.viz import save_html
-from viva_lumenoid.study_figures import STUDY_FIGURES, driving_schema_figure
+from viva_lumenoid.study_figures import STUDY_FIGURES, EXTRA_STUDY_FIGURES, driving_schema_figure
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 STUD = ROOT / "workspace" / "studies"
@@ -17,8 +17,12 @@ TITLES = {
     "r1_regime": "Confinement regimes: cell height vs BM stiffness × relaxation (Fig 1G reproduction)",
     "r2_rheology": "Collagen IV network assembly + stress (small real run)",
     "r3_supply": "Crosslink supply vs remodelling (small real run)",
-    "r4_sheet": "Relaxed 2D epithelial sheet (real tyssue run)",
-    "r5_monolayer": "Explicit 3D cell confinement (real tyssue run)",
+    "r4_confinement": "R4 main — 2D sheet static substrate vs R1 confinement benchmark (observed)",
+    "r4_sheet": "R4 supplement — 12-cell planar Tyssue mesh thumbnail (engineered-diagnostic, z=0)",
+    "r4_bm_hypothesis": "R4 hypothesis — BM-stiffness-dependent confinement (coupling not in composite)",
+    "r5_monolayer": "R5 main — closed 3D monolayer render + per-cell area distribution (engineered-diagnostic)",
+    "r5_volume_hist": "R5 supplement — cell-volume distribution appendix (engineered-diagnostic)",
+    "r5_bm_hypothesis": "R5 hypothesis — matched BM controls (coupling not in composite)",
     "r6_intervention": "Intervention ordering on cell height (Fig 7 reproduction)",
     "e1_cortical_tension": "Cortical tension vs myosin contractility (real LAMMPS)",
     "e2_force_transfer": "Actin → adhesion → collagen BM force transfer (schematic)",
@@ -37,12 +41,14 @@ def main():
         results.append(("[investigation]", "driving_schema", "schema", "ok"))
     except Exception as e:
         results.append(("[investigation]", "driving_schema", "schema", f"FAIL {type(e).__name__}: {e}"))
-    for slug, (name, fn, kind) in STUDY_FIGURES.items():
+    all_figs = [(slug, name, fn, kind) for slug, (name, fn, kind) in STUDY_FIGURES.items()]
+    all_figs += list(EXTRA_STUDY_FIGURES)
+    for slug, name, fn, kind in all_figs:
         vdir = STUD / slug / "viz"
         vdir.mkdir(parents=True, exist_ok=True)
         try:
             fig = fn()
-            save_html(fig, str(vdir / f"{name}.html"), TITLES[name])
+            save_html(fig, str(vdir / f"{name}.html"), TITLES.get(name, name))
             results.append((slug, name, kind, "ok"))
         except Exception as e:
             results.append((slug, name, kind, f"FAIL {type(e).__name__}: {e}"))

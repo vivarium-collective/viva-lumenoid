@@ -274,30 +274,259 @@ def r3_supply_figure():
     return _layout(fig, height=560)
 
 
+# ---------------------------------------------------------------------------
+# R4 / R5 figure-review helpers (new; the listed shared helpers are untouched)
+# ---------------------------------------------------------------------------
+def _r45_build(composite_id: str):
+    """Build a tyssue composite and return the live Composite (so a caller can
+    step it AND read geometry per step). Mirrors _tyssue_build_step's build but
+    returns the Composite rather than only the final eptm."""
+    import viva_lumenoid.composites  # noqa: F401  (registers generators)
+    from process_bigraph.composite_generator import _REGISTRY, apply_core_extensions, build_generator
+    from bigraph_schema import allocate_core
+    from process_bigraph import Composite
+    entry = _REGISTRY[f"viva_lumenoid.composites.{composite_id}"]
+    core = apply_core_extensions(entry, allocate_core())
+    doc = build_generator(entry, None, core=core)
+    state = doc["state"] if isinstance(doc, dict) and "state" in doc else doc
+    comp = Composite({"state": state}, core=core)
+    return comp
+
+
+def _r4_sheet_relaxation_trace(steps: int = 6, dt: float = 0.01):
+    """Real tyssue_2d_sheet run: per-step mean basal area, derived prism height,
+    and the max vertex displacement from the start. Returns a dict of arrays."""
+    comp = _r45_build("tyssue_2d_sheet")
+    eptm = comp.state["Tyssue"]["instance"].eptm
+    v0 = eptm.vert_df[["x", "y"]].values.copy()
+    area, height, disp = [], [], []
+    for _ in range(steps + 1):
+        area.append(float(eptm.face_df["area"].mean()))
+        height.append(float(np.nanmean(eptm.face_df["height"].values)))
+        disp.append(float(np.abs(eptm.vert_df[["x", "y"]].values - v0).max()))
+        comp.update({}, dt)
+    return {"step": np.arange(steps + 1), "area": np.array(area),
+            "height": np.array(height), "max_disp": np.array(disp),
+            "Nf": int(eptm.Nf), "Nv": int(eptm.Nv)}
+
+
 def r4_sheet_figure():
-    """R4: the actual 2D epithelial sheet after relaxation (CrossSectionGeometry)."""
+    """R4 ARCHITECTURE THUMBNAIL (engineered-diagnostic, supplement).
+
+    The 12-cell planar CrossSection Tyssue geometry, drawn on its z=0 plane. This
+    verifies mesh construction over the vivarium-tyssue engine; it is NOT biological
+    evidence of confinement. The geometry is planar (z=0) and does NOT compute a real
+    3D cell height — the per-face ``height`` column is a stored CrossSection prism DOF,
+    not a resolved apical-basal distance."""
     eptm = _tyssue_build_step("tyssue_2d_sheet")
     go = _go()
     fig = go.Figure(data=_mesh_traces(eptm, three_d=False))
-    fig.update_layout(title=f"R4 — relaxed 2D epithelial sheet ({eptm.Nf} cells, real tyssue run)",
-                      xaxis=dict(scaleanchor="y", title="x"), yaxis=dict(title="y"))
-    return _layout(fig, height=620)
+    fig.update_layout(
+        title=f"R4 (supplement · engineered-diagnostic) — 12-cell planar Tyssue mesh (z=0)",
+        xaxis=dict(scaleanchor="y", title="x (reduced)"), yaxis=dict(title="y (reduced)"),
+        annotations=[dict(x=0.5, y=-0.13, xref="paper", yref="paper", showarrow=False,
+                          text="A 12-cell planar Tyssue geometry resolves and relaxes; this verifies mesh "
+                               "construction but not BM-dependent epithelial confinement.<br>"
+                               "Planar z=0 geometry — no real 3D height is computed here.",
+                          font=dict(size=11, color="#777"))])
+    return _layout(fig, height=560)
+
+
+def r4_confinement_figure():
+    """R4 MAIN (observed) — question-driven quantified panel.
+
+    LEFT: what the real tyssue_2d_sheet composite actually produces — mean per-cell
+    basal area and the stored CrossSection prism-height DOF across EulerSolver
+    relaxation steps. Both are flat (the sheet is a pre-equilibrated static mesh; the
+    max vertex displacement is ~0 over the run), and all 12 cells are identical, so
+    there is no spatial heterogeneity and no confinement response.
+
+    RIGHT: the R1 reduced-order prism benchmark (real TissuePrismProcess runs via the
+    _prism_trajectory helper) for three BM regimes — the confinement response the
+    sheet is MISSING, because tyssue_2d_sheet has only line_tension + prefered_area and
+    NO BM stiffness / relaxation / traction coupling. Evidence: observed for both
+    panels (real runs); this is NOT a reproduction of the Fig-1 confinement regimes."""
+    go = _go()
+    from plotly.subplots import make_subplots
+    tr = _r4_sheet_relaxation_trace()
+    a0 = tr["area"][0] or 1.0
+    h0 = tr["height"][0] or 1.0
+    fig = make_subplots(
+        rows=1, cols=2, column_widths=[0.5, 0.5], horizontal_spacing=0.12,
+        subplot_titles=(f"A — real tyssue_2d_sheet readout ({tr['Nf']} cells): static",
+                        "B — R1 reduced-order BM benchmark: confinement response"))
+    # Panel A: real tyssue sheet, fold-change vs step (flat).
+    fig.add_trace(go.Scatter(x=tr["step"], y=tr["area"] / a0, mode="lines+markers",
+                             line=dict(color=BLUE, width=3), marker=dict(size=8),
+                             name="basal area (tyssue sheet)"), row=1, col=1)
+    fig.add_trace(go.Scatter(x=tr["step"], y=tr["height"] / h0, mode="lines+markers",
+                             line=dict(color=TEAL, width=2, dash="dot"), marker=dict(size=7),
+                             name="prism-height DOF (tyssue sheet)"), row=1, col=1)
+    fig.update_xaxes(title_text="EulerSolver relaxation step (dt 0.01)", row=1, col=1)
+    fig.update_yaxes(title_text="fold-change vs step 0", range=[0.0, 3.0], row=1, col=1)
+    # Panel B: R1 benchmark confinement h/h0 for three regimes.
+    corners = [("soft / fast-relaxing", 0.2, 0.2, GREEN),
+               ("intermediate", 1.0, 1.0, BLUE),
+               ("stiff / slow-relaxing", 8.0, 8.0, RED)]
+    for nm, k, r, col in corners:
+        t, _area, conf = _prism_trajectory(k, r)
+        fig.add_trace(go.Scatter(x=t / t[-1], y=conf, mode="lines", line=dict(color=col, width=3),
+                                 name=f"R1 {nm}: {conf[0]:.2f}→{conf[-1]:.2f}"), row=1, col=2)
+    fig.update_xaxes(title_text="proliferation progress (fraction of run)", row=1, col=2)
+    fig.update_yaxes(title_text="confinement h/h₀ (R1 benchmark)", range=[0.3, 1.05], row=1, col=2)
+    fig.update_layout(
+        title="R4 — the 2D sheet is a static substrate, not a confinement response "
+              "(evidence: observed; NOT a Fig-1 reproduction)",
+        template="plotly_white", height=560,
+        legend=dict(orientation="h", y=-0.18, x=0, font=dict(size=10)),
+        annotations=list(fig.layout.annotations) + [dict(
+            x=0.5, y=-0.46, xref="paper", yref="paper", showarrow=False,
+            text="GAP (named): tyssue_2d_sheet exposes only line_tension + prefered_area — no BM stiffness, "
+                 "relaxation or traction coupling. The sheet does not move (max vertex displacement ≈ 0) and "
+                 "all 12 cells are identical, so matched low/high-BM-relaxation snapshots and a "
+                 "stiffness-stratified basal-area-vs-time panel are NOT producible here; see the hypothesis "
+                 "supplement. Panel B is the real R1 reduced-order benchmark, not the tyssue sheet. Reduced units.",
+            font=dict(size=10.5, color="#777"))])
+    return fig
+
+
+def r4_bm_confinement_hypothesis():
+    """R4 HYPOTHESIS (supplement) — the BM-dependent confinement test that
+    tyssue_2d_sheet CANNOT yet run, drawn so the missing experiment is explicit."""
+    fig = _diagram("R4 (hypothesis · supplement) — BM-stiffness-dependent confinement (requires coupling NOT in the composite)",
+                   xr=(0, 10), yr=(0, 10), height=560)
+    _box(fig, 0.6, 5.2, 4.6, 8.8, "low BM relaxation stiffness<br>→ spread / flat cells<br>(larger basal area)", GREEN)
+    _box(fig, 5.4, 5.2, 9.4, 8.8, "high BM relaxation stiffness<br>→ confined / tall cells<br>(smaller basal area)", RED)
+    _arrow(fig, 4.6, 7.0, 5.4, 7.0, "increasing BM stiffness / slower relaxation")
+    fig.add_annotation(x=5, y=2.8, showarrow=False, font=dict(size=12, color="#444"),
+                       text="Matched 2D cell-sheet snapshots at low vs high BM relaxation, and a basal-area-"
+                            "vs-time panel stratified by BM stiffness, with the R1 benchmark overlaid.")
+    fig.add_annotation(x=5, y=1.2, showarrow=False, font=dict(size=11, color=RED),
+                       text="<b>NOT producible from tyssue_2d_sheet</b>: its params are line_tension + prefered_area; "
+                            "BM stiffness / relaxation / traction coupling is not wired. Hypothesis until that coupling exists.")
+    return fig
+
+
+def _r5_monolayer_run(steps: int = 5, dt: float = 0.01):
+    """Real tyssue_3d_monolayer run. Returns the live eptm plus per-step total cell
+    volume (for the conservation residual) and the per-cell z-extent height array."""
+    comp = _r45_build("tyssue_3d_monolayer")
+    eptm = comp.state["Tyssue"]["instance"].eptm
+    total_vol = [float(np.nansum(eptm.cell_df["vol"].values))]
+    for _ in range(steps):
+        comp.update({}, dt)
+        total_vol.append(float(np.nansum(eptm.cell_df["vol"].values)))
+    # per-cell height = vertex z-extent for the cell's vertices
+    e, v = eptm.edge_df, eptm.vert_df
+    heights = []
+    for _c, grp in e.groupby("cell"):
+        vids = np.unique(np.concatenate([grp["srce"].values, grp["trgt"].values]))
+        zz = v.loc[vids, "z"].values
+        heights.append(float(zz.max() - zz.min()))
+    return eptm, np.array(total_vol), np.array(heights)
+
+
+def _r5_cell_centroid_markers(eptm, color_by: str = "area"):
+    """R5-named helper: cell centroids (cell_df) as 3D markers coloured by a per-cell
+    column (default basal area), so per-cell heterogeneity is visible in the render."""
+    go = _go()
+    cdf = eptm.cell_df
+    vals = cdf[color_by].values
+    return go.Scatter3d(
+        x=cdf["x"], y=cdf["y"], z=cdf["z"], mode="markers",
+        marker=dict(size=4.5, color=vals, colorscale="Viridis", cmin=float(np.nanmin(vals)),
+                    cmax=float(np.nanmax(vals)), showscale=True,
+                    colorbar=dict(title=f"per-cell<br>{color_by}", len=0.85)),
+        name="cell centroids", hovertext=[f"{color_by}={x:.2f}" for x in vals],
+        hoverinfo="text", showlegend=False)
 
 
 def r5_monolayer_figure():
-    """R5: the actual stepped 3D monolayer + its real cell-volume distribution."""
-    eptm = _tyssue_build_step("tyssue_3d_monolayer")
+    """R5 MAIN (engineered-diagnostic) — the explicit 3D monolayer as a MODEL
+    ILLUSTRATION paired with the real per-cell basal-area distribution.
+
+    LEFT: the closed 3D Tyssue monolayer (MonolayerGeometry) wireframe with cell
+    centroids coloured by per-cell area (cell_df.area, common limits) — the real
+    per-cell heterogeneity. RIGHT: that per-cell area distribution from the single
+    real run. A finite-volume mesh with identifiable basal surfaces does NOT establish
+    BM-dependent confinement: per-cell HEIGHT (vertex z-extent) is uniform (= 1.00) in
+    this single run, and no BM-relaxation axis is present. Total cell volume is
+    conserved to <0.01% over 5 Euler steps (dt 0.01)."""
     go = _go()
     from plotly.subplots import make_subplots
+    eptm, total_vol, heights = _r5_monolayer_run()
+    area = eptm.cell_df["area"].values
+    resid = abs(total_vol[-1] - total_vol[0]) / (total_vol[0] or 1.0) * 100.0
     fig = make_subplots(rows=1, cols=2, column_widths=[0.62, 0.38],
                         specs=[[{"type": "scene"}, {"type": "xy"}]],
-                        subplot_titles=(f"3D monolayer ({eptm.Nc} cells)", "cell-volume distribution"))
+                        subplot_titles=(f"3D monolayer ({eptm.Nc} cells) — centroids by per-cell area",
+                                        "per-cell area distribution (cell_df.area)"))
     for tr in _mesh_traces(eptm, three_d=True, color_by="z"):
         fig.add_trace(tr, row=1, col=1)
+    fig.add_trace(_r5_cell_centroid_markers(eptm, color_by="area"), row=1, col=1)
+    fig.add_trace(go.Histogram(x=area, nbinsx=24, marker_color=TEAL, showlegend=False,
+                               name=f"median {np.nanmedian(area):.2f}"), row=1, col=2)
+    fig.update_xaxes(title_text="per-cell area (cell_df.area, reduced)", row=1, col=2)
+    fig.update_yaxes(title_text="cell count", row=1, col=2)
+    fig.update_layout(
+        title="R5 (main · engineered-diagnostic) — closed 3D monolayer: finite cell volumes + "
+              "identifiable basal surfaces",
+        template="plotly_white", height=620, scene=dict(aspectmode="data"),
+        annotations=list(fig.layout.annotations) + [dict(
+            x=0.5, y=-0.02, xref="paper", yref="paper", showarrow=False,
+            text=f"A closed 3D Tyssue monolayer has finite cell volumes and identifiable basal surfaces; "
+                 f"no BM-dependent height response is established by this geometric verification alone. "
+                 f"Per-cell area {np.nanmin(area):.2f}–{np.nanmax(area):.2f} (median {np.nanmedian(area):.2f}); "
+                 f"per-cell height (vertex z-extent) uniform = {np.median(heights):.2f}; "
+                 f"total cell volume conserved to {resid:.3f}% over 5 Euler steps (dt 0.01). Reduced units.<br>"
+                 f"GAP (named): the free-BM / stiff-frozen-BM / stiff-fast-relaxing-BM controls the morphology "
+                 f"ordering needs are NOT in tyssue_3d_monolayer (params: contractility + vol_elasticity, no BM "
+                 f"shell) — see the hypothesis supplement.",
+            font=dict(size=10.5, color="#777"))])
+    return fig
+
+
+def r5_volume_hist_figure():
+    """R5 APPENDIX (engineered-diagnostic, supplement) — the standalone cell-volume
+    histogram, kept as a geometry-validation appendix with the volume-conservation
+    residual stated (it does not by itself demonstrate confinement)."""
+    go = _go()
+    eptm, total_vol, _heights = _r5_monolayer_run()
     vol = eptm.cell_df["vol"].values
-    fig.add_trace(go.Histogram(x=vol, nbinsx=24, marker_color=TEAL, showlegend=False), row=1, col=2)
-    fig.update_layout(title="R5 — explicit 3D cell confinement (real tyssue run)", height=620)
-    fig.update_xaxes(title_text="cell volume", row=1, col=2)
+    resid = abs(total_vol[-1] - total_vol[0]) / (total_vol[0] or 1.0) * 100.0
+    fig = go.Figure(go.Histogram(x=vol, nbinsx=24, marker_color=TEAL, showlegend=False))
+    fig.add_vline(x=1.0, line=dict(color=RED, width=1.5, dash="dot"),
+                  annotation_text="target vol 1.0", annotation_font_size=10)
+    fig.update_layout(
+        title=f"R5 (supplement · engineered-diagnostic) — cell-volume distribution ({eptm.Nc} cells)",
+        xaxis_title="per-cell volume (cell_df.vol, reduced)", yaxis_title="cell count",
+        annotations=[dict(x=0.5, y=-0.2, xref="paper", yref="paper", showarrow=False,
+                          text=f"per-cell volume {np.nanmin(vol):.2f}–{np.nanmax(vol):.2f} (median "
+                               f"{np.nanmedian(vol):.2f}); total volume conserved to {resid:.3f}% over 5 Euler "
+                               f"steps (dt 0.01). Geometry validation only — finite volumes do not establish "
+                               f"BM-dependent confinement. Reduced units.",
+                          font=dict(size=11, color="#777"))])
+    return _layout(fig, height=520)
+
+
+def r5_bm_controls_hypothesis():
+    """R5 HYPOTHESIS (supplement) — the free / stiff-frozen / stiff-fast-relaxing BM
+    matched conditions the morphology ordering needs, which require a BM-shell coupling
+    NOT present in tyssue_3d_monolayer."""
+    fig = _diagram("R5 (hypothesis · supplement) — matched BM controls (require a BM-shell coupling NOT in the composite)",
+                   xr=(0, 12), yr=(0, 10), height=560)
+    conds = [("free BM<br>(no shell)<br>→ baseline height", 2.0, GREEN),
+             ("stiff frozen BM<br>→ strongest confinement<br>(tallest)", 6.0, RED),
+             ("stiff fast-relaxing BM<br>→ partial relaxation<br>(intermediate)", 10.0, GOLD)]
+    for label, x, c in conds:
+        _box(fig, x - 1.6, 5.0, x + 1.6, 8.6, label, c)
+    fig.add_annotation(x=6, y=3.0, showarrow=False, font=dict(size=12, color="#444"),
+                       text="Before/after 3D cell images coloured by cell height (common limits), a cell-height "
+                            "distribution by condition, height-vs-doubling-time traces, basal/apical area, and a "
+                            "volume-conservation residual + explicit energy/traction terms.")
+    fig.add_annotation(x=6, y=1.3, showarrow=False, font=dict(size=11, color=RED),
+                       text="<b>NOT producible from tyssue_3d_monolayer</b>: its params are contractility + "
+                            "vol_elasticity; no BM shell coupling. Hypothesis until that coupling exists.")
     return fig
 
 
@@ -973,7 +1202,7 @@ STUDY_FIGURES = {
     "bm-r1-published-tissue-baseline": ("r1_regime", r1_regime_figure, "data"),
     "bm-r2-collagen-network-rheology": ("r2_fig2e", r2_fig2e_figure, "data"),
     "bm-r3-network-expansion-supply": ("r3_supply", r3_supply_figure, "data"),
-    "bm-r4-coupled-2d-epithelium": ("r4_sheet", r4_sheet_figure, "data"),
+    "bm-r4-coupled-2d-epithelium": ("r4_confinement", r4_confinement_figure, "data"),
     "bm-r5-explicit-3d-confinement": ("r5_monolayer", r5_monolayer_figure, "data"),
     "bm-r6-perlecan-growth-perturbations": ("r6_intervention", r6_intervention_figure, "data"),
     "bm-e1-actomyosin-cortex": ("e1_cortical_tension", e1_cortical_tension_figure, "data"),
@@ -981,3 +1210,14 @@ STUDY_FIGURES = {
     "bm-e3-closed-3d-lumenoid": ("e3_lumenoid", e3_lumenoid_figure, "data"),
     "bm-e4-feedback-predictions": ("e4_feedback", e4_feedback_schematic, "schematic"),
 }
+
+# Companion (supplement / hypothesis) figures from the 2026-10-20 figure review of
+# the R4/R5 spatial studies. The main figure of each study stays in STUDY_FIGURES
+# above; these are the demoted thumbnail + the named-gap hypothesis panels. Each is
+# (slug, name, fn, kind) so the generator + tests render them alongside the mains.
+EXTRA_STUDY_FIGURES = [
+    ("bm-r4-coupled-2d-epithelium", "r4_sheet", r4_sheet_figure, "data"),
+    ("bm-r4-coupled-2d-epithelium", "r4_bm_hypothesis", r4_bm_confinement_hypothesis, "schematic"),
+    ("bm-r5-explicit-3d-confinement", "r5_volume_hist", r5_volume_hist_figure, "data"),
+    ("bm-r5-explicit-3d-confinement", "r5_bm_hypothesis", r5_bm_controls_hypothesis, "schematic"),
+]
