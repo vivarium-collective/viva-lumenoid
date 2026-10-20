@@ -1142,17 +1142,18 @@ else:
 #
 # Each composite is a process-bigraph *document* — named processes wired by `inputs`/`outputs` ports over shared stores. Below, each composite shows what it does, then a **parameter cell** with its tunable knobs (the current default and what each one means). Edit any value, then re-run the **Run** section to rebuild and re-simulate with your changes.
 
-# **Composite `viva_lumenoid.composites.actomyosin_cortex`** — `spec_viva_lumenoid_composites_actomyosin_cortex` (materialized from its `@composite_generator`)
+# **The model — `viva_lumenoid.composites.actomyosin_cortex`**
+#
+# E1 (extension) — a coarse 2D actomyosin cortex on the viva-lammps model seam (LammpsModelProcess + the actomyosin-cortex plugin). Contractility (LJ ε, a myosin-activity proxy) tunes the cortical tension that will map onto a Tyssue cortical-energy parameter.
 
-spec_viva_lumenoid_composites_actomyosin_cortex = materialize_composite('viva_lumenoid.composites.actomyosin_cortex')
-describe_spec(spec_viva_lumenoid_composites_actomyosin_cortex)
-
-# === Edit parameters for this composite, then run the Run cell ===
-# ov_viva_lumenoid_composites_actomyosin_cortex maps each tunable parameter to its current value (the generator's
-# defaults). Edit any entry; the Run cell rebuilds the composite with it.
-ov_viva_lumenoid_composites_actomyosin_cortex = dict(spec_viva_lumenoid_composites_actomyosin_cortex['_overrides'])
-import json as _json; print(_json.dumps(ov_viva_lumenoid_composites_actomyosin_cortex, indent=2, default=str))
-# e.g.:  ov_viva_lumenoid_composites_actomyosin_cortex['<parameter>'] = <value>
+# === Parameters — edit any value, then re-run from the Run cell below ===
+# Each entry is the composite's current default; the comment explains it.
+ov_viva_lumenoid_composites_actomyosin_cortex = {
+    'n'            : 8,   # Cortex patch size (lattice replications per side).
+    'contractility': 1.0,   # Myosin activity proxy (LJ well depth); higher = more cortical tension.
+    'temperature'  : 0.2,   # Langevin temperature (LJ units).
+    'seed'         : 12345,   # RNG seed.
+}
 
 # ### Run
 #
@@ -1262,17 +1263,16 @@ else:
 #
 # Each composite is a process-bigraph *document* — named processes wired by `inputs`/`outputs` ports over shared stores. Below, each composite shows what it does, then a **parameter cell** with its tunable knobs (the current default and what each one means). Edit any value, then re-run the **Run** section to rebuild and re-simulate with your changes.
 
-# **Composite `viva_lumenoid.composites.closed_lumenoid`** — `spec_viva_lumenoid_composites_closed_lumenoid` (materialized from its `@composite_generator`)
+# **The model — `viva_lumenoid.composites.closed_lumenoid`**
+#
+# E3 (extension) — a closed 3D lumenoid on the vivarium-tyssue engine (EulerSolver over the merged LumenoidGeometry + lumenoid mesh). Tracks a Laplace lumen pressure on top of the enclosed lumen volume and exposes the basal surface as the basement-membrane coupling shell (the surface the collagen BM attaches to).
 
-spec_viva_lumenoid_composites_closed_lumenoid = materialize_composite('viva_lumenoid.composites.closed_lumenoid')
-describe_spec(spec_viva_lumenoid_composites_closed_lumenoid)
-
-# === Edit parameters for this composite, then run the Run cell ===
-# ov_viva_lumenoid_composites_closed_lumenoid maps each tunable parameter to its current value (the generator's
-# defaults). Edit any entry; the Run cell rebuilds the composite with it.
-ov_viva_lumenoid_composites_closed_lumenoid = dict(spec_viva_lumenoid_composites_closed_lumenoid['_overrides'])
-import json as _json; print(_json.dumps(ov_viva_lumenoid_composites_closed_lumenoid, indent=2, default=str))
-# e.g.:  ov_viva_lumenoid_composites_closed_lumenoid['<parameter>'] = <value>
+# === Parameters — edit any value, then re-run from the Run cell below ===
+# Each entry is the composite's current default; the comment explains it.
+ov_viva_lumenoid_composites_closed_lumenoid = {
+    'contractility'   : 0.05,   # Apical/basal face contractility of the lumenoid cells.
+    'lumen_elasticity': 1.0,   # Lumen pressure stiffness: P = lumen_elasticity*(V0 - V).
+}
 
 # ### Run
 #
