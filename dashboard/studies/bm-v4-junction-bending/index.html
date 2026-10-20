@@ -666,7 +666,7 @@
         <details class="finding-details">
           <summary class="finding-row">
             <span class="finding-status-glyph">◐</span>
-            <span class="finding-claim finding-statement">The AS-FORMED restraint path — bending pinned via `fix restrain` AFTER assembly — is ill-conditioned at v1 size: |E| jumps to tens–hundreds but scatters and sign-flips across seeds (k=80 per-seed −570…+54, median −210), so it yields no calibratable value. SUPERSEDED by F3: the ill-conditioning was an artifact of applying bending after assembly, not an intrinsic limit.
+            <span class="finding-claim finding-statement">The as-formed restraint path — bending pinned via `fix restrain` AFTER assembly — is ill-conditioned at v1 size: |E| jumps to tens–hundreds but scatters and sign-flips across seeds (k=80 per-seed −570…+54, median −210), so it yields no calibratable value. superseded by F3: the ill-conditioning was an artifact of applying bending after assembly, not an intrinsic limit.
 </span>
             
             <span class="finding-chip">via <code>bending-changes-mechanics</code></span>
@@ -702,7 +702,7 @@
             
             
             
-            <div class="finding-explanation"><em>Why:</em> The stiff, pre-stressed, disordered small network has many near-degenerate energy minima; the equibiaxial-stress modulus is dominated by pre-stress and finite-size buckling rather than the intrinsic shear modulus. Creating the angles DURING assembly (F3) lets the network equilibrate compatible with them and removes this pathology.
+            <div class="finding-explanation"><em>Why:</em> The stiff, pre-stressed, disordered small network has many near-degenerate energy minima; the equibiaxial-stress modulus is dominated by pre-stress and finite-size buckling rather than the intrinsic shear modulus. Creating the angles during assembly (F3) lets the network equilibrate compatible with them and removes this pathology.
 </div>
             
             <div class="finding-next"><strong>→ Next:</strong> superseded — see F3 (real angles during assembly)</div>
@@ -722,7 +722,7 @@
         <details class="finding-details">
           <summary class="finding-row">
             <span class="finding-status-glyph">✓</span>
-            <span class="finding-claim finding-statement">Creating real harmonic angles as the crosslinks form (use_real_angles, matching the released bond/react templates) yields a POSITIVE, well- conditioned, reproducible modulus — per-seed 36.7/27.6/37.5 LJ (same sign, tight IQR). So the released model is not floppy once its angles are faithfully active; the modulus is finite and strongly density-dependent (≈79 Pa at 2.9 crosslinks/rod → ≈7 Pa at 1.0/rod).
+            <span class="finding-claim finding-statement">Creating real harmonic angles as the crosslinks form (use_real_angles, matching the released bond/react templates) yields a positive, well- conditioned, reproducible modulus — per-seed 36.7/27.6/37.5 LJ (same sign, tight IQR). So the released model is not floppy once its angles are faithfully active; the modulus is finite and strongly density-dependent (≈79 Pa at 2.9 crosslinks/rod → ≈7 Pa at 1.0/rod).
 </span>
             
             <span class="finding-chip">via <code>reproducible-modulus</code></span>
@@ -758,7 +758,7 @@
             
             
             
-            <div class="finding-explanation"><em>Why:</em> Equilibrating the network WITH the angles active (rather than pinning them on afterwards) removes the pre-stress / near-degenerate-minima pathology of F2. The remaining gap for an absolute Pa value is matching the released make+break crosslink density (the make-only real-angle path over-crosslinks), which needs per-angle deletion or the GCE, plus the energy-scale decision (#4).
+            <div class="finding-explanation"><em>Why:</em> Equilibrating the network with the angles active (rather than pinning them on afterwards) removes the pre-stress / near-degenerate-minima pathology of F2. The remaining gap for an absolute Pa value is matching the released make+break crosslink density (the make-only real-angle path over-crosslinks), which needs per-angle deletion or the GCE, plus the energy-scale decision.
 </div>
             
             <div class="finding-next"><strong>→ Next:</strong> match the released dense make+break crosslink density (GCE) for an absolute modulus</div>
@@ -775,7 +775,7 @@
       <div class="ctr-meta ctr-assess">
         
         
-        <div class="ctr-meta-row"><span class="ctr-meta-k">Caveat</span> <span class="ctr-meta-item">Cross-check (2026-10-01): junction bending is NOT a new ingredient — the released code already sets KangNC1=4.0 (@180°) plus two 7S angles. Re-scope as &#39;match the released angle set&#39;, not &#39;add bending&#39;. See references/cross-check-vs-released-code.md.</span></div>
+        <div class="ctr-meta-row"><span class="ctr-meta-k">Caveat</span> <span class="ctr-meta-item">Cross-check: junction bending is not a new ingredient — the released code already sets KangNC1=4.0 (@180°) plus two 7S angles. Re-scope as &#39;match the released angle set&#39;, not &#39;add bending&#39;.</span></div>
         
       </div>
       
@@ -1516,7 +1516,7 @@ pass_if: {"note": "IQR \u003c 0.5\u00b7|median| \u2014 met by the real-angle pat
         
         
         <div style="margin-top:4px"><em>Pipeline unblocks:</em>
-          <ul style="margin:4px 0 0 18px"><li>An absolute-Pa modulus, once the released make+break crosslink density (GCE) and the energy scale (#4) are matched.</li></ul>
+          <ul style="margin:4px 0 0 18px"><li>An absolute-Pa modulus, once the released make+break crosslink density (GCE) and the energy scale are matched.</li></ul>
         </div>
         
       </div>
@@ -1580,7 +1580,7 @@ pass_if: {"note": "IQR \u003c 0.5\u00b7|median| \u2014 met by the real-angle pat
       <h3 class="overview-label">Limitations</h3>
       <p class="muted" style="margin:0 0 6px 0;font-size:0.85em">What this study explicitly does NOT validate (prevents overclaim).</p>
       <ul style="margin:0 0 0 18px;padding:0;font-size:0.93em">
-        <li style="margin:2px 0">Cross-check (2026-10-01): junction bending is NOT a new ingredient — the released code already sets KangNC1=4.0 (@180°) plus two 7S angles. Re-scope as &#39;match the released angle set&#39;, not &#39;add bending&#39;. See references/cross-check-vs-released-code.md.</li><li style="margin:2px 0">Clean-room parameters transcribed from the spec; the authors&#39; LAMMPS input scripts are now public (Zenodo 10.5281/zenodo.20719515) and not yet cross-checked against this build.</li><li style="margin:2px 0">The bending modulus is ill-conditioned at 200 rods (pre-stress + finite-size); not calibratable yet.</li><li style="margin:2px 0">Bending targets are pinned from a thermally-noisy as-formed geometry (a pre-stress source).</li><li style="margin:2px 0">Only equibiaxial stress-strain slope is used; a shear or energy-curvature modulus may be better conditioned.</li>
+        <li style="margin:2px 0">Cross-check: junction bending is not a new ingredient — the released code already sets KangNC1=4.0 (@180°) plus two 7S angles. Re-scope as &#39;match the released angle set&#39;, not &#39;add bending&#39;.</li><li style="margin:2px 0">Clean-room parameters transcribed from the spec; the authors&#39; LAMMPS input scripts are now public (Zenodo 10.5281/zenodo.20719515) and not yet cross-checked against this build.</li><li style="margin:2px 0">The bending modulus is ill-conditioned at 200 rods (pre-stress + finite-size); not calibratable yet.</li><li style="margin:2px 0">Bending targets are pinned from a thermally-noisy as-formed geometry (a pre-stress source).</li><li style="margin:2px 0">Only equibiaxial stress-strain slope is used; a shear or energy-curvature modulus may be better conditioned.</li>
       </ul>
     </div>
     
@@ -1644,7 +1644,7 @@ pass_if: {"note": "IQR \u003c 0.5\u00b7|median| \u2014 met by the real-angle pat
         
         <div class="di-unc di-unc-remaining">
           <h4>● Remaining uncertainties</h4>
-          <ul><li>The ABSOLUTE (Pa) modulus — blocked on matching the released make+break crosslink density (GCE) and the energy-scale decision (#4).</li></ul>
+          <ul><li>The ABSOLUTE (Pa) modulus — blocked on matching the released make+break crosslink density (GCE) and the energy-scale decision.</li></ul>
         </div>
         
       </div>
@@ -1700,7 +1700,7 @@ pass_if: {"note": "IQR \u003c 0.5\u00b7|median| \u2014 met by the real-angle pat
 </section>
 
 </main>
-<script>window.__DASH_CONFIG__ = { mode: "snapshot", interactiveUrl: "https://github.com/vivarium-collective/viva-lumenoid", basePath: "/viva-lumenoid/dashboard", inputsDownloadBase: "https://github.com/vivarium-collective/viva-lumenoid/raw/main", provenance: {"repo_slug": "vivarium-collective/viva-lumenoid", "repo_url": "https://github.com/vivarium-collective/viva-lumenoid", "commit": "d0a11a8a8cf5ad06f8441fecf7a51d70718225aa", "commit_url": "https://github.com/vivarium-collective/viva-lumenoid/commit/d0a11a8a8cf5ad06f8441fecf7a51d70718225aa", "branch": "main", "lockfile": "uv.lock@796aed340563", "generated_at": "2026-10-20 01:48 UTC"} };</script>
+<script>window.__DASH_CONFIG__ = { mode: "snapshot", interactiveUrl: "https://github.com/vivarium-collective/viva-lumenoid", basePath: "/viva-lumenoid/dashboard", inputsDownloadBase: "https://github.com/vivarium-collective/viva-lumenoid/raw/main", provenance: {"repo_slug": "vivarium-collective/viva-lumenoid", "repo_url": "https://github.com/vivarium-collective/viva-lumenoid", "commit": "91948091e84775bfcd770b13507ce1cf23782080", "commit_url": "https://github.com/vivarium-collective/viva-lumenoid/commit/91948091e84775bfcd770b13507ce1cf23782080", "branch": "main", "lockfile": "uv.lock@796aed340563", "generated_at": "2026-10-20 02:05 UTC"} };</script>
 <script src="/viva-lumenoid/dashboard/assets/data-source.js"></script>
 <script src="/viva-lumenoid/dashboard/assets/toast.js"></script>
 <script>

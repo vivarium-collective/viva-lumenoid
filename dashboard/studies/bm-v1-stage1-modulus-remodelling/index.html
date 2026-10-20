@@ -636,7 +636,7 @@ Two changes make both readouts come out cleanly. Creating the released NC1 angle
         <details class="finding-details">
           <summary class="finding-row">
             <span class="finding-status-glyph">◆</span>
-            <span class="finding-claim finding-statement">LAMMPS `fix bond/break` models only OVER-STRETCH breaking, not a force- independent off-rate — small Rmax dissolves the network, large Rmax saturates it. Replacing it with a controlled random-deletion off-rate gives a make/break steady state and crosslink turnover.
+            <span class="finding-claim finding-statement">LAMMPS `fix bond/break` models only over-stretch breaking, not a force- independent off-rate — small Rmax dissolves the network, large Rmax saturates it. Replacing it with a controlled random-deletion off-rate gives a make/break steady state and crosslink turnover.
 </span>
             
             <span class="finding-chip">via <code>relaxation-decays-not-densifies</code></span>
@@ -672,7 +672,7 @@ Two changes make both readouts come out cleanly. Creating the released NC1 angle
             
             
             
-            <div class="finding-explanation"><em>Why:</em> Breaking must be length-independent to be a controllable rate (spec: force-independent in v1).</div>
+            <div class="finding-explanation"><em>Why:</em> Breaking must be length-independent to be a controllable rate.</div>
             
             <div class="finding-next"><strong>→ Next:</strong> adopted in viva_lumenoid/collagen.py; guarded by a regression test</div>
           </div>
@@ -734,7 +734,7 @@ Two changes make both readouts come out cleanly. Creating the released NC1 angle
             </div>
             
             
-            <div class="finding-explanation"><em>Why:</em> Maxwell counting: NC1 beads reach z = 2, 7S beads z = 4, mean ≤ 3 &lt; 4 → floppy regardless of crosslink density. (Scoped to the ANGLE-OFF transcription; the released model carries junction angles and is soft for other reasons — bm-v3.)
+            <div class="finding-explanation"><em>Why:</em> Maxwell counting: NC1 beads reach z = 2, 7S beads z = 4, mean ≤ 3 &lt; 4 → floppy regardless of crosslink density. (Scoped to the angle-off transcription; the released model carries junction angles and is soft for other reasons — bm-v3.)
 </div>
             
             <div class="finding-next"><strong>→ Next:</strong> seed FP1 (junction-bending rigidity study)</div>
@@ -808,11 +808,11 @@ Two changes make both readouts come out cleanly. Creating the released NC1 angle
         <div class="ctr-meta-row"><span class="ctr-meta-k">Confidence</span>
           
           <span class="ctr-vch">biology&nbsp;PASS</span>
-          <span class="ctr-vch">insight&nbsp;POSITIVE</span>
+          <span class="ctr-vch">insight&nbsp;positive</span>
         </div>
         
         
-        <div class="ctr-meta-row"><span class="ctr-meta-k">Caveat</span> <span class="ctr-meta-item">Cross-check (2026-10-01): the released code includes NC1/7S junction angles (bending: angle_coeff 1 = 4.0 @180°, plus 7S angles) and a 3σ rod (r0=3.0). This study&#39;s floppy ~0 modulus is an artifact of omitting those angles (bending_k=0) and using a 1σ rod; it does not represent the published model. See references/cross-check-vs-released-code.md.</span></div>
+        <div class="ctr-meta-row"><span class="ctr-meta-k">Caveat</span> <span class="ctr-meta-item">Cross-check: the released code includes NC1/7S junction angles (bending: angle_coeff 1 = 4.0 @180°, plus 7S angles) and a 3σ rod (r0=3.0). This study&#39;s floppy ~0 modulus is an artifact of omitting those angles (bending_k=0) and using a 1σ rod; it does not represent the published model.</span></div>
         
       </div>
       
@@ -1612,7 +1612,7 @@ cites:   ["barrientos2026basement"]</pre>
           <span class="narrative-label">Explanatory gain</span>
           <span class="narrative-input verdict-badge-computed" data-verdict-track="explanatory_gain"
                 title="Computed from interpretation-tier findings (read-only)"
-                style="display:inline-block;padding:2px 12px;border-radius:9999px;font-weight:700;font-size:0.85em;background:#f1f5f9;color:#475569">POSITIVE</span>
+                style="display:inline-block;padding:2px 12px;border-radius:9999px;font-weight:700;font-size:0.85em;background:#f1f5f9;color:#475569">positive</span>
           <span class="muted small" style="margin-left:6px">computed from interpretation-tier findings</span>
         </label>
         <label class="narrative-row narrative-row-wide">
@@ -1659,7 +1659,7 @@ cites:   ["barrientos2026basement"]</pre>
         
         
         <div style="margin-top:4px"><em>Pipeline unblocks:</em>
-          <ul style="margin:4px 0 0 18px"><li>Stage 2 — σ(ε̇) sweep on the growing (biaxially stretching) substrate.</li><li>Energy-scale + calibration decisions (spec #4/#10).</li></ul>
+          <ul style="margin:4px 0 0 18px"><li>Stage 2 — σ(ε̇) sweep on the growing (biaxially stretching) substrate.</li><li>Energy-scale + calibration decisions.</li></ul>
         </div>
         
       </div>
@@ -1705,7 +1705,7 @@ cites:   ["barrientos2026basement"]</pre>
       </div>
       
       
-      <div><strong>Proceed when:</strong> <span class="muted">A stable (if soft) stage-1 modulus + a correct remodelling mechanism unblock the rigidity (bm-v3), bending (bm-v4) and geometric-readout (bm-v5) follow-ups.
+      <div><strong>Proceed when:</strong> <span class="muted">A stable (if soft) stage-1 modulus + a correct remodelling mechanism unblock the rigidity, bending and geometric-readout follow-ups.
 </span></div>
       
     </div>
@@ -1715,7 +1715,7 @@ cites:   ["barrientos2026basement"]</pre>
     <div class="overview-section">
       <h3 class="overview-label">Key assumptions</h3>
       <ul style="margin:0 0 0 18px;padding:0;font-size:0.93em">
-        <li style="margin:2px 0">One protomer = one two-bead rod; junction flexibility folded into a finite intra-rod bond (dynamic junction angles omitted in v1-minimal).</li><li style="margin:2px 0">No excluded volume — every pair coefficient is zero (spec #2: the released input scripts set eps=0).</li><li style="margin:2px 0">Crosslink make/break locked at FactorMult = 0.66 (make/break ratio 1.52), as in the released input scripts.</li><li style="margin:2px 0">Quasi-2D slab; rods lie in-plane; thickness/layer count deferred (spec #9).</li><li style="margin:2px 0">Energy unit = kT, so stress unit = kT/a³ ≈ 2.5 Pa; absolute pascals not yet claimed (spec #4).</li>
+        <li style="margin:2px 0">One protomer = one two-bead rod; junction flexibility folded into a finite intra-rod bond (dynamic junction angles omitted in v1-minimal).</li><li style="margin:2px 0">No excluded volume — every pair coefficient is zero.</li><li style="margin:2px 0">Crosslink make/break locked at FactorMult = 0.66 (make/break ratio 1.52), as in the released input scripts.</li><li style="margin:2px 0">Quasi-2D slab; rods lie in-plane; thickness/layer count deferred.</li><li style="margin:2px 0">Energy unit = kT, so stress unit = kT/a³ ≈ 2.5 Pa; absolute pascals not yet claimed.</li>
       </ul>
     </div>
     
@@ -1725,7 +1725,7 @@ cites:   ["barrientos2026basement"]</pre>
       <h3 class="overview-label">Limitations</h3>
       <p class="muted" style="margin:0 0 6px 0;font-size:0.85em">What this study explicitly does NOT validate (prevents overclaim).</p>
       <ul style="margin:0 0 0 18px;padding:0;font-size:0.93em">
-        <li style="margin:2px 0">Cross-check (2026-10-01): the released code includes NC1/7S junction angles (bending: angle_coeff 1 = 4.0 @180°, plus 7S angles) and a 3σ rod (r0=3.0). This study&#39;s floppy ~0 modulus is an artifact of omitting those angles (bending_k=0) and using a 1σ rod; it does not represent the published model. See references/cross-check-vs-released-code.md.</li><li style="margin:2px 0">Network is floppy (z ≤ 3 &lt; 4): central-force crosslinks alone give ~zero modulus; rigidity needs junction bending / bundling (FP1).</li><li style="margin:2px 0">τ below detection while floppy — the relaxable stress is small; a rigid network is needed to resolve it.</li><li style="margin:2px 0">No dynamic junction angles; persistence length is only approximately represented (spec: LAMMPS puts l_p as soft angles at junctions) — the load-bearing v2 gap.</li><li style="margin:2px 0">No excluded volume, so pore-size / bundling readouts are not yet physical (deferred).</li><li style="margin:2px 0">Modulus reported in LJ units / as a ratio, not calibrated pascals (spec #4).</li><li style="margin:2px 0">Parameters transcribed from the spec&#39;s sheet, not ported from the authors&#39; input scripts; those scripts are now public (Zenodo 10.5281/zenodo.20719515) but not yet cross-checked against this build.</li>
+        <li style="margin:2px 0">Cross-check: the released code includes NC1/7S junction angles (bending: angle_coeff 1 = 4.0 @180°, plus 7S angles) and a 3σ rod (r0=3.0). This study&#39;s floppy ~0 modulus is an artifact of omitting those angles (bending_k=0) and using a 1σ rod; it does not represent the published model.</li><li style="margin:2px 0">Network is floppy (z ≤ 3 &lt; 4): central-force crosslinks alone give ~zero modulus; rigidity needs junction bending / bundling.</li><li style="margin:2px 0">τ below detection while floppy — the relaxable stress is small; a rigid network is needed to resolve it.</li><li style="margin:2px 0">No dynamic junction angles; persistence length is only approximately represented — the load-bearing v2 gap.</li><li style="margin:2px 0">No excluded volume, so pore-size / bundling readouts are not yet physical (deferred).</li><li style="margin:2px 0">Modulus reported in LJ units / as a ratio, not calibrated pascals.</li><li style="margin:2px 0">Parameters transcribed from the spec&#39;s sheet, not ported from the authors&#39; input scripts; those scripts are now public (Zenodo 10.5281/zenodo.20719515) but not yet cross-checked against this build.</li>
       </ul>
     </div>
     
@@ -1800,7 +1800,7 @@ cites:   ["barrientos2026basement"]</pre>
             
             <div class="expert-question-response">
               <strong>Requested response format</strong>
-              <p>Confirm LAMMPS through stage 2; revisit at stage 3 (spec #2).</p>
+              <p>Confirm LAMMPS through stage 2; revisit at stage 3.</p>
             </div>
             
           </div>
@@ -1824,7 +1824,7 @@ cites:   ["barrientos2026basement"]</pre>
             
             <div class="expert-question-response">
               <strong>Requested response format</strong>
-              <p>Decide with the coupling contract (spec #4/#5).</p>
+              <p>Decide with the coupling contract.</p>
             </div>
             
           </div>
@@ -1848,7 +1848,7 @@ cites:   ["barrientos2026basement"]</pre>
             
             <div class="expert-question-response">
               <strong>Requested response format</strong>
-              <p>Pick the accountable readout before running (spec #10).</p>
+              <p>Pick the accountable readout before running.</p>
             </div>
             
           </div>
@@ -1876,7 +1876,7 @@ cites:   ["barrientos2026basement"]</pre>
         
         <div class="di-unc di-unc-remaining">
           <h4>● Remaining uncertainties</h4>
-          <ul><li>τ (remodelling time) — below detection until the network is rigid.</li><li>Absolute modulus in pascals — energy scale still open (spec #4).</li></ul>
+          <ul><li>τ (remodelling time) — below detection until the network is rigid.</li><li>Absolute modulus in pascals — energy scale still open.</li></ul>
         </div>
         
       </div>
@@ -1949,7 +1949,7 @@ cites:   ["barrientos2026basement"]</pre>
 </section>
 
 </main>
-<script>window.__DASH_CONFIG__ = { mode: "snapshot", interactiveUrl: "https://github.com/vivarium-collective/viva-lumenoid", basePath: "/viva-lumenoid/dashboard", inputsDownloadBase: "https://github.com/vivarium-collective/viva-lumenoid/raw/main", provenance: {"repo_slug": "vivarium-collective/viva-lumenoid", "repo_url": "https://github.com/vivarium-collective/viva-lumenoid", "commit": "d0a11a8a8cf5ad06f8441fecf7a51d70718225aa", "commit_url": "https://github.com/vivarium-collective/viva-lumenoid/commit/d0a11a8a8cf5ad06f8441fecf7a51d70718225aa", "branch": "main", "lockfile": "uv.lock@796aed340563", "generated_at": "2026-10-20 01:48 UTC"} };</script>
+<script>window.__DASH_CONFIG__ = { mode: "snapshot", interactiveUrl: "https://github.com/vivarium-collective/viva-lumenoid", basePath: "/viva-lumenoid/dashboard", inputsDownloadBase: "https://github.com/vivarium-collective/viva-lumenoid/raw/main", provenance: {"repo_slug": "vivarium-collective/viva-lumenoid", "repo_url": "https://github.com/vivarium-collective/viva-lumenoid", "commit": "91948091e84775bfcd770b13507ce1cf23782080", "commit_url": "https://github.com/vivarium-collective/viva-lumenoid/commit/91948091e84775bfcd770b13507ce1cf23782080", "branch": "main", "lockfile": "uv.lock@796aed340563", "generated_at": "2026-10-20 02:05 UTC"} };</script>
 <script src="/viva-lumenoid/dashboard/assets/data-source.js"></script>
 <script src="/viva-lumenoid/dashboard/assets/toast.js"></script>
 <script>
