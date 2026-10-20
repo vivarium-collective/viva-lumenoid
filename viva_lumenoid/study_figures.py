@@ -1641,6 +1641,273 @@ def v3_centralforce_control_figure():
               f"positive. Athermal modulus (released-code LAMMPS, reduced LJ units). This is a "
               f"counterfactual with angle terms DISABLED, NOT a reproduction of the published model."))
     return _layout(fig, height=600)
+# ---------------------------------------------------------------------------
+# v4 / v5 figure-review figures (2026-10-20)
+#
+# Both draw REAL LAMMPS results baked into viva_lumenoid/data/figrev_v45.json
+# (deterministic, seeded; provenance in that file's _provenance field). The data
+# is baked rather than run live so the figure builds fast + reproducibly — the
+# same pattern as r2_fig2e above (recorded real medians). The v4 three-way
+# moduli are re-generated from viva_lumenoid.bending.run_faithful_comparison();
+# the v5 porosity/bundling from a 3-density stage-1 assembly read through
+# viva_lumenoid.geometry. See each study.yaml for the full caption + the named
+# honest gaps (v4: only the NC1 junction angle is implemented, the two released
+# 7S angles are not; absolute Pa carries the unresolved-energy-scale caveat.
+# v5: strands are predominantly isolated protomers — missing lateral-association
+# bond; the corneal-EM / PFHR-9 bands are cross-system REFERENCES, not validation).
+# ---------------------------------------------------------------------------
+_FR_MUTED = "#6b7280"
+
+
+def _figrev_data():
+    """Load the baked real v4/v5 figure-review data (next to this package)."""
+    import json
+    import pathlib
+    path = pathlib.Path(__file__).resolve().parent / "data" / "figrev_v45.json"
+    with open(path) as fh:
+        return json.load(fh)
+
+
+def bm_v4_faithful_angles_figure():
+    """bm-v4 MAIN (evidence: observed) — forming junction angles DURING assembly
+    stabilises the measured elastic response.
+
+    Panel A: per-seed equibiaxial-stretch tangent modulus (reduced LJ, kT/σ³) for
+    the three controls at matched box / density / loading — central force (angles
+    off), post-hoc as-formed restraints, and real NC1 angles created during
+    assembly. Panel B: the real-angle modulus vs crosslinks-per-rod (positive and
+    monotonic). Bottom: the real-LAMMPS angle create/delete topology. Real
+    LAMMPS (``run_faithful_comparison``); 3 seeds, one deterministic run each."""
+    go = _go()
+    from plotly.subplots import make_subplots
+    d = _figrev_data()["v4"]
+    conds = d["conditions"]
+    kpa = d["kT_per_a3_Pa"]
+    order = ["central-force (k=0)", "as-formed restraint (k=4)",
+             "real angles during assembly (k=4)"]
+    palette = {order[0]: _FR_MUTED, order[1]: ORANGE, order[2]: GREEN}
+    ticks = ["central force<br>(angles off, k=0)", "post-hoc<br>restraints (k=4)",
+             "real angles<br>in assembly (k=4)"]
+
+    fig = make_subplots(
+        rows=2, cols=2, row_heights=[0.68, 0.32],
+        specs=[[{}, {}], [{"colspan": 2}, None]],
+        vertical_spacing=0.17, horizontal_spacing=0.13,
+        subplot_titles=("A — modulus per seed (matched box, density & loading)",
+                        "B — real-angle modulus vs connectivity",
+                        "C — real-LAMMPS junction-angle topology (NC1 only)"))
+
+    # (A) per-seed strip + median tick
+    for i, lab in enumerate(order):
+        es = np.asarray(conds[lab], dtype=float)
+        c = palette[lab]
+        fig.add_trace(go.Scatter(
+            x=[i] * len(es), y=es, mode="markers", name=lab, showlegend=False,
+            marker=dict(size=13, color=c, opacity=0.85, line=dict(width=1, color="white")),
+            hovertemplate=f"{lab}<br>E=%{{y:.2f}} kT/σ³<extra></extra>"), row=1, col=1)
+        fig.add_trace(go.Scatter(
+            x=[i], y=[float(np.median(es))], mode="markers",
+            marker=dict(size=26, color=c, symbol="line-ew", line=dict(width=3, color=c)),
+            showlegend=False, hoverinfo="skip"), row=1, col=1)
+    fig.add_hline(y=0.0, line=dict(color=_FR_MUTED, width=1, dash="dot"), row=1, col=1)
+    fig.update_xaxes(tickmode="array", tickvals=[0, 1, 2], ticktext=ticks,
+                     range=[-0.5, 2.5], row=1, col=1)
+    fig.update_yaxes(title_text="elastic modulus E (kT/σ³, reduced LJ)", row=1, col=1)
+
+    # (B) modulus vs crosslinks/rod
+    dp = np.asarray(d["density_points"], dtype=float)
+    fig.add_trace(go.Scatter(
+        x=dp[:, 0], y=dp[:, 1], mode="lines+markers", line=dict(color=GREEN, width=2.5),
+        marker=dict(size=12, color=GREEN, line=dict(width=1, color="white")),
+        showlegend=False,
+        hovertemplate="%{x:.2f} crosslinks/rod<br>E=%{y:.1f} kT/σ³<extra></extra>"),
+        row=1, col=2)
+    fig.add_annotation(x=float(dp[-1, 0]), y=float(dp[-1, 1]), ax=-46, ay=18,
+                       text=f"released density<br>≈{dp[-1,1]*kpa:.0f} Pa", showarrow=True,
+                       arrowcolor=GREEN, font=dict(size=10, color=GREEN), row=1, col=2)
+    fig.update_xaxes(title_text="crosslinks per rod (connectivity)", row=1, col=2)
+    fig.update_yaxes(title_text="E (kT/σ³)", row=1, col=2)
+
+    # (C) topology schematic: crosslink forms -> two NC1 angles created (real LAMMPS)
+    fig.update_xaxes(visible=False, range=[0, 10], row=2, col=1)
+    fig.update_yaxes(visible=False, range=[0, 4], row=2, col=1)
+
+    def _rod(x0, y0, x1, y1, end_color):
+        fig.add_shape(type="line", x0=x0, y0=y0, x1=x1, y1=y1,
+                      line=dict(color="#7a8390", width=3), row=2, col=1)
+        fig.add_trace(go.Scatter(x=[x0, x1], y=[y0, y1], mode="markers",
+                                 marker=dict(size=9, color=end_color), showlegend=False,
+                                 hoverinfo="skip"), row=2, col=1)
+    # left: crosslink bond u-v forms between two rods
+    _rod(0.8, 1.0, 2.6, 2.6, BLUE)
+    _rod(2.6, 2.6, 4.4, 1.0, BLUE)
+    fig.add_shape(type="line", x0=2.6, y0=2.6, x1=2.6, y1=2.6, row=2, col=1)
+    fig.add_annotation(x=2.6, y=3.3, text="NC1 crosslink u–v forms (bond type 2)",
+                       showarrow=False, font=dict(size=10, color=BLUE), row=2, col=1)
+    fig.add_annotation(x=5.1, y=2.0, text="→<br><span style='font-size:9px'>create_bonds<br>single/angle 1</span>",
+                       showarrow=False, font=dict(size=14, color="#444"), row=2, col=1)
+    # right: two real harmonic angles (partner(u)-u-v and u-v-partner(v)), k=4 @180
+    _rod(6.0, 1.0, 7.8, 2.6, GREEN)
+    _rod(7.8, 2.6, 9.6, 1.0, GREEN)
+    fig.add_shape(type="path",
+                  path="M 6.9 1.8 Q 7.8 2.9 8.7 1.8", line=dict(color=RED, width=2),
+                  row=2, col=1)
+    fig.add_annotation(x=7.8, y=3.3,
+                       text="+ 2 NC1 harmonic angles (type 1, k=4 kT/rad² @180°)",
+                       showarrow=False, font=dict(size=10, color=GREEN), row=2, col=1)
+    fig.add_annotation(x=7.8, y=0.4,
+                       text="on break: delete_bonds angle 1 remove → recreate (per-angle delete)",
+                       showarrow=False, font=dict(size=9, color=_FR_MUTED), row=2, col=1)
+
+    _layout(fig, height=760)
+    fig.update_layout(title=dict(
+        text=("<b>bm-v4 — junction angles formed during assembly stabilise the modulus</b> "
+              f"<span style='font-size:12px;color:{_FR_MUTED}'>evidence: observed · real LAMMPS · "
+              "real angles: 36.7/27.6/37.5 kT/σ³ (≈81/61/83 Pa, energy-scale caveat); "
+              "controls consistent with 0 / sign-flipping</span>"),
+        x=0.01, xanchor="left"))
+    return fig
+
+
+def _v5_network_trace(snap, go, color):
+    """Rod-segment line trace (x/y with None breaks) for a baked v5 snapshot."""
+    xs, ys = [], []
+    for seg in snap["segs"]:
+        xs += [seg[0], seg[2], None]
+        ys += [seg[1], seg[3], None]
+    return go.Scatter(x=xs, y=ys, mode="lines", line=dict(color=color, width=1.1),
+                      showlegend=False, hoverinfo="skip")
+
+
+def bm_v5_porosity_figure():
+    """bm-v5 MAIN (evidence: observed) — simulated pore size falls with areal
+    coverage and reaches the corneal-EM reference band at the densest network.
+
+    Panel A: pore-diameter CDFs (maximal-inscribed-disc method) per density, with
+    the corneal-EM reference band (72 ± 40 nm, Abrams 2000) shaded. Panel B:
+    median pore vs areal coverage against the same shaded band. Panels C/D: the
+    simulated network at low vs high density (2D top-down projection of the
+    quasi-2D slab), matched scale bars. Lengths via σ = 125 nm. The corneal-EM
+    band is a cross-system REFERENCE, not validation for lumenoid BM."""
+    go = _go()
+    from plotly.subplots import make_subplots
+    from . import comparators as C
+    d = _figrev_data()["v5"]
+    sp = d["bead_spacing_nm"]
+    pts = d["points"]
+    lo, hi = C.PORE_CORNEAL_EM.lo, C.PORE_CORNEAL_EM.hi
+
+    fig = make_subplots(
+        rows=2, cols=2, vertical_spacing=0.15, horizontal_spacing=0.12,
+        subplot_titles=("A — pore-size CDF vs corneal-EM reference",
+                        "B — median pore vs areal coverage",
+                        f"C — network at low density ({d['lo_n']} rods)",
+                        f"D — network at high density ({d['hi_n']} rods)"))
+
+    # (A) pore CDFs per density + corneal-EM band
+    fig.add_vrect(x0=lo, x1=hi, fillcolor="rgba(84,162,75,0.10)", line_width=0, row=1, col=1)
+    fig.add_vline(x=C.PORE_CORNEAL_EM.value, line=dict(color="rgba(84,162,75,0.55)", width=1.5,
+                  dash="dash"), row=1, col=1)
+    cmap = [BLUE, PURPLE, RED]
+    for i, p in enumerate(pts):
+        arr = np.sort(np.asarray(d["pore_nm"][str(p["n_rods"])], dtype=float))
+        cdf = np.arange(1, len(arr) + 1) / len(arr)
+        fig.add_trace(go.Scatter(
+            x=arr, y=cdf, mode="lines", line=dict(color=cmap[i % len(cmap)], width=2.5),
+            name=f"{p['n_rods']} rods ({p['coverage']*100:.1f}%)",
+            hovertemplate=f"{p['n_rods']} rods<br>pore %{{x:.0f}} nm<br>CDF %{{y:.2f}}<extra></extra>"),
+            row=1, col=1)
+    fig.update_xaxes(title_text="pore diameter (nm)", row=1, col=1)
+    fig.update_yaxes(title_text="cumulative fraction", row=1, col=1)
+
+    # (B) median pore vs coverage + band
+    cov = np.asarray([p["coverage"] * 100 for p in pts])
+    medp = np.asarray([p["median_pore_nm"] for p in pts])
+    fig.add_hrect(y0=lo, y1=hi, fillcolor="rgba(84,162,75,0.10)", line_width=0, row=1, col=2)
+    fig.add_hline(y=C.PORE_CORNEAL_EM.value, line=dict(color="rgba(84,162,75,0.55)", width=1.5,
+                  dash="dash"), annotation_text="corneal EM 72±40 nm (reference)",
+                  annotation_position="top right", annotation_font_size=10, row=1, col=2)
+    fig.add_trace(go.Scatter(
+        x=cov, y=medp, mode="lines+markers", line=dict(color=PURPLE, width=2.5),
+        marker=dict(size=12, color=PURPLE, line=dict(width=1, color="white")), showlegend=False,
+        customdata=[p["n_rods"] for p in pts],
+        hovertemplate="coverage %{x:.1f}%<br>%{customdata} rods<br>median %{y:.0f} nm<extra></extra>"),
+        row=1, col=2)
+    fig.update_xaxes(title_text="areal coverage (%)", row=1, col=2)
+    fig.update_yaxes(title_text="median pore (nm)", row=1, col=2)
+
+    # (C)/(D) network images with matched scale bars (2 σ = 250 nm)
+    for col, key, n, color in ((1, "snap_lo", d["lo_n"], BLUE), (2, "snap_hi", d["hi_n"], RED)):
+        snap = d[key]
+        bx, by = snap["box"][0], snap["box"][1]
+        fig.add_trace(_v5_network_trace(snap, go, color), row=2, col=col)
+        # scale bar: 2 σ ≈ 250 nm
+        fig.add_shape(type="line", x0=0.6, y0=0.6, x1=2.6, y1=0.6,
+                      line=dict(color="#1f2328", width=3), row=2, col=col)
+        fig.add_annotation(x=1.6, y=1.15, text=f"2σ ≈ {2*sp:.0f} nm", showarrow=False,
+                           font=dict(size=9, color="#1f2328"), row=2, col=col)
+        fig.update_xaxes(range=[0, bx], row=2, col=col, constrain="domain", visible=False)
+        fig.update_yaxes(range=[0, by], row=2, col=col, constrain="domain", visible=False,
+                         scaleanchor=f"x{'3' if col==1 else '4'}", scaleratio=1)
+
+    _layout(fig, height=780)
+    fig.update_layout(title=dict(
+        text=("<b>bm-v5 — simulated pore size reaches the corneal-EM reference at density</b> "
+              f"<span style='font-size:12px;color:{_FR_MUTED}'>evidence: observed · real geometry · "
+              f"median {pts[0]['median_pore_nm']:.0f}→{pts[-1]['median_pore_nm']:.0f} nm "
+              "(corneal EM is a cross-system reference, not validation)</span>"),
+        x=0.01, xanchor="left"))
+    return fig
+
+
+def bm_v5_bundling_figure():
+    """bm-v5 MAIN (evidence: observed) — strands remain predominantly isolated
+    protomers, below the measured 5–7-protomer bundle range.
+
+    Protomers-per-strand distribution (strand = connected component of rods whose
+    minimum-image midpoints lie within the measured 59.5 nm ≈ 0.48 σ lateral
+    spacing AND run ≤22° parallel), at the densest network, with the PFHR-9
+    reference band (5–7, Pokidysheva 2025) shaded. The shortfall is consistent
+    with the released NC1/7S topology having no explicit lateral-association bond;
+    the PFHR-9 band is a cross-system REFERENCE, not validation."""
+    go = _go()
+    from . import comparators as C
+    d = _figrev_data()["v5"]
+    hi = d["snap_hi"]
+    # densest network's strand histogram (string-keyed sizes)
+    dense = d["strand_hist"][str(d["hi_n"])]
+    pt = [p for p in d["points"] if p["n_rods"] == d["hi_n"]][0]
+    sizes = sorted(int(k) for k in dense)
+    counts = [dense[str(s)] for s in sizes]
+    total = sum(counts)
+    frac_singletons = dense.get("1", 0) / total if total else 0.0
+
+    fig = go.Figure()
+    fig.add_vrect(x0=C.BUNDLING_PFHR9.lo, x1=C.BUNDLING_PFHR9.hi,
+                  fillcolor="rgba(84,162,75,0.12)", line_width=0,
+                  annotation_text="PFHR-9 scaffold 5–7 (reference)",
+                  annotation_position="top", annotation_font_size=10)
+    fig.add_trace(go.Bar(
+        x=sizes, y=counts, marker=dict(color=TEAL), showlegend=False,
+        hovertemplate="%{x} protomers/strand<br>%{y} strands<extra></extra>"))
+    fig.add_annotation(x=0.97, y=0.9, xref="paper", yref="paper", xanchor="right", showarrow=False,
+                       font=dict(size=11, color=_FR_MUTED),
+                       text=(f"mean {pt['mean_strand']:.2f} · max {pt['max_strand']} · "
+                             f"{frac_singletons:.0%} singletons · {pt['frac_in_5_7']:.0%} in 5–7"))
+    fig.add_annotation(x=0.97, y=0.73, xref="paper", yref="paper", xanchor="right", showarrow=False,
+                       align="right", font=dict(size=10, color=_FR_MUTED),
+                       text=("strand = rods within 59.5 nm (≈0.48 σ) lateral spacing<br>"
+                             "AND ≤22° parallel; connected components"))
+    fig.update_xaxes(title_text="protomers per strand", dtick=1)
+    fig.update_yaxes(title_text="strand count", type="log")
+    _layout(fig, height=520)
+    fig.update_layout(title=dict(
+        text=("<b>bm-v5 — the NC1/7S-only network under-bundles (no lateral-association bond)</b> "
+              f"<span style='font-size:12px;color:{_FR_MUTED}'>evidence: observed · real geometry · "
+              f"mean {pt['mean_strand']:.2f} protomers/strand, below the measured 5–7 "
+              "(cross-system reference)</span>"),
+        x=0.01, xanchor="left"))
+    return fig
 
 
 STUDY_FIGURES = {
@@ -1657,6 +1924,14 @@ STUDY_FIGURES = {
     "bm-e2-actin-adhesion-collagen": ("e2_force_transfer", e2_force_transfer_figure, "light"),
     "bm-e3-closed-3d-lumenoid": ("e3_lumenoid", e3_lumenoid_figure, "data"),
     "bm-e4-feedback-predictions": ("e4_feedback", e4_feedback_figure, "data"),
+    "bm-v4-junction-bending": ("bm_v4_faithful_angles", bm_v4_faithful_angles_figure, "data"),
+    "bm-v5-porosity-bundling": ("bm_v5_porosity", bm_v5_porosity_figure, "data"),
+}
+
+# v5 has a second MAIN figure (the porosity/bundling 2×2 was split into two story
+# figures — see the 2026-10-20 review); it renders alongside the registered one.
+V5_EXTRA_FIGURES = {
+    "bm-v5-porosity-bundling": [("bm_v5_bundling", bm_v5_bundling_figure)],
 }
 
 # Companion (supplement-tier) figures for the E1-E4 extension studies: a second

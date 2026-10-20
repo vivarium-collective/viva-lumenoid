@@ -142,7 +142,7 @@ behavior_tests:
     measure: {kind: median, field: pore_diameter}
     pass_if: {op: between, lo: 32.0, hi: 112.0, field: median_pore_nm}
     units: nm
-    requires_simulation: "true"
+    requires_simulation: porosity-bundling-density-sweep
     cites: [abrams2000nanoscale]
     calibration_anchor:
       observed_value: "median 54 nm at the densest network (corrected σ≈125 nm)"
@@ -158,7 +158,7 @@ behavior_tests:
     measure: {kind: mean, field: protomers_per_strand}
     pass_if: {op: lt, value: 2.0, field: mean_strand}
     units: count
-    requires_simulation: "true"
+    requires_simulation: porosity-bundling-density-sweep
     cites: [pokidysheva2025targeted]
     calibration_anchor:
       observed_value: "mean 1.29 protomers/strand, mostly singletons, max ~6"
@@ -218,18 +218,80 @@ conclusion_logic:
     block_downstream: "Diagnostic readout study; nothing downstream is gated on it."
 
 visualizations:
-  - name: assembly-movie
-    address: "html:assembly_movie.html"
+  # MAIN 1 (2026-10-20 review: split the old 2×2 into two story figures) — the
+  # porosity story: pore-size CDF + median-vs-coverage + low/high network images.
+  - name: pore-size-coverage
+    address: "html:bm_v5_porosity.html"
     config:
-      title: "Simulation movie — a porous collagen IV mesh forms"
+      title: "Simulated pore size reaches the corneal-EM reference at density"
+      evidence_status: observed
+      tier: main
+      caption: >
+        Simulated pore-diameter distribution (maximal-inscribed-disc /
+        distance-transform method, periodic plane) at three areal-coverage rungs;
+        lengths via σ = 125 nm. Real assembled-network geometry (single
+        deterministic run, seed 12345; box 13σ, 12σ slab, assemble 10000). Median
+        pore falls with coverage (88 → 62 → 54 nm) and the densest network reaches
+        the corneal-EM REFERENCE band (72 ± 40 nm; Abrams 2000, low-voltage SEM),
+        shaded. Panels C/D show the mesh at low (200 rods) vs high (500 rods)
+        density as a 2D top-down projection of the quasi-2D slab, with matched
+        2σ ≈ 250 nm scale bars. The corneal-EM band is a cross-system REFERENCE
+        for an open-mesh length scale, NOT validation for lumenoid BM; the match
+        holds at one coverage, it is not a universal property.
+  # MAIN 2 — the bundling story: protomers-per-strand vs the 5–7 reference.
+  - name: protomers-per-strand
+    address: "html:bm_v5_bundling.html"
+    config:
+      title: "The NC1/7S-only network under-bundles (no lateral-association bond)"
+      evidence_status: observed
+      tier: main
+      caption: >
+        Protomers-per-strand distribution at the densest network. STRAND
+        DEFINITION: a connected component of rods whose minimum-image midpoints lie
+        within the measured cell-deposited lateral spacing (59.5 nm ≈ 0.48σ) AND
+        run ≤22° parallel. Real geometry (single deterministic run, seed 12345).
+        Strands are predominantly isolated protomers (mean 1.38, 76% singletons,
+        max 6; ~6% of rods in strands of 5–7), below the PFHR-9 REFERENCE band
+        (5–7 protomers/strand; Pokidysheva 2025, immuno-gold SEM), shaded. The
+        shortfall is consistent with the released NC1/7S topology having no
+        explicit lateral-association bond; it is NOT evidence that NC1/7S chemistry
+        alone recapitulates bundled BM. The PFHR-9 band is a cross-system
+        reference, not validation; the missing lateral association is the named gap.
+  # SUPPLEMENT — the original combined 2×2 panel (kept; real geometry).
   - name: porosity-bundling
     address: "html:porosity_bundling.html"
     config:
-      title: "Stage 5 — porosity & bundling vs measured BM"
+      title: "Stage 5 — combined porosity & bundling panel (supplement)"
+      evidence_status: observed
+      tier: supplement
+      caption: >
+        The original 2×2 panel (pore histogram + density scaling + strand sizes +
+        pore map), retained as a combined reference. Superseded for the headline
+        narrative by the two split story figures above. Same real geometry; the
+        measured bands are cross-system references, not validation.
+  # SUPPLEMENT — the comparison-audit / evidence map (incompatible units/systems).
   - name: evidence-map
     address: "html:evidence_map.html"
     config:
-      title: "Evidence map — readouts vs measured comparators"
+      title: "Comparison-audit — readouts vs measured comparators (supplement)"
+      evidence_status: engineered-diagnostic
+      tier: supplement
+      caption: >
+        A comparison-audit forest plot of every spec comparator (geometry, pores,
+        modulus, bundling, time) with the model's own values where run. The panels
+        span incompatible units and biological systems, so it is an audit table,
+        not a single scientific claim — kept in supplement per the figure review.
+  # SUPPLEMENT — one optional assembly movie.
+  - name: assembly-movie
+    address: "html:assembly_movie.html"
+    config:
+      title: "Simulation movie — a porous collagen IV mesh forms (supplement)"
+      evidence_status: engineered-diagnostic
+      tier: supplement
+      caption: >
+        Optional animation of the collagen IV mesh assembling. Illustrative
+        spatial context; the quantitative pore/bundle readouts are in the two main
+        figures. 2D top-down projection of the quasi-2D slab.
 
 limitations:
   - "Cross-check: pore sizes in nm use the wrong length mapping (rod is 1σ here, 3σ in the released code → σ≈125 nm), and bundling is affected by the absent 7S angles that organise trimers. Not a like-for-like comparison."
