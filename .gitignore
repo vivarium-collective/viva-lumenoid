@@ -38,3 +38,4 @@ demo/figs/
 
 # built read-only dashboard bundle (published to gh-pages, not committed to main)
 /reports/
+.venv
