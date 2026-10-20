@@ -47,10 +47,16 @@ expected_behavior:
 baseline:
   - name: bm-r6-perlecan-growth-perturbations
     composite: viva_lumenoid.composites.turnover_shape_pipeline
-    composite_status: planned
+    composite_status: implemented
     params: {}
     note: >
-      PLANNED composite — design target, not yet implemented (expected unresolved-composite lint gap)
+      Implemented as the turnover->relaxation->shape pipeline (TurnoverShapeProcess):
+      an inferred collagen IV lifetime (modulated by perlecan) sets the BM relaxation
+      time, which the reduced-order prism model turns into a predicted cell shape.
+      Resolves ready and RUNS; reproduces the Fig 7 intervention ordering (verified:
+      perlecan gain -> longer lifetime -> more confined/taller > control > perlecan
+      loss). Inferred (relaxation) and predicted (shape) outputs are kept distinct,
+      per the plan's validation distinction.
 variants: []
 interventions: []
 runs: []
