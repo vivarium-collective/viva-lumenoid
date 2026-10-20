@@ -3,15 +3,24 @@ name: bm-r6-perlecan-growth-perturbations
 title: "Perlecan & growth perturbations on cell shape"
 created: "2026-09-30"
 status: in-progress
-phase: Decide
+phase: Evaluate
 simulation_status: ran
 implementation_status: complete
 evaluation_status: evaluated
-gate_status: passed
+gate_status: failed
 design_status: drafted
-confidence: Accepted
+confidence: Investigating
 
 claim: >
+  CONTRADICTION FLAGGED (figure review 2026-10-20). The pipeline self-consistently maps an
+  inferred collagen lifetime through BM relaxation to cell shape, but the perlecan direction it
+  encodes (perlecan STABILIZES collagen -> longer lifetime -> slower relaxation -> taller cell)
+  produces an ordering OPPOSITE to the paper's reported perlecan morphology (overexpression ->
+  faster relaxation -> shorter/wider; knockdown -> taller). This study therefore does NOT
+  reproduce Figure 7 and must not be scored as a pass until the perlecan -> turnover direction is
+  audited against the paper. The growth-rate axis (faster growth -> flatter) is unaffected.
+
+claim_superseded: >
   Carrying an inferred collagen lifetime through BM relaxation to cell shape reproduces the
   paper's intervention ordering: perlecan gain gives taller cells than control, and loss gives
   flatter ones, with the inferred relaxation time (turnover) kept distinct from the predicted
@@ -27,6 +36,15 @@ experiment: >
   rank-order against Barrientos Figure 7.
 
 result: >
+  The pipeline runs and produces a strict, self-consistent ordering -- perlecan gain 0.4386 >
+  control 0.4287 > loss 0.4043 -- but that ordering CONTRADICTS the paper. Barrientos Figure 7
+  (per the figure review) reports perlecan overexpression -> FASTER BM relaxation -> SHORTER/wider
+  cells and knockdown -> taller; our model assumes perlecan STABILIZES collagen (gain -> longer
+  lifetime -> slower relaxation -> taller), so it predicts the opposite morphology. The mechanics
+  sign (longer relaxation -> taller) is internally correct and matches R1; the disagreement is
+  entirely in the perlecan -> collagen-turnover direction, which is an unaudited modelling
+  assumption, not a reproduced result. Reproduction is WITHHELD pending that audit.
+result_superseded: >
   The intervention ordering reproduces exactly. Predicted cell height is tallest under perlecan
   gain (0.4386), then control (0.4287), then perlecan loss (0.4043) -- a strict gain > control >
   loss ordering, matching Figure 7. The inferred relaxation time scales exactly linearly with the
@@ -202,8 +220,8 @@ runs:
     status: completed
     outcomes:
       perlecan-intervention-ordering:
-        result: PASS
-        observed: "cell height 0.4386 (gain) > 0.4287 (control) > 0.4043 (loss) -- strict Fig 7 ordering"
+        result: CONTRADICTS
+        observed: "cell height 0.4386 (gain) > 0.4287 (control) > 0.4043 (loss) -- strict and model-self-consistent, but OPPOSITE the paper's perlecan morphology (overexpression -> shorter). Not a Fig 7 reproduction."
       inferred-relaxation-scales-with-perlecan:
         result: PASS
         observed: "inferred_relaxation = 5.0 x perlecan_factor: 1.5 / 5.0 / 10.0 / 15.0 for factor 0.3 / 1.0 / 2.0 / 3.0"
@@ -240,17 +258,19 @@ behavior_tests:
   - name: perlecan-intervention-ordering
     classification: primary
     description: >
-      Predicted cell height follows the Fig 7 intervention ordering: perlecan gain > control >
-      perlecan loss.
+      MODEL-INTERNAL self-consistency only: given the perlecan-STABILIZES assumption, predicted
+      height is strictly gain > control > loss. This passes as an internal check but CONTRADICTS
+      the paper's reported perlecan morphology (overexpression -> shorter), so it does NOT
+      establish Fig 7 reproduction.
     measure: {kind: order, field: cell_height, cases: ["perlecan_gain", "control", "perlecan_loss"]}
-    pass_if: {op: strictly_decreasing, note: "height(gain) > height(control) > height(loss)"}
+    pass_if: {op: strictly_decreasing, note: "height(gain) > height(control) > height(loss) -- model-internal, NOT the paper's direction"}
     units: reduced
     requires_simulation: r6-perlecan-growth-conditions
     cites: [barrientos2026cellshape]
     calibration_anchor:
-      observed_value: "0.4386 > 0.4287 > 0.4043"
-      literature_target: "perlecan gain taller, loss flatter (Fig 7 ordering)"
-      resolution: concept
+      observed_value: "0.4386 > 0.4287 > 0.4043 (model); paper reports the OPPOSITE perlecan ordering"
+      literature_target: "paper: perlecan overexpression -> SHORTER cells (our model gives taller) -- CONTRADICTS"
+      resolution: contradicts
       cites: [barrientos2026cellshape]
   - name: inferred-relaxation-scales-with-perlecan
     classification: primary
@@ -291,17 +311,18 @@ falsifiability: >
 
 conclusion_logic:
   if_primary_tests_pass:
-    implementation_status: "The turnover->shape pipeline runs end-to-end and reproduces the Fig 7 ordering."
-    biological_validation: "Perlecan gain > control > loss reproduced; inferred relaxation scales with perlecan; inferred vs predicted kept distinct."
+    implementation_status: "The turnover->shape pipeline runs end-to-end and keeps inferred vs predicted distinct."
+    biological_validation: "WITHHELD: the model's perlecan ordering (gain -> taller) contradicts the paper (overexpression -> shorter); Fig 7 is NOT reproduced until the perlecan -> turnover direction is audited."
     pipeline_unblocks:
-      - "E4 predictive-feedback study -- this closes the reproduction campaign it builds on."
-  if_primary_tests_fail:
-    diagnose:
-      - "Ordering inverted -- check the sign of the perlecan modulation (>1 must lengthen the lifetime)."
-      - "Inferred and predicted collapsed into one -- the pipeline must emit inferred_relaxation separately from cell_height."
-    block_downstream: "Do not advance to the predictive-feedback study until the ordering + the inferred/predicted split hold."
+      - "E4 predictive-feedback study depends only on the mechanics endpoint (R1), not on the perlecan direction, so it is not blocked by this contradiction."
+  if_contradiction_resolved:
+    audit:
+      - "Verify against the paper whether perlecan overexpression SPEEDS or SLOWS collagen IV turnover."
+      - "If the paper has overexpression -> faster turnover (shorter lifetime), invert the perlecan_factor -> lifetime mapping in turnover_shape.py (gain -> factor < 1) so the predicted morphology matches; then re-record."
+      - "Also audit the sign of the height/confinement variable and the growth/area normalization (reviewer's checklist)."
 
 limitations:
+  - "RED FLAG (figure review): the perlecan ordering CONTRADICTS the paper. Our model assumes perlecan stabilizes collagen (gain -> longer lifetime -> slower relaxation -> taller); the paper reports perlecan overexpression -> faster relaxation -> shorter/wider cells. Reproduction is withheld until the perlecan -> turnover direction is audited against the paper (one-line sign inversion in turnover_shape.py if the paper confirms faster turnover under overexpression)."
   - "Reduced units; the claim is the RELATIVE morphology ordering, not absolute cell height."
   - "Perlecan-driven height differences are small in magnitude (~2-3% gain vs control at these parameters); the ordering is strict but the sensitivity is modest, while the growth-rate axis dominates shape."
   - "Point estimates only: the Fig 7 result propagates an inferred-lifetime DISTRIBUTION with uncertainty bands; this study records the point-estimate ordering and leaves the uncertainty propagation as a documented follow-up."
@@ -312,54 +333,61 @@ visualizations:
   - name: r6_intervention
     address: "html:r6_intervention.html"
     config:
-      title: "Intervention ordering on cell height (Fig 7 reproduction)"
+      title: "Perlecan/growth intervention on predicted cell height — CONTRADICTS paper (evidence: contradicted)"
+      evidence_status: contradicted
       caption: >
-        Predicted cell height for each perlecan and growth-rate condition, with the inferred membrane relaxation time marked on each bar, reproducing the paper's Figure 7. Perlecan gain gives the tallest cells, then the control, then perlecan loss.
+        Predicted cell height per perlecan and growth-rate condition (inferred BM relaxation annotated). The model's perlecan ordering — gain taller than control taller than loss — is self-consistent but OPPOSITE the paper's reported morphology (perlecan overexpression → shorter/wider cells). This figure is shown as a flagged contradiction, NOT a Figure 7 reproduction, pending an audit of the perlecan → collagen-turnover direction. The growth-rate result (faster growth → much flatter) is unaffected.
 
 report:
-  title: "R6 -- turnover -> shape intervention ordering (Fig 7 reproduction)"
+  title: "R6 -- turnover -> shape intervention ordering (perlecan direction CONTRADICTS paper)"
   verdict: >
-    The turnover -> relaxation -> shape pipeline reproduces Barrientos Figure 7's intervention
-    ordering on a deterministic run: predicted cell height is tallest under perlecan gain (0.439),
-    then control (0.429), then perlecan loss (0.404), and the inferred BM relaxation time scales
-    exactly with the perlecan factor (5.0 x factor) while being reported as a distinct output from
-    the predicted shape. The fast-growth condition collapses the cell to 0.134, showing the
-    growth-rate axis dominates morphology. The perlecan effect is strictly ordered but small in
-    magnitude; uncertainty-band propagation over the inferred-lifetime distribution is a documented
-    follow-up.
-  confidence: high
-  evidence_quality: solid
+    RED FLAG (figure review 2026-10-20). The turnover -> relaxation -> shape pipeline runs and
+    produces a strict, self-consistent perlecan ordering -- predicted height gain 0.439 > control
+    0.429 > loss 0.404 -- but that ordering is OPPOSITE the paper's reported perlecan morphology
+    (overexpression -> faster BM relaxation -> shorter/wider cells; knockdown -> taller). Our
+    model assumes perlecan STABILIZES collagen (gain -> longer lifetime -> slower relaxation ->
+    taller), which is an unaudited modelling assumption, not the paper's direction. The mechanics
+    sign (longer relaxation -> taller) is internally correct and matches R1; the growth-rate axis
+    (fast growth -> 0.134, much flatter) is unaffected and correct. Figure 7 reproduction is
+    WITHHELD until the perlecan -> collagen-turnover direction is audited against the paper.
+  confidence: low
+  evidence_quality: contradicted
   main_insight: >
-    Carrying an inferred collagen lifetime (x perlecan) through the BM relaxation time into the R1
-    mechanics reproduces the paper's perlecan intervention ordering and keeps the inferred
-    (turnover) and predicted (mechanics) quantities distinct, as the validation plan requires.
+    The pipeline and the inferred/predicted separation are sound, but the perlecan intervention
+    direction disagrees with the paper. This is a decisive scientific check, not a cosmetic issue:
+    the campaign must not score R6 as a Fig 7 pass until the perlecan sign is resolved.
   caveat: >
-    Reduced units and point estimates only; the perlecan-driven height differences are modest
-    (~2-3%), and the growth-rate axis dominates shape -- the strength of the result is the robust
-    ordering and the inferred/predicted separation, not the magnitude of the perlecan effect.
+    Reduced units and point estimates only. The headline is the CONTRADICTION, not a reproduction:
+    if the paper confirms perlecan overexpression speeds collagen turnover, the fix is a one-line
+    inversion of the perlecan_factor -> lifetime mapping, after which the ordering would match.
 
 findings:
-  - id: F1-fig7-ordering-reproduced
+  - id: F1-perlecan-ordering-contradicts-paper
     kind: biological
-    status: confirms
+    status: refutes
     tier: interpretation
     mechanism_origin: engineered
     statement: >
-      The pipeline reproduces Figure 7's intervention ordering: predicted cell height is tallest
-      under perlecan gain (0.4386), then control (0.4287), then perlecan loss (0.4043) -- a strict
-      gain > control > loss ordering.
+      The model's perlecan ordering CONTRADICTS the paper. It predicts a strict, self-consistent
+      gain (0.4386) > control (0.4287) > loss (0.4043) height ordering, but the paper reports
+      perlecan overexpression -> faster BM relaxation -> SHORTER/wider cells (the opposite). The
+      disagreement is the perlecan -> collagen-turnover direction: our model assumes perlecan
+      stabilizes collagen (gain -> longer lifetime), which is an unaudited assumption. Figure 7 is
+      NOT reproduced.
     evidence:
       from_run: r6-perlecan-growth-conditions
       from_test: perlecan-intervention-ordering
-      observed: "0.4386 > 0.4287 > 0.4043 (perlecan gain / control / loss)"
+      observed: "model 0.4386 > 0.4287 > 0.4043 (gain/control/loss); paper direction is OPPOSITE"
     expected:
       cites: [barrientos2026cellshape]
-      range: "perlecan gain taller, loss flatter (Fig 7)"
+      range: "paper: perlecan overexpression -> shorter cells; knockdown -> taller"
     explanation: >
-      Perlecan gain lengthens the inferred collagen lifetime, slowing BM relaxation, so the R1
-      mechanics keep the cell taller; perlecan loss does the reverse.
-    next_action: "feed the closed reproduction campaign into the E4 predictive-feedback study"
-    next_action_type: escalate_model
+      Our pipeline lengthens the inferred collagen lifetime under perlecan gain (slower relaxation
+      -> taller). If, as the figure review states, the paper has perlecan overexpression speeding
+      collagen turnover, the perlecan_factor -> lifetime mapping must be inverted; the mechanics
+      (relaxation -> height) are already correct.
+    next_action: "audit the perlecan -> collagen-turnover direction against the paper; invert the mapping in turnover_shape.py only if the paper confirms faster turnover under overexpression"
+    next_action_type: diagnose
     provenance:
       run_ids: [r6-perlecan-growth-conditions]
   - id: F2-inferred-predicted-distinct
@@ -398,6 +426,18 @@ findings:
       run_ids: [r6-perlecan-growth-conditions]
 
 followup_proposals:
+  - id: fp-r6-perlecan-direction-audit
+    title: "Audit the perlecan -> collagen-turnover direction against the paper"
+    motivation: >
+      The figure review flags that our perlecan ordering (gain -> taller) is OPPOSITE the paper
+      (overexpression -> faster relaxation -> shorter/wider). Read the paper's perlecan result to
+      fix the direction of the perlecan_factor -> collagen-lifetime mapping in turnover_shape.py.
+    hypothesized_mechanism: >
+      If perlecan overexpression speeds collagen IV turnover (shorter lifetime -> faster BM
+      relaxation -> shorter cell), then gain should map to perlecan_factor < 1, inverting the
+      current assumption. The mechanics (relaxation -> height) are already correct, so a one-line
+      sign change would flip the ordering to match the paper.
+    status: proposed
   - id: fp-r6-uncertainty-bands
     title: "Propagate the inferred-lifetime uncertainty bands through to the predicted shape"
     motivation: >
@@ -410,12 +450,14 @@ followup_proposals:
 
 discovery_implications:
   resolved_uncertainties:
-    - "The turnover->shape pipeline reproduces the Fig 7 perlecan intervention ordering."
-    - "Inferred (turnover) and predicted (mechanics) quantities are kept distinct, as the plan requires."
+    - "The turnover->shape pipeline runs end-to-end and keeps inferred (turnover) and predicted (mechanics) quantities distinct, as the plan requires."
+    - "The growth-rate axis dominates cell shape (fast growth -> much flatter), correctly."
   remaining_uncertainties:
-    - "Whether the perlecan ordering survives uncertainty-band propagation given the modest ~2-3% effect."
+    - "RED FLAG: the perlecan -> collagen-turnover DIRECTION. Our model (perlecan stabilizes -> gain taller) contradicts the paper (overexpression -> shorter). Fig 7 reproduction is withheld until this is audited."
+    - "Whether, after the direction is fixed, the perlecan ordering survives uncertainty-band propagation given the modest ~2-3% effect."
     - "Absolute cell shape in physical units."
   followup_study_proposals:
+    - {id: fp-r6-perlecan-direction-audit, title: "Audit the perlecan -> collagen-turnover direction vs the paper (and invert the mapping if confirmed)"}
     - {id: fp-r6-uncertainty-bands, title: "Inferred-lifetime uncertainty-band propagation"}
 
 conclusion_verdicts:
@@ -423,11 +465,12 @@ conclusion_verdicts:
     result: PASS
     basis: "The turnover_shape_pipeline composite is registered and the pipeline runs cleanly; the behavior-test contracts pass deterministically in CI."
   biological_validation:
-    result: PASS
+    result: FAIL
     basis: >
-      Reproduces Fig 7's intervention ordering (perlecan gain > control > loss) with the inferred
-      relaxation kept distinct from the predicted shape. Magnitude of the perlecan effect is modest
-      (noted as a limitation), but the ordering and the inferred/predicted split are robust.
+      CONTRADICTS the paper: the model's perlecan ordering (gain -> taller) is opposite the paper's
+      reported morphology (overexpression -> shorter/wider). Fig 7 reproduction is WITHHELD pending
+      an audit of the perlecan -> collagen-turnover direction. The inferred/predicted split and the
+      growth-rate axis are sound, but they do not rescue the perlecan reproduction claim.
   explanatory_gain:
     result: POSITIVE
     basis: >
@@ -436,8 +479,9 @@ conclusion_verdicts:
 
 expert_review_status: requested
 expert_questions:
-  - "Magnitude: the perlecan-driven height difference is only ~2-3% at these parameters. Is the strict ordering a sufficient reproduction of Fig 7, or should the perlecan sensitivity (how strongly the lifetime maps to relaxation, and relaxation to shape) be recalibrated to match the paper's effect size?"
-  - "Uncertainty: should the canonical R6 run propagate the inferred collagen-lifetime DISTRIBUTION (uncertainty bands), rather than the point estimates recorded here, before the reproduction is called complete?"
+  - "PERLECAN DIRECTION (decisive): the figure review states the paper has perlecan overexpression -> faster BM relaxation -> shorter/wider cells. Our model assumes the opposite (perlecan stabilizes collagen -> gain -> taller). Please confirm the paper's perlecan -> collagen-turnover direction so we can invert the mapping and reproduce Fig 7 (or keep it as a genuine mechanistic disagreement)."
+  - "Magnitude: once the direction is fixed, the perlecan-driven height difference is only ~2-3% at these parameters. Should the perlecan sensitivity be recalibrated to the paper's effect size?"
+  - "Uncertainty: should the canonical R6 run propagate the inferred collagen-lifetime DISTRIBUTION (uncertainty bands) before the reproduction is called complete?"
 
 bibliography:
   sources:
