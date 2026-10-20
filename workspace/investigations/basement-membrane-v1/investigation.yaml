@@ -186,15 +186,17 @@ at_a_glance:
       spatial models are compared against.
   - study: bm-r2-collagen-network-rheology
     role: >
-      Drives the collagen network through the paper's loading protocol at several
-      turnover rates, tracking molecular residence time and stress relaxation
-      separately, to reproduce the stress traces and the relaxation-versus-turnover
-      slope.
+      Drives the collagen network through the loading protocol at several turnover
+      rates, fitting the stress-relaxation time τ independently of residence time. On
+      a dense multi-seed network τ is resolved across the full range and rises with
+      collagen residence time — the Figure-2E DIRECTION (a floor-plus-residence
+      relationship, reduced units), with a turnover-independent modulus. Observed.
   - study: bm-r3-network-expansion-supply
     role: >
-      Compares no remodelling, remodelling without new collagen, and remodelling
-      with supply from one starting state, reproducing the paper's ordering of
-      network area, concentration, and connectivity.
+      Compares no remodelling, remodelling without new collagen, and remodelling with
+      material insertion from one starting state. Only combined turnover + supply
+      grows a connected load-bearing network (crosslink-per-area and rod-count
+      ordering with-insertion > without > none, 3/3 seeds) — the Figure-2B/C ordering.
   - study: bm-r4-coupled-2d-epithelium
     role: >
       A 2D epithelial sheet with a membrane area law set from the network rheology.
@@ -207,10 +209,12 @@ at_a_glance:
       relaxation contributes to cell height, and set up the lumenoid.
   - study: bm-r6-perlecan-growth-perturbations
     role: >
-      Carries inferred collagen-lifetime distributions for the control, perlecan
-      gain and loss, and growth-rate conditions through relaxation to shape, and
-      reproduces the paper's intervention ordering while keeping inferred and
-      predicted quantities separate.
+      Carries an inferred collagen lifetime for control, perlecan gain/loss and
+      growth-rate conditions through BM relaxation to cell shape, keeping inferred
+      and predicted quantities separate. RED FLAG: its perlecan ordering
+      (gain → taller) CONTRADICTS the paper (overexpression → shorter); marked
+      contradicted, gate failed, pending a perlecan-direction audit. The growth-rate
+      axis (faster growth → flatter) is correct.
   - study: bm-e1-actomyosin-cortex
     role: >
       A new study, not in the paper: a coarse actomyosin cortex whose tension and
@@ -256,15 +260,18 @@ acceptance_criteria:
 executive:
   what_is_this: >
     A coarse-grained model of the collagen IV basement membrane, built in Vivarium
-    from the AICS lumenoid specification. The network runs on a slowly growing
-    boundary until it reports an elastic modulus and a remodelling time — the two
-    numbers an epithelial vertex model needs to couple to a membrane. The project
-    has since grown into a reproduction and extension of Barrientos et al. (Cell
-    2026): the reproduction studies recover the paper's Figures 1 and 2 and extend
-    to spatial 2D and 3D epithelia with two-way coupling, and the extension studies
-    add an actomyosin cortex, a closed lumenoid, and new predictions. The membrane
-    reproduction is complete; the spatial and extension studies are at the design
-    stage.
+    from the AICS lumenoid specification, grown into a reproduction and extension of
+    Barrientos et al. (Cell 2026). The reproduction studies target the paper's
+    Figures 1 (tissue-mechanics regimes), 2 (collagen rheology + supply) and 7
+    (perlecan/growth perturbations); the extension studies add spatial 2D/3D Tyssue
+    epithelia, bidirectional LAMMPS–Tyssue coupling, an actomyosin cortex and a
+    closed lumenoid. All studies now RUN end-to-end against their real composites
+    and carry recorded evidence — but each is scoped honestly by evidence status
+    (observed / reproduced / engineered-diagnostic / hypothesis / contradicted, per
+    docs/figure-conventions.md), not scored as paper reproduction on a smoke test or
+    a geometry screenshot. The membrane-build (v1–v5) and the Fig-1/Fig-2 direction
+    (R1, R2, R3) are the strongest results; the spatial and extension studies are
+    preliminary; and R6's perlecan prediction CONTRADICTS the paper (see verdict).
   verdict: >
     The membrane model is complete: it reproduces the published elastic modulus and
     separates a reproducible elastic modulus from a reproducible remodelling time,
@@ -304,8 +311,34 @@ executive:
     point (around 0.8 crosslinks per rod) and reaches about 8 Pa when saturated — so
     the published softness is a sparse-crosslink state, not a gap in the model, and
     the apparent large discrepancy with the paper disappears.
+    ---
+    Reproduction campaign (R1–R6). R1 reimplements the paper's reduced-order tissue
+    model and recovers the four-regime confinement topology across the two
+    dimensionless axes (BM stiffness; relaxation/doubling time). R2, on a dense
+    multi-seed network, resolves the stress-relaxation time across the full turnover
+    range and reproduces the Figure-2E DIRECTION — τ rises with collagen residence
+    time (≈37→102 reduced units over residence 12.5→200), with a turnover-independent
+    modulus — scoped as a floor-plus-residence relationship, not a single
+    proportional slope. R3 reproduces the Figure-2B/C supply ordering: only combined
+    crosslink turnover AND material insertion grows a connected load-bearing network
+    (with-insertion > without-insertion > no-remodeling, 3/3 seeds). These are the
+    campaign's solid reproductions (direction/ordering, reduced units).
+    ---
+    RED FLAG — R6 contradicts the paper. The perlecan prediction is OPPOSITE the
+    paper's reported morphology: our model assumes perlecan stabilizes collagen
+    (gain → longer lifetime → slower relaxation → taller cell) and predicts
+    gain > control > loss in height, whereas the paper reports perlecan
+    overexpression → faster BM relaxation → SHORTER/wider cells. The mechanics sign
+    (longer relaxation → taller) is internally correct and matches R1; the
+    disagreement is the unaudited perlecan → collagen-turnover direction. R6 is
+    therefore NOT a Figure-7 reproduction — it is marked contradicted and its gate
+    failed, pending an audit of the perlecan direction against the paper (a one-line
+    sign inversion in turnover_shape.py if the paper confirms faster turnover under
+    overexpression). The spatial (R4/R5) and extension (E1–E4) studies run and are
+    preliminary engineering/verification results, not paper reproductions.
   verdict_status: in-progress
   decisions_needed:
+    - "PERLECAN DIRECTION (R6 red flag, decisive): the figure review reports the paper has perlecan overexpression → faster BM relaxation → shorter/wider cells; our model assumes the opposite (perlecan stabilizes collagen → gain taller). Confirm the paper's perlecan → collagen-turnover direction; if it is faster-turnover-under-overexpression, invert the perlecan_factor → lifetime mapping in turnover_shape.py so R6 reproduces Fig 7 (otherwise keep it as a genuine mechanistic disagreement)."
     - "Reproduction conventions: the article alone does not fix every convention needed to reproduce it. Acquire the supplemental tissue-model equations and the precise Figure 1 parameter values."
     - "Released turnover kinetics: pin down the grand-canonical monomer exchange, the distance-gated breaking, the 7S-specific mechanics, and the original stress-to-energy conversion before freezing the collagen reference."
     - "Collagen supply law: a fixed concentration (for reproducing the paper) or a secretion flux (for the lumenoid hypothesis). Decide per study."
