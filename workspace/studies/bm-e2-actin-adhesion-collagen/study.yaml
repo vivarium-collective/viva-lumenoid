@@ -49,14 +49,13 @@ baseline:
     composite_status: implemented
     params: {}
     note: >
-      Implemented as a three-process coupling: the actomyosin cortex (LAMMPS
-      model seam) -> reversible basal linkers (BasalAdhesion, occupancy-gated) ->
-      a collagen IV BM patch (CollagenNetworkProcess). Resolves ready and RUNS:
-      cortex tension is transmitted as traction = occupancy x tension, driving a
-      BM strain rate so the BM deforms + remodels under the load (verified). v0
-      single-cell patch; multicellular coupling + the E2 force-transfer readouts
-      (traction / linker occupancy / deformation) build on this. The force-transfer
-      schematic (this study's figure) is the mechanism diagram for this wiring.
+      A single cell transferring force to its basement membrane: the actomyosin
+      cortex pulls through reversible basal adhesions onto a collagen IV patch.
+      The traction passed down is the fraction of bound adhesions times the
+      cortical tension, and it strains and remodels the collagen beneath. Adhesion
+      binding and unbinding follow simple first-order kinetics. The readouts are
+      the traction, the fraction of bound adhesions, and the membrane's
+      deformation.
 variants: []
 interventions: []
 runs: []

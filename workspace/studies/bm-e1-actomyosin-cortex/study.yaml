@@ -50,11 +50,10 @@ baseline:
     composite_status: implemented
     params: {}
     note: >
-      Implemented over the viva-lammps model seam (LammpsModelProcess + the
-      actomyosin-cortex plugin): resolves ready and runs in real LAMMPS; the
-      contractility knob tunes cortical tension. v0 coarse cortex — not yet
-      filament-resolved; mapping to a Tyssue cortical-energy parameter is the
-      next step (E2).
+      A coarse actomyosin cortex built on the same molecular-dynamics engine as
+      the collagen network: a flat patch of active filaments whose contractility
+      sets the cortical tension. That tension is the quantity the epithelial model
+      later reads as its cortical energy.
 variants: []
 interventions: []
 runs: []

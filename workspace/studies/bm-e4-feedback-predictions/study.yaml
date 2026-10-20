@@ -50,13 +50,13 @@ baseline:
     composite_status: implemented
     params: {}
     note: >
-      Implemented as the bidirectional LAMMPS<->Tyssue coupling (the P3 capstone):
-      the lumenoid epithelium's basal BM-shell surface stretches an explicit LAMMPS
-      collagen IV BM patch, whose stress feeds back as a basal tension on the
-      epithelium. Resolves ready and RUNS the force round-trip (verified: basal area
-      -> BM strain -> BM stress ~0.9..43 -> basal tension -> epithelium; lumen
-      pressure evolves). v0 single-lumenoid patch, bidirectional; the one-way /
-      uncoupled / uniform-material controls + convergence verification build on this.
+      The epithelium and its collagen basement membrane coupled both ways. The
+      growing basal surface stretches a collagen IV patch, and the patch's stress
+      pushes back on the cells as a basal tension. Closing this loop lets lumen
+      pressure and cell shape respond to how fast the membrane remodels. Matched
+      controls — driving the membrane without feedback, leaving it inert, or
+      replacing the collagen patch with an effective material — separate the
+      coupling's effect from the rest.
 variants:
   # P3 coupling controls — the matched controls the plan requires so any departure
   # from the full two-way coupling is attributable to the mechanism, not complexity.

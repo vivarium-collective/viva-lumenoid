@@ -45,10 +45,11 @@ baseline:
     composite_status: implemented
     params: {}
     note: >
-      Implemented over the vivarium-tyssue engine (EulerSolver + MonolayerGeometry
-      + a vendored 3D monolayer mesh): resolves ready and STEPS the vertex model
-      (206 cells, 1590 faces). The no-BM / elastic-BM / relaxing-BM controls are the
-      next step. Needs the tyssue runtime stack (tyssue/scikit-image/tables/quantities).
+      A 3D epithelial monolayer of 206 cells with apical, basal, and lateral
+      surfaces and per-cell volume targets, so cell height and basal area emerge
+      directly instead of from a thin-prism approximation. Cases with no membrane,
+      an elastic membrane, and a relaxing membrane isolate what the membrane's
+      relaxation contributes to cell height.
 variants: []
 interventions: []
 runs: []

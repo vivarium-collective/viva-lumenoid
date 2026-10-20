@@ -48,12 +48,12 @@ baseline:
     composite_status: implemented
     params: {}
     note: >
-      Implemented over the vivarium-tyssue engine (EulerSolver over the merged
-      LumenoidGeometry + a vendored lumenoid mesh): resolves ready and steps the
-      vertex model (78 cells). Tracks a Laplace lumen pressure and exposes the
-      basal BM-shell surface for collagen-BM coupling. Reduced-order BM first; the
-      resolved LAMMPS-patch coupling is the next step. Needs the tyssue runtime
-      stack (tyssue, scikit-image, tables, quantities) in the serving venv.
+      A closed epithelial shell of 78 cells enclosing a lumen, with the basement
+      membrane as its outer basal surface. The model carries a lumen pressure that
+      grows as the lumen fills, and it exposes that basal surface as the membrane
+      the collagen network attaches to. The membrane is treated first as an
+      effective material; a collagen patch resolved at the molecular scale comes
+      later.
 variants: []
 interventions: []
 runs: []
