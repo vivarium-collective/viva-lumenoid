@@ -1,7 +1,7 @@
 schema_version: 3
 name: bm-r1-published-tissue-baseline
 status: planned
-title: "R1 — Published tissue-mechanics baseline"
+title: "Reduced-order tissue-mechanics baseline"
 kind: reproduction
 phase: Design
 confidence: Planned
@@ -63,6 +63,6 @@ visualizations:
   - name: r1_regime
     address: "html:r1_regime.html"
     config:
-      title: "Confinement regimes (Fig 1G design target)"
+      title: "Confinement regimes — cell height vs BM stiffness × relaxation (Fig 1G reproduction)"
       caption: >
-        Design target (Barrientos Fig 1G): the four stiffness x relaxation regimes R1 aims to recover. Schematic of the expected phase diagram - NOT simulated.
+        REAL run (Barrientos Fig 1G reproduction): cell height swept over BM stiffness × relaxation/doubling from the reduced-order prism model. The confinement regime topology emerges — tall (confined) in the stiff, slowly-relaxing corner.

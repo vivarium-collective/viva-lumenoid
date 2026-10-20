@@ -1,7 +1,7 @@
 schema_version: 3
 name: bm-r5-explicit-3d-confinement
 status: planned
-title: "R5 — Explicit 3D cell confinement"
+title: "Explicit 3D cell confinement"
 kind: reproduction
 phase: Design
 confidence: Planned

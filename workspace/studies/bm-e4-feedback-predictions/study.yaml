@@ -1,7 +1,7 @@
 schema_version: 3
 name: bm-e4-feedback-predictions
 status: planned
-title: "E4 — New feedback predictions"
+title: "LAMMPS–Tyssue coupled lumenoid"
 kind: extension
 phase: Design
 confidence: Planned

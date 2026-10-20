@@ -1,5 +1,6 @@
 schema_version: 4
 name: bm-v2-stress-vs-strainrate
+title: "Growth rheology: stress vs strain rate"
 created: "2026-09-30"
 status: in-progress
 phase: Evaluate

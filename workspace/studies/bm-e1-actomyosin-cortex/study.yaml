@@ -1,7 +1,7 @@
 schema_version: 3
 name: bm-e1-actomyosin-cortex
 status: planned
-title: "E1 — Explicit LAMMPS actomyosin cortex"
+title: "Explicit actomyosin cortex mechanics"
 kind: extension
 phase: Design
 confidence: Planned

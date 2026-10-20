@@ -1,5 +1,6 @@
 schema_version: 4
 name: bm-v1-stage1-modulus-remodelling
+title: "Elastic modulus & remodelling-time separation"
 created: "2026-09-30"
 status: in-progress
 phase: Evaluate

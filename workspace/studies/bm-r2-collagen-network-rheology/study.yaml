@@ -1,7 +1,7 @@
 schema_version: 3
 name: bm-r2-collagen-network-rheology
 status: planned
-title: "R2 — Faithful collagen-network rheology"
+title: "Faithful collagen IV network rheology"
 kind: reproduction
 phase: Design
 confidence: Planned

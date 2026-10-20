@@ -12,3 +12,10 @@ def test_study_figure_builds(slug):
         pytest.importorskip("tyssue")
     fig = fn()
     assert fig is not None and hasattr(fig, "data")
+
+
+def test_driving_schema_builds():
+    # Investigation-level framework diagram (no engine needed).
+    from viva_lumenoid.study_figures import driving_schema_figure
+    fig = driving_schema_figure()
+    assert len(fig.layout.shapes) >= 6  # three model + three relationship boxes

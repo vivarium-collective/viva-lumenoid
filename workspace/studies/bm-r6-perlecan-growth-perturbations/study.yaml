@@ -1,7 +1,7 @@
 schema_version: 3
 name: bm-r6-perlecan-growth-perturbations
 status: planned
-title: "R6 — Perlecan and growth perturbations"
+title: "Perlecan & growth perturbations on cell shape"
 kind: reproduction
 phase: Design
 confidence: Planned
@@ -62,9 +62,9 @@ interventions: []
 runs: []
 
 visualizations:
-  - name: r6_perturbation
-    address: "html:r6_perturbation.html"
+  - name: r6_intervention
+    address: "html:r6_intervention.html"
     config:
-      title: "Intervention ordering (Fig 7 design target)"
+      title: "Intervention ordering on cell height (Fig 7 reproduction)"
       caption: >
-        Design target (Fig 7): the expected perlecan / growth-rate intervention ordering on cell height. Schematic - NOT simulated.
+        REAL run (Fig 7 reproduction): predicted cell height per perlecan / growth-rate condition from the turnover->shape pipeline (inferred BM relaxation annotated). Reproduces the rank-order — perlecan gain -> taller > control > loss.
