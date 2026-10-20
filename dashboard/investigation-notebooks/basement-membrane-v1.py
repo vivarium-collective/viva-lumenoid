@@ -250,7 +250,7 @@ def _render_one(address, config, runs_db, study_yaml, overrides=None):
         return _p.read_text(encoding='utf-8', errors='replace')
     return f'<p style="color:#6b7280">unsupported figure type: {address}</p>'
 
-# ## Study: `bm-v1-stage1-modulus-remodelling`
+# ## Study: Elastic modulus & remodelling-time separation (`bm-v1-stage1-modulus-remodelling`)
 #
 # **Question.** Can the clean-room collagen IV network separate an elastic modulus from a viscous remodelling time, as the paper's staged protocol does?
 #
@@ -371,7 +371,7 @@ _save_viz('bm-v1-stage1-modulus-remodelling', 'stage1-diagnostic', _render_one('
 # | relaxation-decays-not-densifies _(primary)_ | kind=delta field=sigma_inplane phase=hold_viscous compare_to=crosslink_count | op decreases note crosslinks decay 46→3; stress drops in the correct direction |
 # | remodelling-time-calibratable _(secondary)_ | kind=relaxation_time field=sigma_inplane phase=hold_viscous convert=hours | op calibratable target_hours 20 range_hours 3-30 across systems |
 
-# ## Study: `bm-v2-stress-vs-strainrate`
+# ## Study: Growth rheology: stress vs strain rate (`bm-v2-stress-vs-strainrate`)
 #
 # **Question.** What is σ(ε̇), and where does the network cross from viscous to elastic?
 #
@@ -468,7 +468,7 @@ _save_viz('bm-v2-stress-vs-strainrate', 'stage2-diagnostic', _render_one('html:s
 # | viscosity-defined _(primary)_ | kind=value field=eta_lowrate | op finite field eta_lowrate |
 # | viscous-plateau-vs-elastic _(secondary)_ | kind=slope field=eta_effective versus=strain_rate scale=log | op plateau note η ~ const at slow ε̇ |
 
-# ## Study: `bm-v3-junction-bending-rigidity`
+# ## Study: Rigidity percolation (central-force control) (`bm-v3-junction-bending-rigidity`)
 #
 # **Question.** Can more crosslink connectivity rigidify the v1 network, or is bending required?
 #
@@ -566,7 +566,7 @@ _save_viz('bm-v3-junction-bending-rigidity', 'rigidity-diagnostic', _render_one(
 # | z-stays-below-threshold _(primary)_ | kind=max field=coordination_z | op lt value 4.0 field max_z |
 # | modulus-stays-floppy _(primary)_ | kind=value field=elastic_modulus_vs_z ensemble=3 | op consistent_with_zero note all CIs span 0 |
 
-# ## Study: `bm-v4-junction-bending`
+# ## Study: Native junction-bending modulus (`bm-v4-junction-bending`)
 #
 # **Question.** Does junction bending yield the measurable modulus the vertex model needs?
 #
@@ -663,7 +663,7 @@ _save_viz('bm-v4-junction-bending', 'bending-diagnostic', _render_one('html:bend
 # | bending-changes-mechanics _(primary)_ | kind=magnitude field=modulus_vs_bending_k at=bending_k>0 | op gt value 1.0 note |E| jumps orders of magnitude above floppy |
 # | reproducible-modulus _(primary)_ | kind=iqr_over_median field=modulus_vs_bending_k at=bending_k>0 | op lt value 0.5 note IQR < 0.5·|median| — met by the real-angle path |
 
-# ## Study: `bm-v5-porosity-bundling`
+# ## Study: Network porosity & strand bundling (`bm-v5-porosity-bundling`)
 #
 # **Question.** Does the v1 network reproduce the measured pore-size and bundling of a real BM?
 #
@@ -758,7 +758,7 @@ _save_viz('bm-v5-porosity-bundling', 'evidence-map', _render_one('html:evidence_
 # | porosity-reaches-EM-band _(primary)_ | kind=median field=pore_diameter | op between lo 32.0 hi 112.0 field median_pore_nm |
 # | bundling-under-shoots-5-7 _(primary)_ | kind=mean field=protomers_per_strand | op lt value 2.0 field mean_strand |
 
-# ## Study: R1 — Published tissue-mechanics baseline (`bm-r1-published-tissue-baseline`)
+# ## Study: Reduced-order tissue-mechanics baseline (`bm-r1-published-tissue-baseline`)
 #
 # **Question.** How do basement-membrane stiffness and relaxation, relative to the proliferation (doubling) time, control growth-dependent epithelial confinement?
 #
@@ -825,9 +825,9 @@ else:
 # **r1_regime**
 
 # r1_regime
-_save_viz('bm-r1-published-tissue-baseline', 'r1_regime', _render_one('html:r1_regime.html', {'title': 'Confinement regimes (Fig 1G design target)', 'caption': 'Design target (Barrientos Fig 1G): the four stiffness x relaxation regimes R1 aims to recover. Schematic of the expected phase diagram - NOT simulated.\n'}, RUNS_DB, STUDY_YAML))
+_save_viz('bm-r1-published-tissue-baseline', 'r1_regime', _render_one('html:r1_regime.html', {'title': 'Confinement regimes — cell height vs BM stiffness × relaxation (Fig 1G reproduction)', 'caption': 'REAL run (Barrientos Fig 1G reproduction): cell height swept over BM stiffness × relaxation/doubling from the reduced-order prism model. The confinement regime topology emerges — tall (confined) in the stiff, slowly-relaxing corner.\n'}, RUNS_DB, STUDY_YAML))
 
-# ## Study: R2 — Faithful collagen-network rheology (`bm-r2-collagen-network-rheology`)
+# ## Study: Faithful collagen IV network rheology (`bm-r2-collagen-network-rheology`)
 #
 # **Question.** Is basement-membrane stress relaxation proportional to collagen IV molecular residence (turnover) time?
 #
@@ -899,7 +899,7 @@ else:
 # r2_rheology
 _save_viz('bm-r2-collagen-network-rheology', 'r2_rheology', _render_one('html:r2_rheology.html', {'title': 'Collagen network assembly + stress (small real run)', 'caption': 'A small REAL collagen IV run: the NC1/7S network assembles and carries in-plane stress. Full Fig 2D/2E reproduction (relaxation vs turnover rate) is the study target.\n'}, RUNS_DB, STUDY_YAML))
 
-# ## Study: R3 — Network expansion and collagen supply (`bm-r3-network-expansion-supply`)
+# ## Study: Network expansion & collagen supply (`bm-r3-network-expansion-supply`)
 #
 # **Question.** Why are both crosslink remodeling and collagen replacement (insertion) necessary for sustained basement-membrane growth?
 #
@@ -971,7 +971,7 @@ else:
 # r3_supply
 _save_viz('bm-r3-network-expansion-supply', 'r3_supply', _render_one('html:r3_supply.html', {'title': 'Supply vs remodelling (small real run)', 'caption': "A small REAL collagen run contrasting remodelling (make+break) vs make-only - the ordering behind 'supply sustains growth'. Full Fig 2B-C reproduction is the study target.\n"}, RUNS_DB, STUDY_YAML))
 
-# ## Study: R4 — Coupled 2D epithelium (`bm-r4-coupled-2d-epithelium`)
+# ## Study: Coupled 2D epithelial sheet (`bm-r4-coupled-2d-epithelium`)
 #
 # **Question.** Do the paper's confinement regimes survive explicit cell topology and heterogeneous growth in a spatial 2D epithelium?
 #
@@ -1039,7 +1039,7 @@ else:
 # r4_sheet
 _save_viz('bm-r4-coupled-2d-epithelium', 'r4_sheet', _render_one('html:r4_sheet.html', {'title': 'Relaxed 2D epithelial sheet (real tyssue run)', 'caption': 'The actual 2D epithelial sheet after relaxation on the merged CrossSectionGeometry (real tyssue EulerSolver run).\n'}, RUNS_DB, STUDY_YAML))
 
-# ## Study: R5 — Explicit 3D cell confinement (`bm-r5-explicit-3d-confinement`)
+# ## Study: Explicit 3D cell confinement (`bm-r5-explicit-3d-confinement`)
 #
 # **Question.** Do growing 3D epithelial cells become taller when the basement membrane relaxes slowly?
 #
@@ -1107,7 +1107,7 @@ else:
 # r5_monolayer
 _save_viz('bm-r5-explicit-3d-confinement', 'r5_monolayer', _render_one('html:r5_monolayer.html', {'title': 'Explicit 3D confinement (real tyssue run)', 'caption': 'The stepped 3D monolayer (MonolayerGeometry) and its real cell-volume distribution (real tyssue run).\n'}, RUNS_DB, STUDY_YAML))
 
-# ## Study: R6 — Perlecan and growth perturbations (`bm-r6-perlecan-growth-perturbations`)
+# ## Study: Perlecan & growth perturbations on cell shape (`bm-r6-perlecan-growth-perturbations`)
 #
 # **Question.** Does the inferred chain lifetime -> relaxation -> shape reproduce the paper's perlecan and growth-rate intervention ordering?
 #
@@ -1171,12 +1171,12 @@ else:
 #
 # _Results are shown by the figures below, produced by the run above._
 
-# **r6_perturbation**
+# **r6_intervention**
 
-# r6_perturbation
-_save_viz('bm-r6-perlecan-growth-perturbations', 'r6_perturbation', _render_one('html:r6_perturbation.html', {'title': 'Intervention ordering (Fig 7 design target)', 'caption': 'Design target (Fig 7): the expected perlecan / growth-rate intervention ordering on cell height. Schematic - NOT simulated.\n'}, RUNS_DB, STUDY_YAML))
+# r6_intervention
+_save_viz('bm-r6-perlecan-growth-perturbations', 'r6_intervention', _render_one('html:r6_intervention.html', {'title': 'Intervention ordering on cell height (Fig 7 reproduction)', 'caption': 'REAL run (Fig 7 reproduction): predicted cell height per perlecan / growth-rate condition from the turnover->shape pipeline (inferred BM relaxation annotated). Reproduces the rank-order — perlecan gain -> taller > control > loss.\n'}, RUNS_DB, STUDY_YAML))
 
-# ## Study: E1 — Explicit LAMMPS actomyosin cortex (`bm-e1-actomyosin-cortex`)
+# ## Study: Explicit actomyosin cortex mechanics (`bm-e1-actomyosin-cortex`)
 #
 # **Question.** Can a coarse explicit actomyosin filament/crosslink/motor model reproduce the cortical tension, strain response and relaxation that an effective Tyssue cortical-energy term represents?
 #
@@ -1246,7 +1246,7 @@ else:
 # e1_cortical_tension
 _save_viz('bm-e1-actomyosin-cortex', 'e1_cortical_tension', _render_one('html:e1_cortical_tension.html', {'title': 'Cortical tension vs contractility (real LAMMPS)', 'caption': 'REAL LAMMPS result: cortical tension rises with the myosin-contractility proxy, run over the viva-lammps model-plugin seam.\n'}, RUNS_DB, STUDY_YAML))
 
-# ## Study: E2 — Actin-adhesion-collagen force transfer (`bm-e2-actin-adhesion-collagen`)
+# ## Study: Actin–adhesion–collagen force transfer (`bm-e2-actin-adhesion-collagen`)
 #
 # **Question.** How does active cortical contractility transfer force through reversible basal adhesions into the collagen IV basement membrane?
 #
@@ -1317,7 +1317,7 @@ else:
 # e2_force_transfer
 _save_viz('bm-e2-actin-adhesion-collagen', 'e2_force_transfer', _render_one('html:e2_force_transfer.html', {'title': 'Force transfer (schematic)', 'caption': 'Schematic of the cortex -> reversible basal linkers -> collagen BM force transfer E2 will measure. NOT simulated.\n'}, RUNS_DB, STUDY_YAML))
 
-# ## Study: E3 — Closed 3D lumenoid (`bm-e3-closed-3d-lumenoid`)
+# ## Study: Closed 3D lumenoid morphogenesis (`bm-e3-closed-3d-lumenoid`)
 #
 # **Question.** How do lumen pressure/volume and a basement-membrane shell set cell shape and curvature- dependent growth in a closed 3D lumenoid?
 #
@@ -1385,7 +1385,7 @@ else:
 # e3_lumenoid
 _save_viz('bm-e3-closed-3d-lumenoid', 'e3_lumenoid', _render_one('html:e3_lumenoid.html', {'title': 'Closed lumenoid shell (real tyssue run)', 'caption': 'The actual closed lumenoid shell on the merged LumenoidGeometry, exposing the basal BM-coupling surface (real tyssue run).\n'}, RUNS_DB, STUDY_YAML))
 
-# ## Study: E4 — New feedback predictions (`bm-e4-feedback-predictions`)
+# ## Study: LAMMPS–Tyssue coupled lumenoid (`bm-e4-feedback-predictions`)
 #
 # **Question.** When do growth-driven turnover, spatial BM heterogeneity, contractility-dependent confinement, partial adhesion and network failure change cell height and lumenoid growth beyond the original paper?
 #
