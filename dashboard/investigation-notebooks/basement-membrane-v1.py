@@ -818,6 +818,15 @@ if RERUN:
 else:
     print("RERUN=False — not re-simulating.")
 
+# ### Visualizations
+#
+# _Results are shown by the figures below, produced by the run above._
+
+# **r1_regime**
+
+# r1_regime
+_save_viz('bm-r1-published-tissue-baseline', 'r1_regime', _render_one('html:r1_regime.html', {'title': 'Confinement regimes (Fig 1G design target)', 'caption': 'Design target (Barrientos Fig 1G): the four stiffness x relaxation regimes R1 aims to recover. Schematic of the expected phase diagram - NOT simulated.\n'}, RUNS_DB, STUDY_YAML))
+
 # ## Study: R2 — Faithful collagen-network rheology (`bm-r2-collagen-network-rheology`)
 #
 # **Question.** Is basement-membrane stress relaxation proportional to collagen IV molecular residence (turnover) time?
@@ -880,6 +889,15 @@ if RERUN:
         print(f"bm-r2-collagen-network-rheology not runnable yet: {type(_e).__name__}: {_e}")
 else:
     print("RERUN=False — not re-simulating.")
+
+# ### Visualizations
+#
+# _Results are shown by the figures below, produced by the run above._
+
+# **r2_rheology**
+
+# r2_rheology
+_save_viz('bm-r2-collagen-network-rheology', 'r2_rheology', _render_one('html:r2_rheology.html', {'title': 'Collagen network assembly + stress (small real run)', 'caption': 'A small REAL collagen IV run: the NC1/7S network assembles and carries in-plane stress. Full Fig 2D/2E reproduction (relaxation vs turnover rate) is the study target.\n'}, RUNS_DB, STUDY_YAML))
 
 # ## Study: R3 — Network expansion and collagen supply (`bm-r3-network-expansion-supply`)
 #
@@ -944,6 +962,15 @@ if RERUN:
 else:
     print("RERUN=False — not re-simulating.")
 
+# ### Visualizations
+#
+# _Results are shown by the figures below, produced by the run above._
+
+# **r3_supply**
+
+# r3_supply
+_save_viz('bm-r3-network-expansion-supply', 'r3_supply', _render_one('html:r3_supply.html', {'title': 'Supply vs remodelling (small real run)', 'caption': "A small REAL collagen run contrasting remodelling (make+break) vs make-only - the ordering behind 'supply sustains growth'. Full Fig 2B-C reproduction is the study target.\n"}, RUNS_DB, STUDY_YAML))
+
 # ## Study: R4 — Coupled 2D epithelium (`bm-r4-coupled-2d-epithelium`)
 #
 # **Question.** Do the paper's confinement regimes survive explicit cell topology and heterogeneous growth in a spatial 2D epithelium?
@@ -1002,6 +1029,15 @@ if RERUN:
         print(f"bm-r4-coupled-2d-epithelium not runnable yet: {type(_e).__name__}: {_e}")
 else:
     print("RERUN=False — not re-simulating.")
+
+# ### Visualizations
+#
+# _Results are shown by the figures below, produced by the run above._
+
+# **r4_sheet**
+
+# r4_sheet
+_save_viz('bm-r4-coupled-2d-epithelium', 'r4_sheet', _render_one('html:r4_sheet.html', {'title': 'Relaxed 2D epithelial sheet (real tyssue run)', 'caption': 'The actual 2D epithelial sheet after relaxation on the merged CrossSectionGeometry (real tyssue EulerSolver run).\n'}, RUNS_DB, STUDY_YAML))
 
 # ## Study: R5 — Explicit 3D cell confinement (`bm-r5-explicit-3d-confinement`)
 #
@@ -1062,6 +1098,15 @@ if RERUN:
 else:
     print("RERUN=False — not re-simulating.")
 
+# ### Visualizations
+#
+# _Results are shown by the figures below, produced by the run above._
+
+# **r5_monolayer**
+
+# r5_monolayer
+_save_viz('bm-r5-explicit-3d-confinement', 'r5_monolayer', _render_one('html:r5_monolayer.html', {'title': 'Explicit 3D confinement (real tyssue run)', 'caption': 'The stepped 3D monolayer (MonolayerGeometry) and its real cell-volume distribution (real tyssue run).\n'}, RUNS_DB, STUDY_YAML))
+
 # ## Study: R6 — Perlecan and growth perturbations (`bm-r6-perlecan-growth-perturbations`)
 #
 # **Question.** Does the inferred chain lifetime -> relaxation -> shape reproduce the paper's perlecan and growth-rate intervention ordering?
@@ -1121,6 +1166,15 @@ if RERUN:
         print(f"bm-r6-perlecan-growth-perturbations not runnable yet: {type(_e).__name__}: {_e}")
 else:
     print("RERUN=False — not re-simulating.")
+
+# ### Visualizations
+#
+# _Results are shown by the figures below, produced by the run above._
+
+# **r6_perturbation**
+
+# r6_perturbation
+_save_viz('bm-r6-perlecan-growth-perturbations', 'r6_perturbation', _render_one('html:r6_perturbation.html', {'title': 'Intervention ordering (Fig 7 design target)', 'caption': 'Design target (Fig 7): the expected perlecan / growth-rate intervention ordering on cell height. Schematic - NOT simulated.\n'}, RUNS_DB, STUDY_YAML))
 
 # ## Study: E1 — Explicit LAMMPS actomyosin cortex (`bm-e1-actomyosin-cortex`)
 #
@@ -1183,6 +1237,15 @@ if RERUN:
 else:
     print("RERUN=False — not re-simulating.")
 
+# ### Visualizations
+#
+# _Results are shown by the figures below, produced by the run above._
+
+# **e1_cortical_tension**
+
+# e1_cortical_tension
+_save_viz('bm-e1-actomyosin-cortex', 'e1_cortical_tension', _render_one('html:e1_cortical_tension.html', {'title': 'Cortical tension vs contractility (real LAMMPS)', 'caption': 'REAL LAMMPS result: cortical tension rises with the myosin-contractility proxy, run over the viva-lammps model-plugin seam.\n'}, RUNS_DB, STUDY_YAML))
+
 # ## Study: E2 — Actin-adhesion-collagen force transfer (`bm-e2-actin-adhesion-collagen`)
 #
 # **Question.** How does active cortical contractility transfer force through reversible basal adhesions into the collagen IV basement membrane?
@@ -1243,6 +1306,15 @@ if RERUN:
 else:
     print("RERUN=False — not re-simulating.")
 
+# ### Visualizations
+#
+# _Results are shown by the figures below, produced by the run above._
+
+# **e2_force_transfer**
+
+# e2_force_transfer
+_save_viz('bm-e2-actin-adhesion-collagen', 'e2_force_transfer', _render_one('html:e2_force_transfer.html', {'title': 'Force transfer (schematic)', 'caption': 'Schematic of the cortex -> reversible basal linkers -> collagen BM force transfer E2 will measure. NOT simulated.\n'}, RUNS_DB, STUDY_YAML))
+
 # ## Study: E3 — Closed 3D lumenoid (`bm-e3-closed-3d-lumenoid`)
 #
 # **Question.** How do lumen pressure/volume and a basement-membrane shell set cell shape and curvature- dependent growth in a closed 3D lumenoid?
@@ -1301,6 +1373,15 @@ if RERUN:
         print(f"bm-e3-closed-3d-lumenoid not runnable yet: {type(_e).__name__}: {_e}")
 else:
     print("RERUN=False — not re-simulating.")
+
+# ### Visualizations
+#
+# _Results are shown by the figures below, produced by the run above._
+
+# **e3_lumenoid**
+
+# e3_lumenoid
+_save_viz('bm-e3-closed-3d-lumenoid', 'e3_lumenoid', _render_one('html:e3_lumenoid.html', {'title': 'Closed lumenoid shell (real tyssue run)', 'caption': 'The actual closed lumenoid shell on the merged LumenoidGeometry, exposing the basal BM-coupling surface (real tyssue run).\n'}, RUNS_DB, STUDY_YAML))
 
 # ## Study: E4 — New feedback predictions (`bm-e4-feedback-predictions`)
 #
@@ -1361,6 +1442,15 @@ if RERUN:
         print(f"bm-e4-feedback-predictions not runnable yet: {type(_e).__name__}: {_e}")
 else:
     print("RERUN=False — not re-simulating.")
+
+# ### Visualizations
+#
+# _Results are shown by the figures below, produced by the run above._
+
+# **e4_feedback**
+
+# e4_feedback
+_save_viz('bm-e4-feedback-predictions', 'e4_feedback', _render_one('html:e4_feedback.html', {'title': 'Feedback loop + controls (schematic)', 'caption': 'Schematic of the growth <-> turnover <-> BM relaxation <-> confinement feedback loop and its one-way/uncoupled/uniform controls. NOT simulated.\n'}, RUNS_DB, STUDY_YAML))
 
 # ## Open decisions
 # - Reproduction conventions: acquire the supplemental tissue-model equations and precise Figure 1 parameter values — the article alone does not fix every reproduction convention (gates R1).
