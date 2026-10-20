@@ -1410,9 +1410,12 @@ _save_viz('bm-e3-closed-3d-lumenoid', 'e3_lumenoid', _render_one('html:e3_lumeno
 # === Parameters — edit any value, then re-run from the Run cell below ===
 # Each entry is the composite's current default; the comment explains it.
 ov_viva_lumenoid_composites_coupled_lumenoid = {
-    'bm_rods'     : 40,   # Collagen rods in the explicit LAMMPS BM patch.
-    'strain_gain' : 20.0,   # Epithelial basal strain-rate -> BM strain-rate.
-    'tension_gain': 0.02,   # BM stress -> added basal contractility (reaction force).
+    'bm_rods'      : 40,   # Collagen rods in the explicit LAMMPS BM patch.
+    'strain_gain'  : 20.0,   # Epithelial basal strain-rate -> BM strain-rate.
+    'tension_gain' : 0.02,   # BM stress -> added basal contractility (reaction force).
+    'coupling_mode': 'two-way',   # two-way | one-way (no reaction) | uncoupled (inert BM).
+    'bm_mode'      : 'explicit',   # explicit (LAMMPS collagen) | reduced (effective viscoelastic BM).
+    'bm_substeps'  : 1,   # BM subcycles per epithelial macro-step (convergence).
 }
 
 # ### Run
