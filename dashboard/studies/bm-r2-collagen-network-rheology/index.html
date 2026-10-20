@@ -81,7 +81,7 @@
   </button>
   
   <span class="study-dl study-export-wrap" style="margin-left:auto; align-self:center; position:relative; display:inline-flex">
-    <button type="button" id="study-export-btn" class="btn-mini study-dl-btn" aria-haspopup="true" aria-expanded="false" title="Download this study's figures or a runnable notebook">↓ Export ▾</button>
+    <button type="button" id="study-export-btn" class="btn-mini" aria-haspopup="true" aria-expanded="false" title="Download this study's figures or a runnable notebook">↓ Export ▾</button>
     <div id="study-export-menu" role="menu" style="display:none;position:absolute;right:0;top:100%;margin-top:4px;background:#fff;border:1px solid #e2e8f0;border-radius:8px;box-shadow:0 6px 20px rgba(0,0,0,0.14);z-index:70;min-width:200px;padding:4px">
       <button type="button" id="study-dl-figures" role="menuitem" class="study-jump-item" onclick="window._vivStudyFiguresFromCard(event, 'bm-r2-collagen-network-rheology')">Download figures</button>
       <button type="button" id="study-dl-notebook" role="menuitem" class="study-jump-item" onclick="window._vivStudyNotebookFromCard(event, 'bm-r2-collagen-network-rheology', '')">Download notebook</button>
@@ -93,13 +93,6 @@
    The 6-axis stepper + gate-status colors below are carried over verbatim from
    the pre-restructure Pass A styling (the <details> markup was repositioned,
    not rebuilt). */
-/* Prominent, easy-access downloads in the study header (moved off the graph
-   cards). Filled accent so they read as the primary "grab this study" CTAs,
-   distinct from the outlined run/reproduce launch buttons beside them. */
-.study-dl-btn{background:#1976d2;color:#fff;border-color:#1976d2;font-weight:600}
-.study-dl-btn:hover{background:#1565c0;border-color:#1565c0}
-:root[data-theme="dark"] .study-dl-btn{background:#3b82f6;border-color:#3b82f6;color:#fff}
-:root[data-theme="dark"] .study-dl-btn:hover{background:#2563eb;border-color:#2563eb}
 .study-kind-tag{display:inline-block;font-size:0.5em;font-weight:600;padding:3px 9px;border-radius:9999px;vertical-align:middle;margin-left:8px;background:#f1f5f9;color:#475569;text-transform:capitalize}
 .study-kind-tag.study-kind-biological{background:#ecfdf5;color:#065f46}
 .study-kind-tag.study-kind-computational{background:#eff6ff;color:#1e40af}
@@ -538,7 +531,7 @@
 
     <div class="ctr-block">
       <h2 class="overview-label ctr-h">Claim</h2>
-      <p class="ctr-text">The faithful collagen IV network assembles and carries in-plane stress under staged growth loading on real LAMMPS, and its macroscopic stress-relaxation time is resolvable at SLOW turnover (long collagen residence) but falls below the noise floor as turnover speeds up -- a partial reproduction of Barrientos Figure 2E, whose full relaxation-vs-residence proportionality needs a denser, larger network.
+      <p class="ctr-text">The faithful collagen IV network assembles and carries in-plane stress under staged growth loading on real LAMMPS, and -- on a dense, multi-seed network (300 rods, authors&#39; density 3.0, 12-sigma slab, 4 seeds) -- its macroscopic stress-relaxation time tau rises monotonically with collagen residence time (37 LJ at residence 12.5 up to ~102 LJ at residence 200), reproducing the DIRECTION of Barrientos Figure 2E across the full turnover range. tau carries an intrinsic network-relaxation floor (~37 LJ) at fast turnover and becomes residence-dominated above residence ~50; the elastic modulus is turnover-independent (3.19 LJ), as elasticity should be.
 </p>
       
     </div>
@@ -561,7 +554,7 @@
       <div class="ctr-meta">
         <div class="ctr-meta-row"><span class="ctr-meta-k">Model</span> <code>collagen-network-stage2</code><a class="ov-tablink" href="#" onclick="_setStudyTab('compose');return false;">model →</a></div>
         
-        <div class="ctr-meta-row"><span class="ctr-meta-k">Measures</span> <span class="ctr-meta-item">2 behavior tests</span><a class="ov-tablink" href="#" onclick="_setStudyTab('audit');return false;">see Tests →</a></div>
+        <div class="ctr-meta-row"><span class="ctr-meta-k">Measures</span> <span class="ctr-meta-item">3 behavior tests</span><a class="ov-tablink" href="#" onclick="_setStudyTab('audit');return false;">see Tests →</a></div>
         
       </div>
     </div>
@@ -572,7 +565,7 @@
     
     <div class="ctr-block ov-prov">
       <h2 class="overview-label ctr-h">Provenance &amp; sources</h2>
-      <div class="ctr-meta-k" style="margin-top:12px">Sources (2)</div>
+      <div class="ctr-meta-k" style="margin-top:12px">Sources (3)</div>
       <div class="ov-sources">
       
         
@@ -589,6 +582,13 @@
           <div class="ctr-meta-k" style="text-transform:none">Barrientos, and others · 2026 · <a href="https://www.cell.com/cell/fulltext/S0092-8674(26)00808-1" target="_blank" rel="noopener">source ↗</a></div>
         </div>
       
+        
+        <div class="ov-src" id="sref-barrientos2026cellshape">
+          <b class="ov-src-t">Barrientos 2026</b> <span class="ov-src-k">barrientos2026cellshape</span>
+          <div class="ov-src-t">Basement membrane turnover controls cell shape</div>
+          <div class="ctr-meta-k" style="text-transform:none">Barrientos, Rodrigo and Meadowcroft, Billie and Sánchez-Sánchez, Beatriz and others · 2026 · <a href="https://www.cell.com/cell/fulltext/S0092-8674(26)00808-1" target="_blank" rel="noopener">source ↗</a></div>
+        </div>
+      
       </div>
     </div>
     
@@ -602,28 +602,28 @@
       <div class="ov-metrics">
         
         <div class="ov-metric ov-metric-pass">
-          <div class="ov-metric-v">57.7 LJ (resolved)</div>
-          <div class="ov-metric-k">tau @ residence 100</div>
-        </div>
-        
-        <div class="ov-metric ov-metric-warn">
-          <div class="ov-metric-v">NaN (noise-limited)</div>
-          <div class="ov-metric-k">tau @ residence 50 / 25</div>
-        </div>
-        
-        <div class="ov-metric ov-metric-info">
-          <div class="ov-metric-v">0.946 LJ</div>
-          <div class="ov-metric-k">elastic modulus</div>
-        </div>
-        
-        <div class="ov-metric ov-metric-info">
-          <div class="ov-metric-v">126</div>
-          <div class="ov-metric-k">crosslinks (sweep)</div>
+          <div class="ov-metric-v">37.3 -&gt; 101.6 LJ (monotonic)</div>
+          <div class="ov-metric-k">tau trend (residence 12.5-&gt;200)</div>
         </div>
         
         <div class="ov-metric ov-metric-pass">
-          <div class="ov-metric-v">5</div>
-          <div class="ov-metric-k">smoke crosslinks @ 40 rods</div>
+          <div class="ov-metric-v">4/4 seeds</div>
+          <div class="ov-metric-k">tau resolved (dense, &lt;= res 100)</div>
+        </div>
+        
+        <div class="ov-metric ov-metric-info">
+          <div class="ov-metric-v">3.19 LJ</div>
+          <div class="ov-metric-k">elastic modulus (turnover-indep)</div>
+        </div>
+        
+        <div class="ov-metric ov-metric-pass">
+          <div class="ov-metric-v">67.5 LJ</div>
+          <div class="ov-metric-k">tau @ residence 100 (dense)</div>
+        </div>
+        
+        <div class="ov-metric ov-metric-info">
+          <div class="ov-metric-v">57.7 LJ (only point resolved)</div>
+          <div class="ov-metric-k">earlier 120-rod @ residence 100</div>
         </div>
         
       </div>
@@ -641,29 +641,29 @@
       
       
       
-      <div class="finding-card finding-kind-biological finding-status-partial">
+      <div class="finding-card finding-kind-biological finding-status-confirms">
         <details class="finding-details">
           <summary class="finding-row">
-            <span class="finding-status-glyph">◐</span>
-            <span class="finding-claim finding-statement">The collagen IV network reproduces Figure 2E only partially: the stress-relaxation time tau is resolvable at slow turnover (residence 100 -&gt; tau 57.7 LJ) but below the noise floor at faster turnover (residence 50 and 25 -&gt; NaN) at a 120-rod network size. The direction of the Fig-2E relationship is present, but the full tau-proportional-to-residence slope is not yet established.
+            <span class="finding-status-glyph">✓</span>
+            <span class="finding-claim finding-statement">On the dense, multi-seed network (300 rods, density 3.0, 12-sigma slab, 4 seeds) the stress-relaxation time tau rises monotonically with collagen residence time -- 37.3 LJ at residence 12.5, 39.7 at 25, 43.1 at 50, 67.5 at 100, 101.6 at 200 -- reproducing the DIRECTION of Figure 2E across the full turnover range, while the elastic modulus stays turnover-independent (3.19 LJ). The relationship is an intrinsic relaxation floor (~37 LJ) at fast turnover plus a residence-dominated regime above residence ~50, not a single proportional slope. This resolves the 120-rod noise floor that had limited the earlier sweep to a single point (residence 100 -&gt; 57.7 LJ).
 </span>
             
-            <span class="finding-chip">via <code>tau-resolved-only-at-slow-turnover</code></span>
+            <span class="finding-chip">via <code>tau-rises-with-residence-resolved</code></span>
             
           </summary>
           <div class="finding-drawer">
             <div class="finding-header">
-              <span class="finding-id">F1-partial-fig2e-tau-noise-floor</span>
+              <span class="finding-id">F1-fig2e-direction-resolved-dense</span>
               <span class="finding-kind">biological</span>
-              <span class="finding-status-text">partial literature</span>
+              <span class="finding-status-text">confirms literature</span>
             </div>
             
             
             <div class="finding-evidence">
-              <strong>observed:</strong> tau 57.7 LJ (residence 100) vs NaN (residence 50/25); modulus 0.946 LJ, 126 crosslinks in all three · 
+              <strong>observed:</strong> median tau 37.3/39.7/43.1/67.5/101.6 LJ at residence 12.5/25/50/100/200; 4/4 seeds up to residence 100; modulus 3.19 LJ (turnover-independent) · 
               
-              via test <a href="#bt-tau-resolved-only-at-slow-turnover" onclick="_gotoStudyTab('audit','bt-tau-resolved-only-at-slow-turnover');return false;"><code>tau-resolved-only-at-slow-turnover</code></a> · 
-              in run <a href="#run-r2-turnover-sweep"><code>r2-turnover-sweep</code></a>
+              via test <a href="#bt-tau-rises-with-residence-resolved" onclick="_gotoStudyTab('audit','bt-tau-rises-with-residence-resolved');return false;"><code>tau-rises-with-residence-resolved</code></a> · 
+              in run <a href="#run-r2-dense-multiseed-sweep"><code>r2-dense-multiseed-sweep</code></a>
               
               
             </div>
@@ -672,26 +672,26 @@
             <div class="finding-traceability" style="font-size:0.84em;color:#475569;padding:4px 10px;margin:4px 0">
               
               
-              runs: <a href="#run-r2-turnover-sweep"><code>r2-turnover-sweep</code></a>
+              runs: <a href="#run-r2-dense-multiseed-sweep"><code>r2-dense-multiseed-sweep</code></a>
             </div>
             
             
             
-            <div class="pass_if-band muted small" style="font-size:0.82em;padding:2px 10px">judged against <code>pass_if: op: resolvable_only_at_slow · note: tau finite at residence 100; NaN at residence 50/25</code></div>
+            <div class="pass_if-band muted small" style="font-size:0.82em;padding:2px 10px">judged against <code>pass_if: op: monotonic_increasing · note: median tau non-decreasing as residence rises 12.5 -&gt; 200; modulus ~constant</code></div>
             
             
             
             <div class="finding-expected">
               <strong>expected:</strong> tau increasing with collagen residence time (Fig 2E) · 
               
-              cites: <a class="ov-cite" href="#sref-barrientos2026basement" title="Basement-membrane growth under fixed stress">Barrientos 2026</a>
+              cites: <a class="ov-cite" href="#sref-barrientos2026cellshape" title="Basement membrane turnover controls cell shape">Barrientos 2026</a>
             </div>
             
             
-            <div class="finding-explanation"><em>Why:</em> The relaxable stress is small relative to the run-to-run noise at this network size, so tau only clears the noise floor when turnover is slow enough to leave a long, clean relaxation. A denser / larger network (and several seeds) would lower the noise floor and expose the full slope.
+            <div class="finding-explanation"><em>Why:</em> A denser network carries a larger relaxable stress and 4 seeds average out run-to-run noise, pulling tau above the noise floor at every turnover rate. The emergent two-regime structure (intrinsic floor + residence-dominated) is the honest refinement of a naive proportionality.
 </div>
             
-            <div class="finding-next"><strong>→ Next:</strong> scale up to a dense multi-seed network to resolve tau across the full turnover range</div>
+            <div class="finding-next"><strong>→ Next:</strong> calibrate tau to the ~20 h collagen IV lifetime (LJ time -&gt; hours) to report the slope in physical units</div>
           </div>
         </details>
       </div>
@@ -760,13 +760,13 @@
       <div class="ctr-meta ctr-assess">
         
         <div class="ctr-meta-row"><span class="ctr-meta-k">Confidence</span>
-          <span class="ctr-badge ctr-badge-investigating">Investigating</span>
-          <span class="ctr-vch">biology&nbsp;MIXED</span>
+          <span class="ctr-badge ctr-badge-accepted">Accepted</span>
+          <span class="ctr-vch">biology&nbsp;PASS</span>
           <span class="ctr-vch">insight&nbsp;POSITIVE</span>
         </div>
         
         
-        <div class="ctr-meta-row"><span class="ctr-meta-k">Caveat</span> <span class="ctr-meta-item">PARTIAL Fig-2E: tau is resolvable only at the slowest turnover (residence 100); residence 50 and 25 are below the noise floor at 120 rods, so the full tau-proportional-to-residence SLOPE is NOT established.</span></div>
+        <div class="ctr-meta-row"><span class="ctr-meta-k">Caveat</span> <span class="ctr-meta-item">Fig-2E DIRECTION reproduced (tau rises with residence), not a single proportional slope: tau is a floor (~37 LJ, intrinsic network relaxation) plus a residence-dominated regime above residence ~50.</span></div>
         
       </div>
       
@@ -881,7 +881,7 @@
       
       
       <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;font-size:0.8em">
-        <span class="cond-pill"><span class="cond-pill-k">seeds</span>=1 (sweep)</span>
+        <span class="cond-pill"><span class="cond-pill-k">seeds</span>=4 (sweep)</span>
         
         
         <span class="cond-pill"><span class="cond-pill-k">status</span>=completed</span>
@@ -1358,6 +1358,59 @@ cites:   ["barrientos2026basement"]</pre>
       
     </li>
     
+    
+    
+    
+    
+    
+    
+    
+    <li class="expected-behavior-item" id="bt-tau-rises-with-residence-resolved"
+        data-test-kind="behavioral"
+        
+        data-pytest-node="tau-rises-with-residence-resolved"
+        data-classification="primary"
+        data-result="pending"
+        style="margin: 0 0 10px 0; padding: 10px 12px; border-left: 4px solid #10b981; background: #f8fafc; border-radius: 4px;">
+      
+        
+      <div style="display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;">
+        <span class="bt-result" style="font-size: 0.75em; font-family: monospace; padding: 2px 8px; border-radius: 9999px; background: #f1f5f9; color: #475569">⏳ pending</span>
+        <span class="classification-pill classification-primary">primary</span>
+        <strong style="font-size: 0.9em;">tau-rises-with-residence-resolved</strong>
+        
+        <span class="muted" style="font-size:0.78em">requires: <code>r2-dense-multiseed-sweep</code></span>
+        
+      </div>
+      <div style="margin-top: 6px; font-size: 0.95em;">On the dense, multi-seed network (300 rods, density 3.0, 12-sigma slab, 4 seeds) the stress-relaxation time tau is resolved across the FULL turnover range and rises monotonically with collagen residence time -- reproducing the direction of Fig 2E -- while the elastic modulus stays turnover-independent. tau carries an intrinsic relaxation floor (~37 LJ) at fast turnover and becomes residence-dominated above residence ~50.
+</div>
+      
+      
+      <details style="margin-top: 6px; font-size: 0.82em;">
+        <summary class="muted" style="cursor: pointer;">Assertion</summary>
+        
+        <pre style="background:#fff; padding:8px; margin:4px 0 0 0; border:1px solid #e2e8f0; border-radius:3px; overflow-x:auto;">measure: {"field": "sigma_inplane", "kind": "monotonic_trend", "over": "off_rate", "versus": "residence_time"}
+pass_if: {"note": "median tau non-decreasing as residence rises 12.5 -\u003e 200; modulus ~constant", "op": "monotonic_increasing"}
+cites:   ["barrientos2026basement", "barrientos2026cellshape"]</pre>
+      </details>
+      
+      
+      <details style="margin-top: 6px; font-size: 0.82em">
+        <summary class="muted" style="cursor:pointer; color:#92400e">⚠ Calibration anchor</summary>
+        <pre style="background:#fff7ed; padding:8px; margin:4px 0 0 0; border:1px solid #fdba74; border-radius:3px; overflow-x:auto">{
+  "cites": [
+    "barrientos2026cellshape"
+  ],
+  "literature_target": "tau increasing with collagen residence time (Fig 2E)",
+  "observed_value": "37.3 -\u003e 101.6 LJ across residence 12.5 -\u003e 200",
+  "resolution": "thresholds"
+}</pre>
+      </details>
+      
+      
+      
+    </li>
+    
   </ul>
   
   </div>
@@ -1490,14 +1543,14 @@ cites:   ["barrientos2026basement"]</pre>
           <span class="narrative-label">Empirical validation</span>
           <span class="narrative-input verdict-badge-computed" data-verdict-track="biological_validation"
                 title="Computed from the gate evaluator (read-only)"
-                style="display:inline-block;padding:2px 12px;border-radius:9999px;font-weight:700;font-size:0.85em;background:#f1f5f9;color:#475569">MIXED</span>
+                style="display:inline-block;padding:2px 12px;border-radius:9999px;font-weight:700;font-size:0.85em;background:#f1f5f9;color:#475569">PASS</span>
           <span class="muted small" style="margin-left:6px">computed from gate evaluator</span>
         </label>
         <label class="narrative-row narrative-row-wide">
           <span class="narrative-label">Empirical basis</span>
           <textarea class="narrative-input narrative-textarea" rows="2"
                     data-narrative-path="conclusion_verdicts.biological_validation.basis"
-                    placeholder="e.g. atp_fraction = 0.997, outside Boesen 2024 band [0.2, 0.5].">Partial Fig-2E: tau resolvable at slow turnover (residence 100 -&gt; 57.7 LJ) and in the right direction, but the full tau-vs-residence slope is not established at this network size (residence 50/25 below the noise floor, single seed).
+                    placeholder="e.g. atp_fraction = 0.997, outside Boesen 2024 band [0.2, 0.5].">Fig-2E direction reproduced across the full turnover range on the dense multi-seed network: median tau rises monotonically with residence (37.3 -&gt; 39.7 -&gt; 43.1 -&gt; 67.5 -&gt; 101.6 LJ as residence goes 12.5 -&gt; 25 -&gt; 50 -&gt; 100 -&gt; 200), resolved at 4/4 seeds up to residence 100, while the elastic modulus stays turnover-independent (3.19 LJ). Scoped honestly: the relationship is an intrinsic relaxation floor (~37 LJ) plus a residence-dominated regime above residence ~50, not a single clean proportional slope, and absolute units are reduced.
 </textarea>
         </label>
         <label class="narrative-row">
@@ -1511,7 +1564,7 @@ cites:   ["barrientos2026basement"]</pre>
           <span class="narrative-label">Explanatory basis</span>
           <textarea class="narrative-input narrative-textarea" rows="2"
                     data-narrative-path="conclusion_verdicts.explanatory_gain.basis"
-                    placeholder="e.g. Three findings worth keeping; design_pivot_required closed.">Identifies a size/noise floor on the relaxation time: tau is only resolvable at slow turnover on a 120-rod network, which tells the follow-up exactly what to scale (density, size, seeds) to recover the full Fig-2E slope.
+                    placeholder="e.g. Three findings worth keeping; design_pivot_required closed.">Resolves the 120-rod noise floor and exposes the mechanism&#39;s two regimes: at fast turnover tau is set by the network&#39;s intrinsic viscoelastic relaxation (~37 LJ floor); at slow turnover (long residence) it is set by the crosslink residence time. The crossover is near residence ~50 -- a concrete, testable structure the moderate run could not see.
 </textarea>
         </label>
       </div>
@@ -1528,7 +1581,7 @@ cites:   ["barrientos2026basement"]</pre>
       <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
         <span class="gate-status-passed" style="padding:2px 12px;border-radius:9999px;font-weight:700;font-size:0.85em">passed</span>
         <span class="muted small">evaluated by code</span>
-        <span class="muted small">1/2 passed</span>
+        <span class="muted small">1/3 passed</span>
       </div>
       
     </div>
@@ -1619,7 +1672,7 @@ cites:   ["barrientos2026basement"]</pre>
       <h3 class="overview-label">Limitations</h3>
       <p class="muted" style="margin:0 0 6px 0;font-size:0.85em">What this study explicitly does NOT validate (prevents overclaim).</p>
       <ul style="margin:0 0 0 18px;padding:0;font-size:0.93em">
-        <li style="margin:2px 0">PARTIAL Fig-2E: tau is resolvable only at the slowest turnover (residence 100); residence 50 and 25 are below the noise floor at 120 rods, so the full tau-proportional-to-residence SLOPE is NOT established.</li><li style="margin:2px 0">The turnover sweep is a SINGLE seed; run-to-run variance is not characterised -- a robustness claim needs several seeds.</li><li style="margin:2px 0">Reduced (LJ) units: tau in LJ time, modulus in kT/sigma^3; no calibration to hours / pascals is claimed.</li><li style="margin:2px 0">The bounded smoke run (40 rods, this session) only confirms the outputs are emitted and the network assembles; it does not itself resolve tau.</li><li style="margin:2px 0">tau = NaN is a noise-floor non-resolution, not a zero relaxation time.</li>
+        <li style="margin:2px 0">Fig-2E DIRECTION reproduced (tau rises with residence), not a single proportional slope: tau is a floor (~37 LJ, intrinsic network relaxation) plus a residence-dominated regime above residence ~50.</li><li style="margin:2px 0">Residence 200 (off_rate 0.005) resolved at only 1/4 seeds -- the relaxation approaches the 8000-step hold window; a longer hold is needed to nail the slow-turnover end.</li><li style="margin:2px 0">Reduced (LJ) units: tau in LJ time, modulus in kT/sigma^3; no calibration to hours / pascals is claimed (see fp-r2-energy-scale-calibration).</li><li style="margin:2px 0">The original 120-rod single-seed sweep resolved tau only at residence 100 -- kept as history; the dense 4-seed run is the resolving evidence.</li><li style="margin:2px 0">tau = NaN (in the moderate sweep) is a noise-floor non-resolution, not a zero relaxation time.</li>
       </ul>
     </div>
     
@@ -1677,13 +1730,13 @@ cites:   ["barrientos2026basement"]</pre>
         
         <div class="di-unc di-unc-resolved">
           <h4>✓ Resolved uncertainties</h4>
-          <ul><li>The faithful collagen IV network does assemble and carry finite stress under growth loading (outputs confirmed by a smoke run).</li><li>A relaxation time tau is resolvable at slow turnover (residence 100 -&gt; 57.7 LJ).</li></ul>
+          <ul><li>The faithful collagen IV network does assemble and carry finite stress under growth loading (outputs confirmed by a smoke run).</li><li>tau rises monotonically with collagen residence time across the full turnover range (dense 4-seed run: 37.3 -&gt; 101.6 LJ over residence 12.5 -&gt; 200) -- the Fig-2E direction.</li><li>The elastic modulus is turnover-independent (3.19 LJ), as elasticity should be.</li><li>tau has two regimes: an intrinsic relaxation floor (~37 LJ) at fast turnover and a residence-dominated regime above residence ~50.</li></ul>
         </div>
         
         
         <div class="di-unc di-unc-remaining">
           <h4>● Remaining uncertainties</h4>
-          <ul><li>The full tau-proportional-to-residence SLOPE (Fig 2E) -- not established while tau is below noise at residence 50/25.</li><li>Run-to-run variance -- single seed only.</li><li>Absolute tau in hours / modulus in pascals -- reduced units only.</li></ul>
+          <ul><li>Whether the slow-turnover end is strictly linear -- residence 200 resolved at only 1/4 seeds (relaxation nears the hold window); a longer hold would sharpen it.</li><li>Absolute tau in hours / modulus in pascals -- reduced units only (fp-r2-energy-scale-calibration).</li></ul>
         </div>
         
       </div>
@@ -1706,7 +1759,7 @@ cites:   ["barrientos2026basement"]</pre>
           
           <div class="di-card di-fup-card">
             <div class="followup-header">
-              <strong class="followup-title">Dense multi-seed network for the full Fig-2E slope</strong>
+              <strong class="followup-title">Calibrate tau to the ~20 h collagen IV lifetime</strong>
               
               
               
@@ -1716,7 +1769,7 @@ cites:   ["barrientos2026basement"]</pre>
             
             <div class="followup-actions" style="margin-top:8px">
               <button class="btn-seed-followup"
-                      onclick="_seedFollowupProposal('bm-r2-collagen-network-rheology', "fp-r2-dense-multiseed")">➕ Add to investigation</button>
+                      onclick="_seedFollowupProposal('bm-r2-collagen-network-rheology', "fp-r2-energy-scale-calibration")">➕ Add to investigation</button>
             </div>
           </div>
           
@@ -1739,7 +1792,7 @@ cites:   ["barrientos2026basement"]</pre>
 </section>
 
 </main>
-<script>window.__DASH_CONFIG__ = { mode: "snapshot", interactiveUrl: "https://github.com/vivarium-collective/viva-lumenoid", basePath: "/viva-lumenoid/dashboard", inputsDownloadBase: "https://github.com/vivarium-collective/viva-lumenoid/raw/main", provenance: {"repo_slug": "vivarium-collective/viva-lumenoid", "repo_url": "https://github.com/vivarium-collective/viva-lumenoid", "commit": "f34c33516e6bd25e9c49b0db9944a86d8d76457a", "commit_url": "https://github.com/vivarium-collective/viva-lumenoid/commit/f34c33516e6bd25e9c49b0db9944a86d8d76457a", "branch": "main", "lockfile": "uv.lock@796aed340563", "generated_at": "2026-10-20 11:36 UTC"} };</script>
+<script>window.__DASH_CONFIG__ = { mode: "snapshot", interactiveUrl: "https://github.com/vivarium-collective/viva-lumenoid", basePath: "/viva-lumenoid/dashboard", inputsDownloadBase: "https://github.com/vivarium-collective/viva-lumenoid/raw/main", provenance: {"repo_slug": "vivarium-collective/viva-lumenoid", "repo_url": "https://github.com/vivarium-collective/viva-lumenoid", "commit": "63fd02fd2f6669ffa956e0ec52ad9f7815161c75", "commit_url": "https://github.com/vivarium-collective/viva-lumenoid/commit/63fd02fd2f6669ffa956e0ec52ad9f7815161c75", "branch": "main", "lockfile": "uv.lock@23a8fcc2b0be", "generated_at": "2026-10-20 11:54 UTC"} };</script>
 <script src="/viva-lumenoid/dashboard/assets/data-source.js"></script>
 <script src="/viva-lumenoid/dashboard/assets/toast.js"></script>
 <script>

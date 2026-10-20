@@ -1397,6 +1397,28 @@ body.viv-rail-resizing-active #viv-rail-studies-section{ contain:layout; }
   margin-left:4px;
 }
 
+/* Resources tab — segmented category nav + search. Reuses the detail-tab look
+   (.investigation-detail-tabs/-tab/.tab-count-badge) so it matches the study +
+   investigation sub-tabs; the controls row owns the underline and seats the
+   search box to the right. */
+.res-controls{
+  display:flex; align-items:center; gap:16px; flex-wrap:wrap;
+  border-bottom:1px solid #e5e7eb; margin:4px 0 16px;
+}
+.res-controls .res-tabs{
+  border-bottom:0; margin:0; flex:1 1 auto; flex-wrap:wrap; gap:20px;
+}
+.res-search{
+  flex:0 0 auto; width:220px; max-width:100%;
+  padding:6px 10px; margin-bottom:8px;
+  border:1px solid #d1d5db; border-radius:6px;
+  font:inherit; font-size:0.9em; color:#1f2937; background:#fff;
+}
+.res-search:focus{
+  outline:none; border-color:#3b82f6; box-shadow:0 0 0 2px rgba(59,130,246,0.15);
+}
+@media (max-width:640px){ .res-search{ width:100%; } }
+
 /* Study Detail page shell — gives breathing room around the content
    in both the standalone /studies/<name> view and inside the
    Investigations iframe (where body margin:0 used to push text
@@ -4700,19 +4722,19 @@ details.overview-section[open] > summary.overview-label{ margin-bottom:8px; }
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 8px 12px;
+  gap: 5px 8px;
   margin: 2px 0 10px;
-  padding: 6px 10px;
+  padding: 4px 9px;
   background: #f8fafc;
   border: 1px solid #eef2f7;
   border-radius: 8px;
-  font-size: 0.86em;
+  font-size: 0.8em;
   color: #475569;
 }
 .aig-tb-group {
   display: inline-flex;
   align-items: center;
-  gap: 7px;
+  gap: 5px;
 }
 /* While a study is open, hide the investigation PROSE (verdict / question /
    description / decision cockpit + tab blocks) so only the graph region remains;
@@ -4893,15 +4915,15 @@ details.overview-section[open] > summary.overview-label{ margin-bottom:8px; }
   color: #94a3b8; padding: 6px 10px 2px; font-weight: 700;
 }
 .aig-tb-group + .aig-tb-group {
-  padding-left: 12px;
+  padding-left: 8px;
   border-left: 1px solid #e2e8f0;
 }
 .aig-tb-right { margin-left: auto; }
 .aig-tb-group.aig-tb-right { padding-left: 0; border-left: none; }
 .aig-tb-label {
-  font-size: 0.8em;
+  font-size: 0.74em;
   font-weight: 600;
-  letter-spacing: 0.03em;
+  letter-spacing: 0.02em;
   text-transform: uppercase;
   color: #94a3b8;
   white-space: nowrap;
@@ -4920,7 +4942,7 @@ details.overview-section[open] > summary.overview-label{ margin-bottom:8px; }
   background: transparent;
   color: #475569;
   font-weight: 600;
-  padding: 4px 10px;
+  padding: 3px 8px;
   cursor: pointer;
   font-size: 0.82em;
   line-height: 1.4;
@@ -4933,13 +4955,13 @@ details.overview-section[open] > summary.overview-label{ margin-bottom:8px; }
      one consistent button set (same size, weight, fill, border, hover). */
   display: inline-flex;
   align-items: center;
-  gap: 5px;
+  gap: 4px;
   border: 1px solid #e5e7eb;
   border-radius: 6px;
   background: #f8fafc;
   color: #475569;
   font-weight: 600;
-  padding: 4px 11px;
+  padding: 3px 8px;
   cursor: pointer;
   font-size: 0.82em;
   line-height: 1.4;
@@ -5015,7 +5037,7 @@ details.overview-section[open] > summary.overview-label{ margin-bottom:8px; }
 
 /* The primary unified-zoom slider is wider than the fine-tune sliders so it
    reads as the main control. */
-.aig-tb-slider-wide { width: 180px; }
+.aig-tb-slider-wide { width: 130px; }
 /* ⚙ Display popover: the fine-tune sliders stack as labelled rows. */
 .aig-settings-row {
   display: flex;

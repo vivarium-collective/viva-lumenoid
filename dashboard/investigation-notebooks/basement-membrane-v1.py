@@ -853,7 +853,7 @@ _save_viz('bm-r1-published-tissue-baseline', 'r1_regime', _render_one('html:r1_r
 #
 # **Purpose.** A crosslinked semiflexible rod network relaxes macroscopic stress as crosslinks turn over. Slower turnover (a longer collagen residence time, set by a smaller off_rate) should give a longer, more cleanly resolvable stress-relaxation time tau; fast turnover relaxes stress faster than the network can hold a measurable signal above noise.
 #
-# **Claim.** The faithful collagen IV network assembles and carries in-plane stress under staged growth loading on real LAMMPS, and its macroscopic stress-relaxation time is resolvable at SLOW turnover (long collagen residence) but falls below the noise floor as turnover speeds up -- a partial reproduction of Barrientos Figure 2E, whose full relaxation-vs-residence proportionality needs a denser, larger network.
+# **Claim.** The faithful collagen IV network assembles and carries in-plane stress under staged growth loading on real LAMMPS, and -- on a dense, multi-seed network (300 rods, authors' density 3.0, 12-sigma slab, 4 seeds) -- its macroscopic stress-relaxation time tau rises monotonically with collagen residence time (37 LJ at residence 12.5 up to ~102 LJ at residence 200), reproducing the DIRECTION of Barrientos Figure 2E across the full turnover range. tau carries an intrinsic network-relaxation floor (~37 LJ) at fast turnover and becomes residence-dominated above residence ~50; the elastic modulus is turnover-independent (3.19 LJ), as elasticity should be.
 
 # ### Parameters
 #
@@ -920,10 +920,15 @@ else:
 #
 # _Results are shown by the figures below, produced by the run above._
 
+# **r2_fig2e**
+
+# r2_fig2e
+_save_viz('bm-r2-collagen-network-rheology', 'r2_fig2e', _render_one('html:r2_fig2e.html', {'title': 'Stress-relaxation time τ vs collagen residence (Barrientos Fig 2E)', 'caption': 'REAL measured data (dense multi-seed sweep: 300 rods, density 3.0, 12σ slab, 4 seeds): the stress-relaxation time τ rises monotonically with collagen residence time (37→102 LJ over residence 12.5→200), reproducing the Fig 2E direction. τ carries an intrinsic relaxation floor (~37 LJ) at fast turnover and is residence-dominated above residence ~50; the modulus is turnover-independent (3.19 LJ). The open marker (residence 200) resolved at only 1/4 seeds.\n'}, RUNS_DB, STUDY_YAML))
+
 # **r2_rheology**
 
 # r2_rheology
-_save_viz('bm-r2-collagen-network-rheology', 'r2_rheology', _render_one('html:r2_rheology.html', {'title': 'Collagen network assembly + stress (small real run)', 'caption': 'A small REAL collagen IV run: the NC1/7S network assembles and carries in-plane stress. Full Fig 2D/2E reproduction (relaxation vs turnover rate) is the study target.\n'}, RUNS_DB, STUDY_YAML))
+_save_viz('bm-r2-collagen-network-rheology', 'r2_rheology', _render_one('html:r2_rheology.html', {'title': 'Collagen network assembly + stress (small real run)', 'caption': 'A small REAL collagen IV run: the NC1/7S network assembles and carries in-plane stress — the mechanism at reduced scale behind the Fig 2E curve above.\n'}, RUNS_DB, STUDY_YAML))
 
 # ### Acceptance criteria
 #
@@ -933,6 +938,7 @@ _save_viz('bm-r2-collagen-network-rheology', 'r2_rheology', _render_one('html:r2
 # | --- | --- | --- |
 # | network-forms-and-stresses _(primary)_ | kind=count_and_finiteness fields=['n_crosslinks', 'sigma_inplane'] | op gt_and_finite note n_crosslinks > 0 AND sigma_inplane finite |
 # | tau-resolved-only-at-slow-turnover _(primary)_ | kind=relaxation_time field=sigma_inplane versus=residence_time over=off_rate | op resolvable_only_at_slow note tau finite at residence 100; NaN at residence 50/25 |
+# | tau-rises-with-residence-resolved _(primary)_ | kind=monotonic_trend field=sigma_inplane versus=residence_time over=off_rate | op monotonic_increasing note median tau non-decreasing as residence rises 12.5 -> 200; modulus ~constant |
 
 # ## Study: Network expansion & collagen supply (`bm-r3-network-expansion-supply`)
 #

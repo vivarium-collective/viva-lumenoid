@@ -1606,7 +1606,14 @@ a.viv-bs-commit:hover { text-decoration: underline; }
                aria-label="Zoom — overview to a single study card"
                title="Zoom — slide left for a zoomed-out overview, right to zoom into a single study card">
       </span>
+      <span class="aig-tb-group">
+        <button id="aig-fill-btn" type="button" class="aig-tb-btn"
+                title="Fill to screen — fit the whole investigation graph to the view and centre it"
+                aria-label="Fill the investigation graph to the screen"
+                onclick="window._aigFillToScreen&&window._aigFillToScreen()">&#10530; Fit</button>
+      </span>
       <span class="aig-tb-group aig-settings-ctl" style="position:relative">
+        <span class="aig-tb-label">Display</span>
         <button id="aig-settings-btn" type="button" class="aig-tb-btn" aria-haspopup="true" aria-expanded="false"
                 title="Display settings — fine-tune detail, card width, and zoom"
                 aria-label="Display settings" onclick="window._aigToggleSettings(event)">⚙</button>
@@ -1637,11 +1644,13 @@ a.viv-bs-commit:hover { text-decoration: underline; }
       </span>
       
       <span class="aig-tb-group dag-legend-wrap" style="position:relative">
+        <span class="aig-tb-label">Legend</span>
         <button id="dag-legend-chip" type="button" class="aig-tb-btn" aria-haspopup="true" aria-expanded="false"
                 aria-label="Legend" title="Legend — node Progress/Verdict markers and edge types">?</button>
         <div id="dag-legend-popover" role="dialog" aria-label="Investigation graph legend" style="display:none;position:absolute;right:0;top:100%;margin-top:6px;background:#fff;border:1px solid #e2e8f0;border-radius:8px;box-shadow:0 6px 20px rgba(0,0,0,0.14);z-index:70;min-width:240px;max-width:360px;padding:10px 12px;text-align:left"></div>
       </span>
       <span class="aig-tb-group aig-dl-ctl" style="position:relative">
+        <span class="aig-tb-label">Export</span>
         <button id="aig-dl-btn" type="button" class="aig-tb-btn" title="Download the investigation graph as an image (PNG) or PDF"
                 aria-label="Export graph" aria-haspopup="true" aria-expanded="false" onclick="window._aigToggleDownloadMenu(event)">⬇</button>
         <div id="aig-dl-menu" role="menu" style="display:none;position:absolute;right:0;top:100%;margin-top:4px;background:#fff;border:1px solid #e2e8f0;border-radius:6px;box-shadow:0 4px 16px rgba(0,0,0,0.14);z-index:70;min-width:132px;overflow:hidden">
@@ -1653,6 +1662,7 @@ a.viv-bs-commit:hover { text-decoration: underline; }
            inline. Placed after the Display/Legend/Export trio so those three stay
            grouped together. -->
       <span class="aig-tb-group" role="group" aria-label="Graph panel">
+        <span class="aig-tb-label">Dock</span>
         <button id="aig-dock-panel-btn" type="button" class="aig-tb-btn"
                 title="Dock the investigation graph — choose a side, pop out, or go back inline"
                 aria-haspopup="menu" aria-label="Dock the investigation graph"
@@ -1661,7 +1671,8 @@ a.viv-bs-commit:hover { text-decoration: underline; }
     </div>
     <div id="investigation-dag-shell"
          style="position: relative; border: 1px solid #e2e8f0; border-radius: 6px 6px 0 0; background: #fafafa;
-                overflow: auto; resize: none; height: 460px; min-height: 32px; max-height: 92vh; cursor: grab;">
+                overflow: auto; resize: none; height: 460px; min-height: 32px; max-height: 92vh; cursor: grab;
+                touch-action: none;">
       <!-- overflow-y must be hidden (not visible): per CSS spec, when one axis
            is `visible` and the other isn't, `visible` gets promoted to `auto`,
            which gives this shell its own vertical scrollbar in addition to
@@ -2654,7 +2665,7 @@ Nothing on <code id="pr-base-display-2">main</code> changes until someone presse
      DataSource global that renderers call to fetch narrative data.
      local-server mode (default) fetches from the same-origin /api/* endpoints.
      Hosted mode (sub-projects #2/#3) will set a different config here. -->
-<script>window.__DASH_CONFIG__ = { mode: "snapshot", interactiveUrl: "https://github.com/vivarium-collective/viva-lumenoid", basePath: "/viva-lumenoid/dashboard", inputsDownloadBase: "https://github.com/vivarium-collective/viva-lumenoid/raw/main", provenance: {"repo_slug": "vivarium-collective/viva-lumenoid", "repo_url": "https://github.com/vivarium-collective/viva-lumenoid", "commit": "f34c33516e6bd25e9c49b0db9944a86d8d76457a", "commit_url": "https://github.com/vivarium-collective/viva-lumenoid/commit/f34c33516e6bd25e9c49b0db9944a86d8d76457a", "branch": "main", "lockfile": "uv.lock@796aed340563", "generated_at": "2026-10-20 11:36 UTC"} };</script>
+<script>window.__DASH_CONFIG__ = { mode: "snapshot", interactiveUrl: "https://github.com/vivarium-collective/viva-lumenoid", basePath: "/viva-lumenoid/dashboard", inputsDownloadBase: "https://github.com/vivarium-collective/viva-lumenoid/raw/main", provenance: {"repo_slug": "vivarium-collective/viva-lumenoid", "repo_url": "https://github.com/vivarium-collective/viva-lumenoid", "commit": "63fd02fd2f6669ffa956e0ec52ad9f7815161c75", "commit_url": "https://github.com/vivarium-collective/viva-lumenoid/commit/63fd02fd2f6669ffa956e0ec52ad9f7815161c75", "branch": "main", "lockfile": "uv.lock@23a8fcc2b0be", "generated_at": "2026-10-20 11:54 UTC"} };</script>
 <!-- Derive the global URL prefix from the (possibly publish-injected) config.
      Many renderers prefix workspace-root-absolute links (/studies/, /api/)
      with window.__BASE_PATH__ so they resolve when the read-only bundle is

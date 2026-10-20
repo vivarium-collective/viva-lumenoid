@@ -1164,7 +1164,7 @@
       var dl = path ? _inputsDownloadLink(path, 'Download') :
         (ds.url ? '<a href="' + _esc(ds.url) + '" target="_blank" rel="noopener" ' +
           'class="action-btn" style="font-size:0.8em;padding:1px 8px;text-decoration:none">↗ Source</a>' : '');
-      return '<tr><td><code>' + name + '</code></td><td><small class="muted">' +
+      return '<tr class="res-item"><td><code>' + name + '</code></td><td><small class="muted">' +
         _esc(src) + '</small></td><td style="text-align:right">' + dl + '</td></tr>';
     }).join('');
     return '<table><thead><tr><th>Name</th><th>Source</th><th></th></tr></thead><tbody>' +
@@ -1187,7 +1187,7 @@
     var key = ref.key || ref.bib_key || '';
 
     if (ref._unmatched) {
-      return '<div style="border:1px solid #e2e8f0;border-radius:6px;padding:8px 10px">' +
+      return '<div class="res-item" style="border:1px solid #e2e8f0;border-radius:6px;padding:8px 10px">' +
         '<code>' + _esc(key || _inputsRefLabel(ref)) + '</code> ' +
         '<small class="muted">(no bib entry)</small></div>';
     }
@@ -1253,7 +1253,7 @@
 
     // Anchor by bib key so lipid/reaction citation cross-links (_resScrollToRef)
     // resolve to this References entry.
-    var anchor = key ? ' id="res-ref-' + _esc(String(key)) + '" class="res-ref-anchor"' : '';
+    var anchor = key ? ' id="res-ref-' + _esc(String(key)) + '" class="res-item res-ref-anchor"' : ' class="res-item"';
 
     return '<div' + anchor + ' style="border:1px solid #e2e8f0;border-radius:6px;padding:8px 10px">' +
       '<div>' + titleHtml + foldFlag + actions + '</div>' + meta + noteHtml + bibBlock + citedHtml + '</div>';
@@ -1313,7 +1313,7 @@
           ? '<div class="muted" style="font-size:0.85em;margin-top:2px">' +
             _esc(doc.description) + '</div>'
           : '';
-        return '<li><strong>' + name + '</strong>' + path + dl + desc + '</li>';
+        return '<li class="res-item"><strong>' + name + '</strong>' + path + dl + desc + '</li>';
       }).join('') + '</ul>';
   }
 
@@ -1510,48 +1510,168 @@
     // Expose the folded (not-in-papers.bib) keys for diagnostics/reporting.
     window._resFoldedPaperKeys = _foldedPaperKeys;
 
+    // Counts per formalized resource category, for the tab badges. Structured
+    // data comes from the structured-resources manifest (already loaded into
+    // window._resStructured by _loadResources before this runs).
+    var _rs = window._resStructured;
+    var structAvail = !!(_rs && _rs.type_order && _rs.type_order.length);
+    var structCount = 0;
+    if (structAvail) (_rs.type_order || []).forEach(function (t) {
+      structCount += ((_rs.groups || {})[t] || []).length;
+    });
+    var dsCount = (datasets || []).length;
+    var refCount = (refs || []).length;
+    var expCount = (experts || []).length;
+    var totalCount = dsCount + refCount + expCount + structCount;
+
+    // One segmented tab, matching the study/investigation detail tabs so it fits
+    // the rest of the workbench (same .investigation-detail-tab classes + count
+    // badge). Clicking a tab shows just that category — no scrolling a long page.
+    var _resTabBtn = function (id, label, count) {
+      return '<button type="button" class="investigation-detail-tab res-tab" ' +
+        'data-restab="' + id + '" role="tab" onclick="_resTab(\'' + id + '\')">' +
+        '<span class="tab-label">' + label + '</span>' +
+        (count != null ? '<span class="tab-count-badge">' + count + '</span>' : '') +
+        '</button>';
+    };
+
     var html = '<div>';
     html += '<h3 style="margin:0 0 2px">Resources</h3>';
     html += '<p class="muted" style="font-size:0.85em;margin:0 0 14px">' +
-      'Papers, datasets, and expert docs for this workspace. Each reference shows ' +
-      'the studies that cite it — click a study to open it.</p>';
+      'Papers, datasets, expert docs, and structured data for this workspace. Each ' +
+      'reference shows the studies that cite it — click a study to open it.</p>';
 
     // Drag-and-drop upload zone (live/authoring only; category inferred from the
     // dropped file's extension). Files land in the workspace-wide store.
     html += '<div id="inputs-dropzone" class="js-authoring" ' +
       'ondragover="_inputsDragOver(event)" ondragleave="_inputsDragLeave(event)" ondrop="_inputsDrop(event)" ' +
       'style="border:2px dashed #cbd5e1;border-radius:8px;padding:16px 14px;text-align:center;' +
-      'color:#64748b;font-size:0.9em;margin:0 0 20px;background:#f8fafc;transition:background .12s,border-color .12s">' +
+      'color:#64748b;font-size:0.9em;margin:0 0 14px;background:#f8fafc;transition:background .12s,border-color .12s">' +
       '<div style="font-weight:600;color:#475569">⬆ Drag papers, datasets, or expert docs here to upload</div>' +
       '<div style="font-size:0.78em;color:#94a3b8;margin-top:3px">' +
         'PDFs → references · .md / .txt / .docx → expert docs · everything else → datasets' +
       '</div></div>';
 
-    // Section order (unified Resources page): Datasets, References, Expert docs,
-    // then the structured science sections (rendered separately into
-    // #resources-gallery below this block).
+    // Category nav + search. The tabs route to the four formalized categories
+    // (Datasets / References / Expert docs / Structured data), each with a live
+    // count; "All" shows everything. The search box filters across every
+    // category at once, revealing matches wherever they live.
+    html += '<div class="res-controls">' +
+      '<div class="investigation-detail-tabs res-tabs" role="tablist">' +
+        _resTabBtn('all', 'All', totalCount) +
+        _resTabBtn('datasets', 'Datasets', dsCount) +
+        _resTabBtn('references', 'References', refCount) +
+        _resTabBtn('expert', 'Expert docs', expCount) +
+        (structAvail ? _resTabBtn('structured', 'Structured data', structCount) : '') +
+      '</div>' +
+      '<input type="search" id="res-search" class="res-search" placeholder="Search resources…" ' +
+        'oninput="_resSearch(this.value)" aria-label="Search resources">' +
+      '</div>';
 
+    // One pane per category (the structured gallery lives in the sibling
+    // #resources-gallery and is adopted as the "structured" pane below).
     // Datasets — provider-backed bundle (if any) renders into this host first,
     // then the declared datasets.
     var dsBody = '<div id="data-sources-host" style="display:none;margin-bottom:12px"></div>' +
       _inputsDatasetsHtml(datasets);
-    html += _inputsSection('Datasets', 'data files', 'dataset', dsBody);
+    html += '<div class="investigation-detail-panel res-pane" data-restab="datasets">' +
+      _inputsSection('Datasets', 'data files', 'dataset', dsBody) + '</div>';
 
-    // References (papers) — the richest section, with cited-by study chips and
+    // References (papers) — the richest category, with cited-by study chips and
     // the folded-in manifest paper-references.
-    html += _inputsSection('References', 'papers · BibTeX · PDFs', 'reference',
-      _inputsRefsHtml(refs));
+    html += '<div class="investigation-detail-panel res-pane" data-restab="references">' +
+      _inputsSection('References', 'papers · BibTeX · PDFs', 'reference', _inputsRefsHtml(refs)) + '</div>';
 
     // Expert docs — source dossiers / background the workspace draws on.
-    html += _inputsSection('Expert docs', 'dossiers · notes', 'expert',
-      _inputsExpertDocsHtml(experts));
+    html += '<div class="investigation-detail-panel res-pane" data-restab="expert">' +
+      _inputsSection('Expert docs', 'dossiers · notes', 'expert', _inputsExpertDocsHtml(experts)) + '</div>';
 
+    html += '<div id="res-empty" class="muted" style="display:none;font-style:italic;' +
+      'padding:18px 2px">No resources match your search.</div>';
     html += '</div>';
 
     el.innerHTML = html;
 
+    // Adopt the structured science gallery as the "structured" pane, then apply
+    // the active tab (persisted across reloads) and any live search.
+    _resAdoptStructuredPane();
+    _resTab(window._resActiveTab || 'all');
+
     _loadDataSources();
   }
+
+  // Give the sibling structured-science gallery (#resources-gallery) the pane
+  // classes so _resTab / _resSearch treat it as the "Structured data" category.
+  function _resAdoptStructuredPane() {
+    var g = document.getElementById('resources-gallery');
+    if (!g) return;
+    g.classList.add('investigation-detail-panel', 'res-pane');
+    g.setAttribute('data-restab', 'structured');
+  }
+
+  // Switch the visible resource category. 'all' shows every pane; otherwise only
+  // the matching one. Re-applies an active search so a filter survives tab
+  // changes. Mirrors _invDetailTab's active-class toggling.
+  function _resTab(tab) {
+    window._resActiveTab = tab;
+    document.querySelectorAll('.res-tab').forEach(function (b) {
+      b.classList.toggle('active', b.getAttribute('data-restab') === tab);
+    });
+    var search = document.getElementById('res-search');
+    var q = search ? (search.value || '').trim() : '';
+    if (q) { _resSearch(q); return; }  // search owns visibility while active
+    // No active search: undo any search-time per-item hiding, then show the pane(s).
+    document.querySelectorAll('.res-pane .res-item, .res-pane .res-grid > *, .res-pane .res-section')
+      .forEach(function (it) { it.style.display = ''; });
+    document.querySelectorAll('.res-pane').forEach(function (p) {
+      // Explicit display (not just the .active class): the structured pane carries
+      // its own .resources-gallery display rule that would otherwise keep it shown.
+      var show = tab === 'all' || p.getAttribute('data-restab') === tab;
+      p.classList.toggle('active', show);
+      p.style.display = show ? '' : 'none';
+    });
+    var empty = document.getElementById('res-empty');
+    if (empty) empty.style.display = 'none';
+  }
+  window._resTab = _resTab;
+
+  // Filter resource items across every category by substring. While a query is
+  // active, all panes are revealed so matches surface wherever they live; each
+  // item (dataset row / reference card / expert doc / structured card) toggles
+  // on its text, and panes/sections with no match collapse. Clearing restores
+  // the active tab.
+  function _resSearch(q) {
+    q = (q || '').toLowerCase().trim();
+    var panes = Array.prototype.slice.call(document.querySelectorAll('.res-pane'));
+    if (!q) { _resTab(window._resActiveTab || 'all'); return; }
+    var anyMatch = false;
+    panes.forEach(function (p) {
+      p.classList.add('active');  // reveal all panes while searching
+      var structured = p.getAttribute('data-restab') === 'structured';
+      var items = structured
+        ? p.querySelectorAll('.res-grid > *')
+        : p.querySelectorAll('.res-item');
+      var paneMatch = false;
+      Array.prototype.forEach.call(items, function (it) {
+        var hit = (it.textContent || '').toLowerCase().indexOf(q) !== -1;
+        it.style.display = hit ? '' : 'none';
+        if (hit) paneMatch = true;
+      });
+      if (structured) {
+        // Hide a structured sub-section whose cards are all filtered out.
+        p.querySelectorAll('.res-section').forEach(function (sec) {
+          var vis = Array.prototype.slice.call(sec.querySelectorAll('.res-grid > *'))
+            .some(function (c) { return c.style.display !== 'none'; });
+          sec.style.display = vis ? '' : 'none';
+        });
+      }
+      p.style.display = paneMatch ? '' : 'none';
+      if (paneMatch) anyMatch = true;
+    });
+    var empty = document.getElementById('res-empty');
+    if (empty) empty.style.display = anyMatch ? 'none' : 'block';
+  }
+  window._resSearch = _resSearch;
 
   // -------------------------------------------------------------------------
   // Repo-wide data sources — provider-backed bundle (workspace.yaml hook).
@@ -10669,6 +10789,16 @@
     var H = ['<section class="inv-plan-board' + (compact ? ' inv-plan-board-compact' : '') + '">'];
     // The tab label already says "Plan progress" — drop the redundant heading in compact mode.
     if (!compact) H.push('<h3 class="inv-plan-board-title">Plan progress · cumulative gates</h3>');
+    // Honest at-a-glance tally by outcome — NOT a strict "passed" count (which reads 0
+    // against met/qualified/refuted verdicts and makes an evaluated board look idle).
+    var _tally = {};
+    gates.forEach(function (g) { _tally[g.status] = (_tally[g.status] || 0) + 1; });
+    var _tOrder = ['passed', 'met', 'qualified', 'refuted', 'in_progress', 'blocked', 'pending'];
+    var _tBits = [];
+    _tOrder.forEach(function (s) { if (_tally[s]) _tBits.push(_tally[s] + ' ' + (meta[s] ? meta[s].label : s)); });
+    if (_tBits.length)
+      H.push('<div class="inv-plan-tally" style="font-size:0.82em;color:#64748b;margin:' +
+             (compact ? '0 0 8px' : '2px 0 10px') + '">' + _escInv(_tBits.join(' · ')) + '</div>');
     H.push('<ol class="inv-plan-gates">');
     gates.forEach(function (g) {
       var sm = meta[g.status] || meta.pending;
@@ -10754,17 +10884,10 @@
     // Headline.
     if (headline) H.push('<h2 class="inv-brief-q">' + _invInline(headline) + '</h2>');
 
-    // (The verdict moved out of the header into its own canonical tab below, so
-    // the long status paragraph no longer pushes the rest of the page down.)
-
-    // Introduction — the full what_is_this rendered as markdown prose.
-    if (whatIs) H.push('<div class="inv-brief-prose inv-brief-intro">' + _renderInvLeadMarkdown(whatIs) + '</div>');
-
-    // Meta — the driving question + hypothesis, one muted line each.
-    var _meta = [];
-    if (q) _meta.push('<span class="inv-brief-meta-item"><em>Question</em> ' + _invInline(oneline(q)) + '</span>');
-    if (hyp) _meta.push('<span class="inv-brief-meta-item"><em>Hypothesis</em> ' + _invInline(hyp) + '</span>');
-    if (_meta.length) H.push('<div class="inv-brief-meta">' + _meta.join('') + '</div>');
+    // Front stays lean — just the headline — so the investigation graph sits high
+    // on the page. The overview, verdict, background (with the question/hypothesis
+    // + evidence folded in), plan and decisions all live behind the tab strip
+    // below; only the short Overview tab shows on load.
 
     // Canonical section set — a FIXED, ordered list of tabs so every
     // investigation renders the SAME shape (reproducible across the workspace),
@@ -10790,32 +10913,13 @@
 
     var tabs = [];
 
-    // 1. Verdict — the campaign's current answer (executive.verdict). First tab
-    // so the answer is what opens; the colored VS pill is kept for status.
-    if (verdict)
-      tabs.push({ id:'verdict', label:'Verdict', badge: vs ? vs.toUpperCase() : '',
-        html: '<div class="inv-brief-verdict-tab inv-vs-' + vsClass + '">' +
-          '<span class="inv-vs-pill">' + _esc(vs.toUpperCase()) + '</span>' +
-          '<div class="inv-brief-verdict-text">' + _invInline(verdict) + '</div></div>' });
-
-    // 2. Background — the lead intro (falls back to description).
-    if (leadProse)
-      tabs.push({ id:'background', label:'Background', html:
-        '<div class="inv-brief-prose">' + _renderInvLeadMarkdown(leadProse) + '</div>' });
-
-    // 3. Biology — the plain-English mechanism narrative (biological_story).
-    if (bio)
-      tabs.push({ id:'biology', label:'Biology', html:
-        '<div class="inv-brief-prose">' + _renderInvLeadMarkdown(bio) + '</div>' });
-
-    // 4. Hypothesis & evidence — the structured argument (scientific_argument
-    // main_claim + key_claims as CITED claims), with the competing interpretive
-    // frameworks FOLDED IN as a trailing note rather than a separate, usually
-    // thin tab. Citation chips resolve from references/papers.bib.
+    // Structured-argument (evidence) body — now folded INTO Background rather than
+    // its own tab (scientific_argument main_claim + key_claims as cited claims +
+    // competing frameworks). Citation chips resolve from references/papers.bib.
     var kclaims    = Array.isArray(d.key_claims) ? d.key_claims : [];
     var sciArg     = d.scientific_argument || {};
     var frameworks = Array.isArray(d.competing_frameworks) ? d.competing_frameworks : [];
-    if (kclaims.length || sciArg.main_claim || frameworks.length) {
+    function _evidenceBody() {
       var evBody = '';
       if (sciArg.main_claim)
         evBody += '<p class="inv-brief-prose" style="font-weight:600;margin:0 0 10px">' +
@@ -10837,8 +10941,53 @@
             return '<li><strong>' + _escInv(f.name || '') + '</strong>' +
               (f.relation ? ' <span class="muted">— ' + _escInv(f.relation) + '</span>' : '') + '</li>';
           }).join('') + '</ul></div>';
-      tabs.push({ id: 'evidence', label: 'Hypothesis & evidence', html: evBody });
+      return evBody;
     }
+
+    // 1. Overview — the lean landing tab (DEFAULT): a one-paragraph what-is-this +
+    // the verdict in brief (status pill + opening sentence). Deliberately short so
+    // the investigation graph sits high on the page; depth lives in the tabs below.
+    var whatIsLede = whatIs ? whatIs.split(/\n\s*\n/)[0].trim() : '';
+    var ovParts = [];
+    if (whatIsLede)
+      ovParts.push('<div class="inv-brief-prose inv-brief-overview-lede">' +
+        _renderInvLeadMarkdown(whatIsLede) + '</div>');
+    if (verdict)
+      ovParts.push('<div class="inv-brief-overview-verdict inv-vs-' + vsClass + '" ' +
+        'style="margin-top:10px;display:flex;align-items:baseline;gap:8px;flex-wrap:wrap">' +
+        '<span class="inv-vs-pill">' + _esc(vs.toUpperCase()) + '</span> ' +
+        '<span class="inv-brief-overview-verdict-text" style="color:#475569">' +
+        _invInline(headlineOf(verdict)) + '</span></div>');
+    if (ovParts.length)
+      tabs.push({ id:'overview', label:'Overview', html: ovParts.join('') });
+
+    // 2. Verdict — the full campaign answer (executive.verdict); behind a click.
+    if (verdict)
+      tabs.push({ id:'verdict', label:'Verdict', badge: vs ? vs.toUpperCase() : '',
+        html: '<div class="inv-brief-verdict-tab inv-vs-' + vsClass + '">' +
+          '<span class="inv-vs-pill">' + _esc(vs.toUpperCase()) + '</span>' +
+          '<div class="inv-brief-verdict-text">' + _invInline(verdict) + '</div></div>' });
+
+    // 3. Background — the lead intro, the driving Question + Hypothesis, and the
+    // structured argument (Hypothesis & evidence folded in here per the owner).
+    var bgParts = [];
+    if (leadProse)
+      bgParts.push('<div class="inv-brief-prose">' + _renderInvLeadMarkdown(leadProse) + '</div>');
+    var _bgMeta = [];
+    if (q) _bgMeta.push('<span class="inv-brief-meta-item"><em>Question</em> ' + _invInline(oneline(q)) + '</span>');
+    if (hyp) _bgMeta.push('<span class="inv-brief-meta-item"><em>Hypothesis</em> ' + _invInline(hyp) + '</span>');
+    if (_bgMeta.length) bgParts.push('<div class="inv-brief-meta">' + _bgMeta.join('') + '</div>');
+    var _evBody = _evidenceBody();
+    if (_evBody)
+      bgParts.push('<div class="inv-brief-evidence">' +
+        '<div class="inv-brief-frameworks-label">Hypothesis &amp; evidence</div>' + _evBody + '</div>');
+    if (bgParts.length)
+      tabs.push({ id:'background', label:'Background', html: bgParts.join('') });
+
+    // 4. Biology — the plain-English mechanism narrative (biological_story).
+    if (bio)
+      tabs.push({ id:'biology', label:'Biology', html:
+        '<div class="inv-brief-prose">' + _renderInvLeadMarkdown(bio) + '</div>' });
 
     // 5. How to read — evaluator tips (string prose or a list of tips).
     if (hasHowto)
@@ -10860,9 +11009,13 @@
     var _planHtml = _planBoardHtml(d, { compact: true });
     if (_planHtml) {
       var _pb = d.plan_board || [];
-      var _passed = _pb.filter(function (g) { return g.status === 'passed'; }).length;
+      // Count EVALUATED gates (any terminal verdict), not strict "passed" — honest
+      // met/qualified/refuted verdicts are real progress, so "0/N passed" misread an
+      // evaluated board as no progress. The per-outcome breakdown is in the board tally.
+      var _TERMINAL = { passed: 1, met: 1, qualified: 1, refuted: 1 };
+      var _evaluated = _pb.filter(function (g) { return _TERMINAL[g.status]; }).length;
       tabs.push({ id:'plan', label:'Plan progress', html:_planHtml,
-        badge: _pb.length ? (_passed + '/' + _pb.length + ' gates') : '' });
+        badge: _pb.length ? (_evaluated + '/' + _pb.length + ' evaluated') : '' });
     }
 
     // 8. Decisions — the open expert decisions, HIGHLIGHTED when any are open.
@@ -10873,6 +11026,8 @@
         badge: _nDec ? (_nDec + ' needed') : 'all clear', attention: _nDec > 0 });
     }
 
+    // Overview is pushed first, so it is the default (active) tab via the i===0
+    // rule below; every other tab (Verdict, Background, …) is reached by a click.
     if (tabs.length) {
       H.push('<div class="inv-brief-tabs" role="tablist">' + tabs.map(function(t, i) {
         var _cls = 'inv-brief-tab' + (i === 0 ? ' active' : '') + (t.attention ? ' inv-brief-tab-attn' : '');
@@ -11806,6 +11961,19 @@
   function _applyInvOverviewState() {
     var view = document.getElementById('investigation-detail-view');
     if (!view) return;
+    // Safeguard: the investigation overview (intro + decision cockpit) must sit
+    // ABOVE the graph. The template already orders them that way, but enforce it
+    // defensively so no state (or a stale cached fragment) can leave the graph
+    // rendered above the overview — the overview opens below the graph otherwise.
+    // Idempotent: a no-op when the order is already correct.
+    var _graph = document.getElementById('investigation-dag-fs');
+    var _intro = document.getElementById('investigation-intro');
+    var _cockpit = document.getElementById('investigation-decision-cockpit');
+    if (_graph && _intro && _intro.parentNode === view && _graph.parentNode === view &&
+        (_intro.compareDocumentPosition(_graph) & Node.DOCUMENT_POSITION_PRECEDING)) {
+      view.insertBefore(_intro, _graph);
+      if (_cockpit && _cockpit.parentNode === view) view.insertBefore(_cockpit, _graph);
+    }
     var collapsed = _invOverviewCollapsed();
     view.classList.toggle('inv-overview-collapsed', collapsed);
     var btn = document.getElementById('inv-overview-toggle');
@@ -13146,6 +13314,23 @@
   }
   window._aigZoomBy = _aigZoomBy;
   window._aigFit = _aigFit;
+  // Fill to screen (toolbar ⤢ Fit): fit the WHOLE graph to the viewport in both
+  // dimensions and CENTRE it — the on-demand "re-fit + centre now" control. Unlike
+  // the passive auto-fill, it runs even after the user has taken over the view.
+  function _aigFillToScreen() {
+    var shell = document.getElementById('investigation-dag-shell');
+    if (!shell) return;
+    try { _aigCloseCardPopout(); } catch (_e) { /* ignore */ }
+    var cw = parseFloat(shell.dataset.canvasW) || 1, ch = parseFloat(shell.dataset.canvasH) || 1;
+    var z = Math.min((shell.clientWidth - 16) / cw, (shell.clientHeight - 16) / ch);
+    aigZoom = Math.max(0.3, Math.min(2, z || 1));
+    _applyAigZoom();
+    // Centre the now-fully-visible graph in the viewport.
+    shell.scrollLeft = Math.max(0, (cw * aigZoom - shell.clientWidth) / 2);
+    shell.scrollTop  = Math.max(0, (ch * aigZoom - shell.clientHeight) / 2);
+    try { _aigSyncZoomUI(aigBand, aigZoom); } catch (_e) { /* ignore */ }
+  }
+  window._aigFillToScreen = _aigFillToScreen;
   window._aigFullscreen = _aigFullscreen;
   window._aigExpand = _aigExpand;
 
@@ -13281,6 +13466,7 @@
   }, true);
   // Drag anywhere on the shell background to pan (card clicks still work).
   document.addEventListener('pointerdown', function (e) {
+    if (e.pointerType === 'touch') return;   // touch pan + pinch is owned by _aigWireTouch
     var shell = e.target.closest && e.target.closest('#investigation-dag-shell');
     if (!shell || (e.target.closest && e.target.closest('.iset-dag-node'))) return;
     var sx = e.clientX, sy = e.clientY, sl = shell.scrollLeft, st0 = shell.scrollTop, moved = false;
@@ -13290,6 +13476,9 @@
       document.removeEventListener('pointermove', mv);
       document.removeEventListener('pointerup', up);
       shell.style.cursor = '';
+      // A real pan means the user now owns the view — stop auto-fit from snapping
+      // it back to the fit on the next re-render / resize / poll.
+      if (moved) { try { window._aigMarkUserZoomed(); } catch (_e) { /* ignore */ } }
     }
     document.addEventListener('pointermove', mv);
     document.addEventListener('pointerup', up);
@@ -13385,6 +13574,54 @@
   window._aigWireWheelZoom = _aigWireWheelZoom;
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', _aigWireWheelZoom);
   else _aigWireWheelZoom();
+
+  // Touch: one-finger PAN + two-finger PINCH-zoom on the graph shell, so the
+  // investigation graph is navigable on a phone. touch-action:none on the shell
+  // (template) keeps these gestures from scrolling / zooming the PAGE instead; the
+  // mouse/pen pan path (pointerdown above) ignores touch so the two never fight.
+  // Both gestures mark the view user-owned, so auto-fit won't snap it back.
+  function _aigWireTouch() {
+    var shell = document.getElementById('investigation-dag-shell');
+    if (!shell || shell._aigTouchWired) return;
+    shell._aigTouchWired = true;
+    var mode = 0, sx = 0, sy = 0, sl = 0, st = 0, startDist = 1, startZoom = 1;
+    function dist(t) {
+      var dx = t[0].clientX - t[1].clientX, dy = t[0].clientY - t[1].clientY;
+      return Math.sqrt(dx * dx + dy * dy);
+    }
+    shell.addEventListener('touchstart', function (e) {
+      if (e.target.closest && e.target.closest('.iset-dag-node')) return;   // let node taps through
+      if (e.touches.length === 1) {
+        mode = 1; sx = e.touches[0].clientX; sy = e.touches[0].clientY; sl = shell.scrollLeft; st = shell.scrollTop;
+      } else if (e.touches.length >= 2) {
+        mode = 2; startDist = dist(e.touches) || 1; startZoom = aigZoom;
+      }
+    }, { passive: true });
+    shell.addEventListener('touchmove', function (e) {
+      if (mode === 1 && e.touches.length === 1) {
+        e.preventDefault();
+        shell.scrollLeft = sl - (e.touches[0].clientX - sx);
+        shell.scrollTop  = st - (e.touches[0].clientY - sy);
+      } else if (mode === 2 && e.touches.length >= 2) {
+        e.preventDefault();
+        aigZoom = Math.max(0.3, Math.min(2, startZoom * (dist(e.touches) / startDist)));
+        _applyAigZoom();
+        try { _aigSyncZoomUI(aigBand, aigZoom); } catch (_e) { /* ignore */ }
+      }
+    }, { passive: false });
+    function end(e) {
+      if (mode) { try { window._aigMarkUserZoomed(); } catch (_e) { /* ignore */ } }
+      if (!e.touches || e.touches.length === 0) { mode = 0; }
+      else if (e.touches.length === 1) {
+        mode = 1; sx = e.touches[0].clientX; sy = e.touches[0].clientY; sl = shell.scrollLeft; st = shell.scrollTop;
+      }
+    }
+    shell.addEventListener('touchend', end, { passive: true });
+    shell.addEventListener('touchcancel', end, { passive: true });
+  }
+  window._aigWireTouch = _aigWireTouch;
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', _aigWireTouch);
+  else _aigWireTouch();
 
   function _setAigBand(b) {
     var nb = Math.max(0, Math.min(2, b | 0));
@@ -13683,6 +13920,13 @@
       ? base + '/reports/investigation-' + encodeURIComponent(name) + '.html'
       : '/api/investigation-report/' + encodeURIComponent(name);
   }
+  // The pre-baked PDF in a static bundle (publish.py renders it with headless
+  // Chromium when available). Only meaningful in snapshot mode.
+  function _investigationReportPdfUrl(name) {
+    var cfg = window.__DASH_CONFIG__ || {};
+    var base = cfg.basePath || '';
+    return base + '/reports/investigation-' + encodeURIComponent(name) + '.pdf';
+  }
   // In-flight exports keyed by `${name}|${fmt}`. We guard only against firing the
   // SAME export twice (the "downloaded it 3×" bug) — different exports can run
   // concurrently, and the Export dropdown stays enabled so you can pick another
@@ -13697,16 +13941,28 @@
     }
     fmt = (fmt === 'pdf') ? 'pdf' : 'html';
     var cfg = window.__DASH_CONFIG__ || {};
-    // PDF is rendered server-side (headless Chromium) — not available in a static
-    // snapshot (no server), so fall back to the pre-rendered HTML there.
-    if (fmt === 'pdf' && cfg.mode === 'snapshot') fmt = 'html';
     var _save = function (href, dl) {
       var a = document.createElement('a');
       a.href = href; a.download = dl; a.rel = 'noopener';
       document.body.appendChild(a); a.click(); a.remove();
     };
-    // Snapshot HTML is a pre-rendered static file — instant, no server render.
-    if (fmt === 'html' && cfg.mode === 'snapshot') {
+    // Static snapshot: both the HTML and the (pre-baked) PDF report are plain files
+    // in the bundle — serve the requested one directly, no server render. The PDF
+    // is baked at publish time only when headless Chromium was available there; if
+    // it's missing, fall back to the HTML rather than downloading a 404 page named
+    // ".pdf" (which the OS then rejects as a corrupt file).
+    if (cfg.mode === 'snapshot') {
+      if (fmt === 'pdf') {
+        var _pdfUrl = _investigationReportPdfUrl(name);
+        fetch(_pdfUrl, { method: 'HEAD' })
+          .then(function (r) {
+            if (r && r.ok) { _save(_pdfUrl, 'investigation-' + name + '.pdf'); return; }
+            if (typeof _showToast === 'function') _showToast('PDF isn’t available in this read-only snapshot — downloading the HTML report instead');
+            _save(_investigationReportUrl(name), 'investigation-' + name + '.html');
+          })
+          .catch(function () { _save(_investigationReportUrl(name), 'investigation-' + name + '.html'); });
+        return;
+      }
       _save(_investigationReportUrl(name), 'investigation-' + name + '.html');
       return;
     }
