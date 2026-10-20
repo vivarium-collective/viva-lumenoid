@@ -391,6 +391,14 @@ limitations:
   - "Insertion sites are uniform-random in the slab; no spatial supply gradient or concentration-dependent rate (a v2 refinement)."
 
 visualizations:
+  - name: network_expansion_supply_movie
+    address: "gif:bm-r3-network-expansion-supply.gif"
+    config:
+      title: "R3 — collagen network, remodeling + supply (movie)"
+      evidence_status: observed
+      tier: supplement
+      caption: >
+        Animated movie of the collagen network with crosslink turnover AND material insertion (the third Fig-2B/C supply mode): new rods appear and crosslink in as the network expands. Illustrative companion to the three-mode ordering figure.
   - name: r3_supply
     address: "html:r3_supply.html"
     config:

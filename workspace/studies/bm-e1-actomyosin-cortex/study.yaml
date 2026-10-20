@@ -259,6 +259,14 @@ limitations:
   - "tau = -(pxx+pyy)/2 is an in-plane stress proxy for cortical tension, not a measured surface/line tension."
 
 visualizations:
+  - name: actomyosin_cortex_movie
+    address: "gif:bm-e1-actomyosin-cortex.gif"
+    config:
+      title: "E1 — actomyosin cortex contracting (movie)"
+      evidence_status: engineered-diagnostic
+      tier: supplement
+      caption: >
+        Animated movie of the LJ bead patch contracting under the well-depth proxy. Engineering verification of tunable effective tension — NOT explicit actin filaments/motors; the x-axis proxy is not biological myosin activity.
   - name: e1_cortical_tension
     address: "html:e1_cortical_tension.html"
     config:

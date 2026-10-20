@@ -408,6 +408,14 @@ limitations:
   - "basal_tension and bm_sigma are negative (compressive sign) in two-way; the contract checks non-zero / exact-zero and convergence, not the sign or absolute magnitude against the paper."
 
 visualizations:
+  - name: feedback_predictions_movie
+    address: "gif:bm-e4-feedback-predictions.gif"
+    config:
+      title: "E4 — LAMMPS collagen BM ↔ Tyssue epithelium coupling (movie)"
+      evidence_status: observed
+      tier: main
+      caption: >
+        The capstone coupling, animated: LEFT the Tyssue epithelium (basal tension annotated), RIGHT the explicit LAMMPS collagen IV BM patch (stress σ annotated) it is coupled to. The two evolve together through the bidirectional loop — the epithelium's basal-area change strains the collagen BM, whose stress feeds back as basal tension. Real explicit-BM dynamics (reduced units).
   - name: e4_feedback
     address: "html:e4_feedback.html"
     config:

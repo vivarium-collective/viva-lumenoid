@@ -210,6 +210,14 @@ limitations:
   - "Reduced units; no calibration to microns."
 
 visualizations:
+  - name: explicit_3d_confinement_movie
+    address: "gif:bm-r5-explicit-3d-confinement.gif"
+    config:
+      title: "R5 — 3D monolayer (movie)"
+      evidence_status: observed
+      tier: supplement
+      caption: >
+        Animated movie of the 206-cell closed 3D Tyssue monolayer (xy projection of the mesh edges). Geometry verification with conserved per-cell volumes; BM-shell coupling is not wired (see the hypothesis panel).
   - name: r5_monolayer
     address: "html:r5_monolayer.html"
     config:
