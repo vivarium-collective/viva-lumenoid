@@ -351,6 +351,14 @@ limitations:
   - "tau = NaN (in the moderate sweep) is a noise-floor non-resolution, not a zero relaxation time."
 
 visualizations:
+  - name: collagen_network_rheology_movie
+    address: "gif:bm-r2-collagen-network-rheology.gif"
+    config:
+      title: "R2 — collagen IV network remodeling (movie)"
+      evidence_status: observed
+      tier: supplement
+      caption: >
+        Animated movie of the real NC1/7S collagen network under staged growth loading: beads are NC1 (orange) and 7S (blue) ends, grey segments are crosslink bonds forming and breaking as the network remodels. Illustrative companion to the quantitative Fig-2E figure; reduced units.
   - name: r2_fig2e
     address: "html:r2_fig2e.html"
     config:

@@ -209,6 +209,14 @@ limitations:
   - "Reduced units; single deterministic configuration (no parameter sweep, n_replicates = 1) -- replication across BM stiffness / growth rate is a gap."
 
 visualizations:
+  - name: coupled_2d_epithelium_movie
+    address: "gif:bm-r4-coupled-2d-epithelium.gif"
+    config:
+      title: "R4 — 2D epithelial sheet relaxing (movie)"
+      evidence_status: observed
+      tier: supplement
+      caption: >
+        Animated movie of the 12-cell 2D Tyssue sheet relaxing to its finite geometry (edges in blue). Verifies mesh construction; the planar z=0 geometry does not compute a real 3D height (see the quantitative panel + the BM-coupling gap).
   - name: r4_confinement
     address: "html:r4_confinement.html"
     config:

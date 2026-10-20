@@ -295,6 +295,14 @@ limitations:
   - "The BM response is confirmed by a bounded LAMMPS smoke (it emits a stress under load), not a converged rheology measurement."
 
 visualizations:
+  - name: actin_adhesion_collagen_movie
+    address: "gif:bm-e2-actin-adhesion-collagen.gif"
+    config:
+      title: "E2 — actomyosin cortex, coupling input (movie)"
+      evidence_status: engineered-diagnostic
+      tier: supplement
+      caption: >
+        Animated movie of the cortex bead patch that drives the deterministic occupancy-gated force transfer in E2. Coupling unit-test input, not emergent integrin mechanics.
   - name: e2_force_transfer
     address: "html:e2_force_transfer.html"
     config:

@@ -229,6 +229,14 @@ limitations:
   - "Single deterministic configuration (no parameter sweep, n_replicates = 1); reduced units, no micron calibration."
 
 visualizations:
+  - name: closed_3d_lumenoid_movie
+    address: "gif:bm-e3-closed-3d-lumenoid.gif"
+    config:
+      title: "E3 — closed 3D lumenoid shell (movie)"
+      evidence_status: observed
+      tier: supplement
+      caption: >
+        Animated movie of the closed 78-cell Tyssue lumenoid shell (xy projection). Geometry verification of the closed lumen + basal BM-coupling surface; no lumen-filling drive is wired yet (pressure 0 at rest).
   - name: e3_lumenoid
     address: "html:e3_lumenoid.html"
     config:
