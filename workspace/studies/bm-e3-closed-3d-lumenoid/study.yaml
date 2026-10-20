@@ -45,10 +45,15 @@ expected_behavior:
 baseline:
   - name: bm-e3-closed-3d-lumenoid
     composite: viva_lumenoid.composites.closed_lumenoid
-    composite_status: planned
+    composite_status: implemented
     params: {}
     note: >
-      PLANNED composite — design target, not yet implemented (expected unresolved-composite lint gap)
+      Implemented over the vivarium-tyssue engine (EulerSolver over the merged
+      LumenoidGeometry + a vendored lumenoid mesh): resolves ready and steps the
+      vertex model (78 cells). Tracks a Laplace lumen pressure and exposes the
+      basal BM-shell surface for collagen-BM coupling. Reduced-order BM first; the
+      resolved LAMMPS-patch coupling is the next step. Needs the tyssue runtime
+      stack (tyssue, scikit-image, tables, quantities) in the serving venv.
 variants: []
 interventions: []
 runs: []

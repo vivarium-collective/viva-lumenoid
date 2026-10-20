@@ -16,7 +16,7 @@ from viva_superpowers.composite_generator import composite_generator
 
 from ..params import CollagenParams
 from ..collagen import register_viva_lumenoid
-from .builders import collagen_network_spec, lammps_model_spec
+from .builders import collagen_network_spec, lammps_model_spec, tyssue_eptm_spec
 
 
 def _register_actomyosin(core):
@@ -24,6 +24,14 @@ def _register_actomyosin(core):
     composite-BUILD time, so this module imports cleanly when the optional
     viva-lammps engine isn't installed (CI without the engines extra)."""
     from ..actomyosin import register_actomyosin as _r
+    return _r(core)
+
+
+def _register_tyssue(core):
+    """Lazy core extension: register the vivarium-tyssue engine only at
+    composite-BUILD time (keeps this module import-clean without the optional
+    tyssue engine)."""
+    from ..tyssue_coupling import register_tyssue as _r
     return _r(core)
 
 
@@ -154,3 +162,41 @@ _CORTEX_EMIT = {"cortical_tension": "float", "pressure_xx": "float",
 def actomyosin_cortex(core=None, **kw) -> dict:
     params = {k: v for k, v in kw.items() if k in _CORTEX_PARAMS}
     return lammps_model_spec("actomyosin-cortex", params, emit=_CORTEX_EMIT)
+
+
+_LUMENOID_PARAMS = {
+    "contractility": {"type": "float", "default": 0.05,
+                      "description": "Apical/basal face contractility of the lumenoid cells."},
+    "lumen_elasticity": {"type": "float", "default": 1.0,
+                         "description": "Lumen pressure stiffness: P = lumen_elasticity*(V0 - V)."},
+}
+
+
+@composite_generator(
+    name="closed_lumenoid",
+    description="E3 (extension) — a closed 3D lumenoid on the vivarium-tyssue "
+                "engine (EulerSolver over the merged LumenoidGeometry + lumenoid "
+                "mesh). Tracks a Laplace lumen pressure on top of the enclosed "
+                "lumen volume and exposes the basal surface as the basement-"
+                "membrane coupling shell (the surface the collagen BM attaches to).",
+    parameters=_LUMENOID_PARAMS,
+    core_extensions=[_register_tyssue],
+)
+def closed_lumenoid(core=None, **kw) -> dict:
+    contractility = float(kw.get("contractility", 0.05))
+    lumen_elasticity = float(kw.get("lumen_elasticity", 1.0))
+    parameters = {
+        "cell_df": {"vol_elasticity": 1.0, "prefered_vol": 1.0, "is_alive": 1.0},
+        "face_df": {"area_elasticity": 1.0, "prefered_area": 1.0,
+                    "contractility": contractility, "is_alive": 1.0},
+        "edge_df": {"line_tension": 0.0, "is_active": 1.0},
+        "vert_df": {"viscosity": 1.0, "is_alive": 1.0},
+    }
+    return tyssue_eptm_spec(
+        "Lumenoid", "workspace/datasets/lumenoid.hf5", "LumenoidGeometry", "Monolayer",
+        effectors=["CellVolumeElasticity", "FaceAreaElasticity",
+                   "FaceContractility", "LineTension"],
+        ref_effector="FaceAreaElasticity", parameters=parameters,
+        settings={"threshold_length": 0.03, "lumen_side": "basal",
+                  "bm_side": "basal", "lumen_elasticity": lumen_elasticity},
+    )

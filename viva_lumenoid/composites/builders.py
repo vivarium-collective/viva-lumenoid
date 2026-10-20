@@ -128,3 +128,40 @@ def lammps_model_spec(
             "outputs": {},
         },
     }
+
+
+def tyssue_eptm_spec(
+    name: str,
+    eptm: str,
+    geom: str,
+    tissue_type: str,
+    *,
+    effectors: list,
+    ref_effector: str,
+    parameters: dict,
+    settings: "dict | None" = None,
+    max_displacement: float = 0.2,
+) -> dict[str, Any]:
+    """General Tyssue composite: ``EulerSolver`` over a ``geom`` + an ``eptm`` mesh.
+
+    One wiring reused by every Tyssue composite (closed lumenoid now; 2D sheet /
+    3D monolayer next) — the composite differs only by ``eptm`` (mesh), ``geom``
+    (a key in vivarium_tyssue ``GEOMETRY_MAP``), ``tissue_type``, the mechanical
+    ``effectors`` and ``parameters``. ``settings`` carries geometry extras (e.g.
+    the lumenoid's ``lumen_elasticity`` / ``lumen_side`` + the BM-shell side).
+    """
+    return {
+        "Tyssue": {
+            "_type": "process", "address": "local:EulerSolver",
+            "config": {
+                "name": name, "eptm": eptm, "tissue_type": tissue_type,
+                "parameters": parameters, "geom": geom,
+                "effectors": list(effectors), "ref_effector": ref_effector,
+                "factory": "model_factory", "settings": settings or {},
+                "auto_reconnect": False, "max_displacement": max_displacement,
+                "bounds": {}, "output_columns": {}, "maps": {}, "backend": "python",
+            },
+            "inputs": {"behaviors": ["behaviors"], "global_time": ["global_time"]},
+            "outputs": {},
+        },
+    }
