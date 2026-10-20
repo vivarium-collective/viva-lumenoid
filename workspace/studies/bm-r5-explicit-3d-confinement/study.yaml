@@ -42,10 +42,13 @@ expected_behavior:
 baseline:
   - name: bm-r5-explicit-3d-confinement
     composite: viva_lumenoid.composites.tyssue_3d_monolayer
-    composite_status: planned
+    composite_status: implemented
     params: {}
     note: >
-      PLANNED composite — design target, not yet implemented (expected unresolved-composite lint gap)
+      Implemented over the vivarium-tyssue engine (EulerSolver + MonolayerGeometry
+      + a vendored 3D monolayer mesh): resolves ready and STEPS the vertex model
+      (206 cells, 1590 faces). The no-BM / elastic-BM / relaxing-BM controls are the
+      next step. Needs the tyssue runtime stack (tyssue/scikit-image/tables/quantities).
 variants: []
 interventions: []
 runs: []

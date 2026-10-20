@@ -200,3 +200,71 @@ def closed_lumenoid(core=None, **kw) -> dict:
         settings={"threshold_length": 0.03, "lumen_side": "basal",
                   "bm_side": "basal", "lumen_elasticity": lumen_elasticity},
     )
+
+
+_SHEET_PARAMS = {
+    "line_tension": {"type": "float", "default": 0.1,
+                     "description": "Junction line tension of the 2D sheet."},
+    "prefered_area": {"type": "float", "default": 1.0,
+                      "description": "Target cell area."},
+}
+
+
+@composite_generator(
+    name="tyssue_2d_sheet",
+    description="R4 — coupled 2D epithelium on the vivarium-tyssue engine: a "
+                "polygonal sheet relaxed with the merged CrossSectionGeometry "
+                "(explicit per-cell height DOF for the prism/height relation). The "
+                "homogeneous reference for the confinement response (vs R1).",
+    parameters=_SHEET_PARAMS,
+    core_extensions=[_register_tyssue],
+)
+def tyssue_2d_sheet(core=None, **kw) -> dict:
+    # 2D sheet: area + line-tension only (FaceContractility's gradient needs 3D).
+    parameters = {
+        "face_df": {"area_elasticity": 1.0,
+                    "prefered_area": float(kw.get("prefered_area", 1.0)), "is_alive": 1.0},
+        "edge_df": {"line_tension": float(kw.get("line_tension", 0.1)), "is_active": 1.0},
+        "vert_df": {"viscosity": 1.0, "is_alive": 1.0},
+    }
+    return tyssue_eptm_spec(
+        "Sheet2D", "workspace/datasets/cross_section.hf5", "CrossSectionGeometry", "Sheet",
+        effectors=["FaceAreaElasticity", "LineTension"],
+        ref_effector="FaceAreaElasticity", parameters=parameters,
+        settings={"threshold_length": 0.03},
+    )
+
+
+_MONOLAYER_PARAMS = {
+    "contractility": {"type": "float", "default": 0.05,
+                      "description": "Apical/basal face contractility."},
+    "vol_elasticity": {"type": "float", "default": 1.0,
+                       "description": "Cell volume elasticity (resists height change)."},
+}
+
+
+@composite_generator(
+    name="tyssue_3d_monolayer",
+    description="R5 — explicit 3D cell confinement: a Tyssue 3D monolayer "
+                "(MonolayerGeometry) with apical/basal/lateral surfaces and "
+                "cell-volume targets, so cell height + basal area emerge "
+                "explicitly (no prism approximation).",
+    parameters=_MONOLAYER_PARAMS,
+    core_extensions=[_register_tyssue],
+)
+def tyssue_3d_monolayer(core=None, **kw) -> dict:
+    parameters = {
+        "cell_df": {"vol_elasticity": float(kw.get("vol_elasticity", 1.0)),
+                    "prefered_vol": 1.0, "is_alive": 1.0},
+        "face_df": {"area_elasticity": 1.0, "prefered_area": 1.0,
+                    "contractility": float(kw.get("contractility", 0.05)), "is_alive": 1.0},
+        "edge_df": {"line_tension": 0.0, "is_active": 1.0},
+        "vert_df": {"viscosity": 1.0, "is_alive": 1.0},
+    }
+    return tyssue_eptm_spec(
+        "Monolayer3D", "workspace/datasets/monolayer_box.hf5", "MonolayerGeometry", "Monolayer",
+        effectors=["CellVolumeElasticity", "FaceAreaElasticity",
+                   "FaceContractility", "LineTension"],
+        ref_effector="FaceAreaElasticity", parameters=parameters,
+        settings={"threshold_length": 0.03},
+    )

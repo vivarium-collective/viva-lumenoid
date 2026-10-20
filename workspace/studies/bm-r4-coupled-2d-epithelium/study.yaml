@@ -47,10 +47,15 @@ expected_behavior:
 baseline:
   - name: bm-r4-coupled-2d-epithelium
     composite: viva_lumenoid.composites.tyssue_2d_sheet
-    composite_status: planned
+    composite_status: implemented
     params: {}
     note: >
-      PLANNED composite — design target, not yet implemented (expected unresolved-composite lint gap)
+      Implemented over the vivarium-tyssue engine (EulerSolver + the merged
+      CrossSectionGeometry + an annular 2D mesh): resolves ready and steps the
+      vertex model (12-face ring). Needs the numpy-2.x 2D-cross shim in
+      tyssue_coupling (tyssue's 2D area gradient uses np.cross on 2D vectors,
+      removed in numpy 2.x). The homogeneous reference for R1; BM traction/area
+      coupling is the next step.
 variants: []
 interventions: []
 runs: []
