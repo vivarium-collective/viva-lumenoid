@@ -209,12 +209,53 @@ limitations:
   - "Reduced units; single deterministic configuration (no parameter sweep, n_replicates = 1) -- replication across BM stiffness / growth rate is a gap."
 
 visualizations:
+  - name: r4_confinement
+    address: "html:r4_confinement.html"
+    config:
+      title: "2D sheet static substrate vs R1 confinement benchmark"
+      evidence_status: observed
+      tier: main
+      caption: >
+        MAIN (evidence: observed) — NOT a reproduction. Left: the real tyssue_2d_sheet
+        readout over the vivarium-tyssue EulerSolver (dt 0.01) — mean per-cell basal area
+        (fold-change vs step 0) and the stored CrossSection prism-height degree of freedom.
+        Both are flat: all 12 cells relax to the identical basal area (5.0 reduced) and
+        prism-height DOF (1.9319 reduced), and the max vertex displacement over the run is
+        ~0, so the sheet is a pre-equilibrated static mesh with no spatial heterogeneity.
+        Right: the R1 reduced-order prism benchmark (real TissuePrismProcess runs) — the
+        confinement h/h0 trajectory for three BM regimes (soft/fast 0.998->0.38,
+        intermediate 0.998->0.43, stiff/slow 0.998->0.70) — the confinement response the
+        sheet does NOT reproduce. Axes dimensionless (reduced units); single deterministic
+        run (no stochasticity). GAP (named): tyssue_2d_sheet exposes only line_tension +
+        prefered_area — NO BM stiffness / relaxation / traction coupling — so the
+        BM-dependent confinement regimes of Barrientos Fig 1 cannot be produced here; the
+        right panel is the R1 benchmark, not the tyssue sheet.
   - name: r4_sheet
     address: "html:r4_sheet.html"
     config:
-      title: "Relaxed 2D epithelial sheet (real tyssue run)"
+      title: "12-cell planar Tyssue mesh thumbnail (z=0)"
+      evidence_status: engineered-diagnostic
+      tier: supplement
       caption: >
-        The actual 2D epithelial sheet after relaxation on the merged CrossSectionGeometry (real tyssue EulerSolver run).
+        SUPPLEMENT (evidence: engineered-diagnostic) — a 12-cell planar Tyssue geometry
+        resolves and relaxes on the merged CrossSectionGeometry; this verifies mesh
+        construction but NOT BM-dependent epithelial confinement. The geometry is planar
+        (z=0) and does NOT compute a real 3D cell height: the per-face height column is a
+        stored CrossSection prism degree of freedom, not a resolved apical-basal distance.
+        Reduced units; architecture/methods thumbnail only.
+  - name: r4_bm_hypothesis
+    address: "html:r4_bm_hypothesis.html"
+    config:
+      title: "BM-stiffness-dependent confinement (hypothesis)"
+      evidence_status: hypothesis
+      tier: supplement
+      caption: >
+        SUPPLEMENT (evidence: hypothesis) — the BM-stiffness-dependent confinement test
+        the figure review asked for (matched low/high-BM-relaxation cell-sheet snapshots
+        and a basal-area-vs-time panel stratified by BM stiffness, with the R1 benchmark
+        overlaid). NOT producible from tyssue_2d_sheet: its parameters are line_tension +
+        prefered_area, and BM stiffness / relaxation / traction coupling is not wired into
+        the composite. Marked hypothesis until that coupling exists.
 
 report:
   title: "R4 -- coupled 2D epithelial sheet (spatial substrate runs)"

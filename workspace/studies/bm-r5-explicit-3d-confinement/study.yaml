@@ -213,9 +213,49 @@ visualizations:
   - name: r5_monolayer
     address: "html:r5_monolayer.html"
     config:
-      title: "Explicit 3D confinement (real tyssue run)"
+      title: "Closed 3D monolayer render + per-cell area distribution"
+      evidence_status: engineered-diagnostic
+      tier: main
       caption: >
-        The stepped 3D monolayer (MonolayerGeometry) and its real cell-volume distribution (real tyssue run).
+        MAIN (evidence: engineered-diagnostic) — a model illustration, not a biological
+        result. The closed 3D Tyssue monolayer (MonolayerGeometry, 206 cells) over the
+        vivarium-tyssue EulerSolver (dt 0.01): the vertex wireframe is coloured by z
+        (apical vs basal surface) and the cell centroids by per-cell area (common colour
+        limits), with the real per-cell area distribution alongside (cell_df.area
+        4.51-6.38 reduced, median 6.34). A closed 3D monolayer has finite cell volumes and
+        identifiable basal surfaces, but no BM-dependent height response is established by
+        this geometric verification alone: per-cell HEIGHT (vertex z-extent) is uniform
+        (= 1.00) in this single run, and total cell volume is conserved to <0.01% over 5
+        Euler steps. Single deterministic run; reduced units. GAP (named): the free-BM /
+        stiff-frozen-BM / stiff-fast-relaxing-BM matched controls the morphology ordering
+        needs are NOT in tyssue_3d_monolayer (params: contractility + vol_elasticity, no
+        BM shell coupling).
+  - name: r5_volume_hist
+    address: "html:r5_volume_hist.html"
+    config:
+      title: "Cell-volume distribution appendix"
+      evidence_status: engineered-diagnostic
+      tier: supplement
+      caption: >
+        SUPPLEMENT (evidence: engineered-diagnostic) — geometry-validation appendix. The
+        standalone per-cell volume distribution (cell_df.vol 0.58-1.16 reduced, median
+        1.16, target 1.0) with the volume-conservation residual stated (total cell volume
+        conserved to <0.01% over 5 Euler steps at dt 0.01). Finite volumes do NOT by
+        themselves establish BM-dependent confinement; reduced units, single run.
+  - name: r5_bm_hypothesis
+    address: "html:r5_bm_hypothesis.html"
+    config:
+      title: "Matched BM controls (hypothesis)"
+      evidence_status: hypothesis
+      tier: supplement
+      caption: >
+        SUPPLEMENT (evidence: hypothesis) — the matched free-BM / stiff-frozen-BM /
+        stiff-fast-relaxing-BM conditions the morphology ordering needs (before/after 3D
+        cell images coloured by cell height, a height distribution by condition,
+        height-vs-doubling-time traces, basal/apical area, and a volume-conservation
+        residual + explicit energy/traction terms). NOT producible from
+        tyssue_3d_monolayer: its parameters are contractility + vol_elasticity and there is
+        no BM-shell coupling. Marked hypothesis until that coupling exists.
 
 report:
   title: "R5 -- explicit 3D monolayer (per-cell volumes emerge)"
