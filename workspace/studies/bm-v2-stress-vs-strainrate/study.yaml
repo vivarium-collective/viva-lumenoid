@@ -244,6 +244,10 @@ visualizations:
       evidence_status: observed
       tier: main
       caption: >
+        How to read: compare panel A (stress at each growth rate) against panel C
+        (crosslinks per rod at each rate); if the stress curve stays flat while the
+        crosslink density drops, the apparent stiffening is driven by how much the
+        network managed to assemble, not by the growth rate itself.
         Imposed growth rate ε̇ changes the network's apparent mechanical resistance;
         the paired crosslink-density readout assesses whether the response reflects
         turnover competition or a rate-dependent change in structure. (A) σ(ε̇) is

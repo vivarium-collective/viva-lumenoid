@@ -239,6 +239,10 @@ visualizations:
       evidence_status: observed
       tier: main
       caption: >
+        How to read: follow the pore-diameter distributions as areal coverage rises
+        (median shifts 88 → 62 → 54 nm); the result is reached when the densest
+        network's distribution overlaps the shaded corneal-EM reference band, meaning
+        the simulated mesh has reached a realistic open-mesh pore size.
         Simulated pore-diameter distribution (maximal-inscribed-disc /
         distance-transform method, periodic plane) at three areal-coverage rungs;
         lengths via σ = 125 nm. Real assembled-network geometry (single
@@ -258,6 +262,10 @@ visualizations:
       evidence_status: observed
       tier: main
       caption: >
+        How to read: look at where the protomers-per-strand distribution sits relative
+        to the shaded 5–7 reference band; because it piles up at 1 (mostly single
+        protomers) and falls well short of the band, the network under-bundles — the
+        gap between the distribution and the shaded band is the missing lateral association.
         Protomers-per-strand distribution at the densest network. STRAND
         DEFINITION: a connected component of rods whose minimum-image midpoints lie
         within the measured cell-deposited lateral spacing (59.5 nm ≈ 0.48σ) AND

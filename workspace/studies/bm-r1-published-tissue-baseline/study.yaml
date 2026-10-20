@@ -317,6 +317,7 @@ visualizations:
       evidence_status: observed
       tier: main
       caption: >
+        How to read: Panel A is a heat-map of confinement (h/h₀) over BM stiffness (one axis) and the BM-relaxation / doubling-time ratio (the other); the stiff, slowly-relaxing corner — warm colors above the drawn confinement=1 boundary — is where cells go tall and confined, while panels B–D trace the basal-area growth behind individual corners.
         Reduced-order epithelial model predicts cell confinement across the two dimensionless axes the paper uses — BM stiffness relative to the cell and BM relaxation time / proliferation (doubling) time. Panel A maps confinement (h/h₀) with the confinement=1 boundary drawn and the three sampled regimes marked; panels B–D show representative basal-area growth trajectories for the soft/fast, intermediate and stiff/slow corners. This is our analytic reimplementation of the Barrientos Fig 1 model (not a simulation and not a digitized overlay of the published boundaries): the regime topology is consistent with Fig 1 — tall/confined in the stiff, slowly-relaxing corner — and a quantitative boundary overlay vs digitized Fig 1G is the open follow-up.
 
 report:

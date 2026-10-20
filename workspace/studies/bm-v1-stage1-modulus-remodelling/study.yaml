@@ -338,6 +338,10 @@ visualizations:
       evidence_status: observed
       tier: main
       caption: >
+        How to read: look at panel B — the slope of the fitted line through the
+        stress-vs-strain points is the elastic modulus, so a positive non-zero slope
+        means the network carries tensile stress rather than being floppy; panel C
+        then shows the bonds breaking and re-forming (remodeling) as the stress relaxes.
         An NC1-angle-stabilized collagen IV network develops tensile stress during
         imposed biaxial stretching and relaxes when bond remodeling resumes.
         Shaded phases (stretch / frozen-hold / chemistry-on-hold) define the

@@ -252,6 +252,10 @@ visualizations:
       evidence_status: engineered-diagnostic
       tier: main
       caption: >
+        How to read: read coordination z left-to-right on the x-axis and the modulus
+        points up the y-axis; because the points scatter around zero (every error bar
+        crosses the zero reference) and z never climbs toward the z=4 Maxwell line,
+        adding connectivity alone does not stiffen this central-force control network.
         With angular potentials intentionally removed (bending_k=0), changing the
         allowable end-link valency does not produce a reproducibly positive modulus
         across sampled connectivities. This artificial control must NOT be
@@ -267,17 +271,9 @@ visualizations:
         angle-stabilized, finite-thickness network, which carries junction angles
         and is soft for other reasons (missing components, thin-sheet geometry, no
         pre-stress).
-  # Demoted (figure-review): superseded diagnostic + rigidity movies.
-  - name: rigidity-diagnostic
-    address: "html:rigidity_diagnostic.html"
-    config:
-      title: "Rigidity sweep — modulus vs coordination z (superseded)"
-      evidence_status: engineered-diagnostic
-      tier: supplement
-      caption: >
-        The earlier modulus-vs-z sweep; superseded as the primary by
-        v3-centralforce-control (which frames it explicitly as a negative control
-        with the zero reference and the Maxwell-line caveat). Supplement.
+  # Demoted (figure-review): rigidity movies. The superseded modulus-vs-z
+  # diagnostic (rigidity_diagnostic) was removed 2026-10-20 — its central-force
+  # framing does not describe the released model; the main is v3-centralforce-control.
   - name: rigidity-movie
     address: "html:rigidity_movie.html"
     config:

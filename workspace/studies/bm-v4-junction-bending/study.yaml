@@ -316,6 +316,11 @@ visualizations:
       evidence_status: observed
       tier: main
       caption: >
+        How to read: compare the three control groups' modulus points — only the
+        "angles formed during assembly" case sits clearly above zero while the
+        central-force and post-hoc-restraint cases straddle zero, so a positive and
+        repeatable modulus means the junction angles must be present while the network
+        assembles; panel B shows that modulus rising with crosslinks per rod.
         Per-seed equibiaxial-stretch tangent modulus (reduced LJ units, kT/σ³;
         ×2.2 → Pa, carrying the unresolved-energy-scale caveat) at matched box
         (13σ), density and loading protocol for three controls — central force

@@ -632,6 +632,10 @@ visualizations:
       evidence_status: observed
       tier: main
       caption: >
+        How to read: in panel A the solid realized basal-area curves sit BELOW the dashed
+        preferred-growth target and separate by coupling mode (two-way reaches 1.006, one-way and
+        uncoupled 0.767, target 1.150); in panel C only the two-way curve carries a non-zero reaction
+        tension, while one-way and uncoupled stay exactly at 0.
         MAIN (evidence: observed) — the growth-driven two-way feedback (2026-10-20 review).
         The epithelial PREFERRED geometry grows (cell volume + basal area ramped; division
         OFF), driving basal displacement; the reduced-order BM reacts and feeds a reaction
