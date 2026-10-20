@@ -360,6 +360,12 @@ _COUPLED_PARAMS = {
                     "description": "Epithelial basal strain-rate -> BM strain-rate."},
     "tension_gain": {"type": "float", "default": 0.02,
                      "description": "BM stress -> added basal contractility (reaction force)."},
+    "coupling_mode": {"type": "string", "default": "two-way",
+                      "description": "two-way | one-way (no reaction) | uncoupled (inert BM)."},
+    "bm_mode": {"type": "string", "default": "explicit",
+                "description": "explicit (LAMMPS collagen) | reduced (effective viscoelastic BM)."},
+    "bm_substeps": {"type": "integer", "default": 1,
+                    "description": "BM subcycles per epithelial macro-step (convergence)."},
 }
 
 _COUPLED_EMIT = {"basal_area": "float", "basal_strain_rate": "float",
@@ -383,6 +389,9 @@ def coupled_lumenoid(core=None, **kw) -> dict:
         "strain_gain": float(kw.get("strain_gain", 20.0)),
         "tension_gain": float(kw.get("tension_gain", 0.02)),
         "base_contractility": 0.05,
+        "coupling_mode": str(kw.get("coupling_mode", "two-way")),
+        "bm_mode": str(kw.get("bm_mode", "explicit")),
+        "bm_substeps": int(kw.get("bm_substeps", 1)),
     }
     return {
         "coupling": {

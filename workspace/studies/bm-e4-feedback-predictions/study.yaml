@@ -57,7 +57,29 @@ baseline:
       -> BM strain -> BM stress ~0.9..43 -> basal tension -> epithelium; lumen
       pressure evolves). v0 single-lumenoid patch, bidirectional; the one-way /
       uncoupled / uniform-material controls + convergence verification build on this.
-variants: []
+variants:
+  # P3 coupling controls — the matched controls the plan requires so any departure
+  # from the full two-way coupling is attributable to the mechanism, not complexity.
+  - name: one-way-control
+    base_composite: bm-e4-feedback-predictions
+    parameter_overrides: {coupling_mode: one-way}
+    description: >
+      Epithelium drives the BM but the BM reaction is NOT fed back (no basal
+      tension). Isolates the forward half of the mechanical contract.
+  - name: uncoupled-control
+    base_composite: bm-e4-feedback-predictions
+    parameter_overrides: {coupling_mode: uncoupled}
+    description: >
+      The BM is inert (the epithelium does not drive it). The null against which
+      the coupled cases are read.
+  - name: reduced-order-bm
+    base_composite: bm-e4-feedback-predictions
+    parameter_overrides: {bm_mode: reduced}
+    description: >
+      The reduced-order effective (viscoelastic) BM instead of the explicit LAMMPS
+      collagen network — the interchangeable alternative; agreement in the overlap
+      regime is the reduced-order-agreement check (needs E_eff calibration for a
+      quantitative match).
 interventions: []
 runs: []
 
