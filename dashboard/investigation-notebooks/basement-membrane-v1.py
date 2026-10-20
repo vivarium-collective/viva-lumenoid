@@ -23,7 +23,7 @@ if _os.environ.get("PYTHONUTF8") != "1":
 #
 # **Question.** How does collagen IV molecular turnover set basement-membrane (BM) stress relaxation, and how do BM mechanics, epithelial growth and actomyosin mechanics jointly determine epithelial cell height and lumenoid morphology? (The original v1 sub-question — the effective modulus E(ε̇) and remodelling time τ(ε̇) a growing boundary produces, the two numbers the AICS vertex model couples to — is the P0/P1 reproduction core this campaign now builds on.)
 #
-# The first Vivarium build of the AICS lumenoid basement membrane: a coarse- grained collagen IV network on a moving boundary, run until it reports an elastic modulus and a remodelling time for the vertex model. EXPANDED 2026-10-19 into a staged reproduction+extension campaign of Barrientos et al. (Cell 2026): R1–R6 reproduce Figures 1–2 and extend to spatial 2D/3D Tyssue epithelia + coupling; E1–E4 add actomyosin, a closed lumenoid and new predictions. The BM-reproduction core (bm-v1…v5) is complete; the R/E studies are design-only (planned) under gates P0→P4.
+# A coarse-grained model of the collagen IV basement membrane, built in Vivarium from the AICS lumenoid specification. The network runs on a slowly growing boundary until it reports an elastic modulus and a remodelling time — the two numbers an epithelial vertex model needs to couple to a membrane. The project has since grown into a reproduction and extension of Barrientos et al. (Cell 2026): the reproduction studies recover the paper's Figures 1 and 2 and extend to spatial 2D and 3D epithelia with two-way coupling, and the extension studies add an actomyosin cortex, a closed lumenoid, and new predictions. The membrane reproduction is complete; the spatial and extension studies are at the design stage.
 #
 # ---
 #
@@ -377,7 +377,7 @@ _save_viz('bm-v1-stage1-modulus-remodelling', 'stage1-diagnostic', _render_one('
 #
 # **Purpose.** At ε̇ below the crosslink turnover rate the network remodels fast enough to flow (σ ∝ ε̇, constant η); above it, bonds cannot relax between deformation increments and the response stiffens.
 #
-# **Claim.** Imposing an equibiaxial in-plane strain rate ε̇ on the growing collagen IV network and reading the steady-state stress σ(ε̇) gives the effective viscosity η = σ/ε̇ (viscous at slow rates) and the rate at which the response turns elastic — the σ(ε̇) relation the vertex model needs.
+# **Claim.** Imposing an equibiaxial in-plane strain rate ε̇ on the growing collagen IV network and reading the steady-state stress σ(ε̇) gives the effective viscosity η = σ/ε̇ (viscous at slow rates) and the rate at which the response turns elastic — the σ(ε̇) relation a vertex model needs.
 
 # ### Parameters
 #
@@ -474,7 +474,7 @@ _save_viz('bm-v2-stress-vs-strainrate', 'stage2-diagnostic', _render_one('html:s
 #
 # **Purpose.** Maxwell rigidity percolation: a central-force network is floppy below z = 2d (= 4 in 2D). Bond-bending constraints lower the threshold and rigidify sub- isostatic networks.
 #
-# **Claim.** SUPERSEDED by the 2026-10-01 cross-check. This study originally explained the soft modulus as a central-force rigidity-percolation effect (z ≤ 3 < 4). The released code is NOT central-force — it sets junction angles (NC1 180° k=4.0, 7S 155°/60°) — so that explanation does not describe the published model, which carries those angles and is still soft (≈0.03 Pa). What this sweep actually shows: with angles OFF (our earlier transcription) and the corrected params, the network is sub-isostatic (z tops out ≈2.0) and soft — a property of the angle- off transcription, not of the paper.
+# **Claim.** This study originally explained the soft modulus as a central-force rigidity-percolation effect (z ≤ 3 < 4). The released code is not a central-force network — it sets junction angles (NC1 at 180° with stiffness 4.0, 7S at 155° and 60°) — so that explanation does not describe the published model, which carries those angles and is still soft (≈0.03 Pa). What this connectivity sweep actually shows is that with angles off (our earlier transcription) and the corrected parameters, the network is sub-isostatic (z tops out at ≈2.0) and soft — a property of the angle-off transcription, not of the paper.
 
 # ### Parameters
 #
@@ -572,7 +572,7 @@ _save_viz('bm-v3-junction-bending-rigidity', 'rigidity-diagnostic', _render_one(
 #
 # **Purpose.** Bending constraints at crosslink junctions lift a sub-isostatic (z < 4) central-force network out of the floppy regime — the physically-expected rigidity source for a semiflexible fiber network.
 #
-# **Claim.** Junction bending is a released feature (NC1 angle k=4.0 @180°, plus 7S angles), not a new ingredient. HOW it is applied decides whether it yields a usable modulus. Our original as-formed `fix restrain` (pinned on AFTER assembly) is ill-conditioned — sign-flipping, no reproducible value. The FAITHFUL path (2026-10-02), creating real harmonic angles as the crosslinks form so the network equilibrates with them active (matching the released bond/react templates), yields a POSITIVE, well-conditioned, reproducible modulus. So the released model is not floppy once the angles are faithfully active; its modulus is finite and strongly density-dependent.
+# **Claim.** Junction bending is a released feature (an NC1 angle of stiffness 4.0 at 180°, plus 7S angles), not a new ingredient; how it is applied decides whether it gives a usable modulus. Pinning as-formed restraints on after assembly is ill-conditioned — the sign flips and no reproducible value emerges. Creating real harmonic angles as the crosslinks form, so the network equilibrates with them active (matching the released bond/react templates), gives a positive, well-conditioned, reproducible modulus. The released model is not floppy once its angles are active; its modulus is finite and strongly density-dependent.
 
 # ### Parameters
 #
@@ -669,7 +669,7 @@ _save_viz('bm-v4-junction-bending', 'bending-diagnostic', _render_one('html:bend
 #
 # **Purpose.** Porosity is set by the areal density of rods (an emergent mesh); bundling requires lateral association of 5–7 protomers into a strand, a bond the released NC1/7S model does not have (it can bundle only through 7S branching).
 #
-# **Claim.** Of the two geometric readouts the spec asks the network to reproduce, one is met and one is not: the simulated pore-size distribution reaches the measured corneal-EM band (72 ± 40 nm) at realistic density, while the protomers-per- strand distribution stays near 1, below the measured 5–7. The released NC1/7S topology has no lateral-association bond, so it cannot form multi-protomer strands — a limitation the spec identifies in advance.
+# **Claim.** Of the two geometric readouts the model should reproduce, one is met and one is not. The simulated pore-size distribution reaches the measured corneal-EM band (72 ± 40 nm) at realistic density, while the protomers-per-strand distribution stays near 1, below the measured 5-7. The released NC1/7S topology has no lateral-association bond, so it cannot form multi-protomer strands — a limitation identified in advance.
 
 # ### Parameters
 #
@@ -825,7 +825,7 @@ else:
 # **r1_regime**
 
 # r1_regime
-_save_viz('bm-r1-published-tissue-baseline', 'r1_regime', _render_one('html:r1_regime.html', {'title': 'Confinement regimes — cell height vs BM stiffness × relaxation (Fig 1G reproduction)', 'caption': 'REAL run (Barrientos Fig 1G reproduction): cell height swept over BM stiffness × relaxation/doubling from the reduced-order prism model. The confinement regime topology emerges — tall (confined) in the stiff, slowly-relaxing corner.\n'}, RUNS_DB, STUDY_YAML))
+_save_viz('bm-r1-published-tissue-baseline', 'r1_regime', _render_one('html:r1_regime.html', {'title': 'Confinement regimes — cell height vs BM stiffness × relaxation (Fig 1G reproduction)', 'caption': "Cell height across basement-membrane stiffness and relaxation time (relative to the doubling time), reproducing the paper's Figure 1G. The confinement regimes appear: cells are tall where the membrane is stiff and slow to relax, and flat where it is soft or fast.\n"}, RUNS_DB, STUDY_YAML))
 
 # ## Study: Faithful collagen IV network rheology (`bm-r2-collagen-network-rheology`)
 #
@@ -1174,7 +1174,7 @@ else:
 # **r6_intervention**
 
 # r6_intervention
-_save_viz('bm-r6-perlecan-growth-perturbations', 'r6_intervention', _render_one('html:r6_intervention.html', {'title': 'Intervention ordering on cell height (Fig 7 reproduction)', 'caption': 'REAL run (Fig 7 reproduction): predicted cell height per perlecan / growth-rate condition from the turnover->shape pipeline (inferred BM relaxation annotated). Reproduces the rank-order — perlecan gain -> taller > control > loss.\n'}, RUNS_DB, STUDY_YAML))
+_save_viz('bm-r6-perlecan-growth-perturbations', 'r6_intervention', _render_one('html:r6_intervention.html', {'title': 'Intervention ordering on cell height (Fig 7 reproduction)', 'caption': "Predicted cell height for each perlecan and growth-rate condition, with the inferred membrane relaxation time marked on each bar, reproducing the paper's Figure 7. Perlecan gain gives the tallest cells, then the control, then perlecan loss.\n"}, RUNS_DB, STUDY_YAML))
 
 # ## Study: Explicit actomyosin cortex mechanics (`bm-e1-actomyosin-cortex`)
 #
@@ -1458,18 +1458,17 @@ else:
 _save_viz('bm-e4-feedback-predictions', 'e4_feedback', _render_one('html:e4_feedback.html', {'title': 'Feedback loop + controls (schematic)', 'caption': 'Schematic of the growth <-> turnover <-> BM relaxation <-> confinement feedback loop and its one-way/uncoupled/uniform controls. NOT simulated.\n'}, RUNS_DB, STUDY_YAML))
 
 # ## Open decisions
-# - Reproduction conventions: acquire the supplemental tissue-model equations and precise Figure 1 parameter values — the article alone does not fix every reproduction convention (gates R1).
-# - Released turnover kinetics: resolve the full GCE-style monomer-exchange / distance-gated-break implementation, the 7S-specific mechanics, and the original stress/energy conversion before freezing the R2 reference (P0).
-# - Collagen supply law: fixed-concentration (reference reproduction, R3) vs secretion-flux-driven (new lumenoid hypothesis, E3/E4) — decide per study.
-# - 3D calibration data: obtain lumenoid geometry timecourses, cell height/volume, BM thickness and collagen-vs-laminin staining before calibrating R5/E3.
-# - Actin fidelity: use a validated reduced cortical model (Tyssue cortical energy) unless molecularly-resolved actin (E1) changes a measurable prediction — explicit go/no-go decision.
-# - Process/composite modularity: converge the collagen-network composites on ONE general, parameterized network builder reused across stage1/stage2/R2/R3 (chemistry, bending_k, density, strain protocol as config) rather than near-duplicate generators.
-# - Absolute (Pa) modulus path: the faithful angle-stabilized model now reproduces the published ≈0.03 Pa and gives a reproducible reduced-unit modulus (bm-v4, E≈3 LJ). An EXACT absolute value additionally needs the released GCE + distance-gated 7S break (0.95) + dense initial config — implement these, or accept the reduced-unit value and resolve via the energy-scale decision (#4)? (Cross-check + param correction already DONE 2026-10-01; see references/cross-check-vs-released-code.md.)
-# - Engine for stages 1–2: LAMMPS now; revisit Smoldyn at stage 3 (spec #2).
-# - Secretion: fixed concentration vs fixed flux (spec #3).
-# - Energy scale: report modulus in Pa (fit to a measured modulus) or keep kT and report a ratio (spec #4).
-# - Coupling contract: which vertex-model term receives the BM — basal tension, mobility, or elastic spring (spec #5).
-# - Linker values: density, spring constant, off-rate; sweep off-rate as a multiple of the crosslink break rate (spec #6).
-# - Growth rate ε̇ from the lumenoid radius time course — still requested (spec #7).
-# - Slab thickness / layer count — one z-stack away (spec #9).
-# - Which readout calibrates vs validates — remodelling time calibrates MP and the time unit, so it cannot also validate (spec #10).
+# - Reproduction conventions: the article alone does not fix every convention needed to reproduce it. Acquire the supplemental tissue-model equations and the precise Figure 1 parameter values.
+# - Released turnover kinetics: pin down the grand-canonical monomer exchange, the distance-gated breaking, the 7S-specific mechanics, and the original stress-to-energy conversion before freezing the collagen reference.
+# - Collagen supply law: a fixed concentration (for reproducing the paper) or a secretion flux (for the lumenoid hypothesis). Decide per study.
+# - 3D calibration data: obtain lumenoid geometry over time, cell height and volume, membrane thickness, and collagen-versus-laminin staining before calibrating the 3D models.
+# - Actin fidelity: use a validated reduced cortical model unless a molecularly-resolved actin cortex changes a measurable prediction. An explicit go/no-go call.
+# - Composite modularity: keep the collagen-network composites as thin selections over one general, parameterized network builder (chemistry, bending stiffness, density, and strain protocol as configuration), rather than near-duplicate generators.
+# - Absolute modulus in pascals: the angle-stabilized model reproduces the published ≈0.03 Pa and gives a reproducible modulus in reduced units (E ≈ 3 LJ). An exact value in pascals additionally needs the released monomer exchange, the distance-gated 7S break (0.95), and the dense starting configuration — or accept the reduced-unit value and settle the energy-scale choice below.
+# - Engine for the early stages: LAMMPS now, with Smoldyn revisited when surface binders are added.
+# - Energy scale: report the modulus in pascals (fit to a measured modulus) or keep kT units and report a ratio.
+# - Coupling contract: which vertex-model term receives the membrane — a basal tension, a mobility, or an elastic spring.
+# - Linker values: density, spring constant, and off-rate; sweep the off-rate as a multiple of the crosslink break rate.
+# - Growth rate: extract ε̇ from the lumenoid radius over time (still needed).
+# - Slab thickness and layer count (one z-stack away).
+# - Which readout calibrates and which validates: the remodelling time calibrates the formation probability and the time unit, so it cannot also validate.
