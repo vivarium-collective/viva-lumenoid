@@ -25,6 +25,47 @@ def _run(coupling_mode="two-way", substeps=1, n=15, dt=0.02):
     return out
 
 
+def _run_growth(growth_mode="exponential", rate=0.3, coupling_mode="two-way",
+                n=18, dt=0.02, bm_modulus=50.0, bm_relaxation=10.0):
+    from bigraph_schema import allocate_core
+    from viva_lumenoid.multiscale_coupling import LammpsTyssueCoupling
+    p = LammpsTyssueCoupling(config={
+        "bm_mode": "reduced", "coupling_mode": coupling_mode,
+        "growth_mode": growth_mode, "growth_rate": rate,
+        "strain_gain": 20.0, "tension_gain": 0.02,
+        "bm_modulus": bm_modulus, "bm_relaxation": bm_relaxation}, core=allocate_core())
+    out = {}
+    for _ in range(n):
+        out = p.update({}, dt)
+    p.close()
+    return out
+
+
+def test_growth_drives_basal_displacement():
+    # preferred growth ramps the target and the realized basal area follows it up
+    # (growth-driven displacement, not contractility alone).
+    _need()
+    grown = _run_growth(rate=0.4)
+    assert grown["preferred_area_fold"] > 1.0     # the target grew
+    assert grown["realized_area_fold"] > 1.0      # realized basal area grew too
+
+
+def test_realized_growth_not_hardcoded_to_preferred():
+    # THE meeting test: with a stiff/slow BM resisting, the realized basal-area
+    # growth LAGS the preferred target -> it emerges from the mechanics, it is not
+    # hard-coded to follow the target.
+    _need()
+    r = _run_growth(rate=0.4, bm_modulus=200.0, bm_relaxation=50.0)
+    assert r["realized_area_fold"] < r["preferred_area_fold"]
+
+
+def test_no_growth_is_backward_compatible():
+    # growth_mode="none" (default) leaves the preferred geometry static.
+    _need()
+    r = _run_growth(growth_mode="none", rate=0.0)
+    assert r["preferred_area_fold"] == pytest.approx(1.0)
+
+
 def test_coupling_controls():
     _need()
     two_way = _run("two-way")

@@ -48,6 +48,14 @@ class LammpsTyssueCoupling(Process):
         # subcycled BM equilibration). Advances BM stability without shrinking the
         # exchange interval.
         "bm_substeps": {"_type": "integer", "_default": 1},
+        # Epithelial PREFERRED growth (the 2026-10-20 review's constraint): basal
+        # displacement should be driven by a growing preferred cell geometry, not by
+        # contractility alone. "none" (default -> backward-compatible, no growth),
+        # "linear" or "exponential" ramp the preferred cell volume + basal area so
+        # the REALIZED basal area emerges from the mechanics (it is NOT hard-coded to
+        # the target). Growth is NOT cell division (no cells are added).
+        "growth_mode": {"_type": "string", "_default": "none"},
+        "growth_rate": {"_type": "float", "_default": 0.0},
     }
 
     def __init__(self, config=None, core=None):
@@ -58,6 +66,9 @@ class LammpsTyssueCoupling(Process):
         self._bm = None
         self._bm_strain = 0.0   # reduced-BM accumulated strain
         self._bm_rest = 0.0     # reduced-BM relaxing rest strain (Maxwell element)
+        self._grow_v = None     # preferred cell-volume growth driver
+        self._grow_a = None     # preferred basal-area growth driver
+        self._A_base = None     # realized basal area at growth onset (for folds)
 
     # --- lazy build of both engines (heavy; done on first use) ---
     def _build(self):
@@ -86,6 +97,11 @@ class LammpsTyssueCoupling(Process):
             output_columns={}, maps={}, backend="python", substeps=1),
             core=tcore)
         self._basal_mask = (self._es.eptm.face_df["segment"] == "basal")
+        # Preferred-growth drivers (division OFF): ramp the preferred cell volume +
+        # basal area from their baseline (1.0). "none" leaves them constant.
+        from .growth import PreferredGrowth
+        self._grow_v = PreferredGrowth(1.0, mode=c["growth_mode"], rate=c["growth_rate"])
+        self._grow_a = PreferredGrowth(1.0, mode=c["growth_mode"], rate=c["growth_rate"])
         # Explicit (LAMMPS) BM only; the reduced BM is a cheap analytic element.
         if c["bm_mode"] == "explicit":
             self._bm = CollagenNetworkProcess(
@@ -105,16 +121,28 @@ class LammpsTyssueCoupling(Process):
             "bm_sigma": "overwrite[float]",           # collagen BM stress (LAMMPS)
             "basal_tension": "overwrite[float]",      # BM reaction fed back as basal contractility
             "lumen_pressure": "overwrite[float]",
+            "preferred_area_fold": "overwrite[float]",  # target basal-area growth (A0/A0_base)
+            "realized_area_fold": "overwrite[float]",   # realized basal-area growth (A/A_base)
         }
 
     def update(self, state, interval):
         self._build()
         c = self.config
 
+        # 0. epithelial PREFERRED growth: ramp the preferred cell volume + basal
+        #    area so the basal displacement is growth-driven. The realized basal
+        #    area emerges from the vertex model + BM reaction below (not hard-coded).
+        if c["growth_mode"] != "none" and c["growth_rate"] != 0.0:
+            self._es.eptm.cell_df["prefered_vol"] = self._grow_v.target(self._t)
+            self._es.eptm.face_df.loc[self._basal_mask, "prefered_area"] = \
+                self._grow_a.target(self._t)
+
         # 1. step the epithelium; read its basal BM-shell surface area.
         self._es.update({"behaviors": [], "global_time": self._t}, interval)
         self._t += interval
         A = float(self._es.eptm.settings.get("bm_surface_area", 0.0))
+        if self._A_base is None:
+            self._A_base = A or 1.0
         rate = ((A - self._A_prev) / self._A_prev / interval
                 if self._A_prev else 0.0)
         self._A_prev = A
@@ -149,6 +177,8 @@ class LammpsTyssueCoupling(Process):
             "bm_sigma": sigma,
             "basal_tension": tension,
             "lumen_pressure": float(self._es.eptm.settings.get("lumen_pressure", 0.0)),
+            "preferred_area_fold": self._grow_a.target(self._t),
+            "realized_area_fold": (A / self._A_base) if self._A_base else 1.0,
         }
 
     def close(self):

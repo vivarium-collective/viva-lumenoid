@@ -74,6 +74,18 @@ key_assumptions:
   - "Stiff restraints need a reduced timestep (dt ≈ 0.002; the spec's own regime)."
   - "Athermal (T=0) energy minimisation gives the deterministic elastic modulus."
 
+model_assumptions_declaration:
+  preferred_vs_realized: "n/a — network mechanics; as-formed vs during-assembly junction angles is the axis studied"
+  load_control_vs_reaction: "athermal minimize + imposed strain"
+  geometry_dimension: "quasi-2D slab"
+  material_representation: "explicit-LAMMPS"
+  growth_vs_division: "n/a"
+  calibration_limits: "absolute pascals gated on density match + energy scale; only NC1 angle implemented (7S angles are a stated gap)"
+
+meeting_alignment_2026_10_20:
+  disposition: revise
+  note: "Use as the AUTHORITATIVE collagen IV network mechanics reference. Clarify native angles vs artificial as-formed bending and why construction order matters; show native-angle vs no-angle stress curves with seed spread, not only end-state moduli."
+
 baseline:
   - name: junction-bending-network
     composite: viva_lumenoid.composites.bending_sweep

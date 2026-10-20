@@ -114,6 +114,41 @@ description: |
   studies: R6 realizes the timer/turnover model, R2/R3 the collagen network, and
   R1/R4/R5 the tissue mechanics.
 
+meeting_alignment_2026_10_20:
+  disposition: revise
+  central_pivot: >
+    The 2026-10-20 modeling review (Eran/Tasnif/Saurabh) refocuses the first deliverable on
+    the simplest TWO-WAY feedback experiment: increase the PREFERRED (target) epithelial
+    area/volume — NOT realized area — let cells mechanically deform the BM, let the BM reaction
+    feed back on the cells, and MEASURE the realized expansion and cell height. Realized
+    geometry emerges from the mechanics and lags the preferred target under BM resistance; that
+    lag IS the confinement, and it is never hard-coded to the target. Growth is distinct from
+    cell DIVISION — the MVP grows a preferred geometry with proliferation OFF; the paper's
+    proliferation is a separate faithful-reproduction extension.
+  staging:
+    - "2D (planar / cross-section) complete cell<->BM feedback  — R4"
+    - "true 3D monolayer                                        — R5"
+    - "already-closed 3D lumen (geometry vs model-side elasticity kept separate) — E3/E4"
+  prioritized_dependencies:
+    - "1. preferred area/volume growth with proliferation OFF (R4 2D, R5 3D, E4 coupling) — DONE this revision"
+    - "2. constitutive BM coupling controls (no-BM / soft / stiff / fast-relax / slow-relax)"
+    - "3. resolved LAMMPS force transfer (explicit-BM path — the separate verification gate, E4)"
+    - "4. 3D monolayer (R5)"
+    - "5. closed lumen geometry + separate volume elasticity (E3)"
+    - "6. pressure / osmosis / curvature / non-uniform BM thickness (follow-on branches, NOT prerequisites)"
+  engine_vs_reproduction: >
+    Engine/smoke-test success is marked SEPARATELY from scientific reproduction throughout: a
+    mesh that resolves or a geometry that renders is engineered-diagnostic, not a biological
+    result. Explicit actin (E1), osmosis, spatial BM thickness and pressure are follow-on
+    branches, not milestone dependencies.
+  this_revision: >
+    Propagated the existing preferred->realized->BM-reaction mechanism (previously only in the
+    0-D R1/R6 prism) into the spatial/coupled studies: R4 (2D cross-section coupled growth), R5
+    (real-Tyssue 3D monolayer growth), E4 (growth-driven two-way coupling). Added a shared
+    growth primitive (PreferredGrowth + ReducedBM), new observed main figures, and per-study
+    6-axis model-assumptions declarations (preferred-vs-realized, load-vs-reaction, dimension,
+    explicit-vs-reduced material, growth-vs-division, calibration limits).
+
 # Investigation-level driving figure (the three-model framework).
 visualizations:
   - name: driving_schema
@@ -209,20 +244,23 @@ at_a_glance:
       ordering with-insertion > without > none, 3/3 seeds) — the Figure-2B/C ordering.
   - study: bm-r4-coupled-2d-epithelium
     role: >
-      Spatial 2D epithelium (preliminary). A 12-cell Tyssue sheet relaxes to a finite
-      uniform geometry — a real mesh readout vs the R1 benchmark. Honest gap: the
-      current tyssue_2d_sheet carries only line-tension / preferred-area, no BM
-      stiffness / relaxation / traction, so the BM-dependent confinement test cannot
-      run yet (shown as a hypothesis panel); the bare mesh snapshot is an architecture
-      thumbnail, not confinement, and the planar z=0 geometry is not a real 3D height.
+      2D coupled growth (the meeting's #1 upgrade). A ramped PREFERRED basal area
+      (division OFF) drives a REALIZED area that emerges and lags the target under a
+      viscoelastic BM — a stiff/slow BM lags by a 0.317 gap (vs 0.116 free) and raises
+      reconstructed height (0.70→0.91); zero growth gives no BM strain; a BM-stiffness
+      gradient makes a spatial height gradient (0.76→0.91). Reduced-order 2D
+      cross-section with fixed-volume height; qualitatively consistent with the paper's
+      confinement direction, not calibrated. The resolved vertex-model sheet stays a
+      static substrate at the engine level (named limitation).
   - study: bm-r5-explicit-3d-confinement
     role: >
-      Explicit 3D monolayer (preliminary). A 206-cell closed mesh with finite,
-      conserved per-cell volumes (<0.01% drift) and a per-cell area distribution —
-      a geometry verification. Honest gap: tyssue_3d_monolayer has only
-      contractility / volume-elasticity, no BM-shell coupling, so the no-BM /
-      elastic-BM / relaxing-BM confinement cases are not wired yet (hypothesis panel);
-      height is uniform within a run.
+      3D monolayer growth (the geometric upgrade after R4). Preferred cell volume +
+      basal area are ramped (division OFF) on the real 206-cell Tyssue monolayer; a
+      stiff/slow BM reaction confines basal spreading (1.11 vs 1.20 free) while the
+      realized volume lags the target (gap 0.27), and under the near-incompressible
+      volume elasticity confinement drives volume into cell height (1.138 vs 1.133 free
+      — directional). The full no-BM/elastic-BM/relaxing-BM control matrix + a
+      relaxation sweep remain the calibration gap.
   - study: bm-r6-perlecan-growth-perturbations
     role: >
       Carries an inferred collagen lifetime for control, perlecan gain/loss and
@@ -254,12 +292,14 @@ at_a_glance:
       BM-regulated morphogenesis are shown as flat/honest, untested.
   - study: bm-e4-feedback-predictions
     role: >
-      Extension, coupling control (not a novel prediction yet). Real 3-mode
-      reduced-order time courses: two-way returns a nonzero BM reaction (basal_tension
-      −0.30, damping contraction) while one-way/uncoupled disable it as designed, and
-      BM subcycling converges (|Δσ| 0.066→0.033→0.017). Gaps: explicit LAMMPS BM is
-      not in the loop, there is no growth trajectory, and exchange-cadence convergence
-      is not wired — correct software wiring, not a mechanistic prediction.
+      Growth-driven two-way feedback (the meeting's most-important follow-up). An
+      epithelial PREFERRED growth trajectory is now wired (preferred cell volume + basal
+      area ramped; division OFF), so basal displacement is growth-driven: the realized
+      basal-area fold emerges and differs by coupling mode (two-way 1.006 vs
+      one-way/uncoupled 0.767) while lagging the preferred target (1.150) — verified NOT
+      hard-coded — and two-way returns a nonzero basal reaction tension absent in the
+      controls. Reduced BM is the primary path; the explicit-LAMMPS BM stays a separate,
+      numerically-delicate verification gate. Reduced units; magnitudes uncalibrated.
 
 acceptance_criteria:
   - study: bm-v1-stage1-modulus-remodelling
@@ -299,6 +339,15 @@ executive:
     Fig 7 perlecan ordering) are the strongest results; the spatial and extension
     studies are preliminary. R6 reproduces Fig 7 only after a review-caught fix: its
     perlecan direction had been inverted and was corrected against the paper.
+    FOLLOWING the 2026-10-20 modeling review, the spatial/coupled studies were
+    refocused on the agreed PREFERRED-vs-REALIZED two-way feedback: R4 (2D
+    cross-section), R5 (3D monolayer) and E4 (coupling) now DRIVE a growing preferred
+    geometry (division OFF) and MEASURE the emergent, lagging realized geometry + cell
+    height under BM confinement — the realized geometry is verified not hard-coded to
+    the target. These are demonstrated in reduced order / reduced units (qualitatively
+    consistent with the paper's confinement direction), not calibrated reproductions;
+    explicit-LAMMPS coupling remains a separate verification gate. See
+    meeting_alignment_2026_10_20 for the full spine + staging.
   verdict: >
     The membrane model is complete: it reproduces the published elastic modulus and
     separates a reproducible elastic modulus from a reproducible remodelling time,
@@ -364,7 +413,11 @@ executive:
     preliminary engineering/verification results, not paper reproductions.
   verdict_status: in-progress
   decisions_needed:
+    - "Growth as preferred-vs-realized (2026-10-20): RESOLVED in direction — the first deliverable is now the two-way experiment where a PREFERRED geometry grows (division OFF) and the realized geometry emerges/lags under BM reaction (R4/R5/E4). Open: calibrate the stiffness/relaxation vs preferred-growth-timescale mapping and run the full BM control matrix."
+    - "Growth vs division (2026-10-20): RESOLVED for the MVP — growth is a preferred-geometry ramp with proliferation OFF; the paper's proliferation stays a separate faithful-reproduction extension. Confirm with the expert that no-division growth is the right MVP scope."
+    - "Explicit-LAMMPS coupling as a separate gate (2026-10-20): RESOLVED as policy — the explicit-BM path is a separate verification gate (numerically delicate, E4 F5), marked apart from the reduced-order primary results; stabilizing its subcycling is the open engineering item."
     - "Perlecan direction (R6): RESOLVED — verified against the paper (perlecan promotes collagen IV bond breakage; overexpression ~1 h, control ~20 h, knockdown ~500 h lifetime) and the perlecan_factor mapping was inverted so R6 reproduces Fig 7. Left here as a sanity-check item for the expert to confirm the reading."
+    - "Lumen geometry vs model-side elasticity (2026-10-20): keep the new lumen geometry/volume (a geometry class computing enclosed volume) SEPARATE from model-side lumen elasticity/pressure; start E3/E4 from an already-closed lumen (no nucleation). Osmotic water-pumping is a later branch."
     - "Reproduction conventions: the article alone does not fix every convention needed to reproduce it. Acquire the supplemental tissue-model equations and the precise Figure 1 parameter values."
     - "Released turnover kinetics: pin down the grand-canonical monomer exchange, the distance-gated breaking, the 7S-specific mechanics, and the original stress-to-energy conversion before freezing the collagen reference."
     - "Collagen supply law: a fixed concentration (for reproducing the paper) or a secretion flux (for the lumenoid hypothesis). Decide per study."

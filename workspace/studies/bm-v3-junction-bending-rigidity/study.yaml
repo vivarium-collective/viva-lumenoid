@@ -81,6 +81,18 @@ key_assumptions:
   - "Raising NC1/7S max crosslinks is a proxy for lateral bundling (more junctions)."
   - "Same clean-room parameters and force-independent off-rate as stage 1."
 
+model_assumptions_declaration:
+  preferred_vs_realized: "n/a — central-force negative control"
+  load_control_vs_reaction: "imposed/athermal strain"
+  geometry_dimension: "2D (z=4 rigidity heuristic)"
+  material_representation: "explicit-LAMMPS"
+  growth_vs_division: "n/a"
+  calibration_limits: "reduced LJ units; adversarial control, not the released network"
+
+meeting_alignment_2026_10_20:
+  disposition: revise
+  note: "Retain ONLY as a central-force negative control; it does not describe the native released collagen network. Do not expand into a primary narrative branch. Caption must say intentionally angle-free, not evidence of native-BM floppiness."
+
 baseline:
   - name: connectivity-sweep
     composite: viva_lumenoid.composites.connectivity_sweep

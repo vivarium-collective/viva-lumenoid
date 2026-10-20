@@ -112,6 +112,18 @@ key_assumptions:
   - "inferred_relaxation (turnover/inference) and cell_height (mechanics prediction) are kept as distinct outputs; the inferred quantity is not re-derived from the predicted one."
   - "Reduced units; relative morphology ordering is the claim, not absolute cell height. Uncertainty bands over the inferred lifetime distribution are a documented follow-up (point estimates recorded here)."
 
+model_assumptions_declaration:
+  preferred_vs_realized: "inferred lifetime->relaxation feeding the R1 preferred-area prism endpoint"
+  load_control_vs_reaction: "reaction via the R1 effective BM; perlecan acts only through relaxation time"
+  geometry_dimension: "non-spatial (R1 prism endpoint)"
+  material_representation: "reduced-order (R1 effective BM)"
+  growth_vs_division: "growth-rate axis (doubling_time); NO division"
+  calibration_limits: "reduced units; factors encode the paper's ratios, not independent calibration"
+
+meeting_alignment_2026_10_20:
+  disposition: revise
+  note: "Perlecan ordering is corrected. Do NOT present the prescribed lifetime-to-height mapping as a fully independent multiscale mechanistic prediction. The conversation prioritizes direct mechanical stiff/soft and growth-rate tests before genetic context."
+
 parent_studies:
   - {study: bm-r1-published-tissue-baseline, condition: tests-passed}
   - {study: bm-r5-explicit-3d-confinement, condition: tests-passed}

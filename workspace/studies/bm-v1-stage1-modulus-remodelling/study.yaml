@@ -101,6 +101,18 @@ key_assumptions:
   - "Quasi-2D slab; rods lie in-plane; thickness/layer count deferred."
   - "Energy unit = kT, so stress unit = kT/a³ ≈ 2.5 Pa; absolute pascals not yet claimed."
 
+model_assumptions_declaration:
+  preferred_vs_realized: "n/a — this is a collagen-network mechanics study (no epithelial cell geometry); strain is imposed, not an emergent preferred-vs-realized response"
+  load_control_vs_reaction: "imposed strain (fix deform staged stretch)"
+  geometry_dimension: "quasi-2D slab"
+  material_representation: "explicit-LAMMPS"
+  growth_vs_division: "n/a"
+  calibration_limits: "reduced kT units; absolute pascals not yet claimed"
+
+meeting_alignment_2026_10_20:
+  disposition: revise
+  note: "Keep as reference-material verification, NOT tissue-growth evidence. The older low-modulus central-force result is a deliberately incomplete control; the native NC1/7S angle-assembled model is authoritative. Growth-induced strain here is IMPOSED, not an epithelial emergent displacement."
+
 baseline:
   - name: collagen-iv-network-stage1
     composite: viva_lumenoid.composites.stage1_composite

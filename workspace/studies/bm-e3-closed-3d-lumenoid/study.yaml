@@ -79,6 +79,22 @@ key_assumptions:
   - "The lumen-pressure trajectory (pressure departing from zero as the lumen fills/drains) is a dynamic readout not yet exercised -- the shell is reported at its rest configuration."
   - "Reduced units throughout; qualitative scope -- this study establishes that a closed lumen-enclosing shell runs with well-posed geometry, not the curvature-dependent growth prediction."
 
+model_assumptions_declaration:
+  preferred_vs_realized: "lumen at a preferred volume (geometry class computes enclosed volume; model-side energy/pressure would create mechanics)"
+  load_control_vs_reaction: "no lumen-filling drive wired (pressure 0 at rest)"
+  geometry_dimension: "explicit 3D closed shell"
+  material_representation: "effective basal surface; explicit/LAMMPS BM not wired here"
+  growth_vs_division: "no lumen growth wired"
+  calibration_limits: "reduced units; geometry verification, not biological morphogenesis"
+
+meeting_alignment_2026_10_20:
+  disposition: revise
+  note: >
+    Clarify scope: start from an ALREADY CLOSED, formed lumen. Do NOT imply lumen
+    nucleation/lifting is being simulated. Geometry class computes enclosed volume; model-side
+    energy/pressure creates mechanics. Osmotic water-pumping is a LATER extension after passive
+    lumen elasticity.
+
 parent_studies:
   - {study: bm-r5-explicit-3d-confinement, condition: tests-passed}
   - {study: bm-e2-actin-adhesion-collagen, condition: tests-passed}
