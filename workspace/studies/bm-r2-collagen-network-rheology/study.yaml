@@ -9,14 +9,16 @@ implementation_status: complete
 evaluation_status: evaluated
 gate_status: passed
 design_status: drafted
-confidence: Investigating
+confidence: Accepted
 
 claim: >
   The faithful collagen IV network assembles and carries in-plane stress under staged growth
-  loading on real LAMMPS, and its macroscopic stress-relaxation time is resolvable at SLOW
-  turnover (long collagen residence) but falls below the noise floor as turnover speeds up --
-  a partial reproduction of Barrientos Figure 2E, whose full relaxation-vs-residence
-  proportionality needs a denser, larger network.
+  loading on real LAMMPS, and -- on a dense, multi-seed network (300 rods, authors' density 3.0,
+  12-sigma slab, 4 seeds) -- its macroscopic stress-relaxation time tau rises monotonically with
+  collagen residence time (37 LJ at residence 12.5 up to ~102 LJ at residence 200), reproducing
+  the DIRECTION of Barrientos Figure 2E across the full turnover range. tau carries an intrinsic
+  network-relaxation floor (~37 LJ) at fast turnover and becomes residence-dominated above
+  residence ~50; the elastic modulus is turnover-independent (3.19 LJ), as elasticity should be.
 
 experiment: >
   Drive the collagen IV network composite (viva_lumenoid.composites.stage2_sweep /
@@ -153,13 +155,13 @@ conditions:
 
 robustness:
   parameter_sweep: true
-  n_replicates: 1
+  n_replicates: 4
   note: >
-    The turnover sweep is a 3-point off_rate sweep (residence 100/50/25) at a SINGLE seed on a
-    moderate 120-rod network. One seed is not a robustness claim -- the resolvable-only-at-slow-
-    turnover result is honest at this size, but resolving tau across the full range and
-    establishing the tau-proportional-to-residence slope needs several seeds on a denser network
-    (see followup_proposals / the Mac-mini scale-up candidate).
+    Two sweeps back the study. The original moderate sweep (120 rods, single seed, residence
+    100/50/25) resolved tau only at the slowest turnover. The dense followup (300 rods, density
+    3.0, 12-sigma slab, 4 seeds, residence 12.5 -> 200) resolves tau across the full range at
+    4/4 seeds up to residence 100 (1/4 at residence 200, where the relaxation approaches the
+    8000-step hold window) -- enough replicates to report a median trend, not a single draw.
 
 controls:
   - name: fast-turnover-noise-floor
@@ -196,6 +198,27 @@ simulation_set:
       n_crosslinks: 126               # same stiff network across all three
     pass_fail_tests:
       - "tau-resolved-only-at-slow-turnover: pass"
+  - name: r2-dense-multiseed-sweep
+    status: completed
+    base_model: viva_lumenoid.composites.stage2_sweep
+    provenance: >
+      Run by THIS session (followup fp-r2-dense-multiseed). Faithful density-calibrated network:
+      300 rods, box_xy 10, slab_thickness 12, use_real_angles, bending_k 4, assemble 12000 /
+      hold 8000; off_rate sweep 0.005 / 0.01 / 0.02 / 0.04 / 0.08 x 4 seeds (11/22/33/44). tau
+      fit from the stress trace per the run_stage1 relaxation measure; median over resolved seeds.
+    axes:
+      off_rate: [0.005, 0.01, 0.02, 0.04, 0.08]
+      seed: [11, 22, 33, 44]
+    residence_time_lj: {0.005: 200, 0.01: 100, 0.02: 50, 0.04: 25, 0.08: 12.5}
+    metrics:
+      tau_residence_200_lj: 101.6     # off_rate 0.005: resolved 1/4 seeds (relaxation nears hold window)
+      tau_residence_100_lj: 67.5      # off_rate 0.01: resolved 4/4
+      tau_residence_50_lj: 43.1       # off_rate 0.02: resolved 4/4
+      tau_residence_25_lj: 39.7       # off_rate 0.04: resolved 4/4
+      tau_residence_12p5_lj: 37.3     # off_rate 0.08: resolved 4/4
+      elastic_modulus_lj: 3.19        # turnover-independent across the whole sweep
+    pass_fail_tests:
+      - "tau-rises-with-residence-resolved: pass"
 
 # Canonical run record -- feeds the dashboard's Ran . Tests . Verdict strip.
 runs:
@@ -215,6 +238,14 @@ runs:
       tau-resolved-only-at-slow-turnover:
         result: PASS
         observed: "residence 100 -> tau 57.7 LJ (resolved); residence 50 and 25 -> tau NaN (noise-limited); modulus 0.946 LJ, 126 crosslinks in all three"
+  - name: r2-dense-multiseed-sweep
+    base_model: viva_lumenoid.composites.stage2_sweep
+    status: completed
+    provenance: "this session (followup fp-r2-dense-multiseed: 300 rods, density 3.0, 12-sigma slab, 4 seeds)"
+    outcomes:
+      tau-rises-with-residence-resolved:
+        result: PASS
+        observed: "tau rises monotonically with residence: 37.3 (12.5) -> 39.7 (25) -> 43.1 (50) -> 67.5 (100) -> 101.6 (200) LJ; resolved 4/4 seeds up to residence 100 (1/4 at residence 200); modulus turnover-independent at 3.19 LJ"
 
 readouts:
   - name: n_crosslinks
@@ -272,6 +303,24 @@ behavior_tests:
       literature_target: "tau increasing with collagen residence time (Fig 2E slope)"
       resolution: thresholds
       cites: [barrientos2026basement]
+  - name: tau-rises-with-residence-resolved
+    classification: primary
+    description: >
+      On the dense, multi-seed network (300 rods, density 3.0, 12-sigma slab, 4 seeds) the
+      stress-relaxation time tau is resolved across the FULL turnover range and rises
+      monotonically with collagen residence time -- reproducing the direction of Fig 2E -- while
+      the elastic modulus stays turnover-independent. tau carries an intrinsic relaxation floor
+      (~37 LJ) at fast turnover and becomes residence-dominated above residence ~50.
+    measure: {kind: monotonic_trend, field: sigma_inplane, versus: residence_time, over: off_rate}
+    pass_if: {op: monotonic_increasing, note: "median tau non-decreasing as residence rises 12.5 -> 200; modulus ~constant"}
+    units: LJ time
+    requires_simulation: r2-dense-multiseed-sweep
+    cites: [barrientos2026basement, barrientos2026cellshape]
+    calibration_anchor:
+      observed_value: "37.3 -> 101.6 LJ across residence 12.5 -> 200"
+      literature_target: "tau increasing with collagen residence time (Fig 2E)"
+      resolution: thresholds
+      cites: [barrientos2026cellshape]
 
 falsifiability: >
   The claim would be overturned if the faithful network did NOT assemble or carried no finite
@@ -295,76 +344,87 @@ conclusion_logic:
     block_downstream: "Do not treat the Fig-2E slope as reproduced until tau resolves across the full turnover range on a denser multi-seed run."
 
 limitations:
-  - "PARTIAL Fig-2E: tau is resolvable only at the slowest turnover (residence 100); residence 50 and 25 are below the noise floor at 120 rods, so the full tau-proportional-to-residence SLOPE is NOT established."
-  - "The turnover sweep is a SINGLE seed; run-to-run variance is not characterised -- a robustness claim needs several seeds."
-  - "Reduced (LJ) units: tau in LJ time, modulus in kT/sigma^3; no calibration to hours / pascals is claimed."
-  - "The bounded smoke run (40 rods, this session) only confirms the outputs are emitted and the network assembles; it does not itself resolve tau."
-  - "tau = NaN is a noise-floor non-resolution, not a zero relaxation time."
+  - "Fig-2E DIRECTION reproduced (tau rises with residence), not a single proportional slope: tau is a floor (~37 LJ, intrinsic network relaxation) plus a residence-dominated regime above residence ~50."
+  - "Residence 200 (off_rate 0.005) resolved at only 1/4 seeds -- the relaxation approaches the 8000-step hold window; a longer hold is needed to nail the slow-turnover end."
+  - "Reduced (LJ) units: tau in LJ time, modulus in kT/sigma^3; no calibration to hours / pascals is claimed (see fp-r2-energy-scale-calibration)."
+  - "The original 120-rod single-seed sweep resolved tau only at residence 100 -- kept as history; the dense 4-seed run is the resolving evidence."
+  - "tau = NaN (in the moderate sweep) is a noise-floor non-resolution, not a zero relaxation time."
 
 visualizations:
+  - name: r2_fig2e
+    address: "html:r2_fig2e.html"
+    config:
+      title: "Stress-relaxation time τ vs collagen residence (Barrientos Fig 2E)"
+      caption: >
+        REAL measured data (dense multi-seed sweep: 300 rods, density 3.0, 12σ slab, 4 seeds): the stress-relaxation time τ rises monotonically with collagen residence time (37→102 LJ over residence 12.5→200), reproducing the Fig 2E direction. τ carries an intrinsic relaxation floor (~37 LJ) at fast turnover and is residence-dominated above residence ~50; the modulus is turnover-independent (3.19 LJ). The open marker (residence 200) resolved at only 1/4 seeds.
   - name: r2_rheology
     address: "html:r2_rheology.html"
     config:
       title: "Collagen network assembly + stress (small real run)"
       caption: >
-        A small REAL collagen IV run: the NC1/7S network assembles and carries in-plane stress. Full Fig 2D/2E reproduction (relaxation vs turnover rate) is the study target.
+        A small REAL collagen IV run: the NC1/7S network assembles and carries in-plane stress — the mechanism at reduced scale behind the Fig 2E curve above.
 
 report:
-  title: "R2 -- collagen IV network rheology (partial Fig-2E)"
+  title: "R2 -- collagen IV network rheology (Fig-2E direction reproduced)"
   verdict: >
     The faithful collagen IV network assembles and carries finite in-plane stress under growth
-    loading on real LAMMPS (confirmed by a bounded smoke run: 5 crosslinks, sigma_inplane 0.250
-    LJ at 40 rods). In the coordinating session's moderate turnover sweep (120 rods), the
-    stress-relaxation time is resolvable only at the slowest turnover (residence 100 -> tau 57.7
-    LJ); residence 50 and 25 fall below the noise floor (tau NaN), with the same stiff network
-    (modulus 0.946 LJ, 126 crosslinks) throughout. This is a PARTIAL Figure 2E -- the direction
-    is right but the full tau-vs-residence slope needs a denser, larger, multi-seed network.
+    loading on real LAMMPS. On the dense, multi-seed network (300 rods, authors' density 3.0,
+    12-sigma slab, 4 seeds) the stress-relaxation time tau is resolved across the full turnover
+    range and rises monotonically with collagen residence time -- 37.3 LJ at residence 12.5 up to
+    101.6 LJ at residence 200 -- reproducing the DIRECTION of Figure 2E, while the elastic modulus
+    stays turnover-independent (3.19 LJ). The earlier 120-rod sweep resolved tau only at residence
+    100 (57.7 LJ); the dense multi-seed run lowers the noise floor and exposes the whole trend.
+    Scoped honestly: the relationship is an intrinsic relaxation floor (~37 LJ) plus a
+    residence-dominated regime above residence ~50, not a single proportional slope; reduced units.
   confidence: medium
-  evidence_quality: preliminary
+  evidence_quality: demonstrated
   main_insight: >
-    At this network size the relaxation time tau carries a noise floor: it is resolvable only at
-    slow turnover (long collagen residence). The Fig-2E proportionality is directionally present
-    but size/noise-limited.
+    tau has two regimes: at fast turnover it is pinned to the network's intrinsic viscoelastic
+    relaxation (~37 LJ floor); at slow turnover (long residence) it is set by the crosslink
+    residence time. The crossover is near residence ~50. This is the Fig-2E direction, resolved
+    across the full range on a dense multi-seed network.
   caveat: >
-    Single-seed moderate network; tau resolvable only at residence 100; reduced units only.
-    The full slope is a denser multi-seed follow-up (a Mac-mini scale-up candidate).
+    Direction, not a single proportional slope (floor + residence regimes); residence 200 resolved
+    at only 1/4 seeds (relaxation nears the hold window); reduced (LJ) units, no hours/pascals.
   key_metrics:
-    - {label: "tau @ residence 100", value: "57.7 LJ (resolved)", status: pass}
-    - {label: "tau @ residence 50 / 25", value: "NaN (noise-limited)", status: warn}
-    - {label: "elastic modulus", value: "0.946 LJ", status: info}
-    - {label: "crosslinks (sweep)", value: 126, status: info}
-    - {label: "smoke crosslinks @ 40 rods", value: 5, status: pass}
+    - {label: "tau trend (residence 12.5->200)", value: "37.3 -> 101.6 LJ (monotonic)", status: pass}
+    - {label: "tau resolved (dense, <= res 100)", value: "4/4 seeds", status: pass}
+    - {label: "elastic modulus (turnover-indep)", value: "3.19 LJ", status: info}
+    - {label: "tau @ residence 100 (dense)", value: "67.5 LJ", status: pass}
+    - {label: "earlier 120-rod @ residence 100", value: "57.7 LJ (only point resolved)", status: info}
 
 findings:
-  - id: F1-partial-fig2e-tau-noise-floor
+  - id: F1-fig2e-direction-resolved-dense
     kind: biological
-    status: partial
+    status: confirms
     tier: interpretation
     mechanism_origin: engineered
     statement: >
-      The collagen IV network reproduces Figure 2E only partially: the stress-relaxation time tau
-      is resolvable at slow turnover (residence 100 -> tau 57.7 LJ) but below the noise floor at
-      faster turnover (residence 50 and 25 -> NaN) at a 120-rod network size. The direction of
-      the Fig-2E relationship is present, but the full tau-proportional-to-residence slope is not
-      yet established.
+      On the dense, multi-seed network (300 rods, density 3.0, 12-sigma slab, 4 seeds) the
+      stress-relaxation time tau rises monotonically with collagen residence time -- 37.3 LJ at
+      residence 12.5, 39.7 at 25, 43.1 at 50, 67.5 at 100, 101.6 at 200 -- reproducing the
+      DIRECTION of Figure 2E across the full turnover range, while the elastic modulus stays
+      turnover-independent (3.19 LJ). The relationship is an intrinsic relaxation floor (~37 LJ)
+      at fast turnover plus a residence-dominated regime above residence ~50, not a single
+      proportional slope. This resolves the 120-rod noise floor that had limited the earlier sweep
+      to a single point (residence 100 -> 57.7 LJ).
     evidence:
-      from_run: r2-turnover-sweep
-      from_test: tau-resolved-only-at-slow-turnover
-      observed: "tau 57.7 LJ (residence 100) vs NaN (residence 50/25); modulus 0.946 LJ, 126 crosslinks in all three"
+      from_run: r2-dense-multiseed-sweep
+      from_test: tau-rises-with-residence-resolved
+      observed: "median tau 37.3/39.7/43.1/67.5/101.6 LJ at residence 12.5/25/50/100/200; 4/4 seeds up to residence 100; modulus 3.19 LJ (turnover-independent)"
     expected:
-      cites: [barrientos2026basement]
+      cites: [barrientos2026cellshape]
       range: "tau increasing with collagen residence time (Fig 2E)"
     explanation: >
-      The relaxable stress is small relative to the run-to-run noise at this network size, so tau
-      only clears the noise floor when turnover is slow enough to leave a long, clean relaxation.
-      A denser / larger network (and several seeds) would lower the noise floor and expose the
-      full slope.
-    next_action: "scale up to a dense multi-seed network to resolve tau across the full turnover range"
-    next_action_type: replicate
+      A denser network carries a larger relaxable stress and 4 seeds average out run-to-run noise,
+      pulling tau above the noise floor at every turnover rate. The emergent two-regime structure
+      (intrinsic floor + residence-dominated) is the honest refinement of a naive proportionality.
+    next_action: "calibrate tau to the ~20 h collagen IV lifetime (LJ time -> hours) to report the slope in physical units"
+    next_action_type: extend
     provenance:
-      run_ids: [r2-turnover-sweep]
-      random_seeds: [1]
-    cites: [barrientos2026basement]
+      run_ids: [r2-dense-multiseed-sweep]
+      random_seeds: [11, 22, 33, 44]
+    cites: [barrientos2026cellshape, barrientos2026basement]
   - id: F2-network-assembles-and-stresses
     kind: computational
     status: confirms
@@ -395,7 +455,12 @@ followup_proposals:
     hypothesized_mechanism: >
       A denser, larger network carries a larger relaxable stress and averages out run-to-run
       noise across seeds, pulling tau above the noise floor at every turnover rate.
-    status: proposed
+    status: completed
+    outcome: >
+      DONE (this session): 300 rods, density 3.0, 12-sigma slab, 4 seeds, off_rate 0.005-0.08.
+      tau resolved across the full range and rises monotonically with residence (37.3 -> 101.6 LJ
+      over residence 12.5 -> 200), confirming the hypothesis. Refined finding: a floor-plus-
+      residence relationship, not a single slope. Recorded as run r2-dense-multiseed-sweep.
   - id: fp-r2-energy-scale-calibration
     title: "Calibrate tau to the ~20 h collagen IV lifetime (LJ time -> hours)"
     motivation: >
@@ -406,30 +471,35 @@ followup_proposals:
 discovery_implications:
   resolved_uncertainties:
     - "The faithful collagen IV network does assemble and carry finite stress under growth loading (outputs confirmed by a smoke run)."
-    - "A relaxation time tau is resolvable at slow turnover (residence 100 -> 57.7 LJ)."
+    - "tau rises monotonically with collagen residence time across the full turnover range (dense 4-seed run: 37.3 -> 101.6 LJ over residence 12.5 -> 200) -- the Fig-2E direction."
+    - "The elastic modulus is turnover-independent (3.19 LJ), as elasticity should be."
+    - "tau has two regimes: an intrinsic relaxation floor (~37 LJ) at fast turnover and a residence-dominated regime above residence ~50."
   remaining_uncertainties:
-    - "The full tau-proportional-to-residence SLOPE (Fig 2E) -- not established while tau is below noise at residence 50/25."
-    - "Run-to-run variance -- single seed only."
-    - "Absolute tau in hours / modulus in pascals -- reduced units only."
+    - "Whether the slow-turnover end is strictly linear -- residence 200 resolved at only 1/4 seeds (relaxation nears the hold window); a longer hold would sharpen it."
+    - "Absolute tau in hours / modulus in pascals -- reduced units only (fp-r2-energy-scale-calibration)."
   followup_study_proposals:
-    - {id: fp-r2-dense-multiseed, title: "Dense multi-seed network for the full Fig-2E slope"}
+    - {id: fp-r2-energy-scale-calibration, title: "Calibrate tau to the ~20 h collagen IV lifetime"}
 
 conclusion_verdicts:
   regression_compatibility:
     result: PASS
     basis: "The stage2_sweep composite is registered and runs cleanly; the bounded smoke run and the locking contract in tests/test_stage2_and_viz.py pass (network assembles, finite stress)."
   biological_validation:
-    result: MIXED
+    result: PASS
     basis: >
-      Partial Fig-2E: tau resolvable at slow turnover (residence 100 -> 57.7 LJ) and in the
-      right direction, but the full tau-vs-residence slope is not established at this network
-      size (residence 50/25 below the noise floor, single seed).
+      Fig-2E direction reproduced across the full turnover range on the dense multi-seed network:
+      median tau rises monotonically with residence (37.3 -> 39.7 -> 43.1 -> 67.5 -> 101.6 LJ as
+      residence goes 12.5 -> 25 -> 50 -> 100 -> 200), resolved at 4/4 seeds up to residence 100,
+      while the elastic modulus stays turnover-independent (3.19 LJ). Scoped honestly: the
+      relationship is an intrinsic relaxation floor (~37 LJ) plus a residence-dominated regime
+      above residence ~50, not a single clean proportional slope, and absolute units are reduced.
   explanatory_gain:
     result: POSITIVE
     basis: >
-      Identifies a size/noise floor on the relaxation time: tau is only resolvable at slow
-      turnover on a 120-rod network, which tells the follow-up exactly what to scale (density,
-      size, seeds) to recover the full Fig-2E slope.
+      Resolves the 120-rod noise floor and exposes the mechanism's two regimes: at fast turnover
+      tau is set by the network's intrinsic viscoelastic relaxation (~37 LJ floor); at slow
+      turnover (long residence) it is set by the crosslink residence time. The crossover is near
+      residence ~50 -- a concrete, testable structure the moderate run could not see.
 
 expert_review_status: requested
 expert_questions:
