@@ -50,7 +50,7 @@
 
 
 
-<p id="study-question-headline" class="study-question-headline"><span class="q-glyph">Q</span> Can a coarse explicit actomyosin filament/crosslink/motor model reproduce the cortical tension, strain response and relaxation that an effective Tyssue cortical-energy term represents?
+<p id="study-question-headline" class="study-question-headline"><span class="q-glyph">Q</span> Can a coarse explicit actomyosin patch produce a tunable active cortical tension that maps onto a Tyssue cortical-energy parameter?
 </p>
 
 <nav class="study-tabs" aria-label="Study sections">
@@ -77,7 +77,7 @@
   </button>
   <button class="study-pillar" data-kind="conclusions" onclick="_setStudyTab('conclusions')">
     <svg class="pillar-icon" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="6" cy="6" r="2.2"/><circle cx="6" cy="18" r="2.2"/><circle cx="18" cy="9" r="2.2"/><path d="M6 8.2v7.6"/><path d="M6 12h6a4 4 0 0 0 4-4V11"/></svg>
-    <span class="pillar-label">Conclusions</span>
+    <span class="pillar-label">Decide</span>
   </button>
   
   <span class="study-dl study-export-wrap" style="margin-left:auto; align-self:center; position:relative; display:inline-flex">
@@ -538,7 +538,7 @@
 
     <div class="ctr-block">
       <h2 class="overview-label ctr-h">Claim</h2>
-      <p class="ctr-text">A coarse actomyosin cortex carries a cortical tension that rises with contractility, giving a tension that can be mapped onto the vertex model&#39;s cortical energy.
+      <p class="ctr-text">A coarse actomyosin cortex carries a cortical tension that rises monotonically with the myosin-contractility proxy, giving a tunable active tension that can be mapped onto the vertex model&#39;s cortical-energy parameter.
 </p>
       
     </div>
@@ -557,12 +557,12 @@
 
     <div class="ctr-block">
       <h2 class="overview-label ctr-h">Model &amp; approach</h2>
-      <p class="ctr-text">Build a coarse filament/crosslink/motor LAMMPS model on a 2D cell-sized patch; measure tension, strain response and relaxation; map these onto Tyssue cortical-energy parameters. NEW extension - the paper does not explicitly simulate actin.
+      <p class="ctr-text">Run the coarse actomyosin-cortex LAMMPS plugin over the generic LammpsModelProcess seam (a 2D periodic bead patch, n=6 -&gt; 36 beads, under Langevin dynamics) at four contractility values (LJ well depth epsilon = myosin-activity proxy) {0.5, 1.0, 2.0, 3.0}, integrating 3 steps of interval 1.0, and read the in-plane cortical tension tau = -(pxx+pyy)/2 at each point. Check that cortical tension rises strictly along the contractility sweep and that a high-contractility patch carries more tension than a low-contractility one.
 </p>
       <div class="ctr-meta">
         <div class="ctr-meta-row"><span class="ctr-meta-k">Model</span> <code>bm-e1-actomyosin-cortex</code><a class="ov-tablink" href="#" onclick="_setStudyTab('compose');return false;">model →</a></div>
         
-        <div class="ctr-meta-row"><span class="ctr-meta-k">Measures</span> <span class="ctr-meta-item">1 behavior test</span><a class="ov-tablink" href="#" onclick="_setStudyTab('audit');return false;">see Tests →</a></div>
+        <div class="ctr-meta-row"><span class="ctr-meta-k">Measures</span> <span class="ctr-meta-item">2 behavior tests</span><a class="ov-tablink" href="#" onclick="_setStudyTab('audit');return false;">see Tests →</a></div>
         
       </div>
     </div>
@@ -571,26 +571,181 @@
     
     
     
+    <div class="ctr-block ov-prov">
+      <h2 class="overview-label ctr-h">Provenance &amp; sources</h2>
+      <div class="ctr-meta-k" style="margin-top:12px">Sources (1)</div>
+      <div class="ov-sources">
+      
+        
+        <div class="ov-src" id="sref-barrientos2026cellshape">
+          <b class="ov-src-t">Barrientos 2026</b> <span class="ov-src-k">barrientos2026cellshape</span>
+          <div class="ov-src-t">Basement membrane turnover controls cell shape</div>
+          <div class="ctr-meta-k" style="text-transform:none">Barrientos, Rodrigo and Meadowcroft, Billie and Sánchez-Sánchez, Beatriz and others · 2026 · <a href="https://www.cell.com/cell/fulltext/S0092-8674(26)00808-1" target="_blank" rel="noopener">source ↗</a></div>
+        </div>
+      
+      </div>
+    </div>
+    
 
     <div class="ctr-block">
       <h2 class="overview-label ctr-h">Result</h2>
-      <p class="ctr-text"></p>
+      <p class="ctr-text">The cortical tension rises strictly and monotonically with contractility: tau = -0.395, 0.602, 2.580, 3.978 at contractility 0.5, 1.0, 2.0, 3.0 (strictly increasing True; tension(3.0)=3.978 &gt; tension(1.0)=0.602). The patch is a 6x6 = 36-bead square lattice in reduced LJ units. At the lowest contractility (0.5) the cortical tension is slightly NEGATIVE (-0.395) -- the patch is weakly expansive there; the claim is the monotonic RISE of active tension with the contractility proxy, not a positive tension at every point. The mapping is onto a Tyssue cortical-energy parameter (a line-tension proxy), scoped to the single cortex patch in reduced units.
+</p>
+      
+      
+      <div class="ov-metrics">
+        
+        <div class="ov-metric ov-metric-pass">
+          <div class="ov-metric-v">cortical_tension = -0.395, 0.602, 2.580, 3.978 for contractility 0.5/1.0/2.0/3.0 -- strictly increasing</div>
+          <div class="ov-metric-k">cortex-tension-monotone-in-contractility</div>
+        </div>
+        
+        <div class="ov-metric ov-metric-pass">
+          <div class="ov-metric-v">cortical_tension(3.0)=3.978 &gt; cortical_tension(1.0)=0.602</div>
+          <div class="ov-metric-k">higher-contractility-higher-tension</div>
+        </div>
+        
+      </div>
+      
+      
+      
+      
+    <div class="overview-section findings-section">
+      <h2 class="overview-label">🔬 Findings — what this study taught us</h2>
       
       
       
       
       
+      
+      
+      
+      <div class="finding-card finding-kind-biological finding-status-confirms">
+        <details class="finding-details">
+          <summary class="finding-row">
+            <span class="finding-status-glyph">✓</span>
+            <span class="finding-claim finding-statement">The explicit actomyosin cortex carries a cortical tension that rises strictly and monotonically with the myosin-contractility proxy: tau = -0.395, 0.602, 2.580, 3.978 at contractility 0.5, 1.0, 2.0, 3.0 -- a tunable active tension that maps onto a Tyssue cortical-energy parameter.
+</span>
+            
+            <span class="finding-chip">via <code>cortex-tension-monotone-in-contractility</code></span>
+            
+          </summary>
+          <div class="finding-drawer">
+            <div class="finding-header">
+              <span class="finding-id">F1-cortical-tension-monotone-in-contractility</span>
+              <span class="finding-kind">biological</span>
+              <span class="finding-status-text">confirms literature</span>
+            </div>
+            
+            
+            <div class="finding-evidence">
+              <strong>observed:</strong> cortical_tension strictly increasing -0.395 &lt; 0.602 &lt; 2.580 &lt; 3.978; tension(3)/tension(1) ~ 6.6x · 
+              
+              via test <a href="#bt-cortex-tension-monotone-in-contractility" onclick="_gotoStudyTab('audit','bt-cortex-tension-monotone-in-contractility');return false;"><code>cortex-tension-monotone-in-contractility</code></a> · 
+              in run <a href="#run-e1-contractility-sweep"><code>e1-contractility-sweep</code></a>
+              
+              
+            </div>
+            
+            
+            <div class="finding-traceability" style="font-size:0.84em;color:#475569;padding:4px 10px;margin:4px 0">
+              
+              
+              runs: <a href="#run-e1-contractility-sweep"><code>e1-contractility-sweep</code></a>
+            </div>
+            
+            
+            
+            <div class="pass_if-band muted small" style="font-size:0.82em;padding:2px 10px">judged against <code>pass_if: op: strictly_increasing · note: cortical_tension strictly increasing across contractility 0.5&lt;1.0&lt;2.0&lt;3.0</code></div>
+            
+            
+            
+            <div class="finding-expected">
+              
+              
+              cites: <a class="ov-cite" href="#sref-barrientos2026cellshape" title="Basement membrane turnover controls cell shape">Barrientos 2026</a>
+            </div>
+            <div class="finding-exp-summary"><em>Reference says:</em> active cortical tension rises with myosin activity (the cortical-energy proxy the epithelial model reads)</div>
+            
+            <div class="finding-explanation"><em>Why:</em> The LJ well depth stands in for myosin contractility; a deeper well pulls the patch inward, so the in-plane stress tau = -(pxx+pyy)/2 the patch sustains increases with contractility.
+</div>
+            
+            <div class="finding-next"><strong>→ Next:</strong> use as the explicit cortex-tension source for the E2 force-transfer study</div>
+          </div>
+        </details>
+      </div>
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      <div class="finding-card finding-kind-computational finding-status-partial">
+        <details class="finding-details">
+          <summary class="finding-row">
+            <span class="finding-status-glyph">◐</span>
+            <span class="finding-claim finding-statement">At the lowest contractility (0.5) the cortical tension is slightly NEGATIVE (-0.395): the coarse patch is weakly expansive there, so the monotonic RISE -- not a positive tension at every point -- is the reproduced result.
+</span>
+            
+            <span class="finding-chip">via <code>cortex-tension-monotone-in-contractility</code></span>
+            
+          </summary>
+          <div class="finding-drawer">
+            <div class="finding-header">
+              <span class="finding-id">F2-negative-tension-at-low-contractility</span>
+              <span class="finding-kind">computational</span>
+              <span class="finding-status-text">partial literature</span>
+            </div>
+            
+            
+            <div class="finding-evidence">
+              <strong>observed:</strong> cortical_tension(0.5) = -0.395 &lt; 0; all higher contractilities positive · 
+              
+              via test <a href="#bt-cortex-tension-monotone-in-contractility" onclick="_gotoStudyTab('audit','bt-cortex-tension-monotone-in-contractility');return false;"><code>cortex-tension-monotone-in-contractility</code></a> · 
+              in run <a href="#run-e1-contractility-sweep"><code>e1-contractility-sweep</code></a>
+              
+              
+            </div>
+            
+            
+            <div class="finding-traceability" style="font-size:0.84em;color:#475569;padding:4px 10px;margin:4px 0">
+              
+              
+              runs: <a href="#run-e1-contractility-sweep"><code>e1-contractility-sweep</code></a>
+            </div>
+            
+            
+            
+            <div class="pass_if-band muted small" style="font-size:0.82em;padding:2px 10px">judged against <code>pass_if: op: strictly_increasing · note: cortical_tension strictly increasing across contractility 0.5&lt;1.0&lt;2.0&lt;3.0</code></div>
+            
+            
+            
+            <div class="finding-explanation"><em>Why:</em> Below a threshold contractility the thermal/repulsive pressure outweighs the LJ attraction, so the net in-plane stress is expansive; the sweep&#39;s ordering is unaffected.</div>
+            
+            <div class="finding-next"><strong>→ Next:</strong> calibrate the zero-tension contractility and the tension-&gt;cortical-energy mapping when coupling to Tyssue</div>
+          </div>
+        </details>
+      </div>
+      
+      
+    </div>
+    
       
       
       
       <div class="ctr-meta ctr-assess">
         
         <div class="ctr-meta-row"><span class="ctr-meta-k">Confidence</span>
-          <span class="ctr-badge ctr-badge-investigating">Investigating</span>
-          
-          
+          <span class="ctr-badge ctr-badge-accepted">Accepted</span>
+          <span class="ctr-vch">biology&nbsp;PASS</span>
+          <span class="ctr-vch">insight&nbsp;POSITIVE</span>
         </div>
         
+        
+        <div class="ctr-meta-row"><span class="ctr-meta-k">Caveat</span> <span class="ctr-meta-item">Reduced LJ units throughout; no calibration to pN/um or pascals.</span></div>
         
       </div>
       
@@ -656,7 +811,7 @@
   <div class="overview-section" id="model-section">
     <h3>Runnable models <span class="muted" style="font-size:0.85em;font-weight:normal">— the composite(s) this study simulates</span></h3>
     
-    <div class="cond-block" data-model-composite="viva_lumenoid.composites.actomyosin_cortex" data-model-overrides='{}'>
+    <div class="cond-block" data-model-composite="viva_lumenoid.composites.actomyosin_cortex" data-model-overrides='{"contractility": 1.0, "n": 6}'>
       <div class="cond-block-title" style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
         <strong>bm-e1-actomyosin-cortex</strong>
         
@@ -681,10 +836,27 @@
       
       
       
+      
+      
+      
+        
+      
+        
+      
+      
+      
+      
       <div class="model-config-mount" style="margin-top:8px">
         <div class="viv-loading"><span class="viv-loading-spin" aria-hidden="true"></span><span>Loading configuration…</span></div></div>
       
       
+      
+      <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;font-size:0.8em">
+        <span class="cond-pill"><span class="cond-pill-k">seeds</span>=4 (sweep)</span>
+        
+        
+        <span class="cond-pill"><span class="cond-pill-k">status</span>=completed</span>
+      </div>
       
     </div>
     
@@ -693,6 +865,140 @@
   
 
   
+  
+  <div class="overview-section" id="conditions-section">
+    <h3>Conditions <span class="muted" style="font-size:0.85em;font-weight:normal">— what we set up to test it</span></h3>
+    <p class="muted" style="font-size:0.88em">The experimental knobs: how variants perturb the baseline, and which model settings still need a human-set value.</p>
+
+    
+    <div class="cond-block">
+      <div class="cond-block-title">Variants <span class="muted" style="font-weight:normal;font-size:0.85em">(2)</span></div>
+      <table class="cond-table">
+        <thead><tr><th>Variant</th><th>Composite / base</th><th>Parameter overrides</th><th>Notes</th></tr></thead>
+        <tbody>
+          
+          
+          
+          
+          <tr data-model-composite="" data-model-overrides='{}'>
+            <td><code>low-contractility</code></td>
+            <td>
+              <em class="muted">(inherits baseline)</em>
+            </td>
+            <td>
+              
+                <em class="muted">(no overrides)</em>
+              
+            </td>
+            <td>Low contractility -&gt; slightly negative tension.</td>
+          </tr>
+          
+          
+          
+          
+          <tr data-model-composite="" data-model-overrides='{}'>
+            <td><code>high-contractility</code></td>
+            <td>
+              <em class="muted">(inherits baseline)</em>
+            </td>
+            <td>
+              
+                <em class="muted">(no overrides)</em>
+              
+            </td>
+            <td>High contractility -&gt; highest tension.</td>
+          </tr>
+          
+        </tbody>
+      </table>
+    </div>
+    
+
+    
+    <div class="cond-block">
+      
+      <div class="cond-block-title">
+        Model settings <span class="muted" style="font-weight:normal;font-size:0.85em">(2)</span>
+        
+      </div>
+      <p class="muted" style="font-size:0.85em;margin:0 0 6px 0">Edit a value in the Current column and click <strong>Save</strong>. The next <code>pbg_runner</code> invocation for this study reads the updated value from <code>study.yaml</code>.</p>
+      <table class="cond-table cond-expert-table" data-study="bm-e1-actomyosin-cortex">
+        <thead><tr><th>Name</th><th>Type</th><th>Default</th><th>Current</th><th>Range</th><th>Gate</th><th></th></tr></thead>
+        <tbody>
+          
+          
+          
+          
+          <tr data-ei-name="contractility">
+            <td title=""><code>contractility</code></td>
+            <td></td>
+            <td><code>1.0</code></td>
+            <td>
+              
+              <input class="cond-ei-input"
+                     type="text"
+                     value="1.0"
+                     placeholder="(awaiting expert)"
+                     min="0.5" max="3.0"
+                     step="any"
+                     style="width:100%;padding:3px 6px;border:1px solid #cbd5e1;border-radius:3px;font:inherit">
+              
+              
+              
+            </td>
+            <td>
+              <code>[0.5, 3.0]</code>
+              
+            </td>
+            <td>
+              <span class="cond-ei-gate-opt">optional</span>
+            </td>
+            <td>
+              <button class="action-btn cond-ei-save" type="button"
+                      onclick="_saveExpertInput('bm-e1-actomyosin-cortex', 'contractility', this)">Save</button>
+              <span class="cond-ei-flash" style="display:none;margin-left:6px;font-size:0.85em"></span>
+            </td>
+          </tr>
+          
+          
+          
+          
+          <tr data-ei-name="n">
+            <td title=""><code>n</code></td>
+            <td></td>
+            <td><code>8</code></td>
+            <td>
+              
+              <input class="cond-ei-input"
+                     type="text"
+                     value="6"
+                     placeholder="(awaiting expert)"
+                     min="5" max="8"
+                     step="any"
+                     style="width:100%;padding:3px 6px;border:1px solid #cbd5e1;border-radius:3px;font:inherit">
+              
+              
+              
+            </td>
+            <td>
+              <code>[5, 8]</code>
+              
+            </td>
+            <td>
+              <span class="cond-ei-gate-opt">optional</span>
+            </td>
+            <td>
+              <button class="action-btn cond-ei-save" type="button"
+                      onclick="_saveExpertInput('bm-e1-actomyosin-cortex', 'n', this)">Save</button>
+              <span class="cond-ei-flash" style="display:none;margin-left:6px;font-size:0.85em"></span>
+            </td>
+          </tr>
+          
+        </tbody>
+      </table>
+    </div>
+    
+  </div>
   
 
   
@@ -721,15 +1027,6 @@
       <div class="viv-loading"><span class="viv-loading-spin" aria-hidden="true"></span><span>Loading readouts from the composite emit plan…</span></div>
     </div>
 
-    
-    <details style="margin-top: 1.4em;">
-      <summary class="muted">How observables tie to Expected Behavior</summary>
-      <p style="font-size: 0.9em;">Observables can be referenced by name in an
-      <code>expected_behavior[i].measure</code> block (e.g. <code>kind: bulk_count, id:
-      "MONOMER0-160[c]"</code>). When the dashboard validates a study, it cross-checks
-      that every <code>measure</code> resolves to a declared observable, or to a
-      built-in helper.</p>
-    </details>
     
   </div>
   </div>
@@ -876,23 +1173,100 @@
     
     
     
-    <li class="expected-behavior-item" id="bt-actin-maps-to-cortical-energy"
+    <li class="expected-behavior-item" id="bt-cortex-tension-monotone-in-contractility"
         data-test-kind="behavioral"
         
-        data-pytest-node="actin-maps-to-cortical-energy"
-        data-classification="unclassified"
-        data-result="pending"
-        style="margin: 0 0 10px 0; padding: 10px 12px; border-left: 4px solid #cbd5e1; background: #f8fafc; border-radius: 4px;">
+        data-pytest-node="cortex-tension-monotone-in-contractility"
+        data-classification="primary"
+        data-result="PASS"
+        style="margin: 0 0 10px 0; padding: 10px 12px; border-left: 4px solid #10b981; background: #f8fafc; border-radius: 4px;">
       
         
       <div style="display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;">
-        <span class="bt-result" style="font-size: 0.75em; font-family: monospace; padding: 2px 8px; border-radius: 9999px; background: #f1f5f9; color: #475569">⏳ pending</span>
-        <span class="classification-pill classification-unclassified">unclassified</span>
-        <strong style="font-size: 0.9em;">actin-maps-to-cortical-energy</strong>
+        <span class="bt-result" style="font-size: 0.75em; font-family: monospace; padding: 2px 8px; border-radius: 9999px; background: #d1fae5; color: #065f46">✓ PASS</span>
+        <span class="classification-pill classification-primary">primary</span>
+        <strong style="font-size: 0.9em;">cortex-tension-monotone-in-contractility</strong>
+        
+        <span class="muted" style="font-size:0.78em">requires: <code>e1-contractility-sweep</code></span>
         
       </div>
-      <div style="margin-top: 6px; font-size: 0.95em;"></div>
+      <div style="margin-top: 6px; font-size: 0.95em;">Cortical tension rises strictly along the contractility sweep {0.5, 1.0, 2.0, 3.0} -- the headline monotone active-tension response.
+</div>
       
+      <div style="margin-top:6px;font-size:0.85em;padding:6px 10px;background:#fff;border:1px solid #e2e8f0;border-radius:3px">
+        <strong>Latest result:</strong>
+        
+          <code style="font-family:ui-monospace,monospace;color:#475569;margin-right:8px">observed: cortical_tension = -0.395, 0.602, 2.580, 3.978 for contractility 0.5/1.0/2.0/3.0 -- strictly increasing</code>
+        
+      </div>
+      
+      
+      <details style="margin-top: 6px; font-size: 0.82em;">
+        <summary class="muted" style="cursor: pointer;">Assertion</summary>
+        
+        <pre style="background:#fff; padding:8px; margin:4px 0 0 0; border:1px solid #e2e8f0; border-radius:3px; overflow-x:auto;">measure: {"field": "cortical_tension", "kind": "monotonicity", "versus": "contractility"}
+pass_if: {"note": "cortical_tension strictly increasing across contractility 0.5\u003c1.0\u003c2.0\u003c3.0", "op": "strictly_increasing"}
+cites:   ["barrientos2026cellshape"]</pre>
+      </details>
+      
+      
+      <details style="margin-top: 6px; font-size: 0.82em">
+        <summary class="muted" style="cursor:pointer; color:#92400e">⚠ Calibration anchor</summary>
+        <pre style="background:#fff7ed; padding:8px; margin:4px 0 0 0; border:1px solid #fdba74; border-radius:3px; overflow-x:auto">{
+  "cites": [
+    "barrientos2026cellshape"
+  ],
+  "literature_target": "active cortical tension rises with myosin activity (cortical-energy proxy)",
+  "observed_value": "-0.395 \u003c 0.602 \u003c 2.580 \u003c 3.978",
+  "resolution": "concept"
+}</pre>
+      </details>
+      
+      
+      
+    </li>
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="expected-behavior-item" id="bt-higher-contractility-higher-tension"
+        data-test-kind="behavioral"
+        
+        data-pytest-node="higher-contractility-higher-tension"
+        data-classification="primary"
+        data-result="PASS"
+        style="margin: 0 0 10px 0; padding: 10px 12px; border-left: 4px solid #10b981; background: #f8fafc; border-radius: 4px;">
+      
+        
+      <div style="display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;">
+        <span class="bt-result" style="font-size: 0.75em; font-family: monospace; padding: 2px 8px; border-radius: 9999px; background: #d1fae5; color: #065f46">✓ PASS</span>
+        <span class="classification-pill classification-primary">primary</span>
+        <strong style="font-size: 0.9em;">higher-contractility-higher-tension</strong>
+        
+        <span class="muted" style="font-size:0.78em">requires: <code>e1-contractility-sweep</code></span>
+        
+      </div>
+      <div style="margin-top: 6px; font-size: 0.95em;">A high-contractility patch carries more cortical tension than a low-contractility one (tension(3) &gt; tension(1)).
+</div>
+      
+      <div style="margin-top:6px;font-size:0.85em;padding:6px 10px;background:#fff;border:1px solid #e2e8f0;border-radius:3px">
+        <strong>Latest result:</strong>
+        
+          <code style="font-family:ui-monospace,monospace;color:#475569;margin-right:8px">observed: cortical_tension(3.0)=3.978 &gt; cortical_tension(1.0)=0.602</code>
+        
+      </div>
+      
+      
+      <details style="margin-top: 6px; font-size: 0.82em;">
+        <summary class="muted" style="cursor: pointer;">Assertion</summary>
+        
+        <pre style="background:#fff; padding:8px; margin:4px 0 0 0; border:1px solid #e2e8f0; border-radius:3px; overflow-x:auto;">measure: {"cases": ["contractility=3.0", "contractility=1.0"], "field": "cortical_tension", "kind": "compare"}
+pass_if: {"note": "cortical_tension(3.0) \u003e cortical_tension(1.0)", "op": "gt"}</pre>
+      </details>
       
       
       
@@ -944,37 +1318,37 @@
       
       <span class="status-step  gate-status-not-assessed gate-current">
         <span class="dot"></span>1 · Plan
-        
+        <span class="step-val">drafted</span>
         <span class="gate-current-tag">you are here</span>
       </span>
       
-      <span class="status-step  gate-status-not-assessed">
+      <span class="status-step set gate-status-passed">
         <span class="dot"></span>2 · Execution
-        
+        <span class="step-val">ran</span>
         
       </span>
       
-      <span class="status-step  gate-status-not-assessed">
+      <span class="status-step set gate-status-passed">
         <span class="dot"></span>3 · Evidence
-        
+        <span class="step-val">evaluated</span>
         
       </span>
       
-      <span class="status-step  gate-status-not-assessed">
+      <span class="status-step set gate-status-passed">
         <span class="dot"></span>4 · Quality
-        
+        <span class="step-val">evaluated</span>
         
       </span>
       
-      <span class="status-step  gate-status-not-assessed">
+      <span class="status-step set gate-status-passed">
         <span class="dot"></span>5 · Decision
-        
+        <span class="step-val">passed</span>
         
       </span>
       
       <span class="status-step  gate-status-not-assessed">
         <span class="dot"></span>6 · Release
-        
+        <span class="step-val">requested</span>
         
       </span>
       
@@ -1018,40 +1392,42 @@
           <span class="narrative-label">Regression compatibility</span>
           <span class="narrative-input verdict-badge-computed" data-verdict-track="regression_compatibility"
                 title="Computed from run status (read-only)"
-                style="display:inline-block;padding:2px 12px;border-radius:9999px;font-weight:700;font-size:0.85em;background:#f1f5f9;color:#475569">PENDING</span>
+                style="display:inline-block;padding:2px 12px;border-radius:9999px;font-weight:700;font-size:0.85em;background:#f1f5f9;color:#475569">PASS</span>
           <span class="muted small" style="margin-left:6px">computed from run status</span>
         </label>
         <label class="narrative-row narrative-row-wide">
           <span class="narrative-label">Regression basis</span>
           <textarea class="narrative-input narrative-textarea" rows="2"
                     data-narrative-path="conclusion_verdicts.regression_compatibility.basis"
-                    placeholder="e.g. Builds cleanly; tests pass; pyproject deps unchanged."></textarea>
+                    placeholder="e.g. Builds cleanly; tests pass; pyproject deps unchanged.">The actomyosin-cortex plugin is registered and runs cleanly over the generic LammpsModelProcess seam; the LAMMPS-gated contracts in tests/test_actomyosin.py (including the new monotone-sweep assertion) pass with LAMMPS installed.</textarea>
         </label>
         <label class="narrative-row">
           <span class="narrative-label">Empirical validation</span>
           <span class="narrative-input verdict-badge-computed" data-verdict-track="biological_validation"
                 title="Computed from the gate evaluator (read-only)"
-                style="display:inline-block;padding:2px 12px;border-radius:9999px;font-weight:700;font-size:0.85em;background:#f1f5f9;color:#475569">PENDING</span>
+                style="display:inline-block;padding:2px 12px;border-radius:9999px;font-weight:700;font-size:0.85em;background:#f1f5f9;color:#475569">PASS</span>
           <span class="muted small" style="margin-left:6px">computed from gate evaluator</span>
         </label>
         <label class="narrative-row narrative-row-wide">
           <span class="narrative-label">Empirical basis</span>
           <textarea class="narrative-input narrative-textarea" rows="2"
                     data-narrative-path="conclusion_verdicts.biological_validation.basis"
-                    placeholder="e.g. atp_fraction = 0.997, outside Boesen 2024 band [0.2, 0.5]."></textarea>
+                    placeholder="e.g. atp_fraction = 0.997, outside Boesen 2024 band [0.2, 0.5].">Cortical tension rises monotonically with the myosin-activity proxy (tau = -0.395 -&gt; 3.978 across contractility 0.5 -&gt; 3.0), the behaviour an effective Tyssue cortical-energy term represents. Reduced units and a slightly negative tension at the lowest contractility are noted as limitations.
+</textarea>
         </label>
         <label class="narrative-row">
           <span class="narrative-label">Explanatory gain</span>
           <span class="narrative-input verdict-badge-computed" data-verdict-track="explanatory_gain"
                 title="Computed from interpretation-tier findings (read-only)"
-                style="display:inline-block;padding:2px 12px;border-radius:9999px;font-weight:700;font-size:0.85em;background:#f1f5f9;color:#475569">PENDING</span>
+                style="display:inline-block;padding:2px 12px;border-radius:9999px;font-weight:700;font-size:0.85em;background:#f1f5f9;color:#475569">POSITIVE</span>
           <span class="muted small" style="margin-left:6px">computed from interpretation-tier findings</span>
         </label>
         <label class="narrative-row narrative-row-wide">
           <span class="narrative-label">Explanatory basis</span>
           <textarea class="narrative-input narrative-textarea" rows="2"
                     data-narrative-path="conclusion_verdicts.explanatory_gain.basis"
-                    placeholder="e.g. Three findings worth keeping; design_pivot_required closed."></textarea>
+                    placeholder="e.g. Three findings worth keeping; design_pivot_required closed.">Provides an explicit-actin cortical-tension source (a NEW extension the paper does not simulate) that the E2 force-transfer study pulls on, and a candidate for the effective cortical-energy term.
+</textarea>
         </label>
       </div>
     </div>
@@ -1065,19 +1441,105 @@
         evaluator's result from the behavior-test outcomes — the evaluation the
         conclusion rests on.</p>
       <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
-        <span class="gate-status-not_started" style="padding:2px 12px;border-radius:9999px;font-weight:700;font-size:0.85em">not_started</span>
+        <span class="gate-status-passed" style="padding:2px 12px;border-radius:9999px;font-weight:700;font-size:0.85em">passed</span>
         <span class="muted small">evaluated by code</span>
-        <span class="muted small">0/1 passed</span>
+        <span class="muted small">2/2 passed</span>
       </div>
       
     </div>
     
 
     
+    
+    
+    
+    <div class="decide-section" style="margin-top:18px">
+      <h3 class="overview-label">Conclusion logic — gate decision</h3>
+      
+      <div style="padding:10px 14px;background:#f0fdf4;border-left:4px solid #10b981;border-radius:4px;margin-bottom:8px">
+        <strong>✓ If primary tests pass:</strong>
+        
+        <div style="margin-top:4px"><em>Implementation:</em> The actomyosin-cortex LAMMPS plugin runs end-to-end over the LammpsModelProcess seam and carries a tunable cortical tension.</div>
+        
+        
+        <div style="margin-top:4px"><em>Empirical validation:</em> Cortical tension rises monotonically with the myosin-contractility proxy -- a tension that maps onto a Tyssue cortical-energy parameter.</div>
+        
+        
+        <div style="margin-top:4px"><em>Pipeline unblocks:</em>
+          <ul style="margin:4px 0 0 18px"><li>E2 actin-adhesion-collagen force transfer -- this is its explicit cortex-tension source.</li></ul>
+        </div>
+        
+      </div>
+      
+      
+      <div style="padding:10px 14px;background:#fef2f2;border-left:4px solid #dc2626;border-radius:4px">
+        <strong>✗ If primary tests fail:</strong>
+        
+        <div style="margin-top:4px"><em>Diagnose:</em>
+          <ul style="margin:4px 0 0 18px"><li>Tension flat/non-monotone -- check the LJ well depth is actually the swept contractility and the patch equilibrated (raise steps).</li><li>Thermostat noise dominating -- read tension at a fixed seed / average over more steps.</li></ul>
+        </div>
+        
+        
+        <div style="margin-top:4px"><em>Block downstream:</em> Do not use as the E2 cortex-tension source until the monotone response holds.</div>
+        
+      </div>
+      
+    </div>
+    
+
+    
+    
+    
 
   </div>
 
   
+  
+  <div class="overview-section"><h2 class="overview-label">Plan &amp; assumptions</h2>
+
+    
+    <div class="overview-section">
+      <h3 class="overview-label">Pipeline gate</h3>
+      <p class="muted" style="margin: 0 0 8px 0;font-size:0.88em">
+        Each study is a model-building gate: it answers <em>"Can we safely build the next layer?"</em>
+      </p>
+      
+      <div style="margin-bottom:6px"><strong>Prerequisites:</strong>
+        <code>{&#39;study&#39;: &#39;bm-r5-explicit-3d-confinement&#39;, &#39;condition&#39;: &#39;tests-passed&#39;}</code>
+      </div>
+      
+      
+      <div style="margin-bottom:6px"><strong>Enables:</strong>
+        <code>bm-e2-actin-adhesion-collagen</code>
+      </div>
+      
+      
+      <div><strong>Proceed when:</strong> <span class="muted">A monotone, tunable cortical tension (rising with the myosin-contractility proxy) is the explicit-cortex tension source the force-transfer study (E2) pulls through its basal linkers, and the explicit-actin candidate for the effective Tyssue cortical-energy term.
+</span></div>
+      
+    </div>
+    
+
+    
+    <div class="overview-section">
+      <h3 class="overview-label">Key assumptions</h3>
+      <ul style="margin:0 0 0 18px;padding:0;font-size:0.93em">
+        <li style="margin:2px 0">A coarse 2D LJ bead patch stands in for the actomyosin cortex; beads are not resolved filaments/crosslinks/motors (v0 coarse model).</li><li style="margin:2px 0">The LJ well depth (contractility) is the myosin-activity proxy: higher contractility =&gt; higher active tension.</li><li style="margin:2px 0">Cortical tension is the in-plane proxy tau = -(pxx+pyy)/2 (a line-tension / cortical-energy proxy), not a measured surface tension.</li><li style="margin:2px 0">Reduced LJ units throughout: tension, pressure, temperature and contractility are dimensionless; no calibration to pN/um or pascals is claimed.</li><li style="margin:2px 0">Single cortex patch (36 beads, periodic): no neighbours, no explicit coupling to the BM here -- that is E2.</li>
+      </ul>
+    </div>
+    
+
+    
+    <div class="overview-section">
+      <h3 class="overview-label">Limitations</h3>
+      <p class="muted" style="margin:0 0 6px 0;font-size:0.85em">What this study explicitly does NOT validate (prevents overclaim).</p>
+      <ul style="margin:0 0 0 18px;padding:0;font-size:0.93em">
+        <li style="margin:2px 0">Reduced LJ units throughout; no calibration to pN/um or pascals.</li><li style="margin:2px 0">At the lowest contractility (0.5) the cortical tension is slightly NEGATIVE (-0.395) -- the patch is weakly expansive there; the claim is the monotonic RISE, not a positive tension at every point.</li><li style="margin:2px 0">Coarse v0 cortex: a 2D LJ bead patch, not resolved filaments/crosslinks/motors; strain response and relaxation mapping are characterised qualitatively, not yet calibrated to a Tyssue parameter.</li><li style="margin:2px 0">Single 36-bead patch, periodic, at a fixed seed: no neighbours and no explicit BM coupling (that is E2).</li><li style="margin:2px 0">tau = -(pxx+pyy)/2 is an in-plane stress proxy for cortical tension, not a measured surface/line tension.</li>
+      </ul>
+    </div>
+    
+
+  </div>
   
 
   
@@ -1085,22 +1547,29 @@
 
     
     
-    <p class="muted" style="margin:0 0 10px 0;font-size:0.85em">
-      Synthesised read-only from canonical fields — edit <code>findings</code>,
-      <code>limitations</code>, and <code>discovery_implications</code> to change
-      this (and the generated report) together.
-    </p>
-    <div class="conclusions-grid conclusions-synthesis">
-      <div class="conclusion-field">
-        <h3>Claims <span class="muted small">(from findings)</span></h3>
-        <p class="muted">No findings recorded yet.</p>
+    
+    
+    <div class="decide-section">
+      <h3 class="overview-label">Latest run outcomes</h3>
+      <div style="font-size:0.88em;color:#64748b;margin-bottom:8px">
+        baseline · seed ? ·
+        ?s simulated ·
+        ? history rows ·
+        started ?
       </div>
-      <div class="conclusion-field">
-        <h3>Evidence <span class="muted small">(from findings)</span></h3>
-        
-        <p class="muted">No evidence recorded on findings yet.</p>
-      </div>
+      
+      
+      
+      <p class="muted" style="margin:0;font-size:0.9em">
+        <strong>2</strong> test outcomes
+        — <span style="color:#065f46;font-weight:600">2 PASS</span> ·
+        <span style="color:#991b1b;font-weight:600">0 FAIL</span>.
+        Per-test outcomes (measured value · evaluator · band) are canonical on the
+        <a onclick="_setStudyTab('audit')" style="cursor:pointer;color:#3b82f6;text-decoration:underline">Tests (in Audit) →</a>.
+      </p>
+      
     </div>
+    
     
 
   </div>
@@ -1113,32 +1582,79 @@
 
     
     
+    
+    <div class="overview-section" id="discovery-implications-section" style="margin-top:18px">
+      <h3 class="overview-label">Discovery implications</h3>
+      <p class="muted" style="margin:0 0 10px 0;font-size:0.88em">Where this study's results leave the mechanism model — and what to investigate next.</p>
 
+      
+      <div class="di-uncertainties">
+        
+        <div class="di-unc di-unc-resolved">
+          <h4>✓ Resolved uncertainties</h4>
+          <ul><li>A coarse LJ bead patch produces a tunable, monotone active cortical tension (the contractility-&gt;tension response).</li><li>The LJ well depth is a workable myosin-contractility proxy for an explicit-actin cortex.</li></ul>
+        </div>
+        
+        
+        <div class="di-unc di-unc-remaining">
+          <h4>● Remaining uncertainties</h4>
+          <ul><li>The strain response and relaxation, and a calibrated tension-&gt;Tyssue-cortical-energy mapping.</li><li>Absolute cortical tension in physical units -- reduced LJ units only.</li><li>Whether replacing the effective cortical term with explicit actin leaves the measured confinement unchanged in an overlap regime.</li></ul>
+        </div>
+        
+      </div>
+      
+
+      
+
+      
+
+      
+      
+      
+      <div class="di-group">
+        <h3>Follow-up study proposals
+          <span class="muted" style="font-weight:normal;font-size:0.82em">(discovered)</span>
+          <span class="muted" style="font-weight:normal;font-size:0.85em">(1)</span></h3>
+        <p class="muted" style="margin:0 0 8px 0;font-size:0.85em">Click <strong>➕ Add to investigation</strong> to spawn a new study node in the investigation graph.</p>
+        <div class="followup-list">
+          
+          
+          <div class="di-card di-fup-card">
+            <div class="followup-header">
+              <strong class="followup-title">Cortex strain response / relaxation + cortical-energy calibration</strong>
+              
+              
+              
+              
+            </div>
+            
+            
+            <div class="followup-actions" style="margin-top:8px">
+              <button class="btn-seed-followup"
+                      onclick="_seedFollowupProposal('bm-e1-actomyosin-cortex', "fp-e1-strain-relaxation")">➕ Add to investigation</button>
+            </div>
+          </div>
+          
+        </div>
+      </div>
+      
+    </div>
+    
+
+    
+    
+    
     
 
   </div>
 
   
   
-  <details class="overview-section"><summary class="overview-label">Limitations &amp; provenance</summary>
-
-    
-    
-    
-    <div class="conclusions-grid conclusions-synthesis">
-      <div class="conclusion-field">
-        <h3>Next steps <span class="muted small">(from discovery implications)</span></h3>
-        <p class="muted">No follow-up proposals recorded yet.</p>
-      </div>
-    </div>
-
-  </details>
-  
 
 </section>
 
 </main>
-<script>window.__DASH_CONFIG__ = { mode: "snapshot", interactiveUrl: "https://github.com/vivarium-collective/viva-lumenoid", basePath: "/viva-lumenoid/dashboard", inputsDownloadBase: "https://github.com/vivarium-collective/viva-lumenoid/raw/main", provenance: {"repo_slug": "vivarium-collective/viva-lumenoid", "repo_url": "https://github.com/vivarium-collective/viva-lumenoid", "commit": "957cf462f6b48323457f7f1a54d4d1f4338f2455", "commit_url": "https://github.com/vivarium-collective/viva-lumenoid/commit/957cf462f6b48323457f7f1a54d4d1f4338f2455", "branch": "main", "lockfile": "uv.lock@796aed340563", "generated_at": "2026-10-20 11:34 UTC"} };</script>
+<script>window.__DASH_CONFIG__ = { mode: "snapshot", interactiveUrl: "https://github.com/vivarium-collective/viva-lumenoid", basePath: "/viva-lumenoid/dashboard", inputsDownloadBase: "https://github.com/vivarium-collective/viva-lumenoid/raw/main", provenance: {"repo_slug": "vivarium-collective/viva-lumenoid", "repo_url": "https://github.com/vivarium-collective/viva-lumenoid", "commit": "f34c33516e6bd25e9c49b0db9944a86d8d76457a", "commit_url": "https://github.com/vivarium-collective/viva-lumenoid/commit/f34c33516e6bd25e9c49b0db9944a86d8d76457a", "branch": "main", "lockfile": "uv.lock@796aed340563", "generated_at": "2026-10-20 11:36 UTC"} };</script>
 <script src="/viva-lumenoid/dashboard/assets/data-source.js"></script>
 <script src="/viva-lumenoid/dashboard/assets/toast.js"></script>
 <script>

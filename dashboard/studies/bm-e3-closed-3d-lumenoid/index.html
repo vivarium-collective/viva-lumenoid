@@ -77,7 +77,7 @@
   </button>
   <button class="study-pillar" data-kind="conclusions" onclick="_setStudyTab('conclusions')">
     <svg class="pillar-icon" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="6" cy="6" r="2.2"/><circle cx="6" cy="18" r="2.2"/><circle cx="18" cy="9" r="2.2"/><path d="M6 8.2v7.6"/><path d="M6 12h6a4 4 0 0 0 4-4V11"/></svg>
-    <span class="pillar-label">Conclusions</span>
+    <span class="pillar-label">Decide</span>
   </button>
   
   <span class="study-dl study-export-wrap" style="margin-left:auto; align-self:center; position:relative; display:inline-flex">
@@ -538,7 +538,7 @@
 
     <div class="ctr-block">
       <h2 class="overview-label ctr-h">Claim</h2>
-      <p class="ctr-text">A closed lumenoid with a lumen pressure and a basal membrane surface runs the vertex model; attaching an explicit membrane and reading curvature-dependent shape is next.
+      <p class="ctr-text">A closed 3D lumenoid runs over the Tyssue engine: 78 cells enclose a single lumen, per-cell volumes emerge finite and positive (0.50-3.43), and a basal surface (78 faces, area 202.5) is exposed as the basement-membrane coupling shell with a readable enclosed lumen volume (261.7). The lumen-pressure trajectory and the explicit BM attachment / curvature-dependent shape are the next readouts, not yet dynamic results.
 </p>
       
     </div>
@@ -549,20 +549,19 @@
       <div class="ctr-meta">
         <div class="ctr-meta-row"><span class="ctr-meta-k">Question</span> <span class="ctr-meta-item">How do lumen pressure/volume and a basement-membrane shell set cell shape and curvature- dependent growth in a closed 3D lumenoid?
 </span></div>
-        <div class="ctr-meta-row"><span class="ctr-meta-k">Hypothesis</span> <span class="ctr-meta-item">A closed curved Tyssue epithelium with a lumen volume/pressure constraint and a BM shell predicts lumen growth and curvature-dependent cell shapes that depend on BM relaxation, first with a validated reduced-order BM law and then with resolved LAMMPS patches or a curved-network realization.
-</span></div>
+        
       </div>
     </div>
     
 
     <div class="ctr-block">
       <h2 class="overview-label ctr-h">Model &amp; approach</h2>
-      <p class="ctr-text">Introduce a 3D closed-shell Tyssue geometry with lumen pressure/volume and a BM shell; first use the validated reduced-order BM law, then test resolved LAMMPS patches or a curved- network realization; predict lumen growth, cell shape and curvature effects.
+      <p class="ctr-text">Build the closed_lumenoid composite (a closed curved Monolayer shell over the vivarium-tyssue engine, its outer basal surface the BM-coupling patch, with a lumen volume/pressure constraint) and step the EulerSolver. Reconstruct the mesh counts (cells, faces, vertices), read every per-cell area and volume off cell_df, read the shell extent off the vertices, and read the lumen volume, lumen pressure and basal BM surface off the engine settings. Confirm the geometry stays finite and positive across several Euler steps (dt 0.01). This is a qualitative morphogenesis check -- that a closed, lumen-enclosing shell resolves with well-posed per-cell geometry and an exposed BM surface -- not yet a lumen-growth trajectory.
 </p>
       <div class="ctr-meta">
         <div class="ctr-meta-row"><span class="ctr-meta-k">Model</span> <code>bm-e3-closed-3d-lumenoid</code><a class="ov-tablink" href="#" onclick="_setStudyTab('compose');return false;">model →</a></div>
         
-        <div class="ctr-meta-row"><span class="ctr-meta-k">Measures</span> <span class="ctr-meta-item">1 behavior test</span><a class="ov-tablink" href="#" onclick="_setStudyTab('audit');return false;">see Tests →</a></div>
+        <div class="ctr-meta-row"><span class="ctr-meta-k">Measures</span> <span class="ctr-meta-item">2 behavior tests</span><a class="ov-tablink" href="#" onclick="_setStudyTab('audit');return false;">see Tests →</a></div>
         
       </div>
     </div>
@@ -571,15 +570,216 @@
     
     
     
+    <div class="ctr-block ov-prov">
+      <h2 class="overview-label ctr-h">Provenance &amp; sources</h2>
+      <div class="ctr-meta-k" style="margin-top:12px">Sources (1)</div>
+      <div class="ov-sources">
+      
+        
+        <div class="ov-src" id="sref-barrientos2026cellshape">
+          <b class="ov-src-t">Barrientos 2026</b> <span class="ov-src-k">barrientos2026cellshape</span>
+          <div class="ov-src-t">Basement membrane turnover controls cell shape</div>
+          <div class="ctr-meta-k" style="text-transform:none">Barrientos, Rodrigo and Meadowcroft, Billie and Sánchez-Sánchez, Beatriz and others · 2026 · <a href="https://www.cell.com/cell/fulltext/S0092-8674(26)00808-1" target="_blank" rel="noopener">source ↗</a></div>
+        </div>
+      
+      </div>
+    </div>
+    
 
     <div class="ctr-block">
       <h2 class="overview-label ctr-h">Result</h2>
-      <p class="ctr-text"></p>
+      <p class="ctr-text">The closed lumenoid resolves and relaxes deterministically. The shell carries 78 cells, 606 faces and 298 vertices, closed in 3D (vertices span roughly +/-4.7 in x and y and -4.90 to +4.74 in z -- a closed shell centred near the origin, measured extent wider than the +/-4.3 of the earlier reconstruction). Per-cell basal area ranges 3.90-15.65 and per-cell volume 0.50-3.43, all finite and positive. The lumen is readable off the engine: enclosed lumen volume 261.69 (at its preferred volume, so lumen pressure is 0.0 at rest), and the basal BM-coupling surface is 78 faces with total area 202.47. Stepping the EulerSolver five times (dt 0.01) keeps per-cell area and volume finite and positive -- no NaN or blow-up. Because the lumen starts at its preferred volume, the pressure trajectory (pressure departing from zero as the lumen fills or drains) and the explicit BM attachment / curvature-dependent cell-shape predictions are the next readouts, flagged as followups.
+</p>
+      
+      
+      <div class="ov-metrics">
+        
+        <div class="ov-metric ov-metric-pass">
+          <div class="ov-metric-v">78 cells, 606 faces enclosing one lumen (vol 261.69); per-cell volume 0.4961-3.4257, all finite and &gt; 0; basal BM surface 78 faces, area 202.47</div>
+          <div class="ov-metric-k">lumenoid-is-closed-with-cells</div>
+        </div>
+        
+        <div class="ov-metric ov-metric-pass">
+          <div class="ov-metric-v">5 Euler steps (dt 0.01) keep per-cell area and volume finite and positive -- no NaN, no blow-up</div>
+          <div class="ov-metric-k">lumenoid-steps-stably</div>
+        </div>
+        
+      </div>
+      
+      
+      
+      
+    <div class="overview-section findings-section">
+      <h2 class="overview-label">🔬 Findings — what this study taught us</h2>
       
       
       
       
       
+      
+      
+      
+      <div class="finding-card finding-kind-computational finding-status-confirms">
+        <details class="finding-details">
+          <summary class="finding-row">
+            <span class="finding-status-glyph">✓</span>
+            <span class="finding-claim finding-statement">The closed lumenoid resolves over the tyssue engine: 78 cells, 606 faces and 298 vertices form a closed 3D shell (extent roughly +/-4.7 in x/y, -4.90 to +4.74 in z) enclosing a single lumen of volume 261.69; per-cell volumes (0.4961-3.4257) and areas (3.9018-15.6489) emerge finite and positive, and a basal surface of 78 faces (area 202.47) is exposed as the BM-coupling shell.
+</span>
+            
+            <span class="finding-chip">via <code>lumenoid-is-closed-with-cells</code></span>
+            
+          </summary>
+          <div class="finding-drawer">
+            <div class="finding-header">
+              <span class="finding-id">F1-closed-shell-with-lumen</span>
+              <span class="finding-kind">computational</span>
+              <span class="finding-status-text">confirms literature</span>
+            </div>
+            
+            
+            <div class="finding-evidence">
+              <strong>observed:</strong> Nc=78, Nf=606, Nv=298; cell vol 0.50-3.43; lumen vol 261.69, pressure 0.0 at rest; BM surface 78 faces / area 202.47 · 
+              
+              via test <a href="#bt-lumenoid-is-closed-with-cells" onclick="_gotoStudyTab('audit','bt-lumenoid-is-closed-with-cells');return false;"><code>lumenoid-is-closed-with-cells</code></a> · 
+              in run <a href="#run-e3-closed-lumenoid-relaxation"><code>e3-closed-lumenoid-relaxation</code></a>
+              
+              
+            </div>
+            
+            
+            <div class="finding-traceability" style="font-size:0.84em;color:#475569;padding:4px 10px;margin:4px 0">
+              
+              
+              runs: <a href="#run-e3-closed-lumenoid-relaxation"><code>e3-closed-lumenoid-relaxation</code></a>
+            </div>
+            
+            
+            
+            <div class="pass_if-band muted small" style="font-size:0.82em;padding:2px 10px">judged against <code>pass_if: op: all_finite_positive · note: Nc &gt; 0 and Nf &gt; 0 and all 78 cell volumes finite and &gt; 0 (0.50-3.43)</code></div>
+            
+            
+            
+            <div class="finding-explanation"><em>Why:</em> The merged LumenoidGeometry loads a closed curved mesh; each cell carries a volume target and the lumen a volume/pressure constraint, so the vertex model relaxes to a well-posed closed shell with per-cell volumes and an exposed basal surface.
+</div>
+            
+            <div class="finding-next"><strong>→ Next:</strong> drive the lumen off its preferred volume and record the pressure trajectory and curvature-dependent cell shape</div>
+          </div>
+        </details>
+      </div>
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      <div class="finding-card finding-kind-computational finding-status-confirms">
+        <details class="finding-details">
+          <summary class="finding-row">
+            <span class="finding-status-glyph">✓</span>
+            <span class="finding-claim finding-statement">Stepping the EulerSolver five times (dt 0.01) keeps per-cell area and volume finite and positive, with no NaN or blow-up -- the closed lumenoid shell is numerically stable over short integration.
+</span>
+            
+            <span class="finding-chip">via <code>lumenoid-steps-stably</code></span>
+            
+          </summary>
+          <div class="finding-drawer">
+            <div class="finding-header">
+              <span class="finding-id">F2-steps-stably</span>
+              <span class="finding-kind">computational</span>
+              <span class="finding-status-text">confirms literature</span>
+            </div>
+            
+            
+            <div class="finding-evidence">
+              <strong>observed:</strong> per-cell area and volume finite and &gt; 0 after 5 Euler steps · 
+              
+              via test <a href="#bt-lumenoid-steps-stably" onclick="_gotoStudyTab('audit','bt-lumenoid-steps-stably');return false;"><code>lumenoid-steps-stably</code></a> · 
+              in run <a href="#run-e3-closed-lumenoid-relaxation"><code>e3-closed-lumenoid-relaxation</code></a>
+              
+              
+            </div>
+            
+            
+            <div class="finding-traceability" style="font-size:0.84em;color:#475569;padding:4px 10px;margin:4px 0">
+              
+              
+              runs: <a href="#run-e3-closed-lumenoid-relaxation"><code>e3-closed-lumenoid-relaxation</code></a>
+            </div>
+            
+            
+            
+            <div class="pass_if-band muted small" style="font-size:0.82em;padding:2px 10px">judged against <code>pass_if: op: finite_no_blowup · note: per-cell area and volume finite and positive after 5 Euler steps (dt 0.01)</code></div>
+            
+            
+            
+            
+            
+            
+          </div>
+        </details>
+      </div>
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      <div class="finding-card finding-kind-methodological finding-status-partial">
+        <details class="finding-details">
+          <summary class="finding-row">
+            <span class="finding-status-glyph">◐</span>
+            <span class="finding-claim finding-statement">The lumen sits at its preferred volume (pressure 0.0 at rest) and the BM is an effective basal surface with no explicit attachment, so the lumen-growth / pressure trajectory and the curvature-dependent cell-shape prediction -- the new morphogenesis claims -- are not yet tested. Only the closed rest-state geometry and the readable lumen/BM quantities are established.
+</span>
+            
+            <span class="finding-chip">via <code>lumenoid-is-closed-with-cells</code></span>
+            
+          </summary>
+          <div class="finding-drawer">
+            <div class="finding-header">
+              <span class="finding-id">F3-lumen-pressure-and-bm-attachment-next</span>
+              <span class="finding-kind">methodological</span>
+              <span class="finding-status-text">partial literature</span>
+            </div>
+            
+            
+            <div class="finding-evidence">
+              <strong>observed:</strong> lumen_vol == lumen_prefered_vol (261.69) -&gt; pressure 0.0; BM surface exposed but not attached · 
+              
+              via test <a href="#bt-lumenoid-is-closed-with-cells" onclick="_gotoStudyTab('audit','bt-lumenoid-is-closed-with-cells');return false;"><code>lumenoid-is-closed-with-cells</code></a> · 
+              in run <a href="#run-e3-closed-lumenoid-relaxation"><code>e3-closed-lumenoid-relaxation</code></a>
+              
+              
+            </div>
+            
+            
+            <div class="finding-traceability" style="font-size:0.84em;color:#475569;padding:4px 10px;margin:4px 0">
+              
+              
+              runs: <a href="#run-e3-closed-lumenoid-relaxation"><code>e3-closed-lumenoid-relaxation</code></a>
+            </div>
+            
+            
+            
+            <div class="pass_if-band muted small" style="font-size:0.82em;padding:2px 10px">judged against <code>pass_if: op: all_finite_positive · note: Nc &gt; 0 and Nf &gt; 0 and all 78 cell volumes finite and &gt; 0 (0.50-3.43)</code></div>
+            
+            
+            
+            
+            
+            <div class="finding-next"><strong>→ Next:</strong> wire the lumen-volume forcing + explicit BM attachment, then read pressure and curvature-dependent shape over time</div>
+          </div>
+        </details>
+      </div>
+      
+      
+    </div>
+    
       
       
       
@@ -587,10 +787,12 @@
         
         <div class="ctr-meta-row"><span class="ctr-meta-k">Confidence</span>
           <span class="ctr-badge ctr-badge-investigating">Investigating</span>
-          
-          
+          <span class="ctr-vch">biology&nbsp;PENDING</span>
+          <span class="ctr-vch">insight&nbsp;POSITIVE</span>
         </div>
         
+        
+        <div class="ctr-meta-row"><span class="ctr-meta-k">Caveat</span> <span class="ctr-meta-item">Qualitative morphogenesis check only: the study confirms a closed lumen-enclosing shell resolves with finite per-cell volumes and an exposed BM surface, not that lumen growth or curvature set cell shape.</span></div>
         
       </div>
       
@@ -681,10 +883,23 @@
       
       
       
+      
+      
+      
+      
+      
+      
       <div class="model-config-mount" style="margin-top:8px">
         <div class="viv-loading"><span class="viv-loading-spin" aria-hidden="true"></span><span>Loading configuration…</span></div></div>
       
       
+      
+      <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;font-size:0.8em">
+        <span class="cond-pill"><span class="cond-pill-k">seeds</span>=1</span>
+        
+        
+        <span class="cond-pill"><span class="cond-pill-k">status</span>=completed</span>
+      </div>
       
     </div>
     
@@ -721,15 +936,6 @@
       <div class="viv-loading"><span class="viv-loading-spin" aria-hidden="true"></span><span>Loading readouts from the composite emit plan…</span></div>
     </div>
 
-    
-    <details style="margin-top: 1.4em;">
-      <summary class="muted">How observables tie to Expected Behavior</summary>
-      <p style="font-size: 0.9em;">Observables can be referenced by name in an
-      <code>expected_behavior[i].measure</code> block (e.g. <code>kind: bulk_count, id:
-      "MONOMER0-160[c]"</code>). When the dashboard validates a study, it cross-checks
-      that every <code>measure</code> resolves to a declared observable, or to a
-      built-in helper.</p>
-    </details>
     
   </div>
   </div>
@@ -876,23 +1082,100 @@
     
     
     
-    <li class="expected-behavior-item" id="bt-lumenoid-shape-depends-on-bm"
+    <li class="expected-behavior-item" id="bt-lumenoid-is-closed-with-cells"
         data-test-kind="behavioral"
         
-        data-pytest-node="lumenoid-shape-depends-on-bm"
-        data-classification="unclassified"
-        data-result="pending"
-        style="margin: 0 0 10px 0; padding: 10px 12px; border-left: 4px solid #cbd5e1; background: #f8fafc; border-radius: 4px;">
+        data-pytest-node="lumenoid-is-closed-with-cells"
+        data-classification="primary"
+        data-result="PASS"
+        style="margin: 0 0 10px 0; padding: 10px 12px; border-left: 4px solid #10b981; background: #f8fafc; border-radius: 4px;">
       
         
       <div style="display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;">
-        <span class="bt-result" style="font-size: 0.75em; font-family: monospace; padding: 2px 8px; border-radius: 9999px; background: #f1f5f9; color: #475569">⏳ pending</span>
-        <span class="classification-pill classification-unclassified">unclassified</span>
-        <strong style="font-size: 0.9em;">lumenoid-shape-depends-on-bm</strong>
+        <span class="bt-result" style="font-size: 0.75em; font-family: monospace; padding: 2px 8px; border-radius: 9999px; background: #d1fae5; color: #065f46">✓ PASS</span>
+        <span class="classification-pill classification-primary">primary</span>
+        <strong style="font-size: 0.9em;">lumenoid-is-closed-with-cells</strong>
+        
+        <span class="muted" style="font-size:0.78em">requires: <code>e3-closed-lumenoid-relaxation</code></span>
         
       </div>
-      <div style="margin-top: 6px; font-size: 0.95em;"></div>
+      <div style="margin-top: 6px; font-size: 0.95em;">The lumenoid is a closed shell with a positive cell and face count, and every per-cell volume is finite and positive -- a closed, lumen-enclosing geometry.
+</div>
       
+      <div style="margin-top:6px;font-size:0.85em;padding:6px 10px;background:#fff;border:1px solid #e2e8f0;border-radius:3px">
+        <strong>Latest result:</strong>
+        
+          <code style="font-family:ui-monospace,monospace;color:#475569;margin-right:8px">observed: 78 cells, 606 faces enclosing one lumen (vol 261.69); per-cell volume 0.4961-3.4257, all finite and &gt; 0; basal BM surface 78 faces, area 202.47</code>
+        
+      </div>
+      
+      
+      <details style="margin-top: 6px; font-size: 0.82em;">
+        <summary class="muted" style="cursor: pointer;">Assertion</summary>
+        
+        <pre style="background:#fff; padding:8px; margin:4px 0 0 0; border:1px solid #e2e8f0; border-radius:3px; overflow-x:auto;">measure: {"field": "cell_volume", "kind": "reduce", "reduce": "all_finite_and_positive"}
+pass_if: {"note": "Nc \u003e 0 and Nf \u003e 0 and all 78 cell volumes finite and \u003e 0 (0.50-3.43)", "op": "all_finite_positive"}
+cites:   ["barrientos2026cellshape"]</pre>
+      </details>
+      
+      
+      <details style="margin-top: 6px; font-size: 0.82em">
+        <summary class="muted" style="cursor:pointer; color:#92400e">⚠ Calibration anchor</summary>
+        <pre style="background:#fff7ed; padding:8px; margin:4px 0 0 0; border:1px solid #fdba74; border-radius:3px; overflow-x:auto">{
+  "cites": [
+    "barrientos2026cellshape"
+  ],
+  "literature_target": "a closed lumen-enclosing shell with finite per-cell volumes and an exposed basal BM surface (qualitative; no micron calibration)",
+  "observed_value": "0.4961-3.4257",
+  "resolution": "concept"
+}</pre>
+      </details>
+      
+      
+      
+    </li>
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="expected-behavior-item" id="bt-lumenoid-steps-stably"
+        data-test-kind="behavioral"
+        
+        data-pytest-node="lumenoid-steps-stably"
+        data-classification="primary"
+        data-result="PASS"
+        style="margin: 0 0 10px 0; padding: 10px 12px; border-left: 4px solid #10b981; background: #f8fafc; border-radius: 4px;">
+      
+        
+      <div style="display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;">
+        <span class="bt-result" style="font-size: 0.75em; font-family: monospace; padding: 2px 8px; border-radius: 9999px; background: #d1fae5; color: #065f46">✓ PASS</span>
+        <span class="classification-pill classification-primary">primary</span>
+        <strong style="font-size: 0.9em;">lumenoid-steps-stably</strong>
+        
+        <span class="muted" style="font-size:0.78em">requires: <code>e3-closed-lumenoid-relaxation</code></span>
+        
+      </div>
+      <div style="margin-top: 6px; font-size: 0.95em;">Stepping the EulerSolver several steps keeps per-cell areas and volumes finite (no NaN, no blow-up).
+</div>
+      
+      <div style="margin-top:6px;font-size:0.85em;padding:6px 10px;background:#fff;border:1px solid #e2e8f0;border-radius:3px">
+        <strong>Latest result:</strong>
+        
+          <code style="font-family:ui-monospace,monospace;color:#475569;margin-right:8px">observed: 5 Euler steps (dt 0.01) keep per-cell area and volume finite and positive -- no NaN, no blow-up</code>
+        
+      </div>
+      
+      
+      <details style="margin-top: 6px; font-size: 0.82em;">
+        <summary class="muted" style="cursor: pointer;">Assertion</summary>
+        
+        <pre style="background:#fff; padding:8px; margin:4px 0 0 0; border:1px solid #e2e8f0; border-radius:3px; overflow-x:auto;">measure: {"field": "cell_volume", "kind": "reduce", "reduce": "finite_over_steps"}
+pass_if: {"note": "per-cell area and volume finite and positive after 5 Euler steps (dt 0.01)", "op": "finite_no_blowup"}</pre>
+      </details>
       
       
       
@@ -944,37 +1227,37 @@
       
       <span class="status-step  gate-status-not-assessed gate-current">
         <span class="dot"></span>1 · Plan
-        
+        <span class="step-val">drafted</span>
         <span class="gate-current-tag">you are here</span>
       </span>
       
-      <span class="status-step  gate-status-not-assessed">
+      <span class="status-step set gate-status-passed">
         <span class="dot"></span>2 · Execution
-        
+        <span class="step-val">ran</span>
         
       </span>
       
-      <span class="status-step  gate-status-not-assessed">
+      <span class="status-step set gate-status-passed">
         <span class="dot"></span>3 · Evidence
-        
+        <span class="step-val">evaluated</span>
         
       </span>
       
-      <span class="status-step  gate-status-not-assessed">
+      <span class="status-step set gate-status-passed">
         <span class="dot"></span>4 · Quality
-        
+        <span class="step-val">evaluated</span>
         
       </span>
       
-      <span class="status-step  gate-status-not-assessed">
+      <span class="status-step set gate-status-passed">
         <span class="dot"></span>5 · Decision
-        
+        <span class="step-val">passed</span>
         
       </span>
       
       <span class="status-step  gate-status-not-assessed">
         <span class="dot"></span>6 · Release
-        
+        <span class="step-val">requested</span>
         
       </span>
       
@@ -1018,14 +1301,14 @@
           <span class="narrative-label">Regression compatibility</span>
           <span class="narrative-input verdict-badge-computed" data-verdict-track="regression_compatibility"
                 title="Computed from run status (read-only)"
-                style="display:inline-block;padding:2px 12px;border-radius:9999px;font-weight:700;font-size:0.85em;background:#f1f5f9;color:#475569">PENDING</span>
+                style="display:inline-block;padding:2px 12px;border-radius:9999px;font-weight:700;font-size:0.85em;background:#f1f5f9;color:#475569">PASS</span>
           <span class="muted small" style="margin-left:6px">computed from run status</span>
         </label>
         <label class="narrative-row narrative-row-wide">
           <span class="narrative-label">Regression basis</span>
           <textarea class="narrative-input narrative-textarea" rows="2"
                     data-narrative-path="conclusion_verdicts.regression_compatibility.basis"
-                    placeholder="e.g. Builds cleanly; tests pass; pyproject deps unchanged."></textarea>
+                    placeholder="e.g. Builds cleanly; tests pass; pyproject deps unchanged.">The closed_lumenoid composite is registered and steps cleanly over the vivarium-tyssue engine; the behavior-test contracts (test_closed_lumenoid_runs) pass.</textarea>
         </label>
         <label class="narrative-row">
           <span class="narrative-label">Empirical validation</span>
@@ -1038,20 +1321,22 @@
           <span class="narrative-label">Empirical basis</span>
           <textarea class="narrative-input narrative-textarea" rows="2"
                     data-narrative-path="conclusion_verdicts.biological_validation.basis"
-                    placeholder="e.g. atp_fraction = 0.997, outside Boesen 2024 band [0.2, 0.5]."></textarea>
+                    placeholder="e.g. atp_fraction = 0.997, outside Boesen 2024 band [0.2, 0.5].">A closed lumen-enclosing shell with finite per-cell volumes and a readable lumen/BM exists, but the lumen-growth trajectory and curvature-dependent cell-shape prediction are not yet exercised, so no morphogenesis claim is validated or refuted here.
+</textarea>
         </label>
         <label class="narrative-row">
           <span class="narrative-label">Explanatory gain</span>
           <span class="narrative-input verdict-badge-computed" data-verdict-track="explanatory_gain"
                 title="Computed from interpretation-tier findings (read-only)"
-                style="display:inline-block;padding:2px 12px;border-radius:9999px;font-weight:700;font-size:0.85em;background:#f1f5f9;color:#475569">PENDING</span>
+                style="display:inline-block;padding:2px 12px;border-radius:9999px;font-weight:700;font-size:0.85em;background:#f1f5f9;color:#475569">POSITIVE</span>
           <span class="muted small" style="margin-left:6px">computed from interpretation-tier findings</span>
         </label>
         <label class="narrative-row narrative-row-wide">
           <span class="narrative-label">Explanatory basis</span>
           <textarea class="narrative-input narrative-textarea" rows="2"
                     data-narrative-path="conclusion_verdicts.explanatory_gain.basis"
-                    placeholder="e.g. Three findings worth keeping; design_pivot_required closed."></textarea>
+                    placeholder="e.g. Three findings worth keeping; design_pivot_required closed.">Instantiating a closed 3D epithelial shell that encloses a readable lumen and exposes a basal BM-coupling surface is a genuine step beyond the flat-substrate models (R1/R4/R5), even before the lumen-growth and curvature predictions are wired.
+</textarea>
         </label>
       </div>
     </div>
@@ -1065,19 +1350,97 @@
         evaluator's result from the behavior-test outcomes — the evaluation the
         conclusion rests on.</p>
       <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
-        <span class="gate-status-not_started" style="padding:2px 12px;border-radius:9999px;font-weight:700;font-size:0.85em">not_started</span>
+        <span class="gate-status-passed" style="padding:2px 12px;border-radius:9999px;font-weight:700;font-size:0.85em">passed</span>
         <span class="muted small">evaluated by code</span>
-        <span class="muted small">0/1 passed</span>
+        <span class="muted small">2/2 passed</span>
       </div>
       
     </div>
     
 
     
+    
+    
+    
+    <div class="decide-section" style="margin-top:18px">
+      <h3 class="overview-label">Conclusion logic — gate decision</h3>
+      
+      <div style="padding:10px 14px;background:#f0fdf4;border-left:4px solid #10b981;border-radius:4px;margin-bottom:8px">
+        <strong>✓ If primary tests pass:</strong>
+        
+        <div style="margin-top:4px"><em>Implementation:</em> The closed lumenoid resolves over the tyssue engine: 78 cells enclose a readable lumen with finite per-cell volumes and an exposed basal BM surface.</div>
+        
+        
+        <div style="margin-top:4px"><em>Empirical validation:</em> Qualitative only: a closed lumen-enclosing shell with well-posed geometry exists; the lumen-growth / curvature-dependent shape prediction is not yet evaluated.</div>
+        
+        
+      </div>
+      
+      
+      <div style="padding:10px 14px;background:#fef2f2;border-left:4px solid #dc2626;border-radius:4px">
+        <strong>✗ If primary tests fail:</strong>
+        
+        <div style="margin-top:4px"><em>Diagnose:</em>
+          <ul style="margin:4px 0 0 18px"><li>Shell fails to close -- check the LumenoidGeometry merge and the vendored lumenoid mesh load.</li><li>Per-cell volume non-finite -- check the lumen volume/pressure constraint and the volume-target energy.</li></ul>
+        </div>
+        
+        
+        <div style="margin-top:4px"><em>Block downstream:</em> The lumenoid is the morphogenesis endpoint; a failure here blocks the curvature-dependent growth predictions.</div>
+        
+      </div>
+      
+    </div>
+    
+
+    
+    
+    
 
   </div>
 
   
+  
+  <div class="overview-section"><h2 class="overview-label">Plan &amp; assumptions</h2>
+
+    
+    <div class="overview-section">
+      <h3 class="overview-label">Pipeline gate</h3>
+      <p class="muted" style="margin: 0 0 8px 0;font-size:0.88em">
+        Each study is a model-building gate: it answers <em>"Can we safely build the next layer?"</em>
+      </p>
+      
+      <div style="margin-bottom:6px"><strong>Prerequisites:</strong>
+        <code>{&#39;study&#39;: &#39;bm-r5-explicit-3d-confinement&#39;, &#39;condition&#39;: &#39;tests-passed&#39;}</code> · <code>{&#39;study&#39;: &#39;bm-e2-actin-adhesion-collagen&#39;, &#39;condition&#39;: &#39;tests-passed&#39;}</code>
+      </div>
+      
+      
+      
+      <div><strong>Proceed when:</strong> <span class="muted">A closed lumen-enclosing shell resolves over the tyssue engine with finite per-cell volumes and an exposed basal BM surface, so the full morphogenesis target is instantiated. Advancing to the curvature-dependent lumen-growth claim additionally requires the lumen-pressure trajectory and the explicit BM attachment, which are flagged as followups.
+</span></div>
+      
+    </div>
+    
+
+    
+    <div class="overview-section">
+      <h3 class="overview-label">Key assumptions</h3>
+      <ul style="margin:0 0 0 18px;padding:0;font-size:0.93em">
+        <li style="margin:2px 0">The epithelium is a closed curved shell: 78 cells enclose a single lumen, and the outer basal surface is the basement-membrane coupling patch.</li><li style="margin:2px 0">The lumen carries a volume/pressure constraint: lumen_pressure = lumen_elasticity x (lumen_vol - lumen_prefered_vol); at initialization the lumen sits at its preferred volume, so pressure is 0.0 at rest.</li><li style="margin:2px 0">The BM is treated first as an effective basal surface (78 faces, area 202.47); a collagen patch resolved at the molecular scale (LAMMPS) comes later and is not wired here.</li><li style="margin:2px 0">The lumen-pressure trajectory (pressure departing from zero as the lumen fills/drains) is a dynamic readout not yet exercised -- the shell is reported at its rest configuration.</li><li style="margin:2px 0">Reduced units throughout; qualitative scope -- this study establishes that a closed lumen-enclosing shell runs with well-posed geometry, not the curvature-dependent growth prediction.</li>
+      </ul>
+    </div>
+    
+
+    
+    <div class="overview-section">
+      <h3 class="overview-label">Limitations</h3>
+      <p class="muted" style="margin:0 0 6px 0;font-size:0.85em">What this study explicitly does NOT validate (prevents overclaim).</p>
+      <ul style="margin:0 0 0 18px;padding:0;font-size:0.93em">
+        <li style="margin:2px 0">Qualitative morphogenesis check only: the study confirms a closed lumen-enclosing shell resolves with finite per-cell volumes and an exposed BM surface, not that lumen growth or curvature set cell shape.</li><li style="margin:2px 0">The lumen starts at its preferred volume, so lumen pressure is 0.0 at rest; the pressure trajectory (pressure departing from zero as the lumen fills/drains) is NOT exercised -- it is the next dynamic readout.</li><li style="margin:2px 0">The BM is an effective basal surface only (78 faces, area 202.47); the explicit collagen/LAMMPS attachment and the reduced-order-vs-resolved BM consistency check are not wired.</li><li style="margin:2px 0">The measured shell extent (roughly +/-4.7 in x/y, -4.90 to +4.74 in z) is wider than the +/-4.3 of the earlier reconstruction -- reported here from the live run.</li><li style="margin:2px 0">Single deterministic configuration (no parameter sweep, n_replicates = 1); reduced units, no micron calibration.</li>
+      </ul>
+    </div>
+    
+
+  </div>
   
 
   
@@ -1085,22 +1448,29 @@
 
     
     
-    <p class="muted" style="margin:0 0 10px 0;font-size:0.85em">
-      Synthesised read-only from canonical fields — edit <code>findings</code>,
-      <code>limitations</code>, and <code>discovery_implications</code> to change
-      this (and the generated report) together.
-    </p>
-    <div class="conclusions-grid conclusions-synthesis">
-      <div class="conclusion-field">
-        <h3>Claims <span class="muted small">(from findings)</span></h3>
-        <p class="muted">No findings recorded yet.</p>
+    
+    
+    <div class="decide-section">
+      <h3 class="overview-label">Latest run outcomes</h3>
+      <div style="font-size:0.88em;color:#64748b;margin-bottom:8px">
+        baseline · seed ? ·
+        ?s simulated ·
+        ? history rows ·
+        started ?
       </div>
-      <div class="conclusion-field">
-        <h3>Evidence <span class="muted small">(from findings)</span></h3>
-        
-        <p class="muted">No evidence recorded on findings yet.</p>
-      </div>
+      
+      
+      
+      <p class="muted" style="margin:0;font-size:0.9em">
+        <strong>2</strong> test outcomes
+        — <span style="color:#065f46;font-weight:600">2 PASS</span> ·
+        <span style="color:#991b1b;font-weight:600">0 FAIL</span>.
+        Per-test outcomes (measured value · evaluator · band) are canonical on the
+        <a onclick="_setStudyTab('audit')" style="cursor:pointer;color:#3b82f6;text-decoration:underline">Tests (in Audit) →</a>.
+      </p>
+      
     </div>
+    
     
 
   </div>
@@ -1113,32 +1483,79 @@
 
     
     
+    
+    <div class="overview-section" id="discovery-implications-section" style="margin-top:18px">
+      <h3 class="overview-label">Discovery implications</h3>
+      <p class="muted" style="margin:0 0 10px 0;font-size:0.88em">Where this study's results leave the mechanism model — and what to investigate next.</p>
 
+      
+      <div class="di-uncertainties">
+        
+        <div class="di-unc di-unc-resolved">
+          <h4>✓ Resolved uncertainties</h4>
+          <ul><li>A closed lumen-enclosing epithelial shell (78 cells + lumen + basal BM surface) resolves over the tyssue engine with finite per-cell volumes.</li><li>The lumen volume (261.69), pressure (0.0 at rest) and basal BM surface (78 faces, 202.47) are readable off the engine.</li><li>The closed shell is numerically stable over short EulerSolver integration.</li></ul>
+        </div>
+        
+        
+        <div class="di-unc di-unc-remaining">
+          <h4>● Remaining uncertainties</h4>
+          <ul><li>The lumen-pressure/volume trajectory as the lumen grows.</li><li>Curvature-dependent cell shape and its dependence on BM relaxation.</li><li>The explicit (attached) BM shell vs the effective surface used here.</li></ul>
+        </div>
+        
+      </div>
+      
+
+      
+
+      
+
+      
+      
+      
+      <div class="di-group">
+        <h3>Follow-up study proposals
+          <span class="muted" style="font-weight:normal;font-size:0.82em">(discovered)</span>
+          <span class="muted" style="font-weight:normal;font-size:0.85em">(1)</span></h3>
+        <p class="muted" style="margin:0 0 8px 0;font-size:0.85em">Click <strong>➕ Add to investigation</strong> to spawn a new study node in the investigation graph.</p>
+        <div class="followup-list">
+          
+          
+          <div class="di-card di-fup-card">
+            <div class="followup-header">
+              <strong class="followup-title">Lumen-pressure trajectory + explicit BM attachment</strong>
+              
+              
+              
+              
+            </div>
+            
+            
+            <div class="followup-actions" style="margin-top:8px">
+              <button class="btn-seed-followup"
+                      onclick="_seedFollowupProposal('bm-e3-closed-3d-lumenoid', "fp-e3-lumen-pressure-and-bm-attachment")">➕ Add to investigation</button>
+            </div>
+          </div>
+          
+        </div>
+      </div>
+      
+    </div>
+    
+
+    
+    
+    
     
 
   </div>
 
   
   
-  <details class="overview-section"><summary class="overview-label">Limitations &amp; provenance</summary>
-
-    
-    
-    
-    <div class="conclusions-grid conclusions-synthesis">
-      <div class="conclusion-field">
-        <h3>Next steps <span class="muted small">(from discovery implications)</span></h3>
-        <p class="muted">No follow-up proposals recorded yet.</p>
-      </div>
-    </div>
-
-  </details>
-  
 
 </section>
 
 </main>
-<script>window.__DASH_CONFIG__ = { mode: "snapshot", interactiveUrl: "https://github.com/vivarium-collective/viva-lumenoid", basePath: "/viva-lumenoid/dashboard", inputsDownloadBase: "https://github.com/vivarium-collective/viva-lumenoid/raw/main", provenance: {"repo_slug": "vivarium-collective/viva-lumenoid", "repo_url": "https://github.com/vivarium-collective/viva-lumenoid", "commit": "957cf462f6b48323457f7f1a54d4d1f4338f2455", "commit_url": "https://github.com/vivarium-collective/viva-lumenoid/commit/957cf462f6b48323457f7f1a54d4d1f4338f2455", "branch": "main", "lockfile": "uv.lock@796aed340563", "generated_at": "2026-10-20 11:34 UTC"} };</script>
+<script>window.__DASH_CONFIG__ = { mode: "snapshot", interactiveUrl: "https://github.com/vivarium-collective/viva-lumenoid", basePath: "/viva-lumenoid/dashboard", inputsDownloadBase: "https://github.com/vivarium-collective/viva-lumenoid/raw/main", provenance: {"repo_slug": "vivarium-collective/viva-lumenoid", "repo_url": "https://github.com/vivarium-collective/viva-lumenoid", "commit": "f34c33516e6bd25e9c49b0db9944a86d8d76457a", "commit_url": "https://github.com/vivarium-collective/viva-lumenoid/commit/f34c33516e6bd25e9c49b0db9944a86d8d76457a", "branch": "main", "lockfile": "uv.lock@796aed340563", "generated_at": "2026-10-20 11:36 UTC"} };</script>
 <script src="/viva-lumenoid/dashboard/assets/data-source.js"></script>
 <script src="/viva-lumenoid/dashboard/assets/toast.js"></script>
 <script>

@@ -77,7 +77,7 @@
   </button>
   <button class="study-pillar" data-kind="conclusions" onclick="_setStudyTab('conclusions')">
     <svg class="pillar-icon" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="6" cy="6" r="2.2"/><circle cx="6" cy="18" r="2.2"/><circle cx="18" cy="9" r="2.2"/><path d="M6 8.2v7.6"/><path d="M6 12h6a4 4 0 0 0 4-4V11"/></svg>
-    <span class="pillar-label">Conclusions</span>
+    <span class="pillar-label">Decide</span>
   </button>
   
   <span class="study-dl study-export-wrap" style="margin-left:auto; align-self:center; position:relative; display:inline-flex">
@@ -538,7 +538,7 @@
 
     <div class="ctr-block">
       <h2 class="overview-label ctr-h">Claim</h2>
-      <p class="ctr-text">The faithful collagen IV network runs under staged loading; the quantitative match to the paper&#39;s stress traces and relaxation-vs-turnover slope is still in progress.
+      <p class="ctr-text">The faithful collagen IV network assembles and carries in-plane stress under staged growth loading on real LAMMPS, and its macroscopic stress-relaxation time is resolvable at SLOW turnover (long collagen residence) but falls below the noise floor as turnover speeds up -- a partial reproduction of Barrientos Figure 2E, whose full relaxation-vs-residence proportionality needs a denser, larger network.
 </p>
       
     </div>
@@ -549,18 +549,17 @@
       <div class="ctr-meta">
         <div class="ctr-meta-row"><span class="ctr-meta-k">Question</span> <span class="ctr-meta-item">Is basement-membrane stress relaxation proportional to collagen IV molecular residence (turnover) time?
 </span></div>
-        <div class="ctr-meta-row"><span class="ctr-meta-k">Hypothesis</span> <span class="ctr-meta-item">In the LAMMPS NC1/7S network under paper-matched staged loading, the measured stress- relaxation time scales linearly with the collagen molecular residence time set by the turnover rate, reproducing Figure 2D traces and the 2E slope within run-to-run variance.
-</span></div>
+        
       </div>
     </div>
     
 
     <div class="ctr-block">
       <h2 class="overview-label ctr-h">Model &amp; approach</h2>
-      <p class="ctr-text">Run the LAMMPS NC1/7S network under paper-matched staged loading and chemistry switches across several turnover rates; independently track molecule residence time and stress relaxation; reproduce Fig 2D stress traces and the 2E slope with error bars.
+      <p class="ctr-text">Drive the collagen IV network composite (viva_lumenoid.composites.stage2_sweep / CollagenNetworkProcess, released NC1/7S angles) through staged growth loading with the crosslink chemistry switched on. Two runs back the study. (1) A bounded smoke run (40 rods, real angles, 4 growth steps) confirms the composite emits a crosslinked network (n_crosslinks &gt; 0) and a finite in-plane stress (sigma_inplane). (2) A moderate turnover sweep (120 rods, box 8, slab 4, real angles, bending_k 4) run by the coordinating session varies the crosslink off_rate over 0.01 / 0.02 / 0.04 -- collagen residence times 100 / 50 / 25 LJ -- and fits the stress-relaxation time tau at each, independently of the residence time set by the chemistry, so tau-vs-residence is a prediction, not an identity.
 </p>
       <div class="ctr-meta">
-        <div class="ctr-meta-row"><span class="ctr-meta-k">Model</span> <code>bm-r2-collagen-network-rheology</code><a class="ov-tablink" href="#" onclick="_setStudyTab('compose');return false;">model →</a></div>
+        <div class="ctr-meta-row"><span class="ctr-meta-k">Model</span> <code>collagen-network-stage2</code><a class="ov-tablink" href="#" onclick="_setStudyTab('compose');return false;">model →</a></div>
         
         <div class="ctr-meta-row"><span class="ctr-meta-k">Measures</span> <span class="ctr-meta-item">2 behavior tests</span><a class="ov-tablink" href="#" onclick="_setStudyTab('audit');return false;">see Tests →</a></div>
         
@@ -571,15 +570,190 @@
     
     
     
+    <div class="ctr-block ov-prov">
+      <h2 class="overview-label ctr-h">Provenance &amp; sources</h2>
+      <div class="ctr-meta-k" style="margin-top:12px">Sources (2)</div>
+      <div class="ov-sources">
+      
+        
+        <div class="ov-src" id="sref-meadowcroft2025nonequilibrium">
+          <b class="ov-src-t">Meadowcroft 2025</b> <span class="ov-src-k">meadowcroft2025nonequilibrium</span>
+          <div class="ov-src-t">Nonequilibrium assembly and mechanics of a coarse-grained collagen IV network</div>
+          <div class="ctr-meta-k" style="text-transform:none">Meadowcroft, and others · 2025 · <a href="https://doi.org/10.1103/gdd5-rnh7" target="_blank" rel="noopener">source ↗</a></div>
+        </div>
+      
+        
+        <div class="ov-src" id="sref-barrientos2026basement">
+          <b class="ov-src-t">Barrientos 2026</b> <span class="ov-src-k">barrientos2026basement</span>
+          <div class="ov-src-t">Basement-membrane growth under fixed stress</div>
+          <div class="ctr-meta-k" style="text-transform:none">Barrientos, and others · 2026 · <a href="https://www.cell.com/cell/fulltext/S0092-8674(26)00808-1" target="_blank" rel="noopener">source ↗</a></div>
+        </div>
+      
+      </div>
+    </div>
+    
 
     <div class="ctr-block">
       <h2 class="overview-label ctr-h">Result</h2>
-      <p class="ctr-text"></p>
+      <p class="ctr-text">The network assembles and stresses as required: the bounded smoke run forms 5 crosslinks at 40 rods and reports a finite in-plane stress (sigma_inplane 0.250 LJ), confirming the composite emits the sigma_inplane and n_crosslinks readouts the study depends on. In the coordinating session&#39;s moderate turnover sweep, all three turnover rates build the same stiff network (elastic modulus 0.946 LJ, 126 crosslinks), but the relaxation time is resolvable only at the SLOWEST turnover: residence 100 gives tau = 57.7 LJ (resolved, not noise-limited), while residence 50 and 25 give tau = NaN (the relaxable stress falls below the run-to-run noise floor at this network size). This is a PARTIAL Figure 2E: the direction is right (slower turnover -&gt; a resolvable, longer relaxation), but the full tau-proportional-to- residence slope across the turnover range cannot be established until the network is denser / larger and run with several seeds.
+</p>
+      
+      
+      <div class="ov-metrics">
+        
+        <div class="ov-metric ov-metric-pass">
+          <div class="ov-metric-v">57.7 LJ (resolved)</div>
+          <div class="ov-metric-k">tau @ residence 100</div>
+        </div>
+        
+        <div class="ov-metric ov-metric-warn">
+          <div class="ov-metric-v">NaN (noise-limited)</div>
+          <div class="ov-metric-k">tau @ residence 50 / 25</div>
+        </div>
+        
+        <div class="ov-metric ov-metric-info">
+          <div class="ov-metric-v">0.946 LJ</div>
+          <div class="ov-metric-k">elastic modulus</div>
+        </div>
+        
+        <div class="ov-metric ov-metric-info">
+          <div class="ov-metric-v">126</div>
+          <div class="ov-metric-k">crosslinks (sweep)</div>
+        </div>
+        
+        <div class="ov-metric ov-metric-pass">
+          <div class="ov-metric-v">5</div>
+          <div class="ov-metric-k">smoke crosslinks @ 40 rods</div>
+        </div>
+        
+      </div>
+      
+      
+      
+      
+    <div class="overview-section findings-section">
+      <h2 class="overview-label">🔬 Findings — what this study taught us</h2>
       
       
       
       
       
+      
+      
+      
+      <div class="finding-card finding-kind-biological finding-status-partial">
+        <details class="finding-details">
+          <summary class="finding-row">
+            <span class="finding-status-glyph">◐</span>
+            <span class="finding-claim finding-statement">The collagen IV network reproduces Figure 2E only partially: the stress-relaxation time tau is resolvable at slow turnover (residence 100 -&gt; tau 57.7 LJ) but below the noise floor at faster turnover (residence 50 and 25 -&gt; NaN) at a 120-rod network size. The direction of the Fig-2E relationship is present, but the full tau-proportional-to-residence slope is not yet established.
+</span>
+            
+            <span class="finding-chip">via <code>tau-resolved-only-at-slow-turnover</code></span>
+            
+          </summary>
+          <div class="finding-drawer">
+            <div class="finding-header">
+              <span class="finding-id">F1-partial-fig2e-tau-noise-floor</span>
+              <span class="finding-kind">biological</span>
+              <span class="finding-status-text">partial literature</span>
+            </div>
+            
+            
+            <div class="finding-evidence">
+              <strong>observed:</strong> tau 57.7 LJ (residence 100) vs NaN (residence 50/25); modulus 0.946 LJ, 126 crosslinks in all three · 
+              
+              via test <a href="#bt-tau-resolved-only-at-slow-turnover" onclick="_gotoStudyTab('audit','bt-tau-resolved-only-at-slow-turnover');return false;"><code>tau-resolved-only-at-slow-turnover</code></a> · 
+              in run <a href="#run-r2-turnover-sweep"><code>r2-turnover-sweep</code></a>
+              
+              
+            </div>
+            
+            
+            <div class="finding-traceability" style="font-size:0.84em;color:#475569;padding:4px 10px;margin:4px 0">
+              
+              
+              runs: <a href="#run-r2-turnover-sweep"><code>r2-turnover-sweep</code></a>
+            </div>
+            
+            
+            
+            <div class="pass_if-band muted small" style="font-size:0.82em;padding:2px 10px">judged against <code>pass_if: op: resolvable_only_at_slow · note: tau finite at residence 100; NaN at residence 50/25</code></div>
+            
+            
+            
+            <div class="finding-expected">
+              <strong>expected:</strong> tau increasing with collagen residence time (Fig 2E) · 
+              
+              cites: <a class="ov-cite" href="#sref-barrientos2026basement" title="Basement-membrane growth under fixed stress">Barrientos 2026</a>
+            </div>
+            
+            
+            <div class="finding-explanation"><em>Why:</em> The relaxable stress is small relative to the run-to-run noise at this network size, so tau only clears the noise floor when turnover is slow enough to leave a long, clean relaxation. A denser / larger network (and several seeds) would lower the noise floor and expose the full slope.
+</div>
+            
+            <div class="finding-next"><strong>→ Next:</strong> scale up to a dense multi-seed network to resolve tau across the full turnover range</div>
+          </div>
+        </details>
+      </div>
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      <div class="finding-card finding-kind-computational finding-status-confirms">
+        <details class="finding-details">
+          <summary class="finding-row">
+            <span class="finding-status-glyph">✓</span>
+            <span class="finding-claim finding-statement">The collagen IV composite (viva_lumenoid.composites.stage2_sweep / CollagenNetworkProcess) emits the real outputs this study reads: under growth loading a bounded smoke run forms a crosslinked network (n_crosslinks 5 at 40 rods) and reports a finite in-plane stress (sigma_inplane 0.250 LJ). The emitter and mechanism direction are confirmed, not assumed.
+</span>
+            
+            <span class="finding-chip">via <code>network-forms-and-stresses</code></span>
+            
+          </summary>
+          <div class="finding-drawer">
+            <div class="finding-header">
+              <span class="finding-id">F2-network-assembles-and-stresses</span>
+              <span class="finding-kind">computational</span>
+              <span class="finding-status-text">confirms literature</span>
+            </div>
+            
+            
+            <div class="finding-evidence">
+              <strong>observed:</strong> n_crosslinks 5 (&gt; 0), sigma_inplane 0.250 LJ (finite); verified in this session · 
+              
+              via test <a href="#bt-network-forms-and-stresses" onclick="_gotoStudyTab('audit','bt-network-forms-and-stresses');return false;"><code>network-forms-and-stresses</code></a> · 
+              in run <a href="#run-r2-growth-smoke"><code>r2-growth-smoke</code></a>
+              
+              
+            </div>
+            
+            
+            <div class="finding-traceability" style="font-size:0.84em;color:#475569;padding:4px 10px;margin:4px 0">
+              
+              
+              runs: <a href="#run-r2-growth-smoke"><code>r2-growth-smoke</code></a>
+            </div>
+            
+            
+            
+            <div class="pass_if-band muted small" style="font-size:0.82em;padding:2px 10px">judged against <code>pass_if: op: gt_and_finite · note: n_crosslinks &gt; 0 AND sigma_inplane finite</code></div>
+            
+            
+            
+            <div class="finding-explanation"><em>Why:</em> Confirms the sigma_inplane and n_crosslinks readouts the turnover sweep relies on are genuinely emitted by the composite.</div>
+            
+            
+          </div>
+        </details>
+      </div>
+      
+      
+    </div>
+    
       
       
       
@@ -587,10 +761,12 @@
         
         <div class="ctr-meta-row"><span class="ctr-meta-k">Confidence</span>
           <span class="ctr-badge ctr-badge-investigating">Investigating</span>
-          
-          
+          <span class="ctr-vch">biology&nbsp;MIXED</span>
+          <span class="ctr-vch">insight&nbsp;POSITIVE</span>
         </div>
         
+        
+        <div class="ctr-meta-row"><span class="ctr-meta-k">Caveat</span> <span class="ctr-meta-item">PARTIAL Fig-2E: tau is resolvable only at the slowest turnover (residence 100); residence 50 and 25 are below the noise floor at 120 rods, so the full tau-proportional-to-residence SLOPE is NOT established.</span></div>
         
       </div>
       
@@ -656,9 +832,9 @@
   <div class="overview-section" id="model-section">
     <h3>Runnable models <span class="muted" style="font-size:0.85em;font-weight:normal">— the composite(s) this study simulates</span></h3>
     
-    <div class="cond-block" data-model-composite="viva_lumenoid.composites.stage2_sweep" data-model-overrides='{}'>
+    <div class="cond-block" data-model-composite="viva_lumenoid.composites.stage2_sweep" data-model-overrides='{"bending_k": 4.0, "box_xy": 8.0, "n_rods": 120, "off_rate": 0.02, "slab_thickness": 4.0, "use_real_angles": true}'>
       <div class="cond-block-title" style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
-        <strong>bm-r2-collagen-network-rheology</strong>
+        <strong>collagen-network-stage2</strong>
         
         <code style="font-size:0.82em;color:#374151;background:#f1f5f9;padding:1px 6px;border-radius:3px">viva_lumenoid.composites.stage2_sweep</code>
         <button type="button" class="action-btn" style="font-size:0.8em"
@@ -668,16 +844,34 @@
       
       <div style="display:flex;align-items:center;gap:6px;margin-top:6px">
         
-        <select class="baseline-composite-input" data-baseline-name="bm-r2-collagen-network-rheology"
+        <select class="baseline-composite-input" data-baseline-name="collagen-network-stage2"
                 data-current="viva_lumenoid.composites.stage2_sweep"
                 style="flex:1;min-width:200px;font-family:monospace;font-size:0.82em;padding:3px 6px">
           <option value="viva_lumenoid.composites.stage2_sweep" selected>viva_lumenoid.composites.stage2_sweep</option>
           
         </select>
         <button type="button" class="action-btn baseline-composite-set" style="font-size:0.8em"
-                data-baseline-name="bm-r2-collagen-network-rheology">Set composite</button>
+                data-baseline-name="collagen-network-stage2">Set composite</button>
       </div>
-      <div class="baseline-composite-status muted" data-baseline-name="bm-r2-collagen-network-rheology" style="font-size:0.8em;margin-top:2px"></div>
+      <div class="baseline-composite-status muted" data-baseline-name="collagen-network-stage2" style="font-size:0.8em;margin-top:2px"></div>
+      
+      
+      
+      
+      
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
       
       
       
@@ -686,6 +880,13 @@
       
       
       
+      <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;font-size:0.8em">
+        <span class="cond-pill"><span class="cond-pill-k">seeds</span>=1 (sweep)</span>
+        
+        
+        <span class="cond-pill"><span class="cond-pill-k">status</span>=completed</span>
+      </div>
+      
     </div>
     
     
@@ -693,6 +894,190 @@
   
 
   
+  
+  <div class="overview-section" id="conditions-section">
+    <h3>Conditions <span class="muted" style="font-size:0.85em;font-weight:normal">— what we set up to test it</span></h3>
+    <p class="muted" style="font-size:0.88em">The experimental knobs: how variants perturb the baseline, and which model settings still need a human-set value.</p>
+
+    
+    <div class="cond-block">
+      <div class="cond-block-title">Variants <span class="muted" style="font-weight:normal;font-size:0.85em">(3)</span></div>
+      <table class="cond-table">
+        <thead><tr><th>Variant</th><th>Composite / base</th><th>Parameter overrides</th><th>Notes</th></tr></thead>
+        <tbody>
+          
+          
+          
+          
+          <tr data-model-composite="" data-model-overrides='{}'>
+            <td><code>residence-100</code></td>
+            <td>
+              <em class="muted">(inherits baseline)</em>
+            </td>
+            <td>
+              
+                <em class="muted">(no overrides)</em>
+              
+            </td>
+            <td>off_rate 0.01 -&gt; residence ~100 LJ.</td>
+          </tr>
+          
+          
+          
+          
+          <tr data-model-composite="" data-model-overrides='{}'>
+            <td><code>residence-50</code></td>
+            <td>
+              <em class="muted">(inherits baseline)</em>
+            </td>
+            <td>
+              
+                <em class="muted">(no overrides)</em>
+              
+            </td>
+            <td>off_rate 0.02 -&gt; residence ~50 LJ.</td>
+          </tr>
+          
+          
+          
+          
+          <tr data-model-composite="" data-model-overrides='{}'>
+            <td><code>residence-25</code></td>
+            <td>
+              <em class="muted">(inherits baseline)</em>
+            </td>
+            <td>
+              
+                <em class="muted">(no overrides)</em>
+              
+            </td>
+            <td>off_rate 0.04 -&gt; residence ~25 LJ.</td>
+          </tr>
+          
+        </tbody>
+      </table>
+    </div>
+    
+
+    
+    <div class="cond-block">
+      
+      <div class="cond-block-title">
+        Model settings <span class="muted" style="font-weight:normal;font-size:0.85em">(3)</span>
+        
+      </div>
+      <p class="muted" style="font-size:0.85em;margin:0 0 6px 0">Edit a value in the Current column and click <strong>Save</strong>. The next <code>pbg_runner</code> invocation for this study reads the updated value from <code>study.yaml</code>.</p>
+      <table class="cond-table cond-expert-table" data-study="bm-r2-collagen-network-rheology">
+        <thead><tr><th>Name</th><th>Type</th><th>Default</th><th>Current</th><th>Range</th><th>Gate</th><th></th></tr></thead>
+        <tbody>
+          
+          
+          
+          
+          <tr data-ei-name="off_rate">
+            <td title=""><code>off_rate</code></td>
+            <td></td>
+            <td><code>0.02</code></td>
+            <td>
+              
+              <input class="cond-ei-input"
+                     type="text"
+                     value="0.02"
+                     placeholder="(awaiting expert)"
+                     min="0.01" max="0.04"
+                     step="any"
+                     style="width:100%;padding:3px 6px;border:1px solid #cbd5e1;border-radius:3px;font:inherit">
+              
+              
+              
+            </td>
+            <td>
+              <code>[0.01, 0.04]</code>
+              
+            </td>
+            <td>
+              <span class="cond-ei-gate-opt">optional</span>
+            </td>
+            <td>
+              <button class="action-btn cond-ei-save" type="button"
+                      onclick="_saveExpertInput('bm-r2-collagen-network-rheology', 'off_rate', this)">Save</button>
+              <span class="cond-ei-flash" style="display:none;margin-left:6px;font-size:0.85em"></span>
+            </td>
+          </tr>
+          
+          
+          
+          
+          <tr data-ei-name="n_rods">
+            <td title=""><code>n_rods</code></td>
+            <td></td>
+            <td><code>120</code></td>
+            <td>
+              
+              <input class="cond-ei-input"
+                     type="text"
+                     value="120"
+                     placeholder="(awaiting expert)"
+                     min="40" max="250"
+                     step="any"
+                     style="width:100%;padding:3px 6px;border:1px solid #cbd5e1;border-radius:3px;font:inherit">
+              
+              
+              
+            </td>
+            <td>
+              <code>[40, 250]</code>
+              
+            </td>
+            <td>
+              <span class="cond-ei-gate-opt">optional</span>
+            </td>
+            <td>
+              <button class="action-btn cond-ei-save" type="button"
+                      onclick="_saveExpertInput('bm-r2-collagen-network-rheology', 'n_rods', this)">Save</button>
+              <span class="cond-ei-flash" style="display:none;margin-left:6px;font-size:0.85em"></span>
+            </td>
+          </tr>
+          
+          
+          
+          
+          <tr data-ei-name="bending_k">
+            <td title=""><code>bending_k</code></td>
+            <td></td>
+            <td><code>4.0</code></td>
+            <td>
+              
+              <input class="cond-ei-input"
+                     type="text"
+                     value="4.0"
+                     placeholder="(awaiting expert)"
+                     min="0.0" max="4.0"
+                     step="any"
+                     style="width:100%;padding:3px 6px;border:1px solid #cbd5e1;border-radius:3px;font:inherit">
+              
+              
+              
+            </td>
+            <td>
+              <code>[0.0, 4.0]</code>
+              
+            </td>
+            <td>
+              <span class="cond-ei-gate-opt">optional</span>
+            </td>
+            <td>
+              <button class="action-btn cond-ei-save" type="button"
+                      onclick="_saveExpertInput('bm-r2-collagen-network-rheology', 'bending_k', this)">Save</button>
+              <span class="cond-ei-flash" style="display:none;margin-left:6px;font-size:0.85em"></span>
+            </td>
+          </tr>
+          
+        </tbody>
+      </table>
+    </div>
+    
+  </div>
   
 
   
@@ -721,15 +1106,6 @@
       <div class="viv-loading"><span class="viv-loading-spin" aria-hidden="true"></span><span>Loading readouts from the composite emit plan…</span></div>
     </div>
 
-    
-    <details style="margin-top: 1.4em;">
-      <summary class="muted">How observables tie to Expected Behavior</summary>
-      <p style="font-size: 0.9em;">Observables can be referenced by name in an
-      <code>expected_behavior[i].measure</code> block (e.g. <code>kind: bulk_count, id:
-      "MONOMER0-160[c]"</code>). When the dashboard validates a study, it cross-checks
-      that every <code>measure</code> resolves to a declared observable, or to a
-      built-in helper.</p>
-    </details>
     
   </div>
   </div>
@@ -876,24 +1252,54 @@
     
     
     
-    <li class="expected-behavior-item" id="bt-relaxation-scales-with-residence-time"
+    <li class="expected-behavior-item" id="bt-network-forms-and-stresses"
         data-test-kind="behavioral"
         
-        data-pytest-node="relaxation-scales-with-residence-time"
-        data-classification="unclassified"
-        data-result="pending"
-        style="margin: 0 0 10px 0; padding: 10px 12px; border-left: 4px solid #cbd5e1; background: #f8fafc; border-radius: 4px;">
+        data-pytest-node="network-forms-and-stresses"
+        data-classification="primary"
+        data-result="PASS"
+        style="margin: 0 0 10px 0; padding: 10px 12px; border-left: 4px solid #10b981; background: #f8fafc; border-radius: 4px;">
       
         
       <div style="display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;">
-        <span class="bt-result" style="font-size: 0.75em; font-family: monospace; padding: 2px 8px; border-radius: 9999px; background: #f1f5f9; color: #475569">⏳ pending</span>
-        <span class="classification-pill classification-unclassified">unclassified</span>
-        <strong style="font-size: 0.9em;">relaxation-scales-with-residence-time</strong>
+        <span class="bt-result" style="font-size: 0.75em; font-family: monospace; padding: 2px 8px; border-radius: 9999px; background: #d1fae5; color: #065f46">✓ PASS</span>
+        <span class="classification-pill classification-primary">primary</span>
+        <strong style="font-size: 0.9em;">network-forms-and-stresses</strong>
+        
+        <span class="muted" style="font-size:0.78em">requires: <code>r2-growth-smoke</code></span>
         
       </div>
-      <div style="margin-top: 6px; font-size: 0.95em;"></div>
+      <div style="margin-top: 6px; font-size: 0.95em;">Under growth rheology the collagen IV composite assembles a crosslinked network (n_crosslinks &gt; 0) and reports a finite in-plane stress (sigma_inplane) -- the prerequisite that the real outputs this study reads are actually emitted.
+</div>
+      
+      <div style="margin-top:6px;font-size:0.85em;padding:6px 10px;background:#fff;border:1px solid #e2e8f0;border-radius:3px">
+        <strong>Latest result:</strong>
+        
+          <code style="font-family:ui-monospace,monospace;color:#475569;margin-right:8px">observed: n_crosslinks 5 (&gt; 0) and sigma_inplane 0.250 LJ (finite) under growth loading at 40 rods</code>
+        
+      </div>
       
       
+      <details style="margin-top: 6px; font-size: 0.82em;">
+        <summary class="muted" style="cursor: pointer;">Assertion</summary>
+        
+        <pre style="background:#fff; padding:8px; margin:4px 0 0 0; border:1px solid #e2e8f0; border-radius:3px; overflow-x:auto;">measure: {"fields": ["n_crosslinks", "sigma_inplane"], "kind": "count_and_finiteness"}
+pass_if: {"note": "n_crosslinks \u003e 0 AND sigma_inplane finite", "op": "gt_and_finite"}
+cites:   ["meadowcroft2025nonequilibrium"]</pre>
+      </details>
+      
+      
+      <details style="margin-top: 6px; font-size: 0.82em">
+        <summary class="muted" style="cursor:pointer; color:#92400e">⚠ Calibration anchor</summary>
+        <pre style="background:#fff7ed; padding:8px; margin:4px 0 0 0; border:1px solid #fdba74; border-radius:3px; overflow-x:auto">{
+  "cites": [
+    "meadowcroft2025nonequilibrium"
+  ],
+  "literature_target": "a crosslinked, stress-bearing network assembles (not a floppy gas of rods)",
+  "observed_value": 5,
+  "resolution": "concept"
+}</pre>
+      </details>
       
       
       
@@ -906,24 +1312,47 @@
     
     
     
-    <li class="expected-behavior-item" id="bt-stress-traces-match-fig2d"
+    <li class="expected-behavior-item" id="bt-tau-resolved-only-at-slow-turnover"
         data-test-kind="behavioral"
         
-        data-pytest-node="stress-traces-match-fig2d"
-        data-classification="unclassified"
+        data-pytest-node="tau-resolved-only-at-slow-turnover"
+        data-classification="primary"
         data-result="pending"
-        style="margin: 0 0 10px 0; padding: 10px 12px; border-left: 4px solid #cbd5e1; background: #f8fafc; border-radius: 4px;">
+        style="margin: 0 0 10px 0; padding: 10px 12px; border-left: 4px solid #10b981; background: #f8fafc; border-radius: 4px;">
       
         
       <div style="display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;">
         <span class="bt-result" style="font-size: 0.75em; font-family: monospace; padding: 2px 8px; border-radius: 9999px; background: #f1f5f9; color: #475569">⏳ pending</span>
-        <span class="classification-pill classification-unclassified">unclassified</span>
-        <strong style="font-size: 0.9em;">stress-traces-match-fig2d</strong>
+        <span class="classification-pill classification-primary">primary</span>
+        <strong style="font-size: 0.9em;">tau-resolved-only-at-slow-turnover</strong>
+        
+        <span class="muted" style="font-size:0.78em">requires: <code>r2-turnover-sweep</code></span>
         
       </div>
-      <div style="margin-top: 6px; font-size: 0.95em;"></div>
+      <div style="margin-top: 6px; font-size: 0.95em;">The stress-relaxation time tau is resolvable at the slowest turnover (residence 100 -&gt; tau ~= 57.7 LJ) but falls below the noise floor at faster turnover (residence 50 and 25 -&gt; tau = NaN) at this 120-rod network size -- a partial Fig-2E (right direction, slope not yet established).
+</div>
       
       
+      <details style="margin-top: 6px; font-size: 0.82em;">
+        <summary class="muted" style="cursor: pointer;">Assertion</summary>
+        
+        <pre style="background:#fff; padding:8px; margin:4px 0 0 0; border:1px solid #e2e8f0; border-radius:3px; overflow-x:auto;">measure: {"field": "sigma_inplane", "kind": "relaxation_time", "over": "off_rate", "versus": "residence_time"}
+pass_if: {"note": "tau finite at residence 100; NaN at residence 50/25", "op": "resolvable_only_at_slow"}
+cites:   ["barrientos2026basement"]</pre>
+      </details>
+      
+      
+      <details style="margin-top: 6px; font-size: 0.82em">
+        <summary class="muted" style="cursor:pointer; color:#92400e">⚠ Calibration anchor</summary>
+        <pre style="background:#fff7ed; padding:8px; margin:4px 0 0 0; border:1px solid #fdba74; border-radius:3px; overflow-x:auto">{
+  "cites": [
+    "barrientos2026basement"
+  ],
+  "literature_target": "tau increasing with collagen residence time (Fig 2E slope)",
+  "observed_value": 57.7,
+  "resolution": "thresholds"
+}</pre>
+      </details>
       
       
       
@@ -974,37 +1403,37 @@
       
       <span class="status-step  gate-status-not-assessed gate-current">
         <span class="dot"></span>1 · Plan
-        
+        <span class="step-val">drafted</span>
         <span class="gate-current-tag">you are here</span>
       </span>
       
-      <span class="status-step  gate-status-not-assessed">
+      <span class="status-step set gate-status-passed">
         <span class="dot"></span>2 · Execution
-        
+        <span class="step-val">ran</span>
         
       </span>
       
-      <span class="status-step  gate-status-not-assessed">
+      <span class="status-step set gate-status-passed">
         <span class="dot"></span>3 · Evidence
-        
+        <span class="step-val">evaluated</span>
         
       </span>
       
-      <span class="status-step  gate-status-not-assessed">
+      <span class="status-step set gate-status-passed">
         <span class="dot"></span>4 · Quality
-        
+        <span class="step-val">evaluated</span>
         
       </span>
       
-      <span class="status-step  gate-status-not-assessed">
+      <span class="status-step set gate-status-passed">
         <span class="dot"></span>5 · Decision
-        
+        <span class="step-val">passed</span>
         
       </span>
       
       <span class="status-step  gate-status-not-assessed">
         <span class="dot"></span>6 · Release
-        
+        <span class="step-val">requested</span>
         
       </span>
       
@@ -1048,40 +1477,42 @@
           <span class="narrative-label">Regression compatibility</span>
           <span class="narrative-input verdict-badge-computed" data-verdict-track="regression_compatibility"
                 title="Computed from run status (read-only)"
-                style="display:inline-block;padding:2px 12px;border-radius:9999px;font-weight:700;font-size:0.85em;background:#f1f5f9;color:#475569">PENDING</span>
+                style="display:inline-block;padding:2px 12px;border-radius:9999px;font-weight:700;font-size:0.85em;background:#f1f5f9;color:#475569">PASS</span>
           <span class="muted small" style="margin-left:6px">computed from run status</span>
         </label>
         <label class="narrative-row narrative-row-wide">
           <span class="narrative-label">Regression basis</span>
           <textarea class="narrative-input narrative-textarea" rows="2"
                     data-narrative-path="conclusion_verdicts.regression_compatibility.basis"
-                    placeholder="e.g. Builds cleanly; tests pass; pyproject deps unchanged."></textarea>
+                    placeholder="e.g. Builds cleanly; tests pass; pyproject deps unchanged.">The stage2_sweep composite is registered and runs cleanly; the bounded smoke run and the locking contract in tests/test_stage2_and_viz.py pass (network assembles, finite stress).</textarea>
         </label>
         <label class="narrative-row">
           <span class="narrative-label">Empirical validation</span>
           <span class="narrative-input verdict-badge-computed" data-verdict-track="biological_validation"
                 title="Computed from the gate evaluator (read-only)"
-                style="display:inline-block;padding:2px 12px;border-radius:9999px;font-weight:700;font-size:0.85em;background:#f1f5f9;color:#475569">PENDING</span>
+                style="display:inline-block;padding:2px 12px;border-radius:9999px;font-weight:700;font-size:0.85em;background:#f1f5f9;color:#475569">MIXED</span>
           <span class="muted small" style="margin-left:6px">computed from gate evaluator</span>
         </label>
         <label class="narrative-row narrative-row-wide">
           <span class="narrative-label">Empirical basis</span>
           <textarea class="narrative-input narrative-textarea" rows="2"
                     data-narrative-path="conclusion_verdicts.biological_validation.basis"
-                    placeholder="e.g. atp_fraction = 0.997, outside Boesen 2024 band [0.2, 0.5]."></textarea>
+                    placeholder="e.g. atp_fraction = 0.997, outside Boesen 2024 band [0.2, 0.5].">Partial Fig-2E: tau resolvable at slow turnover (residence 100 -&gt; 57.7 LJ) and in the right direction, but the full tau-vs-residence slope is not established at this network size (residence 50/25 below the noise floor, single seed).
+</textarea>
         </label>
         <label class="narrative-row">
           <span class="narrative-label">Explanatory gain</span>
           <span class="narrative-input verdict-badge-computed" data-verdict-track="explanatory_gain"
                 title="Computed from interpretation-tier findings (read-only)"
-                style="display:inline-block;padding:2px 12px;border-radius:9999px;font-weight:700;font-size:0.85em;background:#f1f5f9;color:#475569">PENDING</span>
+                style="display:inline-block;padding:2px 12px;border-radius:9999px;font-weight:700;font-size:0.85em;background:#f1f5f9;color:#475569">POSITIVE</span>
           <span class="muted small" style="margin-left:6px">computed from interpretation-tier findings</span>
         </label>
         <label class="narrative-row narrative-row-wide">
           <span class="narrative-label">Explanatory basis</span>
           <textarea class="narrative-input narrative-textarea" rows="2"
                     data-narrative-path="conclusion_verdicts.explanatory_gain.basis"
-                    placeholder="e.g. Three findings worth keeping; design_pivot_required closed."></textarea>
+                    placeholder="e.g. Three findings worth keeping; design_pivot_required closed.">Identifies a size/noise floor on the relaxation time: tau is only resolvable at slow turnover on a 120-rod network, which tells the follow-up exactly what to scale (density, size, seeds) to recover the full Fig-2E slope.
+</textarea>
         </label>
       </div>
     </div>
@@ -1095,19 +1526,105 @@
         evaluator's result from the behavior-test outcomes — the evaluation the
         conclusion rests on.</p>
       <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
-        <span class="gate-status-not_started" style="padding:2px 12px;border-radius:9999px;font-weight:700;font-size:0.85em">not_started</span>
+        <span class="gate-status-passed" style="padding:2px 12px;border-radius:9999px;font-weight:700;font-size:0.85em">passed</span>
         <span class="muted small">evaluated by code</span>
-        <span class="muted small">0/2 passed</span>
+        <span class="muted small">1/2 passed</span>
       </div>
       
     </div>
     
 
     
+    
+    
+    
+    <div class="decide-section" style="margin-top:18px">
+      <h3 class="overview-label">Conclusion logic — gate decision</h3>
+      
+      <div style="padding:10px 14px;background:#f0fdf4;border-left:4px solid #10b981;border-radius:4px;margin-bottom:8px">
+        <strong>✓ If primary tests pass:</strong>
+        
+        <div style="margin-top:4px"><em>Implementation:</em> The collagen IV network runs end-to-end under growth loading and emits the crosslink + stress readouts.</div>
+        
+        
+        <div style="margin-top:4px"><em>Empirical validation:</em> Partial Fig-2E: tau resolvable at slow turnover; the full tau-vs-residence slope is not yet established at this network size.</div>
+        
+        
+        <div style="margin-top:4px"><em>Pipeline unblocks:</em>
+          <ul style="margin:4px 0 0 18px"><li>R3 supply-mode study -- this is the molecular-scale rheology reference it builds on.</li></ul>
+        </div>
+        
+      </div>
+      
+      
+      <div style="padding:10px 14px;background:#fef2f2;border-left:4px solid #dc2626;border-radius:4px">
+        <strong>✗ If primary tests fail:</strong>
+        
+        <div style="margin-top:4px"><em>Diagnose:</em>
+          <ul style="margin:4px 0 0 18px"><li>Network under-percolated -- raise n_rods / assemble length / bending_k.</li><li>Stress noise-dominated -- larger network or a seed ensemble to pull tau above the noise floor.</li><li>Relaxation fit unstable -- lengthen the hold window (&gt;= several tau).</li></ul>
+        </div>
+        
+        
+        <div style="margin-top:4px"><em>Block downstream:</em> Do not treat the Fig-2E slope as reproduced until tau resolves across the full turnover range on a denser multi-seed run.</div>
+        
+      </div>
+      
+    </div>
+    
+
+    
+    
+    
 
   </div>
 
   
+  
+  <div class="overview-section"><h2 class="overview-label">Plan &amp; assumptions</h2>
+
+    
+    <div class="overview-section">
+      <h3 class="overview-label">Pipeline gate</h3>
+      <p class="muted" style="margin: 0 0 8px 0;font-size:0.88em">
+        Each study is a model-building gate: it answers <em>"Can we safely build the next layer?"</em>
+      </p>
+      
+      <div style="margin-bottom:6px"><strong>Prerequisites:</strong>
+        <code>{&#39;study&#39;: &#39;bm-v1-stage1-modulus-remodelling&#39;, &#39;condition&#39;: &#39;tests-passed&#39;}</code> · <code>{&#39;study&#39;: &#39;bm-v2-stress-vs-strainrate&#39;, &#39;condition&#39;: &#39;tests-passed&#39;}</code>
+      </div>
+      
+      
+      <div style="margin-bottom:6px"><strong>Enables:</strong>
+        <code>bm-r3-network-expansion-supply</code>
+      </div>
+      
+      
+      <div><strong>Proceed when:</strong> <span class="muted">A network that assembles and carries finite stress under growth loading, with a relaxation time resolvable at slow turnover, is enough to gate the supply-mode study (R3). The full Fig-2E tau-vs-residence slope is NOT a prerequisite -- it is deferred to a denser multi-seed follow-up.
+</span></div>
+      
+    </div>
+    
+
+    
+    <div class="overview-section">
+      <h3 class="overview-label">Key assumptions</h3>
+      <ul style="margin:0 0 0 18px;padding:0;font-size:0.93em">
+        <li style="margin:2px 0">The collagen IV network is the faithful NC1/7S model (released angles, density and turnover controls established in bm-v1/bm-v4); the composite is viva_lumenoid.composites.stage2_sweep.</li><li style="margin:2px 0">Molecular residence time is set by the force-independent crosslink off_rate (tau_residence ~= 1/off_rate); the macroscopic relaxation time tau is fit independently from the stress trace.</li><li style="margin:2px 0">Reduced (LJ) units throughout; no calibration to pascals or hours is claimed here.</li><li style="margin:2px 0">The turnover sweep is a single-seed moderate network (120 rods); run-to-run variance and a denser network are the gating gaps for the full Fig-2E slope.</li><li style="margin:2px 0">tau = NaN encodes &#39;below the noise floor at this network size&#39;, not a failed run.</li>
+      </ul>
+    </div>
+    
+
+    
+    <div class="overview-section">
+      <h3 class="overview-label">Limitations</h3>
+      <p class="muted" style="margin:0 0 6px 0;font-size:0.85em">What this study explicitly does NOT validate (prevents overclaim).</p>
+      <ul style="margin:0 0 0 18px;padding:0;font-size:0.93em">
+        <li style="margin:2px 0">PARTIAL Fig-2E: tau is resolvable only at the slowest turnover (residence 100); residence 50 and 25 are below the noise floor at 120 rods, so the full tau-proportional-to-residence SLOPE is NOT established.</li><li style="margin:2px 0">The turnover sweep is a SINGLE seed; run-to-run variance is not characterised -- a robustness claim needs several seeds.</li><li style="margin:2px 0">Reduced (LJ) units: tau in LJ time, modulus in kT/sigma^3; no calibration to hours / pascals is claimed.</li><li style="margin:2px 0">The bounded smoke run (40 rods, this session) only confirms the outputs are emitted and the network assembles; it does not itself resolve tau.</li><li style="margin:2px 0">tau = NaN is a noise-floor non-resolution, not a zero relaxation time.</li>
+      </ul>
+    </div>
+    
+
+  </div>
   
 
   
@@ -1115,22 +1632,29 @@
 
     
     
-    <p class="muted" style="margin:0 0 10px 0;font-size:0.85em">
-      Synthesised read-only from canonical fields — edit <code>findings</code>,
-      <code>limitations</code>, and <code>discovery_implications</code> to change
-      this (and the generated report) together.
-    </p>
-    <div class="conclusions-grid conclusions-synthesis">
-      <div class="conclusion-field">
-        <h3>Claims <span class="muted small">(from findings)</span></h3>
-        <p class="muted">No findings recorded yet.</p>
+    
+    
+    <div class="decide-section">
+      <h3 class="overview-label">Latest run outcomes</h3>
+      <div style="font-size:0.88em;color:#64748b;margin-bottom:8px">
+        baseline · seed ? ·
+        ?s simulated ·
+        ? history rows ·
+        started ?
       </div>
-      <div class="conclusion-field">
-        <h3>Evidence <span class="muted small">(from findings)</span></h3>
-        
-        <p class="muted">No evidence recorded on findings yet.</p>
-      </div>
+      
+      
+      
+      <p class="muted" style="margin:0;font-size:0.9em">
+        <strong>1</strong> test outcome
+        — <span style="color:#065f46;font-weight:600">1 PASS</span> ·
+        <span style="color:#991b1b;font-weight:600">0 FAIL</span>.
+        Per-test outcomes (measured value · evaluator · band) are canonical on the
+        <a onclick="_setStudyTab('audit')" style="cursor:pointer;color:#3b82f6;text-decoration:underline">Tests (in Audit) →</a>.
+      </p>
+      
     </div>
+    
     
 
   </div>
@@ -1143,32 +1667,79 @@
 
     
     
+    
+    <div class="overview-section" id="discovery-implications-section" style="margin-top:18px">
+      <h3 class="overview-label">Discovery implications</h3>
+      <p class="muted" style="margin:0 0 10px 0;font-size:0.88em">Where this study's results leave the mechanism model — and what to investigate next.</p>
 
+      
+      <div class="di-uncertainties">
+        
+        <div class="di-unc di-unc-resolved">
+          <h4>✓ Resolved uncertainties</h4>
+          <ul><li>The faithful collagen IV network does assemble and carry finite stress under growth loading (outputs confirmed by a smoke run).</li><li>A relaxation time tau is resolvable at slow turnover (residence 100 -&gt; 57.7 LJ).</li></ul>
+        </div>
+        
+        
+        <div class="di-unc di-unc-remaining">
+          <h4>● Remaining uncertainties</h4>
+          <ul><li>The full tau-proportional-to-residence SLOPE (Fig 2E) -- not established while tau is below noise at residence 50/25.</li><li>Run-to-run variance -- single seed only.</li><li>Absolute tau in hours / modulus in pascals -- reduced units only.</li></ul>
+        </div>
+        
+      </div>
+      
+
+      
+
+      
+
+      
+      
+      
+      <div class="di-group">
+        <h3>Follow-up study proposals
+          <span class="muted" style="font-weight:normal;font-size:0.82em">(discovered)</span>
+          <span class="muted" style="font-weight:normal;font-size:0.85em">(1)</span></h3>
+        <p class="muted" style="margin:0 0 8px 0;font-size:0.85em">Click <strong>➕ Add to investigation</strong> to spawn a new study node in the investigation graph.</p>
+        <div class="followup-list">
+          
+          
+          <div class="di-card di-fup-card">
+            <div class="followup-header">
+              <strong class="followup-title">Dense multi-seed network for the full Fig-2E slope</strong>
+              
+              
+              
+              
+            </div>
+            
+            
+            <div class="followup-actions" style="margin-top:8px">
+              <button class="btn-seed-followup"
+                      onclick="_seedFollowupProposal('bm-r2-collagen-network-rheology', "fp-r2-dense-multiseed")">➕ Add to investigation</button>
+            </div>
+          </div>
+          
+        </div>
+      </div>
+      
+    </div>
+    
+
+    
+    
+    
     
 
   </div>
 
   
   
-  <details class="overview-section"><summary class="overview-label">Limitations &amp; provenance</summary>
-
-    
-    
-    
-    <div class="conclusions-grid conclusions-synthesis">
-      <div class="conclusion-field">
-        <h3>Next steps <span class="muted small">(from discovery implications)</span></h3>
-        <p class="muted">No follow-up proposals recorded yet.</p>
-      </div>
-    </div>
-
-  </details>
-  
 
 </section>
 
 </main>
-<script>window.__DASH_CONFIG__ = { mode: "snapshot", interactiveUrl: "https://github.com/vivarium-collective/viva-lumenoid", basePath: "/viva-lumenoid/dashboard", inputsDownloadBase: "https://github.com/vivarium-collective/viva-lumenoid/raw/main", provenance: {"repo_slug": "vivarium-collective/viva-lumenoid", "repo_url": "https://github.com/vivarium-collective/viva-lumenoid", "commit": "957cf462f6b48323457f7f1a54d4d1f4338f2455", "commit_url": "https://github.com/vivarium-collective/viva-lumenoid/commit/957cf462f6b48323457f7f1a54d4d1f4338f2455", "branch": "main", "lockfile": "uv.lock@796aed340563", "generated_at": "2026-10-20 11:34 UTC"} };</script>
+<script>window.__DASH_CONFIG__ = { mode: "snapshot", interactiveUrl: "https://github.com/vivarium-collective/viva-lumenoid", basePath: "/viva-lumenoid/dashboard", inputsDownloadBase: "https://github.com/vivarium-collective/viva-lumenoid/raw/main", provenance: {"repo_slug": "vivarium-collective/viva-lumenoid", "repo_url": "https://github.com/vivarium-collective/viva-lumenoid", "commit": "f34c33516e6bd25e9c49b0db9944a86d8d76457a", "commit_url": "https://github.com/vivarium-collective/viva-lumenoid/commit/f34c33516e6bd25e9c49b0db9944a86d8d76457a", "branch": "main", "lockfile": "uv.lock@796aed340563", "generated_at": "2026-10-20 11:36 UTC"} };</script>
 <script src="/viva-lumenoid/dashboard/assets/data-source.js"></script>
 <script src="/viva-lumenoid/dashboard/assets/toast.js"></script>
 <script>

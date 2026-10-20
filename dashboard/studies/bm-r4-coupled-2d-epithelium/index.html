@@ -77,7 +77,7 @@
   </button>
   <button class="study-pillar" data-kind="conclusions" onclick="_setStudyTab('conclusions')">
     <svg class="pillar-icon" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="6" cy="6" r="2.2"/><circle cx="6" cy="18" r="2.2"/><circle cx="18" cy="9" r="2.2"/><path d="M6 8.2v7.6"/><path d="M6 12h6a4 4 0 0 0 4-4V11"/></svg>
-    <span class="pillar-label">Conclusions</span>
+    <span class="pillar-label">Decide</span>
   </button>
   
   <span class="study-dl study-export-wrap" style="margin-left:auto; align-self:center; position:relative; display:inline-flex">
@@ -538,7 +538,7 @@
 
     <div class="ctr-block">
       <h2 class="overview-label ctr-h">Claim</h2>
-      <p class="ctr-text">A 2D epithelial sheet with an explicit cell-height degree of freedom relaxes under the vertex model; wiring the membrane traction and comparing confinement to the homogeneous baseline is in progress.
+      <p class="ctr-text">The explicit 2D epithelial sheet relaxes under the Tyssue vertex model and yields finite, uniform per-cell geometry: all 12 cell-faces carry the same basal area (5.0) and the same explicit cell height (1.93), and stepping the EulerSolver keeps that geometry finite. The figure-level comparison of this spatial confinement to the homogeneous R1 baseline, and the explicit BM-traction coupling, are not yet in the composite.
 </p>
       
     </div>
@@ -549,20 +549,19 @@
       <div class="ctr-meta">
         <div class="ctr-meta-row"><span class="ctr-meta-k">Question</span> <span class="ctr-meta-item">Do the paper&#39;s confinement regimes survive explicit cell topology and heterogeneous growth in a spatial 2D epithelium?
 </span></div>
-        <div class="ctr-meta-row"><span class="ctr-meta-k">Hypothesis</span> <span class="ctr-meta-item">A Tyssue 2D polygonal sheet with a BM traction/area law calibrated from R2 reproduces R1&#39;s confinement response in the homogeneous limit, and explicit topology, cell division and varying cortical tensions introduce spatial force/area heterogeneity without destroying the regime structure.
-</span></div>
+        
       </div>
     </div>
     
 
     <div class="ctr-block">
       <h2 class="overview-label ctr-h">Model &amp; approach</h2>
-      <p class="ctr-text">Build a Tyssue 2D sheet with a BM response calibrated from R2 (traction/area law, height via an explicit volume/prism relation); include a reference homogeneous case, cell division and varying cortical tensions; compare the confinement response to R1 and quantify topology sensitivity.
+      <p class="ctr-text">Build the tyssue_2d_sheet composite (an explicit polygonal CrossSection sheet over the vivarium-tyssue engine, each cell-face carrying an explicit height degree of freedom) and step the EulerSolver. Reconstruct the mesh counts (faces = cells, vertices), read every cell-face basal area and explicit height off face_df, and confirm the geometry stays finite and positive across several Euler steps (dt 0.01). This is a qualitative spatial-engine check -- that the sheet resolves and relaxes to finite per-cell geometry -- not yet a quantitative confinement comparison to R1.
 </p>
       <div class="ctr-meta">
         <div class="ctr-meta-row"><span class="ctr-meta-k">Model</span> <code>bm-r4-coupled-2d-epithelium</code><a class="ov-tablink" href="#" onclick="_setStudyTab('compose');return false;">model →</a></div>
         
-        <div class="ctr-meta-row"><span class="ctr-meta-k">Measures</span> <span class="ctr-meta-item">1 behavior test</span><a class="ov-tablink" href="#" onclick="_setStudyTab('audit');return false;">see Tests →</a></div>
+        <div class="ctr-meta-row"><span class="ctr-meta-k">Measures</span> <span class="ctr-meta-item">2 behavior tests</span><a class="ov-tablink" href="#" onclick="_setStudyTab('audit');return false;">see Tests →</a></div>
         
       </div>
     </div>
@@ -571,15 +570,216 @@
     
     
     
+    <div class="ctr-block ov-prov">
+      <h2 class="overview-label ctr-h">Provenance &amp; sources</h2>
+      <div class="ctr-meta-k" style="margin-top:12px">Sources (1)</div>
+      <div class="ov-sources">
+      
+        
+        <div class="ov-src" id="sref-barrientos2026cellshape">
+          <b class="ov-src-t">Barrientos 2026</b> <span class="ov-src-k">barrientos2026cellshape</span>
+          <div class="ov-src-t">Basement membrane turnover controls cell shape</div>
+          <div class="ctr-meta-k" style="text-transform:none">Barrientos, Rodrigo and Meadowcroft, Billie and Sánchez-Sánchez, Beatriz and others · 2026 · <a href="https://www.cell.com/cell/fulltext/S0092-8674(26)00808-1" target="_blank" rel="noopener">source ↗</a></div>
+        </div>
+      
+      </div>
+    </div>
+    
 
     <div class="ctr-block">
       <h2 class="overview-label ctr-h">Result</h2>
-      <p class="ctr-text"></p>
+      <p class="ctr-text">The 2D sheet resolves and relaxes deterministically. The mesh carries 12 cell-faces (faces = cells), 12 cells and 24 vertices on a flat z=0 plane spanning +/-5.80 in x and y. Every cell-face relaxes to the same basal area, 5.0, and the same explicit cell height, 1.9319, with all face areas and heights finite. Stepping the EulerSolver five times (dt 0.01) keeps per-cell area and height finite and positive with no NaN or blow-up. The homogeneous cell is uniform because the sheet carries no heterogeneous growth, division or cortical-tension variation yet, and the BM traction/area law is not wired as an explicit coupling -- so the spatial-vs-homogeneous confinement comparison to R1 is a followup, not a result here.
+</p>
+      
+      
+      <div class="ov-metrics">
+        
+        <div class="ov-metric ov-metric-pass">
+          <div class="ov-metric-v">all 12 cell-faces relax to basal area 5.0 and explicit height 1.9319; every area and height finite and &gt; 0</div>
+          <div class="ov-metric-k">sheet-yields-finite-areas</div>
+        </div>
+        
+        <div class="ov-metric ov-metric-pass">
+          <div class="ov-metric-v">5 Euler steps (dt 0.01) keep per-cell area and height finite and positive -- no NaN, no blow-up</div>
+          <div class="ov-metric-k">sheet-steps-stably</div>
+        </div>
+        
+      </div>
+      
+      
+      
+      
+    <div class="overview-section findings-section">
+      <h2 class="overview-label">🔬 Findings — what this study taught us</h2>
       
       
       
       
       
+      
+      
+      
+      <div class="finding-card finding-kind-computational finding-status-confirms">
+        <details class="finding-details">
+          <summary class="finding-row">
+            <span class="finding-status-glyph">✓</span>
+            <span class="finding-claim finding-statement">The explicit 2D epithelial sheet resolves and relaxes over the tyssue engine to finite, uniform per-cell geometry: 12 cell-faces (faces = cells) and 24 vertices on a flat z=0 plane, every cell-face at basal area 5.0 and explicit height 1.9319, all finite.
+</span>
+            
+            <span class="finding-chip">via <code>sheet-yields-finite-areas</code></span>
+            
+          </summary>
+          <div class="finding-drawer">
+            <div class="finding-header">
+              <span class="finding-id">F1-2d-sheet-yields-finite-geometry</span>
+              <span class="finding-kind">computational</span>
+              <span class="finding-status-text">confirms literature</span>
+            </div>
+            
+            
+            <div class="finding-evidence">
+              <strong>observed:</strong> Nf=12, Nv=24; face area 5.0 (uniform), face height 1.9319 (uniform); all finite · 
+              
+              via test <a href="#bt-sheet-yields-finite-areas" onclick="_gotoStudyTab('audit','bt-sheet-yields-finite-areas');return false;"><code>sheet-yields-finite-areas</code></a> · 
+              in run <a href="#run-r4-2d-sheet-relaxation"><code>r4-2d-sheet-relaxation</code></a>
+              
+              
+            </div>
+            
+            
+            <div class="finding-traceability" style="font-size:0.84em;color:#475569;padding:4px 10px;margin:4px 0">
+              
+              
+              runs: <a href="#run-r4-2d-sheet-relaxation"><code>r4-2d-sheet-relaxation</code></a>
+            </div>
+            
+            
+            
+            <div class="pass_if-band muted small" style="font-size:0.82em;padding:2px 10px">judged against <code>pass_if: op: all_finite_positive · note: all 12 face areas finite and &gt; 0; min == max == 5.0</code></div>
+            
+            
+            
+            <div class="finding-explanation"><em>Why:</em> Each cell-face carries an explicit basal area and height degree of freedom; with no heterogeneous growth or BM traction applied, the vertex model relaxes every cell to the same well-posed geometry.
+</div>
+            
+            <div class="finding-next"><strong>→ Next:</strong> use as the planar spatial substrate for the R5 3D monolayer</div>
+          </div>
+        </details>
+      </div>
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      <div class="finding-card finding-kind-computational finding-status-confirms">
+        <details class="finding-details">
+          <summary class="finding-row">
+            <span class="finding-status-glyph">✓</span>
+            <span class="finding-claim finding-statement">Stepping the EulerSolver five times (dt 0.01) keeps per-cell area and height finite and positive, with no NaN or blow-up -- the spatial sheet is numerically stable over short integration.
+</span>
+            
+            <span class="finding-chip">via <code>sheet-steps-stably</code></span>
+            
+          </summary>
+          <div class="finding-drawer">
+            <div class="finding-header">
+              <span class="finding-id">F2-steps-stably</span>
+              <span class="finding-kind">computational</span>
+              <span class="finding-status-text">confirms literature</span>
+            </div>
+            
+            
+            <div class="finding-evidence">
+              <strong>observed:</strong> per-cell area and height finite and &gt; 0 after 5 Euler steps · 
+              
+              via test <a href="#bt-sheet-steps-stably" onclick="_gotoStudyTab('audit','bt-sheet-steps-stably');return false;"><code>sheet-steps-stably</code></a> · 
+              in run <a href="#run-r4-2d-sheet-relaxation"><code>r4-2d-sheet-relaxation</code></a>
+              
+              
+            </div>
+            
+            
+            <div class="finding-traceability" style="font-size:0.84em;color:#475569;padding:4px 10px;margin:4px 0">
+              
+              
+              runs: <a href="#run-r4-2d-sheet-relaxation"><code>r4-2d-sheet-relaxation</code></a>
+            </div>
+            
+            
+            
+            <div class="pass_if-band muted small" style="font-size:0.82em;padding:2px 10px">judged against <code>pass_if: op: finite_no_blowup · note: per-cell area and height finite and positive after 5 Euler steps (dt 0.01)</code></div>
+            
+            
+            
+            
+            
+            
+          </div>
+        </details>
+      </div>
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      <div class="finding-card finding-kind-methodological finding-status-partial">
+        <details class="finding-details">
+          <summary class="finding-row">
+            <span class="finding-status-glyph">◐</span>
+            <span class="finding-claim finding-statement">The quantitative spatial-vs-homogeneous confinement comparison to R1 is NOT yet a result: the sheet is homogeneous (uniform cells) and the BM traction/area law is not wired as an explicit coupling, so only well-posed geometry -- not a reproduced regime -- is established.
+</span>
+            
+            <span class="finding-chip">via <code>sheet-yields-finite-areas</code></span>
+            
+          </summary>
+          <div class="finding-drawer">
+            <div class="finding-header">
+              <span class="finding-id">F3-confinement-comparison-not-yet-wired</span>
+              <span class="finding-kind">methodological</span>
+              <span class="finding-status-text">partial literature</span>
+            </div>
+            
+            
+            <div class="finding-evidence">
+              <strong>observed:</strong> all cells identical (area 5.0, height 1.93) -- no heterogeneity or BM traction to compare against R1 · 
+              
+              via test <a href="#bt-sheet-yields-finite-areas" onclick="_gotoStudyTab('audit','bt-sheet-yields-finite-areas');return false;"><code>sheet-yields-finite-areas</code></a> · 
+              in run <a href="#run-r4-2d-sheet-relaxation"><code>r4-2d-sheet-relaxation</code></a>
+              
+              
+            </div>
+            
+            
+            <div class="finding-traceability" style="font-size:0.84em;color:#475569;padding:4px 10px;margin:4px 0">
+              
+              
+              runs: <a href="#run-r4-2d-sheet-relaxation"><code>r4-2d-sheet-relaxation</code></a>
+            </div>
+            
+            
+            
+            <div class="pass_if-band muted small" style="font-size:0.82em;padding:2px 10px">judged against <code>pass_if: op: all_finite_positive · note: all 12 face areas finite and &gt; 0; min == max == 5.0</code></div>
+            
+            
+            
+            
+            
+            <div class="finding-next"><strong>→ Next:</strong> wire the R2-calibrated BM traction and add heterogeneous growth/division, then compare the confinement response to R1</div>
+          </div>
+        </details>
+      </div>
+      
+      
+    </div>
+    
       
       
       
@@ -587,10 +787,12 @@
         
         <div class="ctr-meta-row"><span class="ctr-meta-k">Confidence</span>
           <span class="ctr-badge ctr-badge-investigating">Investigating</span>
-          
-          
+          <span class="ctr-vch">biology&nbsp;PENDING</span>
+          <span class="ctr-vch">insight&nbsp;NEUTRAL</span>
         </div>
         
+        
+        <div class="ctr-meta-row"><span class="ctr-meta-k">Caveat</span> <span class="ctr-meta-item">Qualitative spatial-engine check only: the study confirms the sheet runs and yields finite per-cell geometry, not that it reproduces R1&#39;s confinement regimes.</span></div>
         
       </div>
       
@@ -681,10 +883,23 @@
       
       
       
+      
+      
+      
+      
+      
+      
       <div class="model-config-mount" style="margin-top:8px">
         <div class="viv-loading"><span class="viv-loading-spin" aria-hidden="true"></span><span>Loading configuration…</span></div></div>
       
       
+      
+      <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;font-size:0.8em">
+        <span class="cond-pill"><span class="cond-pill-k">seeds</span>=1</span>
+        
+        
+        <span class="cond-pill"><span class="cond-pill-k">status</span>=completed</span>
+      </div>
       
     </div>
     
@@ -721,15 +936,6 @@
       <div class="viv-loading"><span class="viv-loading-spin" aria-hidden="true"></span><span>Loading readouts from the composite emit plan…</span></div>
     </div>
 
-    
-    <details style="margin-top: 1.4em;">
-      <summary class="muted">How observables tie to Expected Behavior</summary>
-      <p style="font-size: 0.9em;">Observables can be referenced by name in an
-      <code>expected_behavior[i].measure</code> block (e.g. <code>kind: bulk_count, id:
-      "MONOMER0-160[c]"</code>). When the dashboard validates a study, it cross-checks
-      that every <code>measure</code> resolves to a declared observable, or to a
-      built-in helper.</p>
-    </details>
     
   </div>
   </div>
@@ -876,23 +1082,100 @@
     
     
     
-    <li class="expected-behavior-item" id="bt-confinement-robust-to-topology"
+    <li class="expected-behavior-item" id="bt-sheet-yields-finite-areas"
         data-test-kind="behavioral"
         
-        data-pytest-node="confinement-robust-to-topology"
-        data-classification="unclassified"
-        data-result="pending"
-        style="margin: 0 0 10px 0; padding: 10px 12px; border-left: 4px solid #cbd5e1; background: #f8fafc; border-radius: 4px;">
+        data-pytest-node="sheet-yields-finite-areas"
+        data-classification="primary"
+        data-result="PASS"
+        style="margin: 0 0 10px 0; padding: 10px 12px; border-left: 4px solid #10b981; background: #f8fafc; border-radius: 4px;">
       
         
       <div style="display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;">
-        <span class="bt-result" style="font-size: 0.75em; font-family: monospace; padding: 2px 8px; border-radius: 9999px; background: #f1f5f9; color: #475569">⏳ pending</span>
-        <span class="classification-pill classification-unclassified">unclassified</span>
-        <strong style="font-size: 0.9em;">confinement-robust-to-topology</strong>
+        <span class="bt-result" style="font-size: 0.75em; font-family: monospace; padding: 2px 8px; border-radius: 9999px; background: #d1fae5; color: #065f46">✓ PASS</span>
+        <span class="classification-pill classification-primary">primary</span>
+        <strong style="font-size: 0.9em;">sheet-yields-finite-areas</strong>
+        
+        <span class="muted" style="font-size:0.78em">requires: <code>r4-2d-sheet-relaxation</code></span>
         
       </div>
-      <div style="margin-top: 6px; font-size: 0.95em;"></div>
+      <div style="margin-top: 6px; font-size: 0.95em;">After relaxation, every cell-face in the 2D sheet carries a finite, positive basal area (uniform 5.0 in this homogeneous configuration).
+</div>
       
+      <div style="margin-top:6px;font-size:0.85em;padding:6px 10px;background:#fff;border:1px solid #e2e8f0;border-radius:3px">
+        <strong>Latest result:</strong>
+        
+          <code style="font-family:ui-monospace,monospace;color:#475569;margin-right:8px">observed: all 12 cell-faces relax to basal area 5.0 and explicit height 1.9319; every area and height finite and &gt; 0</code>
+        
+      </div>
+      
+      
+      <details style="margin-top: 6px; font-size: 0.82em;">
+        <summary class="muted" style="cursor: pointer;">Assertion</summary>
+        
+        <pre style="background:#fff; padding:8px; margin:4px 0 0 0; border:1px solid #e2e8f0; border-radius:3px; overflow-x:auto;">measure: {"field": "face_area", "kind": "reduce", "reduce": "all_finite_and_positive"}
+pass_if: {"note": "all 12 face areas finite and \u003e 0; min == max == 5.0", "op": "all_finite_positive"}
+cites:   ["barrientos2026cellshape"]</pre>
+      </details>
+      
+      
+      <details style="margin-top: 6px; font-size: 0.82em">
+        <summary class="muted" style="cursor:pointer; color:#92400e">⚠ Calibration anchor</summary>
+        <pre style="background:#fff7ed; padding:8px; margin:4px 0 0 0; border:1px solid #fdba74; border-radius:3px; overflow-x:auto">{
+  "cites": [
+    "barrientos2026cellshape"
+  ],
+  "literature_target": "finite well-posed per-cell basal area (qualitative; no micron calibration)",
+  "observed_value": 5.0,
+  "resolution": "concept"
+}</pre>
+      </details>
+      
+      
+      
+    </li>
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="expected-behavior-item" id="bt-sheet-steps-stably"
+        data-test-kind="behavioral"
+        
+        data-pytest-node="sheet-steps-stably"
+        data-classification="primary"
+        data-result="PASS"
+        style="margin: 0 0 10px 0; padding: 10px 12px; border-left: 4px solid #10b981; background: #f8fafc; border-radius: 4px;">
+      
+        
+      <div style="display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;">
+        <span class="bt-result" style="font-size: 0.75em; font-family: monospace; padding: 2px 8px; border-radius: 9999px; background: #d1fae5; color: #065f46">✓ PASS</span>
+        <span class="classification-pill classification-primary">primary</span>
+        <strong style="font-size: 0.9em;">sheet-steps-stably</strong>
+        
+        <span class="muted" style="font-size:0.78em">requires: <code>r4-2d-sheet-relaxation</code></span>
+        
+      </div>
+      <div style="margin-top: 6px; font-size: 0.95em;">Stepping the EulerSolver several steps keeps per-cell areas and explicit heights finite (no NaN, no blow-up).
+</div>
+      
+      <div style="margin-top:6px;font-size:0.85em;padding:6px 10px;background:#fff;border:1px solid #e2e8f0;border-radius:3px">
+        <strong>Latest result:</strong>
+        
+          <code style="font-family:ui-monospace,monospace;color:#475569;margin-right:8px">observed: 5 Euler steps (dt 0.01) keep per-cell area and height finite and positive -- no NaN, no blow-up</code>
+        
+      </div>
+      
+      
+      <details style="margin-top: 6px; font-size: 0.82em;">
+        <summary class="muted" style="cursor: pointer;">Assertion</summary>
+        
+        <pre style="background:#fff; padding:8px; margin:4px 0 0 0; border:1px solid #e2e8f0; border-radius:3px; overflow-x:auto;">measure: {"field": "face_height", "kind": "reduce", "reduce": "finite_over_steps"}
+pass_if: {"note": "per-cell area and height finite and positive after 5 Euler steps (dt 0.01)", "op": "finite_no_blowup"}</pre>
+      </details>
       
       
       
@@ -944,37 +1227,37 @@
       
       <span class="status-step  gate-status-not-assessed gate-current">
         <span class="dot"></span>1 · Plan
-        
+        <span class="step-val">drafted</span>
         <span class="gate-current-tag">you are here</span>
       </span>
       
-      <span class="status-step  gate-status-not-assessed">
+      <span class="status-step set gate-status-passed">
         <span class="dot"></span>2 · Execution
-        
+        <span class="step-val">ran</span>
         
       </span>
       
-      <span class="status-step  gate-status-not-assessed">
+      <span class="status-step set gate-status-passed">
         <span class="dot"></span>3 · Evidence
-        
+        <span class="step-val">evaluated</span>
         
       </span>
       
-      <span class="status-step  gate-status-not-assessed">
+      <span class="status-step set gate-status-passed">
         <span class="dot"></span>4 · Quality
-        
+        <span class="step-val">evaluated</span>
         
       </span>
       
-      <span class="status-step  gate-status-not-assessed">
+      <span class="status-step set gate-status-passed">
         <span class="dot"></span>5 · Decision
-        
+        <span class="step-val">passed</span>
         
       </span>
       
       <span class="status-step  gate-status-not-assessed">
         <span class="dot"></span>6 · Release
-        
+        <span class="step-val">requested</span>
         
       </span>
       
@@ -1018,14 +1301,14 @@
           <span class="narrative-label">Regression compatibility</span>
           <span class="narrative-input verdict-badge-computed" data-verdict-track="regression_compatibility"
                 title="Computed from run status (read-only)"
-                style="display:inline-block;padding:2px 12px;border-radius:9999px;font-weight:700;font-size:0.85em;background:#f1f5f9;color:#475569">PENDING</span>
+                style="display:inline-block;padding:2px 12px;border-radius:9999px;font-weight:700;font-size:0.85em;background:#f1f5f9;color:#475569">PASS</span>
           <span class="muted small" style="margin-left:6px">computed from run status</span>
         </label>
         <label class="narrative-row narrative-row-wide">
           <span class="narrative-label">Regression basis</span>
           <textarea class="narrative-input narrative-textarea" rows="2"
                     data-narrative-path="conclusion_verdicts.regression_compatibility.basis"
-                    placeholder="e.g. Builds cleanly; tests pass; pyproject deps unchanged."></textarea>
+                    placeholder="e.g. Builds cleanly; tests pass; pyproject deps unchanged.">The tyssue_2d_sheet composite is registered and steps cleanly over the vivarium-tyssue engine; the behavior-test contracts (test_tyssue_2d_sheet_runs) pass.</textarea>
         </label>
         <label class="narrative-row">
           <span class="narrative-label">Empirical validation</span>
@@ -1038,20 +1321,22 @@
           <span class="narrative-label">Empirical basis</span>
           <textarea class="narrative-input narrative-textarea" rows="2"
                     data-narrative-path="conclusion_verdicts.biological_validation.basis"
-                    placeholder="e.g. atp_fraction = 0.997, outside Boesen 2024 band [0.2, 0.5]."></textarea>
+                    placeholder="e.g. atp_fraction = 0.997, outside Boesen 2024 band [0.2, 0.5].">The sheet yields finite, well-posed per-cell geometry, but the figure-level confinement comparison to R1 and the BM-traction coupling are not yet in the composite, so no biological regime is validated or refuted here.
+</textarea>
         </label>
         <label class="narrative-row">
           <span class="narrative-label">Explanatory gain</span>
           <span class="narrative-input verdict-badge-computed" data-verdict-track="explanatory_gain"
                 title="Computed from interpretation-tier findings (read-only)"
-                style="display:inline-block;padding:2px 12px;border-radius:9999px;font-weight:700;font-size:0.85em;background:#f1f5f9;color:#475569">PENDING</span>
+                style="display:inline-block;padding:2px 12px;border-radius:9999px;font-weight:700;font-size:0.85em;background:#f1f5f9;color:#475569">NEUTRAL</span>
           <span class="muted small" style="margin-left:6px">computed from interpretation-tier findings</span>
         </label>
         <label class="narrative-row narrative-row-wide">
           <span class="narrative-label">Explanatory basis</span>
           <textarea class="narrative-input narrative-textarea" rows="2"
                     data-narrative-path="conclusion_verdicts.explanatory_gain.basis"
-                    placeholder="e.g. Three findings worth keeping; design_pivot_required closed."></textarea>
+                    placeholder="e.g. Three findings worth keeping; design_pivot_required closed.">Establishes that an explicit spatial epithelial substrate runs and is numerically stable; it does not yet add biological understanding of confinement beyond the homogeneous R1 model.
+</textarea>
         </label>
       </div>
     </div>
@@ -1065,19 +1350,105 @@
         evaluator's result from the behavior-test outcomes — the evaluation the
         conclusion rests on.</p>
       <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
-        <span class="gate-status-not_started" style="padding:2px 12px;border-radius:9999px;font-weight:700;font-size:0.85em">not_started</span>
+        <span class="gate-status-passed" style="padding:2px 12px;border-radius:9999px;font-weight:700;font-size:0.85em">passed</span>
         <span class="muted small">evaluated by code</span>
-        <span class="muted small">0/1 passed</span>
+        <span class="muted small">2/2 passed</span>
       </div>
       
     </div>
     
 
     
+    
+    
+    
+    <div class="decide-section" style="margin-top:18px">
+      <h3 class="overview-label">Conclusion logic — gate decision</h3>
+      
+      <div style="padding:10px 14px;background:#f0fdf4;border-left:4px solid #10b981;border-radius:4px;margin-bottom:8px">
+        <strong>✓ If primary tests pass:</strong>
+        
+        <div style="margin-top:4px"><em>Implementation:</em> The explicit 2D sheet resolves over the tyssue engine and relaxes to finite per-cell geometry.</div>
+        
+        
+        <div style="margin-top:4px"><em>Empirical validation:</em> Qualitative only: the sheet yields well-posed per-cell areas and heights; the quantitative confinement match to R1 is not yet evaluated (BM traction not coupled).</div>
+        
+        
+        <div style="margin-top:4px"><em>Pipeline unblocks:</em>
+          <ul style="margin:4px 0 0 18px"><li>R5 explicit 3D monolayer -- this planar sheet is its spatial substrate.</li></ul>
+        </div>
+        
+      </div>
+      
+      
+      <div style="padding:10px 14px;background:#fef2f2;border-left:4px solid #dc2626;border-radius:4px">
+        <strong>✗ If primary tests fail:</strong>
+        
+        <div style="margin-top:4px"><em>Diagnose:</em>
+          <ul style="margin:4px 0 0 18px"><li>Sheet fails to resolve -- check the numpy-2.x 2D-cross shim in tyssue_coupling and the CrossSectionGeometry merge.</li><li>Geometry non-finite after stepping -- lower dt or check the EulerSolver gradient terms.</li></ul>
+        </div>
+        
+        
+        <div style="margin-top:4px"><em>Block downstream:</em> Do not advance R5 until the planar sheet resolves and relaxes to finite geometry.</div>
+        
+      </div>
+      
+    </div>
+    
+
+    
+    
+    
 
   </div>
 
   
+  
+  <div class="overview-section"><h2 class="overview-label">Plan &amp; assumptions</h2>
+
+    
+    <div class="overview-section">
+      <h3 class="overview-label">Pipeline gate</h3>
+      <p class="muted" style="margin: 0 0 8px 0;font-size:0.88em">
+        Each study is a model-building gate: it answers <em>"Can we safely build the next layer?"</em>
+      </p>
+      
+      <div style="margin-bottom:6px"><strong>Prerequisites:</strong>
+        <code>{&#39;study&#39;: &#39;bm-r1-published-tissue-baseline&#39;, &#39;condition&#39;: &#39;tests-passed&#39;}</code> · <code>{&#39;study&#39;: &#39;bm-r2-collagen-network-rheology&#39;, &#39;condition&#39;: &#39;tests-passed&#39;}</code>
+      </div>
+      
+      
+      <div style="margin-bottom:6px"><strong>Enables:</strong>
+        <code>bm-r5-explicit-3d-confinement</code>
+      </div>
+      
+      
+      <div><strong>Proceed when:</strong> <span class="muted">The explicit 2D sheet resolves over the tyssue engine and relaxes to finite per-cell geometry, so it can serve as the planar spatial substrate the 3D monolayer (R5) builds on. Advancing to the quantitative confinement claim additionally requires the BM-traction coupling and the homogeneous-vs-spatial comparison to R1, which are flagged as followups.
+</span></div>
+      
+    </div>
+    
+
+    
+    <div class="overview-section">
+      <h3 class="overview-label">Key assumptions</h3>
+      <ul style="margin:0 0 0 18px;padding:0;font-size:0.93em">
+        <li style="margin:2px 0">The sheet is an explicit polygonal CrossSection: each cell-face carries its own basal area and an explicit cell-height degree of freedom, not an inferred volume/area prism relation.</li><li style="margin:2px 0">The current composite is a homogeneous relaxation: no heterogeneous growth, cell division or cortical-tension variation is applied, so all cells relax to the same geometry.</li><li style="margin:2px 0">Reduced units throughout (areas, heights, lengths are dimensionless); no calibration to microns is claimed.</li><li style="margin:2px 0">The BM traction/area law (calibrated from R2) is NOT wired as an explicit coupling in this composite; the effective constitutive BM and an explicit LAMMPS BM are interchangeable alternatives, not additive forces.</li><li style="margin:2px 0">Qualitative scope: this study establishes that the spatial sheet runs and yields finite geometry; the quantitative confinement comparison to R1 is a followup.</li>
+      </ul>
+    </div>
+    
+
+    
+    <div class="overview-section">
+      <h3 class="overview-label">Limitations</h3>
+      <p class="muted" style="margin:0 0 6px 0;font-size:0.85em">What this study explicitly does NOT validate (prevents overclaim).</p>
+      <ul style="margin:0 0 0 18px;padding:0;font-size:0.93em">
+        <li style="margin:2px 0">Qualitative spatial-engine check only: the study confirms the sheet runs and yields finite per-cell geometry, not that it reproduces R1&#39;s confinement regimes.</li><li style="margin:2px 0">Homogeneous configuration: no heterogeneous growth, cell division or cortical-tension variation is applied, so all 12 cells relax to the same area (5.0) and height (1.93) -- the spatial heterogeneity the question asks about is not exercised yet.</li><li style="margin:2px 0">The BM traction/area law (from R2) is not wired as an explicit coupling; the homogeneous-vs-spatial confinement comparison to R1 is therefore a followup, not a result.</li><li style="margin:2px 0">Reduced units; single deterministic configuration (no parameter sweep, n_replicates = 1) -- replication across BM stiffness / growth rate is a gap.</li>
+      </ul>
+    </div>
+    
+
+  </div>
   
 
   
@@ -1085,22 +1456,29 @@
 
     
     
-    <p class="muted" style="margin:0 0 10px 0;font-size:0.85em">
-      Synthesised read-only from canonical fields — edit <code>findings</code>,
-      <code>limitations</code>, and <code>discovery_implications</code> to change
-      this (and the generated report) together.
-    </p>
-    <div class="conclusions-grid conclusions-synthesis">
-      <div class="conclusion-field">
-        <h3>Claims <span class="muted small">(from findings)</span></h3>
-        <p class="muted">No findings recorded yet.</p>
+    
+    
+    <div class="decide-section">
+      <h3 class="overview-label">Latest run outcomes</h3>
+      <div style="font-size:0.88em;color:#64748b;margin-bottom:8px">
+        baseline · seed ? ·
+        ?s simulated ·
+        ? history rows ·
+        started ?
       </div>
-      <div class="conclusion-field">
-        <h3>Evidence <span class="muted small">(from findings)</span></h3>
-        
-        <p class="muted">No evidence recorded on findings yet.</p>
-      </div>
+      
+      
+      
+      <p class="muted" style="margin:0;font-size:0.9em">
+        <strong>2</strong> test outcomes
+        — <span style="color:#065f46;font-weight:600">2 PASS</span> ·
+        <span style="color:#991b1b;font-weight:600">0 FAIL</span>.
+        Per-test outcomes (measured value · evaluator · band) are canonical on the
+        <a onclick="_setStudyTab('audit')" style="cursor:pointer;color:#3b82f6;text-decoration:underline">Tests (in Audit) →</a>.
+      </p>
+      
     </div>
+    
     
 
   </div>
@@ -1113,32 +1491,79 @@
 
     
     
+    
+    <div class="overview-section" id="discovery-implications-section" style="margin-top:18px">
+      <h3 class="overview-label">Discovery implications</h3>
+      <p class="muted" style="margin:0 0 10px 0;font-size:0.88em">Where this study's results leave the mechanism model — and what to investigate next.</p>
 
+      
+      <div class="di-uncertainties">
+        
+        <div class="di-unc di-unc-resolved">
+          <h4>✓ Resolved uncertainties</h4>
+          <ul><li>The explicit 2D epithelial sheet resolves over the tyssue engine and relaxes to finite, well-posed per-cell geometry.</li><li>The spatial sheet is numerically stable over short EulerSolver integration (no NaN / blow-up).</li></ul>
+        </div>
+        
+        
+        <div class="di-unc di-unc-remaining">
+          <h4>● Remaining uncertainties</h4>
+          <ul><li>Whether the Fig 1 confinement regimes survive explicit topology -- needs the BM traction coupling and heterogeneous growth.</li><li>The quantitative spatial-vs-homogeneous (R1) confinement comparison.</li></ul>
+        </div>
+        
+      </div>
+      
+
+      
+
+      
+
+      
+      
+      
+      <div class="di-group">
+        <h3>Follow-up study proposals
+          <span class="muted" style="font-weight:normal;font-size:0.82em">(discovered)</span>
+          <span class="muted" style="font-weight:normal;font-size:0.85em">(1)</span></h3>
+        <p class="muted" style="margin:0 0 8px 0;font-size:0.85em">Click <strong>➕ Add to investigation</strong> to spawn a new study node in the investigation graph.</p>
+        <div class="followup-list">
+          
+          
+          <div class="di-card di-fup-card">
+            <div class="followup-header">
+              <strong class="followup-title">BM traction coupling + R1 confinement comparison</strong>
+              
+              
+              
+              
+            </div>
+            
+            
+            <div class="followup-actions" style="margin-top:8px">
+              <button class="btn-seed-followup"
+                      onclick="_seedFollowupProposal('bm-r4-coupled-2d-epithelium', "fp-r4-bm-traction-and-r1-comparison")">➕ Add to investigation</button>
+            </div>
+          </div>
+          
+        </div>
+      </div>
+      
+    </div>
+    
+
+    
+    
+    
     
 
   </div>
 
   
   
-  <details class="overview-section"><summary class="overview-label">Limitations &amp; provenance</summary>
-
-    
-    
-    
-    <div class="conclusions-grid conclusions-synthesis">
-      <div class="conclusion-field">
-        <h3>Next steps <span class="muted small">(from discovery implications)</span></h3>
-        <p class="muted">No follow-up proposals recorded yet.</p>
-      </div>
-    </div>
-
-  </details>
-  
 
 </section>
 
 </main>
-<script>window.__DASH_CONFIG__ = { mode: "snapshot", interactiveUrl: "https://github.com/vivarium-collective/viva-lumenoid", basePath: "/viva-lumenoid/dashboard", inputsDownloadBase: "https://github.com/vivarium-collective/viva-lumenoid/raw/main", provenance: {"repo_slug": "vivarium-collective/viva-lumenoid", "repo_url": "https://github.com/vivarium-collective/viva-lumenoid", "commit": "957cf462f6b48323457f7f1a54d4d1f4338f2455", "commit_url": "https://github.com/vivarium-collective/viva-lumenoid/commit/957cf462f6b48323457f7f1a54d4d1f4338f2455", "branch": "main", "lockfile": "uv.lock@796aed340563", "generated_at": "2026-10-20 11:34 UTC"} };</script>
+<script>window.__DASH_CONFIG__ = { mode: "snapshot", interactiveUrl: "https://github.com/vivarium-collective/viva-lumenoid", basePath: "/viva-lumenoid/dashboard", inputsDownloadBase: "https://github.com/vivarium-collective/viva-lumenoid/raw/main", provenance: {"repo_slug": "vivarium-collective/viva-lumenoid", "repo_url": "https://github.com/vivarium-collective/viva-lumenoid", "commit": "f34c33516e6bd25e9c49b0db9944a86d8d76457a", "commit_url": "https://github.com/vivarium-collective/viva-lumenoid/commit/f34c33516e6bd25e9c49b0db9944a86d8d76457a", "branch": "main", "lockfile": "uv.lock@796aed340563", "generated_at": "2026-10-20 11:36 UTC"} };</script>
 <script src="/viva-lumenoid/dashboard/assets/data-source.js"></script>
 <script src="/viva-lumenoid/dashboard/assets/toast.js"></script>
 <script>

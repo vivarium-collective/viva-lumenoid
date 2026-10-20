@@ -20,7 +20,7 @@
   <div style="display:flex; align-items:center; gap:14px; justify-content:space-between;">
   <div style="display:flex; align-items:center; gap:12px; min-width:0; flex-wrap:wrap">
   <h1 class="study-title" style="margin:0">
-    <span class="study-name" id="study-name" data-slug="bm-r3-network-expansion-supply" data-study-kind="computational" title="bm-r3-network-expansion-supply">Network expansion &amp; collagen supply</span>
+    <span class="study-name" id="study-name" data-slug="bm-r3-network-expansion-supply" data-study-kind="biological" title="bm-r3-network-expansion-supply">Network expansion &amp; collagen supply</span>
     
   </h1>
     
@@ -77,7 +77,7 @@
   </button>
   <button class="study-pillar" data-kind="conclusions" onclick="_setStudyTab('conclusions')">
     <svg class="pillar-icon" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="6" cy="6" r="2.2"/><circle cx="6" cy="18" r="2.2"/><circle cx="18" cy="9" r="2.2"/><path d="M6 8.2v7.6"/><path d="M6 12h6a4 4 0 0 0 4-4V11"/></svg>
-    <span class="pillar-label">Conclusions</span>
+    <span class="pillar-label">Decide</span>
   </button>
   
   <span class="study-dl study-export-wrap" style="margin-left:auto; align-self:center; position:relative; display:inline-flex">
@@ -538,7 +538,7 @@
 
     <div class="ctr-block">
       <h2 class="overview-label ctr-h">Claim</h2>
-      <p class="ctr-text">The three supply conditions run from a shared initial state; matching the paper&#39;s ordering in network area, concentration and connectivity is in progress.
+      <p class="ctr-text">The collagen IV network composite distinguishes a REMODELING network (crosslink chemistry on -&gt; crosslinks form, the network remodels) from a FROZEN one (chemistry off -&gt; no crosslinks), but it has NO material-insertion / supply mechanism, so it cannot realise the third supply mode (remodeling WITH insertion) that Figure 2B-C&#39;s ordering needs. R3 is therefore a PARTIAL reproduction, scoped to remodeling-vs-frozen.
 </p>
       
     </div>
@@ -549,20 +549,19 @@
       <div class="ctr-meta">
         <div class="ctr-meta-row"><span class="ctr-meta-k">Question</span> <span class="ctr-meta-item">Why are both crosslink remodeling and collagen replacement (insertion) necessary for sustained basement-membrane growth?
 </span></div>
-        <div class="ctr-meta-row"><span class="ctr-meta-k">Hypothesis</span> <span class="ctr-meta-item">From identical initial states, no-remodeling, remodeling-without-insertion and remodeling- with-insertion diverge in network area, collagen concentration and integrity in the direction and ordering of Figure 2B-C: only remodeling with supply sustains growth without loss of the largest connected network.
-</span></div>
+        
       </div>
     </div>
     
 
     <div class="ctr-block">
       <h2 class="overview-label ctr-h">Model &amp; approach</h2>
-      <p class="ctr-text">From identical initial states, compare no remodeling, remodeling without insertion, and remodeling with insertion under matched forcing; measure area expansion, collagen density and largest-connected-network size; match the direction and ordering of Fig 2B-C.
+      <p class="ctr-text">Drive the collagen IV network composite (viva_lumenoid.composites.stage2_sweep / CollagenNetworkProcess) from a shared initial state in the two modes the composite CAN express: remodeling ON (make_on = break_on = 1, so crosslinks form and the chemistry turns over) versus FROZEN (make_on = break_on = 0, so the topology is fixed and no crosslinks form). A bounded smoke run (40 rods, real angles, 4 steps) confirms the direction: ON forms crosslinks, FROZEN forms none. The third Fig-2B-C mode -- remodeling WITH material insertion -- is NOT run, because the composite has no process that inserts new collagen material.
 </p>
       <div class="ctr-meta">
-        <div class="ctr-meta-row"><span class="ctr-meta-k">Model</span> <code>bm-r3-network-expansion-supply</code><a class="ov-tablink" href="#" onclick="_setStudyTab('compose');return false;">model →</a></div>
+        <div class="ctr-meta-row"><span class="ctr-meta-k">Model</span> <code>collagen-network-supply</code><a class="ov-tablink" href="#" onclick="_setStudyTab('compose');return false;">model →</a></div>
         
-        <div class="ctr-meta-row"><span class="ctr-meta-k">Measures</span> <span class="ctr-meta-item">1 behavior test</span><a class="ov-tablink" href="#" onclick="_setStudyTab('audit');return false;">see Tests →</a></div>
+        <div class="ctr-meta-row"><span class="ctr-meta-k">Measures</span> <span class="ctr-meta-item">2 behavior tests</span><a class="ov-tablink" href="#" onclick="_setStudyTab('audit');return false;">see Tests →</a></div>
         
       </div>
     </div>
@@ -571,15 +570,181 @@
     
     
     
+    <div class="ctr-block ov-prov">
+      <h2 class="overview-label ctr-h">Provenance &amp; sources</h2>
+      <div class="ctr-meta-k" style="margin-top:12px">Sources (2)</div>
+      <div class="ov-sources">
+      
+        
+        <div class="ov-src" id="sref-meadowcroft2025nonequilibrium">
+          <b class="ov-src-t">Meadowcroft 2025</b> <span class="ov-src-k">meadowcroft2025nonequilibrium</span>
+          <div class="ov-src-t">Nonequilibrium assembly and mechanics of a coarse-grained collagen IV network</div>
+          <div class="ctr-meta-k" style="text-transform:none">Meadowcroft, and others · 2025 · <a href="https://doi.org/10.1103/gdd5-rnh7" target="_blank" rel="noopener">source ↗</a></div>
+        </div>
+      
+        
+        <div class="ov-src" id="sref-barrientos2026cellshape">
+          <b class="ov-src-t">Barrientos 2026</b> <span class="ov-src-k">barrientos2026cellshape</span>
+          <div class="ov-src-t">Basement membrane turnover controls cell shape</div>
+          <div class="ctr-meta-k" style="text-transform:none">Barrientos, Rodrigo and Meadowcroft, Billie and Sánchez-Sánchez, Beatriz and others · 2026 · <a href="https://www.cell.com/cell/fulltext/S0092-8674(26)00808-1" target="_blank" rel="noopener">source ↗</a></div>
+        </div>
+      
+      </div>
+    </div>
+    
 
     <div class="ctr-block">
       <h2 class="overview-label ctr-h">Result</h2>
-      <p class="ctr-text"></p>
+      <p class="ctr-text">The composite cleanly separates the two modes it can express. Remodeling ON forms a crosslinked network (n_crosslinks 5 at 40 rods); FROZEN forms exactly zero crosslinks (n_crosslinks 0): crosslinks appear ONLY when the chemistry is on. This reproduces the remodeling-vs-no-remodeling contrast underlying Fig 2B-C. It does NOT reproduce the full three-mode ordering (no-remodeling / remodeling-without-insertion / remodeling-with-insertion), because the third mode requires a material-insertion / supply term the composite does not have. That missing insertion process is an explicit COMPOSITE GAP, and R3 stays Investigating until it is added.
+</p>
+      
+      
+      <div class="ov-metrics">
+        
+        <div class="ov-metric ov-metric-pass">
+          <div class="ov-metric-v">5</div>
+          <div class="ov-metric-k">crosslinks (remodeling on)</div>
+        </div>
+        
+        <div class="ov-metric ov-metric-pass">
+          <div class="ov-metric-v">0</div>
+          <div class="ov-metric-k">crosslinks (frozen)</div>
+        </div>
+        
+        <div class="ov-metric ov-metric-warn">
+          <div class="ov-metric-v">composite gap -- not expressible</div>
+          <div class="ov-metric-k">third supply mode (insertion)</div>
+        </div>
+        
+      </div>
+      
+      
+      
+      
+    <div class="overview-section findings-section">
+      <h2 class="overview-label">🔬 Findings — what this study taught us</h2>
       
       
       
       
       
+      
+      
+      
+      <div class="finding-card finding-kind-biological finding-status-partial">
+        <details class="finding-details">
+          <summary class="finding-row">
+            <span class="finding-status-glyph">◐</span>
+            <span class="finding-claim finding-statement">The collagen IV composite distinguishes a remodeling network from a frozen one: with the crosslink chemistry on it forms crosslinks (n_crosslinks 5), and with it off it forms none (n_crosslinks 0). This reproduces the remodeling-vs-no-remodeling half of Fig 2B-C, but not the full three-mode supply ordering.
+</span>
+            
+            <span class="finding-chip">via <code>remodeling-forms-crosslinks</code></span>
+            
+          </summary>
+          <div class="finding-drawer">
+            <div class="finding-header">
+              <span class="finding-id">F1-remodeling-vs-frozen-distinguished</span>
+              <span class="finding-kind">biological</span>
+              <span class="finding-status-text">partial literature</span>
+            </div>
+            
+            
+            <div class="finding-evidence">
+              <strong>observed:</strong> remodeling ON -&gt; 5 crosslinks; FROZEN -&gt; 0 crosslinks; verified in this session · 
+              
+              via test <a href="#bt-remodeling-forms-crosslinks" onclick="_gotoStudyTab('audit','bt-remodeling-forms-crosslinks');return false;"><code>remodeling-forms-crosslinks</code></a> · 
+              in run <a href="#run-r3-remodeling-vs-frozen"><code>r3-remodeling-vs-frozen</code></a>
+              
+              
+            </div>
+            
+            
+            <div class="finding-traceability" style="font-size:0.84em;color:#475569;padding:4px 10px;margin:4px 0">
+              
+              
+              runs: <a href="#run-r3-remodeling-vs-frozen"><code>r3-remodeling-vs-frozen</code></a>
+            </div>
+            
+            
+            
+            <div class="pass_if-band muted small" style="font-size:0.82em;padding:2px 10px">judged against <code>pass_if: gt 0</code></div>
+            
+            
+            
+            <div class="finding-expected">
+              <strong>expected:</strong> remodeling sustains a connected network; no remodeling does not (Fig 2B-C) · 
+              
+              cites: <a class="ov-cite" href="#sref-barrientos2026cellshape" title="Basement membrane turnover controls cell shape">Barrientos 2026</a>
+            </div>
+            
+            
+            <div class="finding-explanation"><em>Why:</em> make_on / break_on gate the crosslink chemistry; crosslinks appear only when it is on, so the composite cleanly separates the two modes it can express.
+</div>
+            
+            <div class="finding-next"><strong>→ Next:</strong> add a material-insertion process so the third Fig-2B-C supply mode can be run</div>
+          </div>
+        </details>
+      </div>
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      <div class="finding-card finding-kind-methodological finding-status-partial">
+        <details class="finding-details">
+          <summary class="finding-row">
+            <span class="finding-status-glyph">◐</span>
+            <span class="finding-claim finding-statement">The third Fig-2B-C supply mode (remodeling WITH material insertion) is a COMPOSITE GAP: viva_lumenoid.composites.stage2_sweep has no process that inserts new collagen material, so the full no-remodeling / remodeling-without-insertion / remodeling-with-insertion ordering cannot be reproduced. The gap is flagged, not faked.
+</span>
+            
+            <span class="finding-chip">via <code>frozen-has-no-remodeling</code></span>
+            
+          </summary>
+          <div class="finding-drawer">
+            <div class="finding-header">
+              <span class="finding-id">F2-insertion-composite-gap</span>
+              <span class="finding-kind">methodological</span>
+              <span class="finding-status-text">partial literature</span>
+            </div>
+            
+            
+            <div class="finding-evidence">
+              <strong>observed:</strong> only two modes expressible (ON vs FROZEN); no insertion term exists in the composite · 
+              
+              via test <a href="#bt-frozen-has-no-remodeling" onclick="_gotoStudyTab('audit','bt-frozen-has-no-remodeling');return false;"><code>frozen-has-no-remodeling</code></a> · 
+              in run <a href="#run-r3-remodeling-vs-frozen"><code>r3-remodeling-vs-frozen</code></a>
+              
+              
+            </div>
+            
+            
+            <div class="finding-traceability" style="font-size:0.84em;color:#475569;padding:4px 10px;margin:4px 0">
+              
+              
+              runs: <a href="#run-r3-remodeling-vs-frozen"><code>r3-remodeling-vs-frozen</code></a>
+            </div>
+            
+            
+            
+            <div class="pass_if-band muted small" style="font-size:0.82em;padding:2px 10px">judged against <code>pass_if: eq 0</code></div>
+            
+            
+            
+            <div class="finding-explanation"><em>Why:</em> The composite&#39;s chemistry toggles crosslink formation/breaking but never adds material to the box, so area expansion by supply cannot be distinguished from remodeling alone.
+</div>
+            
+            <div class="finding-next"><strong>→ Next:</strong> seed a follow-up that adds a collagen-insertion / supply process</div>
+          </div>
+        </details>
+      </div>
+      
+      
+    </div>
+    
       
       
       
@@ -587,10 +752,12 @@
         
         <div class="ctr-meta-row"><span class="ctr-meta-k">Confidence</span>
           <span class="ctr-badge ctr-badge-investigating">Investigating</span>
-          
-          
+          <span class="ctr-vch">biology&nbsp;MIXED</span>
+          <span class="ctr-vch">insight&nbsp;POSITIVE</span>
         </div>
         
+        
+        <div class="ctr-meta-row"><span class="ctr-meta-k">Caveat</span> <span class="ctr-meta-item">COMPOSITE GAP: viva_lumenoid.composites.stage2_sweep has NO material-insertion / collagen-supply process, so the third Fig-2B-C mode (remodeling WITH insertion) CANNOT be expressed -- only remodeling-vs-frozen is run.</span></div>
         
       </div>
       
@@ -656,9 +823,9 @@
   <div class="overview-section" id="model-section">
     <h3>Runnable models <span class="muted" style="font-size:0.85em;font-weight:normal">— the composite(s) this study simulates</span></h3>
     
-    <div class="cond-block" data-model-composite="viva_lumenoid.composites.stage2_sweep" data-model-overrides='{}'>
+    <div class="cond-block" data-model-composite="viva_lumenoid.composites.stage2_sweep" data-model-overrides='{"bending_k": 4.0, "box_xy": 8.0, "n_rods": 40, "slab_thickness": 4.0, "use_real_angles": true}'>
       <div class="cond-block-title" style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
-        <strong>bm-r3-network-expansion-supply</strong>
+        <strong>collagen-network-supply</strong>
         
         <code style="font-size:0.82em;color:#374151;background:#f1f5f9;padding:1px 6px;border-radius:3px">viva_lumenoid.composites.stage2_sweep</code>
         <button type="button" class="action-btn" style="font-size:0.8em"
@@ -668,16 +835,32 @@
       
       <div style="display:flex;align-items:center;gap:6px;margin-top:6px">
         
-        <select class="baseline-composite-input" data-baseline-name="bm-r3-network-expansion-supply"
+        <select class="baseline-composite-input" data-baseline-name="collagen-network-supply"
                 data-current="viva_lumenoid.composites.stage2_sweep"
                 style="flex:1;min-width:200px;font-family:monospace;font-size:0.82em;padding:3px 6px">
           <option value="viva_lumenoid.composites.stage2_sweep" selected>viva_lumenoid.composites.stage2_sweep</option>
           
         </select>
         <button type="button" class="action-btn baseline-composite-set" style="font-size:0.8em"
-                data-baseline-name="bm-r3-network-expansion-supply">Set composite</button>
+                data-baseline-name="collagen-network-supply">Set composite</button>
       </div>
-      <div class="baseline-composite-status muted" data-baseline-name="bm-r3-network-expansion-supply" style="font-size:0.8em;margin-top:2px"></div>
+      <div class="baseline-composite-status muted" data-baseline-name="collagen-network-supply" style="font-size:0.8em;margin-top:2px"></div>
+      
+      
+      
+      
+      
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
       
       
       
@@ -686,6 +869,13 @@
       
       
       
+      <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;font-size:0.8em">
+        <span class="cond-pill"><span class="cond-pill-k">seeds</span>=1 (sweep)</span>
+        
+        
+        <span class="cond-pill"><span class="cond-pill-k">status</span>=completed</span>
+      </div>
+      
     </div>
     
     
@@ -693,6 +883,140 @@
   
 
   
+  
+  <div class="overview-section" id="conditions-section">
+    <h3>Conditions <span class="muted" style="font-size:0.85em;font-weight:normal">— what we set up to test it</span></h3>
+    <p class="muted" style="font-size:0.88em">The experimental knobs: how variants perturb the baseline, and which model settings still need a human-set value.</p>
+
+    
+    <div class="cond-block">
+      <div class="cond-block-title">Variants <span class="muted" style="font-weight:normal;font-size:0.85em">(2)</span></div>
+      <table class="cond-table">
+        <thead><tr><th>Variant</th><th>Composite / base</th><th>Parameter overrides</th><th>Notes</th></tr></thead>
+        <tbody>
+          
+          
+          
+          
+          <tr data-model-composite="" data-model-overrides='{}'>
+            <td><code>remodeling-on</code></td>
+            <td>
+              <em class="muted">(inherits baseline)</em>
+            </td>
+            <td>
+              
+                <em class="muted">(no overrides)</em>
+              
+            </td>
+            <td>make_on = break_on = 1 -&gt; crosslinks form, network remodels.</td>
+          </tr>
+          
+          
+          
+          
+          <tr data-model-composite="" data-model-overrides='{}'>
+            <td><code>frozen</code></td>
+            <td>
+              <em class="muted">(inherits baseline)</em>
+            </td>
+            <td>
+              
+                <em class="muted">(no overrides)</em>
+              
+            </td>
+            <td>make_on = break_on = 0 -&gt; no crosslinks, topology frozen.</td>
+          </tr>
+          
+        </tbody>
+      </table>
+    </div>
+    
+
+    
+    <div class="cond-block">
+      
+      <div class="cond-block-title">
+        Model settings <span class="muted" style="font-weight:normal;font-size:0.85em">(2)</span>
+        
+      </div>
+      <p class="muted" style="font-size:0.85em;margin:0 0 6px 0">Edit a value in the Current column and click <strong>Save</strong>. The next <code>pbg_runner</code> invocation for this study reads the updated value from <code>study.yaml</code>.</p>
+      <table class="cond-table cond-expert-table" data-study="bm-r3-network-expansion-supply">
+        <thead><tr><th>Name</th><th>Type</th><th>Default</th><th>Current</th><th>Range</th><th>Gate</th><th></th></tr></thead>
+        <tbody>
+          
+          
+          
+          
+          <tr data-ei-name="make_on">
+            <td title=""><code>make_on</code></td>
+            <td></td>
+            <td><code>1.0</code></td>
+            <td>
+              
+              <input class="cond-ei-input"
+                     type="text"
+                     value="1.0"
+                     placeholder="(awaiting expert)"
+                     min="0.0" max="1.0"
+                     step="any"
+                     style="width:100%;padding:3px 6px;border:1px solid #cbd5e1;border-radius:3px;font:inherit">
+              
+              
+              
+            </td>
+            <td>
+              <code>[0.0, 1.0]</code>
+              
+            </td>
+            <td>
+              <span class="cond-ei-gate-opt">optional</span>
+            </td>
+            <td>
+              <button class="action-btn cond-ei-save" type="button"
+                      onclick="_saveExpertInput('bm-r3-network-expansion-supply', 'make_on', this)">Save</button>
+              <span class="cond-ei-flash" style="display:none;margin-left:6px;font-size:0.85em"></span>
+            </td>
+          </tr>
+          
+          
+          
+          
+          <tr data-ei-name="break_on">
+            <td title=""><code>break_on</code></td>
+            <td></td>
+            <td><code>1.0</code></td>
+            <td>
+              
+              <input class="cond-ei-input"
+                     type="text"
+                     value="1.0"
+                     placeholder="(awaiting expert)"
+                     min="0.0" max="1.0"
+                     step="any"
+                     style="width:100%;padding:3px 6px;border:1px solid #cbd5e1;border-radius:3px;font:inherit">
+              
+              
+              
+            </td>
+            <td>
+              <code>[0.0, 1.0]</code>
+              
+            </td>
+            <td>
+              <span class="cond-ei-gate-opt">optional</span>
+            </td>
+            <td>
+              <button class="action-btn cond-ei-save" type="button"
+                      onclick="_saveExpertInput('bm-r3-network-expansion-supply', 'break_on', this)">Save</button>
+              <span class="cond-ei-flash" style="display:none;margin-left:6px;font-size:0.85em"></span>
+            </td>
+          </tr>
+          
+        </tbody>
+      </table>
+    </div>
+    
+  </div>
   
 
   
@@ -721,15 +1045,6 @@
       <div class="viv-loading"><span class="viv-loading-spin" aria-hidden="true"></span><span>Loading readouts from the composite emit plan…</span></div>
     </div>
 
-    
-    <details style="margin-top: 1.4em;">
-      <summary class="muted">How observables tie to Expected Behavior</summary>
-      <p style="font-size: 0.9em;">Observables can be referenced by name in an
-      <code>expected_behavior[i].measure</code> block (e.g. <code>kind: bulk_count, id:
-      "MONOMER0-160[c]"</code>). When the dashboard validates a study, it cross-checks
-      that every <code>measure</code> resolves to a declared observable, or to a
-      built-in helper.</p>
-    </details>
     
   </div>
   </div>
@@ -876,24 +1191,114 @@
     
     
     
-    <li class="expected-behavior-item" id="bt-supply-ordering-matches-fig2bc"
+    <li class="expected-behavior-item" id="bt-remodeling-forms-crosslinks"
         data-test-kind="behavioral"
         
-        data-pytest-node="supply-ordering-matches-fig2bc"
-        data-classification="unclassified"
-        data-result="pending"
-        style="margin: 0 0 10px 0; padding: 10px 12px; border-left: 4px solid #cbd5e1; background: #f8fafc; border-radius: 4px;">
+        data-pytest-node="remodeling-forms-crosslinks"
+        data-classification="primary"
+        data-result="PASS"
+        style="margin: 0 0 10px 0; padding: 10px 12px; border-left: 4px solid #10b981; background: #f8fafc; border-radius: 4px;">
       
         
       <div style="display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;">
-        <span class="bt-result" style="font-size: 0.75em; font-family: monospace; padding: 2px 8px; border-radius: 9999px; background: #f1f5f9; color: #475569">⏳ pending</span>
-        <span class="classification-pill classification-unclassified">unclassified</span>
-        <strong style="font-size: 0.9em;">supply-ordering-matches-fig2bc</strong>
+        <span class="bt-result" style="font-size: 0.75em; font-family: monospace; padding: 2px 8px; border-radius: 9999px; background: #d1fae5; color: #065f46">✓ PASS</span>
+        <span class="classification-pill classification-primary">primary</span>
+        <strong style="font-size: 0.9em;">remodeling-forms-crosslinks</strong>
+        
+        <span class="muted" style="font-size:0.78em">requires: <code>r3-remodeling-vs-frozen</code></span>
         
       </div>
-      <div style="margin-top: 6px; font-size: 0.95em;"></div>
+      <div style="margin-top: 6px; font-size: 0.95em;">With the crosslink chemistry ON (make_on = break_on = 1) the network forms crosslinks (n_crosslinks &gt; 0): it remodels.
+</div>
+      
+      <div style="margin-top:6px;font-size:0.85em;padding:6px 10px;background:#fff;border:1px solid #e2e8f0;border-radius:3px">
+        <strong>Latest result:</strong>
+        
+          <code style="font-family:ui-monospace,monospace;color:#475569;margin-right:8px">observed: make_on = break_on = 1 -&gt; n_crosslinks 5 (&gt; 0); the network remodels</code>
+        
+      </div>
       
       
+      <details style="margin-top: 6px; font-size: 0.82em;">
+        <summary class="muted" style="cursor: pointer;">Assertion</summary>
+        
+        <pre style="background:#fff; padding:8px; margin:4px 0 0 0; border:1px solid #e2e8f0; border-radius:3px; overflow-x:auto;">measure: {"field": "n_crosslinks", "kind": "count", "when": "remodeling-on"}
+pass_if: {"field": "n_crosslinks", "op": "gt", "value": 0}
+cites:   ["meadowcroft2025nonequilibrium"]</pre>
+      </details>
+      
+      
+      <details style="margin-top: 6px; font-size: 0.82em">
+        <summary class="muted" style="cursor:pointer; color:#92400e">⚠ Calibration anchor</summary>
+        <pre style="background:#fff7ed; padding:8px; margin:4px 0 0 0; border:1px solid #fdba74; border-radius:3px; overflow-x:auto">{
+  "cites": [
+    "meadowcroft2025nonequilibrium"
+  ],
+  "literature_target": "a remodeling network forms crosslinks (chemistry on)",
+  "observed_value": 5,
+  "resolution": "concept"
+}</pre>
+      </details>
+      
+      
+      
+    </li>
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="expected-behavior-item" id="bt-frozen-has-no-remodeling"
+        data-test-kind="behavioral"
+        
+        data-pytest-node="frozen-has-no-remodeling"
+        data-classification="primary"
+        data-result="PASS"
+        style="margin: 0 0 10px 0; padding: 10px 12px; border-left: 4px solid #10b981; background: #f8fafc; border-radius: 4px;">
+      
+        
+      <div style="display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;">
+        <span class="bt-result" style="font-size: 0.75em; font-family: monospace; padding: 2px 8px; border-radius: 9999px; background: #d1fae5; color: #065f46">✓ PASS</span>
+        <span class="classification-pill classification-primary">primary</span>
+        <strong style="font-size: 0.9em;">frozen-has-no-remodeling</strong>
+        
+        <span class="muted" style="font-size:0.78em">requires: <code>r3-remodeling-vs-frozen</code></span>
+        
+      </div>
+      <div style="margin-top: 6px; font-size: 0.95em;">With the chemistry OFF (make_on = break_on = 0) the network forms NO crosslinks (n_crosslinks == 0): the topology is frozen -- the discriminating negative control.
+</div>
+      
+      <div style="margin-top:6px;font-size:0.85em;padding:6px 10px;background:#fff;border:1px solid #e2e8f0;border-radius:3px">
+        <strong>Latest result:</strong>
+        
+          <code style="font-family:ui-monospace,monospace;color:#475569;margin-right:8px">observed: make_on = break_on = 0 -&gt; n_crosslinks 0; topology frozen, no crosslinks form</code>
+        
+      </div>
+      
+      
+      <details style="margin-top: 6px; font-size: 0.82em;">
+        <summary class="muted" style="cursor: pointer;">Assertion</summary>
+        
+        <pre style="background:#fff; padding:8px; margin:4px 0 0 0; border:1px solid #e2e8f0; border-radius:3px; overflow-x:auto;">measure: {"field": "n_crosslinks", "kind": "count", "when": "frozen"}
+pass_if: {"field": "n_crosslinks", "op": "eq", "value": 0}
+cites:   ["meadowcroft2025nonequilibrium"]</pre>
+      </details>
+      
+      
+      <details style="margin-top: 6px; font-size: 0.82em">
+        <summary class="muted" style="cursor:pointer; color:#92400e">⚠ Calibration anchor</summary>
+        <pre style="background:#fff7ed; padding:8px; margin:4px 0 0 0; border:1px solid #fdba74; border-radius:3px; overflow-x:auto">{
+  "cites": [
+    "meadowcroft2025nonequilibrium"
+  ],
+  "literature_target": "no remodeling -\u003e no crosslink turnover (chemistry off)",
+  "observed_value": 0,
+  "resolution": "concept"
+}</pre>
+      </details>
       
       
       
@@ -944,37 +1349,37 @@
       
       <span class="status-step  gate-status-not-assessed gate-current">
         <span class="dot"></span>1 · Plan
-        
+        <span class="step-val">drafted</span>
         <span class="gate-current-tag">you are here</span>
       </span>
       
-      <span class="status-step  gate-status-not-assessed">
+      <span class="status-step set gate-status-passed">
         <span class="dot"></span>2 · Execution
-        
+        <span class="step-val">ran</span>
         
       </span>
       
-      <span class="status-step  gate-status-not-assessed">
+      <span class="status-step set gate-status-passed">
         <span class="dot"></span>3 · Evidence
-        
+        <span class="step-val">evaluated</span>
         
       </span>
       
-      <span class="status-step  gate-status-not-assessed">
+      <span class="status-step set gate-status-passed">
         <span class="dot"></span>4 · Quality
-        
+        <span class="step-val">evaluated</span>
         
       </span>
       
-      <span class="status-step  gate-status-not-assessed">
+      <span class="status-step set gate-status-passed">
         <span class="dot"></span>5 · Decision
-        
+        <span class="step-val">passed</span>
         
       </span>
       
       <span class="status-step  gate-status-not-assessed">
         <span class="dot"></span>6 · Release
-        
+        <span class="step-val">requested</span>
         
       </span>
       
@@ -1018,40 +1423,42 @@
           <span class="narrative-label">Regression compatibility</span>
           <span class="narrative-input verdict-badge-computed" data-verdict-track="regression_compatibility"
                 title="Computed from run status (read-only)"
-                style="display:inline-block;padding:2px 12px;border-radius:9999px;font-weight:700;font-size:0.85em;background:#f1f5f9;color:#475569">PENDING</span>
+                style="display:inline-block;padding:2px 12px;border-radius:9999px;font-weight:700;font-size:0.85em;background:#f1f5f9;color:#475569">PASS</span>
           <span class="muted small" style="margin-left:6px">computed from run status</span>
         </label>
         <label class="narrative-row narrative-row-wide">
           <span class="narrative-label">Regression basis</span>
           <textarea class="narrative-input narrative-textarea" rows="2"
                     data-narrative-path="conclusion_verdicts.regression_compatibility.basis"
-                    placeholder="e.g. Builds cleanly; tests pass; pyproject deps unchanged."></textarea>
+                    placeholder="e.g. Builds cleanly; tests pass; pyproject deps unchanged.">The stage2_sweep composite runs both modes cleanly; the locking contract in tests/test_r3_supply.py (ON -&gt; crosslinks &gt; 0, FROZEN -&gt; 0) passes.</textarea>
         </label>
         <label class="narrative-row">
           <span class="narrative-label">Empirical validation</span>
           <span class="narrative-input verdict-badge-computed" data-verdict-track="biological_validation"
                 title="Computed from the gate evaluator (read-only)"
-                style="display:inline-block;padding:2px 12px;border-radius:9999px;font-weight:700;font-size:0.85em;background:#f1f5f9;color:#475569">PENDING</span>
+                style="display:inline-block;padding:2px 12px;border-radius:9999px;font-weight:700;font-size:0.85em;background:#f1f5f9;color:#475569">MIXED</span>
           <span class="muted small" style="margin-left:6px">computed from gate evaluator</span>
         </label>
         <label class="narrative-row narrative-row-wide">
           <span class="narrative-label">Empirical basis</span>
           <textarea class="narrative-input narrative-textarea" rows="2"
                     data-narrative-path="conclusion_verdicts.biological_validation.basis"
-                    placeholder="e.g. atp_fraction = 0.997, outside Boesen 2024 band [0.2, 0.5]."></textarea>
+                    placeholder="e.g. atp_fraction = 0.997, outside Boesen 2024 band [0.2, 0.5].">PARTIAL, scoped to remodeling-vs-frozen: that contrast reproduces (5 vs 0 crosslinks), but the full three-mode supply ordering of Fig 2B-C is not reproduced because the insertion mode is a composite gap.
+</textarea>
         </label>
         <label class="narrative-row">
           <span class="narrative-label">Explanatory gain</span>
           <span class="narrative-input verdict-badge-computed" data-verdict-track="explanatory_gain"
                 title="Computed from interpretation-tier findings (read-only)"
-                style="display:inline-block;padding:2px 12px;border-radius:9999px;font-weight:700;font-size:0.85em;background:#f1f5f9;color:#475569">PENDING</span>
+                style="display:inline-block;padding:2px 12px;border-radius:9999px;font-weight:700;font-size:0.85em;background:#f1f5f9;color:#475569">POSITIVE</span>
           <span class="muted small" style="margin-left:6px">computed from interpretation-tier findings</span>
         </label>
         <label class="narrative-row narrative-row-wide">
           <span class="narrative-label">Explanatory basis</span>
           <textarea class="narrative-input narrative-textarea" rows="2"
                     data-narrative-path="conclusion_verdicts.explanatory_gain.basis"
-                    placeholder="e.g. Three findings worth keeping; design_pivot_required closed."></textarea>
+                    placeholder="e.g. Three findings worth keeping; design_pivot_required closed.">Pins down exactly what is missing to reproduce Fig 2B-C: a material-insertion / supply process. The remodeling-vs-frozen distinction is a reproducible, contract-locked building block the insertion follow-up can extend.
+</textarea>
         </label>
       </div>
     </div>
@@ -1065,19 +1472,97 @@
         evaluator's result from the behavior-test outcomes — the evaluation the
         conclusion rests on.</p>
       <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
-        <span class="gate-status-not_started" style="padding:2px 12px;border-radius:9999px;font-weight:700;font-size:0.85em">not_started</span>
+        <span class="gate-status-passed" style="padding:2px 12px;border-radius:9999px;font-weight:700;font-size:0.85em">passed</span>
         <span class="muted small">evaluated by code</span>
-        <span class="muted small">0/1 passed</span>
+        <span class="muted small">2/2 passed</span>
       </div>
       
     </div>
     
 
     
+    
+    
+    
+    <div class="decide-section" style="margin-top:18px">
+      <h3 class="overview-label">Conclusion logic — gate decision</h3>
+      
+      <div style="padding:10px 14px;background:#f0fdf4;border-left:4px solid #10b981;border-radius:4px;margin-bottom:8px">
+        <strong>✓ If primary tests pass:</strong>
+        
+        <div style="margin-top:4px"><em>Implementation:</em> The composite runs both modes from a shared state and the crosslink chemistry toggle controls remodeling.</div>
+        
+        
+        <div style="margin-top:4px"><em>Empirical validation:</em> Partial Fig-2B-C: the remodeling-vs-frozen half reproduces; the third (insertion) supply mode is a composite gap, not validated.</div>
+        
+        
+      </div>
+      
+      
+      <div style="padding:10px 14px;background:#fef2f2;border-left:4px solid #dc2626;border-radius:4px">
+        <strong>✗ If primary tests fail:</strong>
+        
+        <div style="margin-top:4px"><em>Diagnose:</em>
+          <ul style="margin:4px 0 0 18px"><li>Crosslinks forming while frozen -&gt; the make_on / break_on toggle is not gating the chemistry; check the process update path.</li><li>No crosslinks while remodeling -&gt; network under-percolated; raise n_rods / assemble length / make_prob.</li></ul>
+        </div>
+        
+        
+        <div style="margin-top:4px"><em>Block downstream:</em> Do not claim any supply-mode ordering until the remodeling-vs-frozen distinction holds AND an insertion process exists.</div>
+        
+      </div>
+      
+    </div>
+    
+
+    
+    
+    
 
   </div>
 
   
+  
+  <div class="overview-section"><h2 class="overview-label">Plan &amp; assumptions</h2>
+
+    
+    <div class="overview-section">
+      <h3 class="overview-label">Pipeline gate</h3>
+      <p class="muted" style="margin: 0 0 8px 0;font-size:0.88em">
+        Each study is a model-building gate: it answers <em>"Can we safely build the next layer?"</em>
+      </p>
+      
+      <div style="margin-bottom:6px"><strong>Prerequisites:</strong>
+        <code>{&#39;study&#39;: &#39;bm-r2-collagen-network-rheology&#39;, &#39;condition&#39;: &#39;tests-passed&#39;}</code>
+      </div>
+      
+      
+      
+      <div><strong>Proceed when:</strong> <span class="muted">The remodeling-vs-frozen distinction is a reproducible, contract-locked building block. The full Fig-2B-C supply-mode ordering is NOT established and does not gate downstream work -- it is blocked on adding a material-insertion process (see followup_proposals).
+</span></div>
+      
+    </div>
+    
+
+    
+    <div class="overview-section">
+      <h3 class="overview-label">Key assumptions</h3>
+      <ul style="margin:0 0 0 18px;padding:0;font-size:0.93em">
+        <li style="margin:2px 0">The collagen IV network is the faithful NC1/7S model; the composite is viva_lumenoid.composites.stage2_sweep / CollagenNetworkProcess.</li><li style="margin:2px 0">Remodeling is driven by make_on / break_on: both 1 -&gt; crosslinks form and turn over; both 0 -&gt; topology frozen, no crosslinks.</li><li style="margin:2px 0">The composite has NO material-insertion / collagen-supply process -- the third Fig-2B-C mode cannot be expressed. This is the central honest gap, not a tuning choice.</li><li style="margin:2px 0">Both modes share one initial state (bare rods) and the same forcing; the only difference is whether the crosslink chemistry is on.</li><li style="margin:2px 0">Reduced (LJ) units; the readout here is the crosslink-count contrast (direction), not an absolute area/concentration/connectivity ordering.</li>
+      </ul>
+    </div>
+    
+
+    
+    <div class="overview-section">
+      <h3 class="overview-label">Limitations</h3>
+      <p class="muted" style="margin:0 0 6px 0;font-size:0.85em">What this study explicitly does NOT validate (prevents overclaim).</p>
+      <ul style="margin:0 0 0 18px;padding:0;font-size:0.93em">
+        <li style="margin:2px 0">COMPOSITE GAP: viva_lumenoid.composites.stage2_sweep has NO material-insertion / collagen-supply process, so the third Fig-2B-C mode (remodeling WITH insertion) CANNOT be expressed -- only remodeling-vs-frozen is run.</li><li style="margin:2px 0">Scoped to the crosslink-count direction (5 vs 0); the absolute area / concentration / largest-connected-network ordering of Fig 2B-C is NOT reproduced (those readouts are deferred).</li><li style="margin:2px 0">Single seed, small (40-rod) network: adequate for the deterministic direction, not for a quantitative ordering.</li><li style="margin:2px 0">Reduced (LJ) units; no calibration to physical area / concentration / time.</li>
+      </ul>
+    </div>
+    
+
+  </div>
   
 
   
@@ -1085,22 +1570,29 @@
 
     
     
-    <p class="muted" style="margin:0 0 10px 0;font-size:0.85em">
-      Synthesised read-only from canonical fields — edit <code>findings</code>,
-      <code>limitations</code>, and <code>discovery_implications</code> to change
-      this (and the generated report) together.
-    </p>
-    <div class="conclusions-grid conclusions-synthesis">
-      <div class="conclusion-field">
-        <h3>Claims <span class="muted small">(from findings)</span></h3>
-        <p class="muted">No findings recorded yet.</p>
+    
+    
+    <div class="decide-section">
+      <h3 class="overview-label">Latest run outcomes</h3>
+      <div style="font-size:0.88em;color:#64748b;margin-bottom:8px">
+        baseline · seed ? ·
+        ?s simulated ·
+        ? history rows ·
+        started ?
       </div>
-      <div class="conclusion-field">
-        <h3>Evidence <span class="muted small">(from findings)</span></h3>
-        
-        <p class="muted">No evidence recorded on findings yet.</p>
-      </div>
+      
+      
+      
+      <p class="muted" style="margin:0;font-size:0.9em">
+        <strong>2</strong> test outcomes
+        — <span style="color:#065f46;font-weight:600">2 PASS</span> ·
+        <span style="color:#991b1b;font-weight:600">0 FAIL</span>.
+        Per-test outcomes (measured value · evaluator · band) are canonical on the
+        <a onclick="_setStudyTab('audit')" style="cursor:pointer;color:#3b82f6;text-decoration:underline">Tests (in Audit) →</a>.
+      </p>
+      
     </div>
+    
     
 
   </div>
@@ -1113,32 +1605,79 @@
 
     
     
+    
+    <div class="overview-section" id="discovery-implications-section" style="margin-top:18px">
+      <h3 class="overview-label">Discovery implications</h3>
+      <p class="muted" style="margin:0 0 10px 0;font-size:0.88em">Where this study's results leave the mechanism model — and what to investigate next.</p>
 
+      
+      <div class="di-uncertainties">
+        
+        <div class="di-unc di-unc-resolved">
+          <h4>✓ Resolved uncertainties</h4>
+          <ul><li>The composite does distinguish remodeling (chemistry on -&gt; crosslinks) from frozen (off -&gt; none).</li></ul>
+        </div>
+        
+        
+        <div class="di-unc di-unc-remaining">
+          <h4>● Remaining uncertainties</h4>
+          <ul><li>The full three-mode Fig-2B-C supply ordering -- blocked on a missing material-insertion process (composite gap).</li><li>Area / concentration / connectivity orderings -- readouts deferred.</li></ul>
+        </div>
+        
+      </div>
+      
+
+      
+
+      
+
+      
+      
+      
+      <div class="di-group">
+        <h3>Follow-up study proposals
+          <span class="muted" style="font-weight:normal;font-size:0.82em">(discovered)</span>
+          <span class="muted" style="font-weight:normal;font-size:0.85em">(1)</span></h3>
+        <p class="muted" style="margin:0 0 8px 0;font-size:0.85em">Click <strong>➕ Add to investigation</strong> to spawn a new study node in the investigation graph.</p>
+        <div class="followup-list">
+          
+          
+          <div class="di-card di-fup-card">
+            <div class="followup-header">
+              <strong class="followup-title">Add a material-insertion / collagen-supply process</strong>
+              
+              
+              
+              
+            </div>
+            
+            
+            <div class="followup-actions" style="margin-top:8px">
+              <button class="btn-seed-followup"
+                      onclick="_seedFollowupProposal('bm-r3-network-expansion-supply', "fp-r3-insertion-process")">➕ Add to investigation</button>
+            </div>
+          </div>
+          
+        </div>
+      </div>
+      
+    </div>
+    
+
+    
+    
+    
     
 
   </div>
 
   
   
-  <details class="overview-section"><summary class="overview-label">Limitations &amp; provenance</summary>
-
-    
-    
-    
-    <div class="conclusions-grid conclusions-synthesis">
-      <div class="conclusion-field">
-        <h3>Next steps <span class="muted small">(from discovery implications)</span></h3>
-        <p class="muted">No follow-up proposals recorded yet.</p>
-      </div>
-    </div>
-
-  </details>
-  
 
 </section>
 
 </main>
-<script>window.__DASH_CONFIG__ = { mode: "snapshot", interactiveUrl: "https://github.com/vivarium-collective/viva-lumenoid", basePath: "/viva-lumenoid/dashboard", inputsDownloadBase: "https://github.com/vivarium-collective/viva-lumenoid/raw/main", provenance: {"repo_slug": "vivarium-collective/viva-lumenoid", "repo_url": "https://github.com/vivarium-collective/viva-lumenoid", "commit": "957cf462f6b48323457f7f1a54d4d1f4338f2455", "commit_url": "https://github.com/vivarium-collective/viva-lumenoid/commit/957cf462f6b48323457f7f1a54d4d1f4338f2455", "branch": "main", "lockfile": "uv.lock@796aed340563", "generated_at": "2026-10-20 11:34 UTC"} };</script>
+<script>window.__DASH_CONFIG__ = { mode: "snapshot", interactiveUrl: "https://github.com/vivarium-collective/viva-lumenoid", basePath: "/viva-lumenoid/dashboard", inputsDownloadBase: "https://github.com/vivarium-collective/viva-lumenoid/raw/main", provenance: {"repo_slug": "vivarium-collective/viva-lumenoid", "repo_url": "https://github.com/vivarium-collective/viva-lumenoid", "commit": "f34c33516e6bd25e9c49b0db9944a86d8d76457a", "commit_url": "https://github.com/vivarium-collective/viva-lumenoid/commit/f34c33516e6bd25e9c49b0db9944a86d8d76457a", "branch": "main", "lockfile": "uv.lock@796aed340563", "generated_at": "2026-10-20 11:36 UTC"} };</script>
 <script src="/viva-lumenoid/dashboard/assets/data-source.js"></script>
 <script src="/viva-lumenoid/dashboard/assets/toast.js"></script>
 <script>

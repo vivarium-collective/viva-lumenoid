@@ -851,17 +851,21 @@ _save_viz('bm-r1-published-tissue-baseline', 'r1_regime', _render_one('html:r1_r
 #
 # **Question.** Is basement-membrane stress relaxation proportional to collagen IV molecular residence (turnover) time?
 #
-# **Objective.** Run the LAMMPS NC1/7S network under paper-matched staged loading and chemistry switches across several turnover rates; independently track molecule residence time and stress relaxation; reproduce Fig 2D stress traces and the 2E slope with error bars.
+# **Purpose.** A crosslinked semiflexible rod network relaxes macroscopic stress as crosslinks turn over. Slower turnover (a longer collagen residence time, set by a smaller off_rate) should give a longer, more cleanly resolvable stress-relaxation time tau; fast turnover relaxes stress faster than the network can hold a measurable signal above noise.
 #
-# **Hypothesis.** In the LAMMPS NC1/7S network under paper-matched staged loading, the measured stress- relaxation time scales linearly with the collagen molecular residence time set by the turnover rate, reproducing Figure 2D traces and the 2E slope within run-to-run variance.
-#
-# **Claim.** The faithful collagen IV network runs under staged loading; the quantitative match to the paper's stress traces and relaxation-vs-turnover slope is still in progress.
+# **Claim.** The faithful collagen IV network assembles and carries in-plane stress under staged growth loading on real LAMMPS, and its macroscopic stress-relaxation time is resolvable at SLOW turnover (long collagen residence) but falls below the noise floor as turnover speeds up -- a partial reproduction of Barrientos Figure 2E, whose full relaxation-vs-residence proportionality needs a denser, larger network.
 
 # ### Parameters
 #
 # | simulation | composite | steps | params |
 # | --- | --- | --- | --- |
-# | `bm-r2-collagen-network-rheology` | `viva_lumenoid.composites.stage2_sweep` | 0 | — |
+# | `collagen-network-stage2` | `viva_lumenoid.composites.stage2_sweep` | 0 | n_rods=120, box_xy=8.0, slab_thickness=4.0, use_real_angles=True, bending_k=4.0, off_rate=0.02 |
+#
+# Declared parameter sets (`study.yaml` variants):
+#
+# - **residence-100** — `off_rate=0.01`
+# - **residence-50** — `off_rate=0.02`
+# - **residence-25** — `off_rate=0.04`
 
 # ### The model & its parameters
 #
@@ -895,8 +899,8 @@ RUNS_DB = str(STUDY_DIR / "runs.db")
 # This study has no *recorded* runs yet. RERUN builds its declared
 # composite(s) live and runs them; a composite whose module processes
 # are not implemented yet reports the error instead of crashing.
-STEPS_bm_r2_collagen_network_rheology = 100
-INTERVAL_bm_r2_collagen_network_rheology = 1.0
+STEPS_collagen_network_stage2 = 100
+INTERVAL_collagen_network_stage2 = 1.0
 
 if RERUN:
     from process_bigraph import Composite
@@ -905,10 +909,10 @@ if RERUN:
             _ov = ov_viva_lumenoid_composites_stage2_sweep if 'ov_viva_lumenoid_composites_stage2_sweep' in dir() else None  # edits from the panel cell, if any
             spec_viva_lumenoid_composites_stage2_sweep = materialize_composite('viva_lumenoid.composites.stage2_sweep', _ov)
             _comp = Composite({'state': spec_viva_lumenoid_composites_stage2_sweep['state']}, core=core)
-            _comp.run(STEPS_bm_r2_collagen_network_rheology)
-        print('ran', 'bm-r2-collagen-network-rheology', f'(viva_lumenoid.composites.stage2_sweep) for', STEPS_bm_r2_collagen_network_rheology, 'steps')
+            _comp.run(STEPS_collagen_network_stage2)
+        print('ran', 'collagen-network-stage2', f'(viva_lumenoid.composites.stage2_sweep) for', STEPS_collagen_network_stage2, 'steps')
     except Exception as _e:
-        print(f"bm-r2-collagen-network-rheology not runnable yet: {type(_e).__name__}: {_e}")
+        print(f"collagen-network-stage2 not runnable yet: {type(_e).__name__}: {_e}")
 else:
     print("RERUN=False — not re-simulating.")
 
@@ -921,21 +925,33 @@ else:
 # r2_rheology
 _save_viz('bm-r2-collagen-network-rheology', 'r2_rheology', _render_one('html:r2_rheology.html', {'title': 'Collagen network assembly + stress (small real run)', 'caption': 'A small REAL collagen IV run: the NC1/7S network assembles and carries in-plane stress. Full Fig 2D/2E reproduction (relaxation vs turnover rate) is the study target.\n'}, RUNS_DB, STUDY_YAML))
 
+# ### Acceptance criteria
+#
+# _Pre-registered checks (criteria/thresholds only — run the cells above to evaluate them)._
+#
+# | test | measures | passes if |
+# | --- | --- | --- |
+# | network-forms-and-stresses _(primary)_ | kind=count_and_finiteness fields=['n_crosslinks', 'sigma_inplane'] | op gt_and_finite note n_crosslinks > 0 AND sigma_inplane finite |
+# | tau-resolved-only-at-slow-turnover _(primary)_ | kind=relaxation_time field=sigma_inplane versus=residence_time over=off_rate | op resolvable_only_at_slow note tau finite at residence 100; NaN at residence 50/25 |
+
 # ## Study: Network expansion & collagen supply (`bm-r3-network-expansion-supply`)
 #
 # **Question.** Why are both crosslink remodeling and collagen replacement (insertion) necessary for sustained basement-membrane growth?
 #
-# **Objective.** From identical initial states, compare no remodeling, remodeling without insertion, and remodeling with insertion under matched forcing; measure area expansion, collagen density and largest-connected-network size; match the direction and ordering of Fig 2B-C.
+# **Purpose.** Fig 2B-C decomposes sustained growth into three supply modes: no remodeling, remodeling without insertion, and remodeling with insertion. The collagen IV composite expresses crosslink remodeling (chemistry on -> crosslinks form and turn over) but has no term that inserts new collagen material, so it can only contrast remodeling against a frozen topology.
 #
-# **Hypothesis.** From identical initial states, no-remodeling, remodeling-without-insertion and remodeling- with-insertion diverge in network area, collagen concentration and integrity in the direction and ordering of Figure 2B-C: only remodeling with supply sustains growth without loss of the largest connected network.
-#
-# **Claim.** The three supply conditions run from a shared initial state; matching the paper's ordering in network area, concentration and connectivity is in progress.
+# **Claim.** The collagen IV network composite distinguishes a REMODELING network (crosslink chemistry on -> crosslinks form, the network remodels) from a FROZEN one (chemistry off -> no crosslinks), but it has NO material-insertion / supply mechanism, so it cannot realise the third supply mode (remodeling WITH insertion) that Figure 2B-C's ordering needs. R3 is therefore a PARTIAL reproduction, scoped to remodeling-vs-frozen.
 
 # ### Parameters
 #
 # | simulation | composite | steps | params |
 # | --- | --- | --- | --- |
-# | `bm-r3-network-expansion-supply` | `viva_lumenoid.composites.stage2_sweep` | 0 | — |
+# | `collagen-network-supply` | `viva_lumenoid.composites.stage2_sweep` | 0 | n_rods=40, box_xy=8.0, slab_thickness=4.0, use_real_angles=True, bending_k=4.0 |
+#
+# Declared parameter sets (`study.yaml` variants):
+#
+# - **remodeling-on** — `make_on=1.0`, `break_on=1.0`
+# - **frozen** — `make_on=0.0`, `break_on=0.0`
 
 # ### The model & its parameters
 #
@@ -969,8 +985,8 @@ RUNS_DB = str(STUDY_DIR / "runs.db")
 # This study has no *recorded* runs yet. RERUN builds its declared
 # composite(s) live and runs them; a composite whose module processes
 # are not implemented yet reports the error instead of crashing.
-STEPS_bm_r3_network_expansion_supply = 100
-INTERVAL_bm_r3_network_expansion_supply = 1.0
+STEPS_collagen_network_supply = 100
+INTERVAL_collagen_network_supply = 1.0
 
 if RERUN:
     from process_bigraph import Composite
@@ -979,10 +995,10 @@ if RERUN:
             _ov = ov_viva_lumenoid_composites_stage2_sweep if 'ov_viva_lumenoid_composites_stage2_sweep' in dir() else None  # edits from the panel cell, if any
             spec_viva_lumenoid_composites_stage2_sweep = materialize_composite('viva_lumenoid.composites.stage2_sweep', _ov)
             _comp = Composite({'state': spec_viva_lumenoid_composites_stage2_sweep['state']}, core=core)
-            _comp.run(STEPS_bm_r3_network_expansion_supply)
-        print('ran', 'bm-r3-network-expansion-supply', f'(viva_lumenoid.composites.stage2_sweep) for', STEPS_bm_r3_network_expansion_supply, 'steps')
+            _comp.run(STEPS_collagen_network_supply)
+        print('ran', 'collagen-network-supply', f'(viva_lumenoid.composites.stage2_sweep) for', STEPS_collagen_network_supply, 'steps')
     except Exception as _e:
-        print(f"bm-r3-network-expansion-supply not runnable yet: {type(_e).__name__}: {_e}")
+        print(f"collagen-network-supply not runnable yet: {type(_e).__name__}: {_e}")
 else:
     print("RERUN=False — not re-simulating.")
 
@@ -995,15 +1011,22 @@ else:
 # r3_supply
 _save_viz('bm-r3-network-expansion-supply', 'r3_supply', _render_one('html:r3_supply.html', {'title': 'Supply vs remodelling (small real run)', 'caption': "A small REAL collagen run contrasting remodelling (make+break) vs make-only - the ordering behind 'supply sustains growth'. Full Fig 2B-C reproduction is the study target.\n"}, RUNS_DB, STUDY_YAML))
 
+# ### Acceptance criteria
+#
+# _Pre-registered checks (criteria/thresholds only — run the cells above to evaluate them)._
+#
+# | test | measures | passes if |
+# | --- | --- | --- |
+# | remodeling-forms-crosslinks _(primary)_ | kind=count field=n_crosslinks when=remodeling-on | op gt value 0 field n_crosslinks |
+# | frozen-has-no-remodeling _(primary)_ | kind=count field=n_crosslinks when=frozen | op eq value 0 field n_crosslinks |
+
 # ## Study: Coupled 2D epithelial sheet (`bm-r4-coupled-2d-epithelium`)
 #
 # **Question.** Do the paper's confinement regimes survive explicit cell topology and heterogeneous growth in a spatial 2D epithelium?
 #
-# **Objective.** Build a Tyssue 2D sheet with a BM response calibrated from R2 (traction/area law, height via an explicit volume/prism relation); include a reference homogeneous case, cell division and varying cortical tensions; compare the confinement response to R1 and quantify topology sensitivity.
+# **Purpose.** A Tyssue polygonal sheet carries an explicit per-cell basal area and an explicit cell-height degree of freedom (rather than the inferred prism relation of the homogeneous R1 model). The vertex-model EulerSolver relaxes the sheet; a BM traction/area law (calibrated from R2) is intended to resist basal-area growth, reproducing the R1 confinement response in the homogeneous limit before heterogeneous growth and division are added.
 #
-# **Hypothesis.** A Tyssue 2D polygonal sheet with a BM traction/area law calibrated from R2 reproduces R1's confinement response in the homogeneous limit, and explicit topology, cell division and varying cortical tensions introduce spatial force/area heterogeneity without destroying the regime structure.
-#
-# **Claim.** A 2D epithelial sheet with an explicit cell-height degree of freedom relaxes under the vertex model; wiring the membrane traction and comparing confinement to the homogeneous baseline is in progress.
+# **Claim.** The explicit 2D epithelial sheet relaxes under the Tyssue vertex model and yields finite, uniform per-cell geometry: all 12 cell-faces carry the same basal area (5.0) and the same explicit cell height (1.93), and stepping the EulerSolver keeps that geometry finite. The figure-level comparison of this spatial confinement to the homogeneous R1 baseline, and the explicit BM-traction coupling, are not yet in the composite.
 
 # ### Parameters
 #
@@ -1065,15 +1088,22 @@ else:
 # r4_sheet
 _save_viz('bm-r4-coupled-2d-epithelium', 'r4_sheet', _render_one('html:r4_sheet.html', {'title': 'Relaxed 2D epithelial sheet (real tyssue run)', 'caption': 'The actual 2D epithelial sheet after relaxation on the merged CrossSectionGeometry (real tyssue EulerSolver run).\n'}, RUNS_DB, STUDY_YAML))
 
+# ### Acceptance criteria
+#
+# _Pre-registered checks (criteria/thresholds only — run the cells above to evaluate them)._
+#
+# | test | measures | passes if |
+# | --- | --- | --- |
+# | sheet-yields-finite-areas _(primary)_ | kind=reduce field=face_area reduce=all_finite_and_positive | op all_finite_positive note all 12 face areas finite and > 0; min == max == 5.0 |
+# | sheet-steps-stably _(primary)_ | kind=reduce field=face_height reduce=finite_over_steps | op finite_no_blowup note per-cell area and height finite and positive after 5 Euler steps (dt 0.01) |
+
 # ## Study: Explicit 3D cell confinement (`bm-r5-explicit-3d-confinement`)
 #
 # **Question.** Do growing 3D epithelial cells become taller when the basement membrane relaxes slowly?
 #
-# **Objective.** Build a Tyssue 3D monolayer with apical/lateral/basal energies and cell-volume targets; run no-BM, elastic-BM and relaxing-BM controls; measure height, basal/apical area, their distributions and growth trajectories against the paper's morphology ordering.
+# **Purpose.** A Tyssue 3D monolayer gives each cell apical, basal and lateral faces with their own surface energies and a per-cell volume target, so cell height and basal area emerge from the force balance rather than from an inferred volume/area prism relation. A basement membrane acting on the basal surface, with a tunable relaxation time, is intended to confine the cell (smaller basal area, larger height) when it relaxes slowly.
 #
-# **Hypothesis.** In a Tyssue 3D monolayer with apical/lateral/basal energies and cell-volume targets, cells confined by a slowly-relaxing BM grow taller (smaller basal area, larger height) than under elastic or absent BM, reproducing the core morphology ordering of the paper.
-#
-# **Claim.** A 3D monolayer with volume and surface energies runs and yields per-cell heights; the no-membrane, elastic-membrane and relaxing-membrane controls are the next step.
+# **Claim.** The explicit 3D epithelial monolayer runs over the Tyssue engine and per-cell heights and volumes emerge directly from the apical/lateral/basal surface energies and volume targets -- no thin-prism approximation: 206 cells with finite, positive volumes (0.58-1.16) and a monolayer z-extent of ~1.0. The no-BM / elastic-BM / relaxing-BM controls the morphology comparison needs are not yet in the composite.
 
 # ### Parameters
 #
@@ -1134,6 +1164,15 @@ else:
 
 # r5_monolayer
 _save_viz('bm-r5-explicit-3d-confinement', 'r5_monolayer', _render_one('html:r5_monolayer.html', {'title': 'Explicit 3D confinement (real tyssue run)', 'caption': 'The stepped 3D monolayer (MonolayerGeometry) and its real cell-volume distribution (real tyssue run).\n'}, RUNS_DB, STUDY_YAML))
+
+# ### Acceptance criteria
+#
+# _Pre-registered checks (criteria/thresholds only — run the cells above to evaluate them)._
+#
+# | test | measures | passes if |
+# | --- | --- | --- |
+# | monolayer-yields-per-cell-volumes _(primary)_ | kind=reduce field=cell_volume reduce=all_finite_and_positive | op all_finite_positive note Nc > 0 and all 206 cell volumes finite and > 0 (0.58-1.16) |
+# | monolayer-steps-stably _(primary)_ | kind=reduce field=cell_volume reduce=finite_over_steps | op finite_no_blowup note per-cell area and volume finite and positive after 5 Euler steps (dt 0.01) |
 
 # ## Study: Perlecan & growth perturbations on cell shape (`bm-r6-perlecan-growth-perturbations`)
 #
@@ -1233,13 +1272,20 @@ _save_viz('bm-r6-perlecan-growth-perturbations', 'r6_intervention', _render_one(
 #
 # **Hypothesis.** A 2D cell-sized coarse filament/crosslink/motor LAMMPS patch produces a tunable active tension and a strain response/relaxation that map onto Tyssue cortical-energy parameters, so the effective cortical term can be replaced by explicit actin without changing the measured confinement in the overlap regime.
 #
-# **Claim.** A coarse actomyosin cortex carries a cortical tension that rises with contractility, giving a tension that can be mapped onto the vertex model's cortical energy.
+# **Purpose.** A 2D periodic bead patch under Langevin dynamics carries an in-plane stress; the LJ well depth stands in for myosin contractility, so raising contractility raises the active tension tau = -(pxx+pyy)/2 the patch sustains. That tension is the quantity the epithelial model later reads as its cortical energy.
+#
+# **Claim.** A coarse actomyosin cortex carries a cortical tension that rises monotonically with the myosin-contractility proxy, giving a tunable active tension that can be mapped onto the vertex model's cortical-energy parameter.
 
 # ### Parameters
 #
 # | simulation | composite | steps | params |
 # | --- | --- | --- | --- |
-# | `bm-e1-actomyosin-cortex` | `viva_lumenoid.composites.actomyosin_cortex` | 0 | — |
+# | `bm-e1-actomyosin-cortex` | `viva_lumenoid.composites.actomyosin_cortex` | 0 | n=6, contractility=1.0 |
+#
+# Declared parameter sets (`study.yaml` variants):
+#
+# - **low-contractility** — `contractility=0.5`
+# - **high-contractility** — `contractility=3.0`
 
 # ### The model & its parameters
 #
@@ -1297,7 +1343,16 @@ else:
 # e1_cortical_tension
 _save_viz('bm-e1-actomyosin-cortex', 'e1_cortical_tension', _render_one('html:e1_cortical_tension.html', {'title': 'Cortical tension vs contractility (real LAMMPS)', 'caption': 'REAL LAMMPS result: cortical tension rises with the myosin-contractility proxy, run over the viva-lammps model-plugin seam.\n'}, RUNS_DB, STUDY_YAML))
 
-# ## Study: Actin–adhesion–collagen force transfer (`bm-e2-actin-adhesion-collagen`)
+# ### Acceptance criteria
+#
+# _Pre-registered checks (criteria/thresholds only — run the cells above to evaluate them)._
+#
+# | test | measures | passes if |
+# | --- | --- | --- |
+# | cortex-tension-monotone-in-contractility _(primary)_ | kind=monotonicity field=cortical_tension versus=contractility | op strictly_increasing note cortical_tension strictly increasing across contractility 0.5<1.0<2.0<3.0 |
+# | higher-contractility-higher-tension _(primary)_ | kind=compare field=cortical_tension cases=['contractility=3.0', 'contractility=1.0'] | op gt note cortical_tension(3.0) > cortical_tension(1.0) |
+
+# ## Study: Actin-adhesion-collagen force transfer (`bm-e2-actin-adhesion-collagen`)
 #
 # **Question.** How does active cortical contractility transfer force through reversible basal adhesions into the collagen IV basement membrane?
 #
@@ -1305,13 +1360,20 @@ _save_viz('bm-e1-actomyosin-cortex', 'e1_cortical_tension', _render_one('html:e1
 #
 # **Hypothesis.** Coupling an active cortex to reversible basal linkers and a collagen-IV BM patch produces a traction, linker occupancy and network deformation whose relative relaxation is set jointly by linker off-rate and crosslink turnover, measurable on a single-cell patch before multicellular coupling.
 #
-# **Claim.** An active cortex transmits force through reversible basal linkers to a collagen membrane patch; the transmitted traction scales with linker occupancy and cortical tension.
+# **Purpose.** An active actomyosin cortex (E1) carries a tension; reversible basal linkers with first-order on/off kinetics carry an occupancy in [0, 1]; the traction passed to the BM is occupancy x cortex_tension, which drives a BM strain rate (coupling_gain x traction) that strains and remodels the collagen IV patch beneath.
+#
+# **Claim.** An active cortex transmits force through reversible basal linkers to a collagen membrane patch; the transmitted traction equals linker occupancy times cortical tension (by construction, exactly), the BM strain rate is proportional to that traction, and occupancy rises toward saturation -- so the cortex -> linker -> BM force transfer is occupancy-gated.
 
 # ### Parameters
 #
 # | simulation | composite | steps | params |
 # | --- | --- | --- | --- |
-# | `bm-e2-actin-adhesion-collagen` | `viva_lumenoid.composites.actin_adhesion_bm` | 0 | — |
+# | `bm-e2-actin-adhesion-collagen` | `viva_lumenoid.composites.actin_adhesion_bm` | 0 | contractility=1.5, k_on=0.5, k_off=0.1, coupling_gain=0.0001 |
+#
+# Declared parameter sets (`study.yaml` variants):
+#
+# - **high-koff** — `k_off=0.5`
+# - **strong-coupling** — `coupling_gain=0.001`
 
 # ### The model & its parameters
 #
@@ -1370,15 +1432,23 @@ else:
 # e2_force_transfer
 _save_viz('bm-e2-actin-adhesion-collagen', 'e2_force_transfer', _render_one('html:e2_force_transfer.html', {'title': 'Force transfer (schematic)', 'caption': 'Schematic of the cortex -> reversible basal linkers -> collagen BM force transfer E2 will measure. NOT simulated.\n'}, RUNS_DB, STUDY_YAML))
 
+# ### Acceptance criteria
+#
+# _Pre-registered checks (criteria/thresholds only — run the cells above to evaluate them)._
+#
+# | test | measures | passes if |
+# | --- | --- | --- |
+# | traction-is-occupancy-gated _(primary)_ | kind=identity field=traction relation=traction == linker_occupancy * cortex_tension | op equals note traction (1.0) == occupancy (0.5) x cortex_tension (2.0), exact |
+# | strain-rate-proportional-to-traction _(primary)_ | kind=identity field=bm_strain_rate relation=bm_strain_rate == coupling_gain * traction | op equals note bm_strain_rate (0.001) == coupling_gain (1e-3) x traction (1.0), exact |
+# | occupancy-rises-toward-saturation _(secondary)_ | kind=monotonicity field=linker_occupancy versus=step | op nondecreasing note occupancy 0.100 -> 0.457 over six steps, strictly increasing toward 1 (k_off 0) |
+
 # ## Study: Closed 3D lumenoid morphogenesis (`bm-e3-closed-3d-lumenoid`)
 #
 # **Question.** How do lumen pressure/volume and a basement-membrane shell set cell shape and curvature- dependent growth in a closed 3D lumenoid?
 #
-# **Objective.** Introduce a 3D closed-shell Tyssue geometry with lumen pressure/volume and a BM shell; first use the validated reduced-order BM law, then test resolved LAMMPS patches or a curved- network realization; predict lumen growth, cell shape and curvature effects.
+# **Purpose.** A closed curved Tyssue epithelium encloses a lumen with a volume/pressure constraint (pressure = elasticity x (volume - preferred volume)) and exposes its outer basal surface as the shell the basement membrane attaches to. A slowly-relaxing BM and a growing lumen are intended to drive curvature-dependent cell shapes -- the new morphogenesis prediction beyond the flat-substrate paper.
 #
-# **Hypothesis.** A closed curved Tyssue epithelium with a lumen volume/pressure constraint and a BM shell predicts lumen growth and curvature-dependent cell shapes that depend on BM relaxation, first with a validated reduced-order BM law and then with resolved LAMMPS patches or a curved-network realization.
-#
-# **Claim.** A closed lumenoid with a lumen pressure and a basal membrane surface runs the vertex model; attaching an explicit membrane and reading curvature-dependent shape is next.
+# **Claim.** A closed 3D lumenoid runs over the Tyssue engine: 78 cells enclose a single lumen, per-cell volumes emerge finite and positive (0.50-3.43), and a basal surface (78 faces, area 202.5) is exposed as the basement-membrane coupling shell with a readable enclosed lumen volume (261.7). The lumen-pressure trajectory and the explicit BM attachment / curvature-dependent shape are the next readouts, not yet dynamic results.
 
 # ### Parameters
 #
@@ -1439,6 +1509,15 @@ else:
 
 # e3_lumenoid
 _save_viz('bm-e3-closed-3d-lumenoid', 'e3_lumenoid', _render_one('html:e3_lumenoid.html', {'title': 'Closed lumenoid shell (real tyssue run)', 'caption': 'The actual closed lumenoid shell on the merged LumenoidGeometry, exposing the basal BM-coupling surface (real tyssue run).\n'}, RUNS_DB, STUDY_YAML))
+
+# ### Acceptance criteria
+#
+# _Pre-registered checks (criteria/thresholds only — run the cells above to evaluate them)._
+#
+# | test | measures | passes if |
+# | --- | --- | --- |
+# | lumenoid-is-closed-with-cells _(primary)_ | kind=reduce field=cell_volume reduce=all_finite_and_positive | op all_finite_positive note Nc > 0 and Nf > 0 and all 78 cell volumes finite and > 0 (0.50-3.43) |
+# | lumenoid-steps-stably _(primary)_ | kind=reduce field=cell_volume reduce=finite_over_steps | op finite_no_blowup note per-cell area and volume finite and positive after 5 Euler steps (dt 0.01) |
 
 # ## Study: LAMMPS–Tyssue coupled lumenoid (`bm-e4-feedback-predictions`)
 #

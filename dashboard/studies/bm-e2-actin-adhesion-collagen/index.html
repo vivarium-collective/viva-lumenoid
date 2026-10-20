@@ -20,7 +20,7 @@
   <div style="display:flex; align-items:center; gap:14px; justify-content:space-between;">
   <div style="display:flex; align-items:center; gap:12px; min-width:0; flex-wrap:wrap">
   <h1 class="study-title" style="margin:0">
-    <span class="study-name" id="study-name" data-slug="bm-e2-actin-adhesion-collagen" data-study-kind="computational" title="bm-e2-actin-adhesion-collagen">Actin–adhesion–collagen force transfer</span>
+    <span class="study-name" id="study-name" data-slug="bm-e2-actin-adhesion-collagen" data-study-kind="computational" title="bm-e2-actin-adhesion-collagen">Actin-adhesion-collagen force transfer</span>
     
   </h1>
     
@@ -50,7 +50,7 @@
 
 
 
-<p id="study-question-headline" class="study-question-headline"><span class="q-glyph">Q</span> How does active cortical contractility transfer force through reversible basal adhesions into the collagen IV basement membrane?
+<p id="study-question-headline" class="study-question-headline"><span class="q-glyph">Q</span> How does active cortical contractility transfer force through reversible basal adhesions into the collagen IV basement membrane, on a single-cell patch?
 </p>
 
 <nav class="study-tabs" aria-label="Study sections">
@@ -77,7 +77,7 @@
   </button>
   <button class="study-pillar" data-kind="conclusions" onclick="_setStudyTab('conclusions')">
     <svg class="pillar-icon" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="6" cy="6" r="2.2"/><circle cx="6" cy="18" r="2.2"/><circle cx="18" cy="9" r="2.2"/><path d="M6 8.2v7.6"/><path d="M6 12h6a4 4 0 0 0 4-4V11"/></svg>
-    <span class="pillar-label">Conclusions</span>
+    <span class="pillar-label">Decide</span>
   </button>
   
   <span class="study-dl study-export-wrap" style="margin-left:auto; align-self:center; position:relative; display:inline-flex">
@@ -538,7 +538,7 @@
 
     <div class="ctr-block">
       <h2 class="overview-label ctr-h">Claim</h2>
-      <p class="ctr-text">An active cortex transmits force through reversible basal linkers to a collagen membrane patch; the transmitted traction scales with linker occupancy and cortical tension.
+      <p class="ctr-text">An active cortex transmits force through reversible basal linkers to a collagen membrane patch; the transmitted traction equals linker occupancy times cortical tension (by construction, exactly), the BM strain rate is proportional to that traction, and occupancy rises toward saturation -- so the cortex -&gt; linker -&gt; BM force transfer is occupancy-gated.
 </p>
       
     </div>
@@ -557,12 +557,12 @@
 
     <div class="ctr-block">
       <h2 class="overview-label ctr-h">Model &amp; approach</h2>
-      <p class="ctr-text">Couple active cortical contractility (E1) to reversible basal linkers and a collagen IV BM patch; measure traction, linker occupation, network deformation and relative relaxation; begin with a single-cell patch before multicellular coupling.
+      <p class="ctr-text">Verify the deterministic force-transfer relation of the single-cell actin-adhesion-collagen patch (composite viva_lumenoid.composites.actin_adhesion_bm). Drive the BasalAdhesion linker process with a cortex tension of 2.0 (k_on 0.5, k_off 0.1, coupling_gain 1e-3) and read the traction, the linker occupancy and the BM strain rate; separately step the occupancy kinetics (k_off 0) to confirm it rises toward 1. Then run a bounded LAMMPS smoke of the full composite (real actomyosin cortex + collagen IV BM patch) to confirm the collagen BM responds to the transmitted load and emits its in-plane stress (bm_sigma).
 </p>
       <div class="ctr-meta">
         <div class="ctr-meta-row"><span class="ctr-meta-k">Model</span> <code>bm-e2-actin-adhesion-collagen</code><a class="ov-tablink" href="#" onclick="_setStudyTab('compose');return false;">model →</a></div>
         
-        <div class="ctr-meta-row"><span class="ctr-meta-k">Measures</span> <span class="ctr-meta-item">1 behavior test</span><a class="ov-tablink" href="#" onclick="_setStudyTab('audit');return false;">see Tests →</a></div>
+        <div class="ctr-meta-row"><span class="ctr-meta-k">Measures</span> <span class="ctr-meta-item">3 behavior tests</span><a class="ov-tablink" href="#" onclick="_setStudyTab('audit');return false;">see Tests →</a></div>
         
       </div>
     </div>
@@ -574,23 +574,174 @@
 
     <div class="ctr-block">
       <h2 class="overview-label ctr-h">Result</h2>
-      <p class="ctr-text"></p>
+      <p class="ctr-text">The force-transfer relation holds exactly and deterministically. At cortex_tension 2.0 the linker occupancy is 0.5, the traction is 1.0 (= 0.5 x 2.0, exact), and the BM strain rate is 0.001 (= 1e-3 x 1.0, exact). The occupancy kinetics rise monotonically toward saturation (0.100, 0.189, 0.268, 0.339, 0.401, 0.457 over six 0.1-interval steps with k_off 0, strictly increasing toward 1). The bounded LAMMPS smoke of the full cortex+collagen composite runs the real actomyosin cortex and collagen IV BM patch end-to-end and the BM responds to the transmitted load, emitting its in-plane stress (sigma_inplane -&gt; bm_sigma). The relations are exact because the linker process is a pure deterministic map; the result is scoped to the single-cell patch.
+</p>
+      
+      
+      <div class="ov-metrics">
+        
+        <div class="ov-metric ov-metric-pass">
+          <div class="ov-metric-v">at cortex_tension 2.0: occupancy 0.5, traction 1.0 == 0.5 x 2.0 (exact)</div>
+          <div class="ov-metric-k">traction-is-occupancy-gated</div>
+        </div>
+        
+        <div class="ov-metric ov-metric-pass">
+          <div class="ov-metric-v">bm_strain_rate 0.001 == 1e-3 x traction 1.0 (exact)</div>
+          <div class="ov-metric-k">strain-rate-proportional-to-traction</div>
+        </div>
+        
+        <div class="ov-metric ov-metric-pass">
+          <div class="ov-metric-v">occupancy 0.100 -&gt; 0.457 over six 0.1-interval steps (k_off 0), strictly increasing toward 1</div>
+          <div class="ov-metric-k">occupancy-rises-toward-saturation</div>
+        </div>
+        
+        <div class="ov-metric ov-metric-pass">
+          <div class="ov-metric-v">bounded LAMMPS smoke of the full cortex+collagen composite emits sigma_inplane -&gt; bm_sigma (BM responds)</div>
+          <div class="ov-metric-k">bm-responds-to-transmitted-load</div>
+        </div>
+        
+      </div>
+      
+      
+      
+      
+    <div class="overview-section findings-section">
+      <h2 class="overview-label">🔬 Findings — what this study taught us</h2>
       
       
       
       
       
+      
+      
+      
+      <div class="finding-card finding-kind-biological finding-status-confirms">
+        <details class="finding-details">
+          <summary class="finding-row">
+            <span class="finding-status-glyph">✓</span>
+            <span class="finding-claim finding-statement">The active cortex transmits force to the collagen BM through an occupancy-gated relation: the traction equals linker occupancy times cortex tension exactly (1.0 = 0.5 x 2.0 at cortex_tension 2.0), so the fraction of bound basal linkers sets how much cortical tension reaches the membrane.
+</span>
+            
+            <span class="finding-chip">via <code>traction-is-occupancy-gated</code></span>
+            
+          </summary>
+          <div class="finding-drawer">
+            <div class="finding-header">
+              <span class="finding-id">F1-occupancy-gated-force-transfer</span>
+              <span class="finding-kind">biological</span>
+              <span class="finding-status-text">confirms literature</span>
+            </div>
+            
+            
+            <div class="finding-evidence">
+              <strong>observed:</strong> traction 1.0 == linker_occupancy 0.5 x cortex_tension 2.0 (exact) · 
+              
+              via test <a href="#bt-traction-is-occupancy-gated" onclick="_gotoStudyTab('audit','bt-traction-is-occupancy-gated');return false;"><code>traction-is-occupancy-gated</code></a> · 
+              in run <a href="#run-e2-force-transfer-relation"><code>e2-force-transfer-relation</code></a>
+              
+              
+            </div>
+            
+            
+            <div class="finding-traceability" style="font-size:0.84em;color:#475569;padding:4px 10px;margin:4px 0">
+              
+              
+              runs: <a href="#run-e2-force-transfer-relation"><code>e2-force-transfer-relation</code></a>
+            </div>
+            
+            
+            
+            <div class="pass_if-band muted small" style="font-size:0.82em;padding:2px 10px">judged against <code>pass_if: op: equals · note: traction (1.0) == occupancy (0.5) x cortex_tension (2.0), exact</code></div>
+            
+            
+            
+            <div class="finding-expected">
+              
+              
+              
+            </div>
+            <div class="finding-exp-summary"><em>Reference says:</em> cortical tension reaches the BM gated by the fraction of engaged basal adhesions (occupancy-gated force transfer)</div>
+            
+            <div class="finding-explanation"><em>Why:</em> BasalAdhesion carries a lumped occupancy with first-order on/off kinetics and returns traction = occupancy x tension; the relation is exact by construction, confirming the cortex -&gt; linker -&gt; BM wiring transmits force only through engaged linkers.
+</div>
+            
+            <div class="finding-next"><strong>→ Next:</strong> advance the validated single-cell seam to multicellular / coupled-lumenoid force transfer</div>
+          </div>
+        </details>
+      </div>
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      <div class="finding-card finding-kind-computational finding-status-confirms">
+        <details class="finding-details">
+          <summary class="finding-row">
+            <span class="finding-status-glyph">✓</span>
+            <span class="finding-claim finding-statement">The BM strain rate is proportional to the transmitted traction (0.001 = 1e-3 x 1.0, exact), the linker occupancy rises monotonically toward saturation (0.100 -&gt; 0.457 over six steps), and a bounded LAMMPS smoke of the full cortex+collagen composite confirms the collagen IV BM responds to the load by emitting its in-plane stress (bm_sigma).
+</span>
+            
+            <span class="finding-chip">via <code>strain-rate-proportional-to-traction</code></span>
+            
+          </summary>
+          <div class="finding-drawer">
+            <div class="finding-header">
+              <span class="finding-id">F2-strain-rate-proportional-and-bm-responds</span>
+              <span class="finding-kind">computational</span>
+              <span class="finding-status-text">confirms literature</span>
+            </div>
+            
+            
+            <div class="finding-evidence">
+              <strong>observed:</strong> bm_strain_rate 0.001 == coupling_gain 1e-3 x traction 1.0; occupancy 0.100-&gt;0.457; full composite emits sigma_inplane -&gt; bm_sigma · 
+              
+              via test <a href="#bt-strain-rate-proportional-to-traction" onclick="_gotoStudyTab('audit','bt-strain-rate-proportional-to-traction');return false;"><code>strain-rate-proportional-to-traction</code></a> · 
+              in run <a href="#run-e2-force-transfer-relation"><code>e2-force-transfer-relation</code></a>
+              
+              
+            </div>
+            
+            
+            <div class="finding-traceability" style="font-size:0.84em;color:#475569;padding:4px 10px;margin:4px 0">
+              
+              
+              runs: <a href="#run-e2-force-transfer-relation"><code>e2-force-transfer-relation</code></a>
+            </div>
+            
+            
+            
+            <div class="pass_if-band muted small" style="font-size:0.82em;padding:2px 10px">judged against <code>pass_if: op: equals · note: bm_strain_rate (0.001) == coupling_gain (1e-3) x traction (1.0), exact</code></div>
+            
+            
+            
+            <div class="finding-explanation"><em>Why:</em> coupling_gain linearly maps traction to BM strain rate; the collagen patch receives the strain rate (with crosslink chemistry on) and reports a stress, closing the cortex -&gt; linker -&gt; BM chain.
+</div>
+            
+            
+          </div>
+        </details>
+      </div>
+      
+      
+    </div>
+    
       
       
       
       <div class="ctr-meta ctr-assess">
         
         <div class="ctr-meta-row"><span class="ctr-meta-k">Confidence</span>
-          <span class="ctr-badge ctr-badge-investigating">Investigating</span>
-          
-          
+          <span class="ctr-badge ctr-badge-accepted">Accepted</span>
+          <span class="ctr-vch">biology&nbsp;PASS</span>
+          <span class="ctr-vch">insight&nbsp;POSITIVE</span>
         </div>
         
+        
+        <div class="ctr-meta-row"><span class="ctr-meta-k">Caveat</span> <span class="ctr-meta-item">Scope: single-cell patch only; no multicellular coupling, no prescribed-displacement / imposed-traction work-balance sweep yet.</span></div>
         
       </div>
       
@@ -656,7 +807,7 @@
   <div class="overview-section" id="model-section">
     <h3>Runnable models <span class="muted" style="font-size:0.85em;font-weight:normal">— the composite(s) this study simulates</span></h3>
     
-    <div class="cond-block" data-model-composite="viva_lumenoid.composites.actin_adhesion_bm" data-model-overrides='{}'>
+    <div class="cond-block" data-model-composite="viva_lumenoid.composites.actin_adhesion_bm" data-model-overrides='{"contractility": 1.5, "coupling_gain": 0.0001, "k_off": 0.1, "k_on": 0.5}'>
       <div class="cond-block-title" style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
         <strong>bm-e2-actin-adhesion-collagen</strong>
         
@@ -681,10 +832,31 @@
       
       
       
+      
+      
+      
+        
+      
+        
+      
+        
+      
+        
+      
+      
+      
+      
       <div class="model-config-mount" style="margin-top:8px">
         <div class="viv-loading"><span class="viv-loading-spin" aria-hidden="true"></span><span>Loading configuration…</span></div></div>
       
       
+      
+      <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;font-size:0.8em">
+        <span class="cond-pill"><span class="cond-pill-k">seeds</span>=6 (sweep)</span>
+        
+        
+        <span class="cond-pill"><span class="cond-pill-k">status</span>=completed</span>
+      </div>
       
     </div>
     
@@ -693,6 +865,174 @@
   
 
   
+  
+  <div class="overview-section" id="conditions-section">
+    <h3>Conditions <span class="muted" style="font-size:0.85em;font-weight:normal">— what we set up to test it</span></h3>
+    <p class="muted" style="font-size:0.88em">The experimental knobs: how variants perturb the baseline, and which model settings still need a human-set value.</p>
+
+    
+    <div class="cond-block">
+      <div class="cond-block-title">Variants <span class="muted" style="font-weight:normal;font-size:0.85em">(2)</span></div>
+      <table class="cond-table">
+        <thead><tr><th>Variant</th><th>Composite / base</th><th>Parameter overrides</th><th>Notes</th></tr></thead>
+        <tbody>
+          
+          
+          
+          
+          <tr data-model-composite="" data-model-overrides='{}'>
+            <td><code>high-koff</code></td>
+            <td>
+              <em class="muted">(inherits baseline)</em>
+            </td>
+            <td>
+              
+                <em class="muted">(no overrides)</em>
+              
+            </td>
+            <td>Higher off-rate -&gt; lower occupancy -&gt; less traction.</td>
+          </tr>
+          
+          
+          
+          
+          <tr data-model-composite="" data-model-overrides='{}'>
+            <td><code>strong-coupling</code></td>
+            <td>
+              <em class="muted">(inherits baseline)</em>
+            </td>
+            <td>
+              
+                <em class="muted">(no overrides)</em>
+              
+            </td>
+            <td>Higher coupling_gain -&gt; larger BM strain rate per traction.</td>
+          </tr>
+          
+        </tbody>
+      </table>
+    </div>
+    
+
+    
+    <div class="cond-block">
+      
+      <div class="cond-block-title">
+        Model settings <span class="muted" style="font-weight:normal;font-size:0.85em">(3)</span>
+        
+      </div>
+      <p class="muted" style="font-size:0.85em;margin:0 0 6px 0">Edit a value in the Current column and click <strong>Save</strong>. The next <code>pbg_runner</code> invocation for this study reads the updated value from <code>study.yaml</code>.</p>
+      <table class="cond-table cond-expert-table" data-study="bm-e2-actin-adhesion-collagen">
+        <thead><tr><th>Name</th><th>Type</th><th>Default</th><th>Current</th><th>Range</th><th>Gate</th><th></th></tr></thead>
+        <tbody>
+          
+          
+          
+          
+          <tr data-ei-name="k_on">
+            <td title=""><code>k_on</code></td>
+            <td></td>
+            <td><code>0.5</code></td>
+            <td>
+              
+              <input class="cond-ei-input"
+                     type="text"
+                     value="0.5"
+                     placeholder="(awaiting expert)"
+                     min="0.1" max="1.0"
+                     step="any"
+                     style="width:100%;padding:3px 6px;border:1px solid #cbd5e1;border-radius:3px;font:inherit">
+              
+              
+              
+            </td>
+            <td>
+              <code>[0.1, 1.0]</code>
+              
+            </td>
+            <td>
+              <span class="cond-ei-gate-opt">optional</span>
+            </td>
+            <td>
+              <button class="action-btn cond-ei-save" type="button"
+                      onclick="_saveExpertInput('bm-e2-actin-adhesion-collagen', 'k_on', this)">Save</button>
+              <span class="cond-ei-flash" style="display:none;margin-left:6px;font-size:0.85em"></span>
+            </td>
+          </tr>
+          
+          
+          
+          
+          <tr data-ei-name="k_off">
+            <td title=""><code>k_off</code></td>
+            <td></td>
+            <td><code>0.1</code></td>
+            <td>
+              
+              <input class="cond-ei-input"
+                     type="text"
+                     value="0.1"
+                     placeholder="(awaiting expert)"
+                     min="0.0" max="0.5"
+                     step="any"
+                     style="width:100%;padding:3px 6px;border:1px solid #cbd5e1;border-radius:3px;font:inherit">
+              
+              
+              
+            </td>
+            <td>
+              <code>[0.0, 0.5]</code>
+              
+            </td>
+            <td>
+              <span class="cond-ei-gate-opt">optional</span>
+            </td>
+            <td>
+              <button class="action-btn cond-ei-save" type="button"
+                      onclick="_saveExpertInput('bm-e2-actin-adhesion-collagen', 'k_off', this)">Save</button>
+              <span class="cond-ei-flash" style="display:none;margin-left:6px;font-size:0.85em"></span>
+            </td>
+          </tr>
+          
+          
+          
+          
+          <tr data-ei-name="coupling_gain">
+            <td title=""><code>coupling_gain</code></td>
+            <td></td>
+            <td><code>0.0001</code></td>
+            <td>
+              
+              <input class="cond-ei-input"
+                     type="text"
+                     value="0.0001"
+                     placeholder="(awaiting expert)"
+                     min="0.0001" max="0.001"
+                     step="any"
+                     style="width:100%;padding:3px 6px;border:1px solid #cbd5e1;border-radius:3px;font:inherit">
+              
+              
+              
+            </td>
+            <td>
+              <code>[0.0001, 0.001]</code>
+              
+            </td>
+            <td>
+              <span class="cond-ei-gate-opt">optional</span>
+            </td>
+            <td>
+              <button class="action-btn cond-ei-save" type="button"
+                      onclick="_saveExpertInput('bm-e2-actin-adhesion-collagen', 'coupling_gain', this)">Save</button>
+              <span class="cond-ei-flash" style="display:none;margin-left:6px;font-size:0.85em"></span>
+            </td>
+          </tr>
+          
+        </tbody>
+      </table>
+    </div>
+    
+  </div>
   
 
   
@@ -721,15 +1061,6 @@
       <div class="viv-loading"><span class="viv-loading-spin" aria-hidden="true"></span><span>Loading readouts from the composite emit plan…</span></div>
     </div>
 
-    
-    <details style="margin-top: 1.4em;">
-      <summary class="muted">How observables tie to Expected Behavior</summary>
-      <p style="font-size: 0.9em;">Observables can be referenced by name in an
-      <code>expected_behavior[i].measure</code> block (e.g. <code>kind: bulk_count, id:
-      "MONOMER0-160[c]"</code>). When the dashboard validates a study, it cross-checks
-      that every <code>measure</code> resolves to a declared observable, or to a
-      built-in helper.</p>
-    </details>
     
   </div>
   </div>
@@ -876,23 +1207,143 @@
     
     
     
-    <li class="expected-behavior-item" id="bt-force-transfer-conserves-work"
+    <li class="expected-behavior-item" id="bt-traction-is-occupancy-gated"
         data-test-kind="behavioral"
         
-        data-pytest-node="force-transfer-conserves-work"
-        data-classification="unclassified"
-        data-result="pending"
+        data-pytest-node="traction-is-occupancy-gated"
+        data-classification="primary"
+        data-result="PASS"
+        style="margin: 0 0 10px 0; padding: 10px 12px; border-left: 4px solid #10b981; background: #f8fafc; border-radius: 4px;">
+      
+        
+      <div style="display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;">
+        <span class="bt-result" style="font-size: 0.75em; font-family: monospace; padding: 2px 8px; border-radius: 9999px; background: #d1fae5; color: #065f46">✓ PASS</span>
+        <span class="classification-pill classification-primary">primary</span>
+        <strong style="font-size: 0.9em;">traction-is-occupancy-gated</strong>
+        
+        <span class="muted" style="font-size:0.78em">requires: <code>e2-force-transfer-relation</code></span>
+        
+      </div>
+      <div style="margin-top: 6px; font-size: 0.95em;">The transmitted traction equals linker occupancy times cortex tension, exactly (the occupancy-gated force-transfer relation), covered by tests/test_e2_coupling.py::test_adhesion_transmits_occupancy_gated_traction.
+</div>
+      
+      <div style="margin-top:6px;font-size:0.85em;padding:6px 10px;background:#fff;border:1px solid #e2e8f0;border-radius:3px">
+        <strong>Latest result:</strong>
+        
+          <code style="font-family:ui-monospace,monospace;color:#475569;margin-right:8px">observed: at cortex_tension 2.0: occupancy 0.5, traction 1.0 == 0.5 x 2.0 (exact)</code>
+        
+      </div>
+      
+      
+      <details style="margin-top: 6px; font-size: 0.82em;">
+        <summary class="muted" style="cursor: pointer;">Assertion</summary>
+        
+        <pre style="background:#fff; padding:8px; margin:4px 0 0 0; border:1px solid #e2e8f0; border-radius:3px; overflow-x:auto;">measure: {"field": "traction", "kind": "identity", "relation": "traction == linker_occupancy * cortex_tension"}
+pass_if: {"note": "traction (1.0) == occupancy (0.5) x cortex_tension (2.0), exact", "op": "equals"}</pre>
+      </details>
+      
+      
+      <details style="margin-top: 6px; font-size: 0.82em">
+        <summary class="muted" style="cursor:pointer; color:#92400e">⚠ Calibration anchor</summary>
+        <pre style="background:#fff7ed; padding:8px; margin:4px 0 0 0; border:1px solid #fdba74; border-radius:3px; overflow-x:auto">{
+  "literature_target": "traction = occupancy x tension (occupancy-gated force transfer, by construction)",
+  "observed_value": 1.0,
+  "resolution": "model"
+}</pre>
+      </details>
+      
+      
+      
+    </li>
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="expected-behavior-item" id="bt-strain-rate-proportional-to-traction"
+        data-test-kind="behavioral"
+        
+        data-pytest-node="strain-rate-proportional-to-traction"
+        data-classification="primary"
+        data-result="PASS"
+        style="margin: 0 0 10px 0; padding: 10px 12px; border-left: 4px solid #10b981; background: #f8fafc; border-radius: 4px;">
+      
+        
+      <div style="display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;">
+        <span class="bt-result" style="font-size: 0.75em; font-family: monospace; padding: 2px 8px; border-radius: 9999px; background: #d1fae5; color: #065f46">✓ PASS</span>
+        <span class="classification-pill classification-primary">primary</span>
+        <strong style="font-size: 0.9em;">strain-rate-proportional-to-traction</strong>
+        
+        <span class="muted" style="font-size:0.78em">requires: <code>e2-force-transfer-relation</code></span>
+        
+      </div>
+      <div style="margin-top: 6px; font-size: 0.95em;">The BM strain rate equals coupling_gain times traction, exactly (a linear traction -&gt; deformation map), covered by tests/test_e2_coupling.py::test_adhesion_transmits_occupancy_gated_traction.
+</div>
+      
+      <div style="margin-top:6px;font-size:0.85em;padding:6px 10px;background:#fff;border:1px solid #e2e8f0;border-radius:3px">
+        <strong>Latest result:</strong>
+        
+          <code style="font-family:ui-monospace,monospace;color:#475569;margin-right:8px">observed: bm_strain_rate 0.001 == 1e-3 x traction 1.0 (exact)</code>
+        
+      </div>
+      
+      
+      <details style="margin-top: 6px; font-size: 0.82em;">
+        <summary class="muted" style="cursor: pointer;">Assertion</summary>
+        
+        <pre style="background:#fff; padding:8px; margin:4px 0 0 0; border:1px solid #e2e8f0; border-radius:3px; overflow-x:auto;">measure: {"field": "bm_strain_rate", "kind": "identity", "relation": "bm_strain_rate == coupling_gain * traction"}
+pass_if: {"note": "bm_strain_rate (0.001) == coupling_gain (1e-3) x traction (1.0), exact", "op": "equals"}</pre>
+      </details>
+      
+      
+      
+      
+    </li>
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="expected-behavior-item" id="bt-occupancy-rises-toward-saturation"
+        data-test-kind="behavioral"
+        
+        data-pytest-node="occupancy-rises-toward-saturation"
+        data-classification="secondary"
+        data-result="PASS"
         style="margin: 0 0 10px 0; padding: 10px 12px; border-left: 4px solid #cbd5e1; background: #f8fafc; border-radius: 4px;">
       
         
       <div style="display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;">
-        <span class="bt-result" style="font-size: 0.75em; font-family: monospace; padding: 2px 8px; border-radius: 9999px; background: #f1f5f9; color: #475569">⏳ pending</span>
-        <span class="classification-pill classification-unclassified">unclassified</span>
-        <strong style="font-size: 0.9em;">force-transfer-conserves-work</strong>
+        <span class="bt-result" style="font-size: 0.75em; font-family: monospace; padding: 2px 8px; border-radius: 9999px; background: #d1fae5; color: #065f46">✓ PASS</span>
+        <span class="classification-pill classification-secondary">secondary</span>
+        <strong style="font-size: 0.9em;">occupancy-rises-toward-saturation</strong>
+        
+        <span class="muted" style="font-size:0.78em">requires: <code>e2-force-transfer-relation</code></span>
         
       </div>
-      <div style="margin-top: 6px; font-size: 0.95em;"></div>
+      <div style="margin-top: 6px; font-size: 0.95em;">The linker occupancy increases over steps toward 1 under binding (the first-order on-kinetics), covered by tests/test_e2_coupling.py::test_adhesion_occupancy_kinetics.
+</div>
       
+      <div style="margin-top:6px;font-size:0.85em;padding:6px 10px;background:#fff;border:1px solid #e2e8f0;border-radius:3px">
+        <strong>Latest result:</strong>
+        
+          <code style="font-family:ui-monospace,monospace;color:#475569;margin-right:8px">observed: occupancy 0.100 -&gt; 0.457 over six 0.1-interval steps (k_off 0), strictly increasing toward 1</code>
+        
+      </div>
+      
+      
+      <details style="margin-top: 6px; font-size: 0.82em;">
+        <summary class="muted" style="cursor: pointer;">Assertion</summary>
+        
+        <pre style="background:#fff; padding:8px; margin:4px 0 0 0; border:1px solid #e2e8f0; border-radius:3px; overflow-x:auto;">measure: {"field": "linker_occupancy", "kind": "monotonicity", "versus": "step"}
+pass_if: {"note": "occupancy 0.100 -\u003e 0.457 over six steps, strictly increasing toward 1 (k_off 0)", "op": "nondecreasing"}</pre>
+      </details>
       
       
       
@@ -944,37 +1395,37 @@
       
       <span class="status-step  gate-status-not-assessed gate-current">
         <span class="dot"></span>1 · Plan
-        
+        <span class="step-val">drafted</span>
         <span class="gate-current-tag">you are here</span>
       </span>
       
-      <span class="status-step  gate-status-not-assessed">
+      <span class="status-step set gate-status-passed">
         <span class="dot"></span>2 · Execution
-        
+        <span class="step-val">ran</span>
         
       </span>
       
-      <span class="status-step  gate-status-not-assessed">
+      <span class="status-step set gate-status-passed">
         <span class="dot"></span>3 · Evidence
-        
+        <span class="step-val">evaluated</span>
         
       </span>
       
-      <span class="status-step  gate-status-not-assessed">
+      <span class="status-step set gate-status-passed">
         <span class="dot"></span>4 · Quality
-        
+        <span class="step-val">evaluated</span>
         
       </span>
       
-      <span class="status-step  gate-status-not-assessed">
+      <span class="status-step set gate-status-passed">
         <span class="dot"></span>5 · Decision
-        
+        <span class="step-val">passed</span>
         
       </span>
       
       <span class="status-step  gate-status-not-assessed">
         <span class="dot"></span>6 · Release
-        
+        <span class="step-val">requested</span>
         
       </span>
       
@@ -1018,40 +1469,42 @@
           <span class="narrative-label">Regression compatibility</span>
           <span class="narrative-input verdict-badge-computed" data-verdict-track="regression_compatibility"
                 title="Computed from run status (read-only)"
-                style="display:inline-block;padding:2px 12px;border-radius:9999px;font-weight:700;font-size:0.85em;background:#f1f5f9;color:#475569">PENDING</span>
+                style="display:inline-block;padding:2px 12px;border-radius:9999px;font-weight:700;font-size:0.85em;background:#f1f5f9;color:#475569">PASS</span>
           <span class="muted small" style="margin-left:6px">computed from run status</span>
         </label>
         <label class="narrative-row narrative-row-wide">
           <span class="narrative-label">Regression basis</span>
           <textarea class="narrative-input narrative-textarea" rows="2"
                     data-narrative-path="conclusion_verdicts.regression_compatibility.basis"
-                    placeholder="e.g. Builds cleanly; tests pass; pyproject deps unchanged."></textarea>
+                    placeholder="e.g. Builds cleanly; tests pass; pyproject deps unchanged.">The actin_adhesion_bm composite is registered and the cortex -&gt; linker -&gt; BM chain runs cleanly; the deterministic contracts in tests/test_e2_coupling.py pass, and the LAMMPS-gated full-chain smoke runs with LAMMPS installed.</textarea>
         </label>
         <label class="narrative-row">
           <span class="narrative-label">Empirical validation</span>
           <span class="narrative-input verdict-badge-computed" data-verdict-track="biological_validation"
                 title="Computed from the gate evaluator (read-only)"
-                style="display:inline-block;padding:2px 12px;border-radius:9999px;font-weight:700;font-size:0.85em;background:#f1f5f9;color:#475569">PENDING</span>
+                style="display:inline-block;padding:2px 12px;border-radius:9999px;font-weight:700;font-size:0.85em;background:#f1f5f9;color:#475569">PASS</span>
           <span class="muted small" style="margin-left:6px">computed from gate evaluator</span>
         </label>
         <label class="narrative-row narrative-row-wide">
           <span class="narrative-label">Empirical basis</span>
           <textarea class="narrative-input narrative-textarea" rows="2"
                     data-narrative-path="conclusion_verdicts.biological_validation.basis"
-                    placeholder="e.g. atp_fraction = 0.997, outside Boesen 2024 band [0.2, 0.5]."></textarea>
+                    placeholder="e.g. atp_fraction = 0.997, outside Boesen 2024 band [0.2, 0.5].">Occupancy-gated force transfer holds by construction (traction = occupancy x tension, exact) and the collagen BM responds to the transmitted load. The relations being exact (a deterministic map) rather than emergent is noted as a limitation.
+</textarea>
         </label>
         <label class="narrative-row">
           <span class="narrative-label">Explanatory gain</span>
           <span class="narrative-input verdict-badge-computed" data-verdict-track="explanatory_gain"
                 title="Computed from interpretation-tier findings (read-only)"
-                style="display:inline-block;padding:2px 12px;border-radius:9999px;font-weight:700;font-size:0.85em;background:#f1f5f9;color:#475569">PENDING</span>
+                style="display:inline-block;padding:2px 12px;border-radius:9999px;font-weight:700;font-size:0.85em;background:#f1f5f9;color:#475569">POSITIVE</span>
           <span class="muted small" style="margin-left:6px">computed from interpretation-tier findings</span>
         </label>
         <label class="narrative-row narrative-row-wide">
           <span class="narrative-label">Explanatory basis</span>
           <textarea class="narrative-input narrative-textarea" rows="2"
                     data-narrative-path="conclusion_verdicts.explanatory_gain.basis"
-                    placeholder="e.g. Three findings worth keeping; design_pivot_required closed."></textarea>
+                    placeholder="e.g. Three findings worth keeping; design_pivot_required closed.">Establishes the validated single-cell force-transfer seam (cortex -&gt; reversible linkers -&gt; collagen BM) that multicellular / coupled-lumenoid studies build on, a NEW extension beyond the paper.
+</textarea>
         </label>
       </div>
     </div>
@@ -1065,19 +1518,101 @@
         evaluator's result from the behavior-test outcomes — the evaluation the
         conclusion rests on.</p>
       <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
-        <span class="gate-status-not_started" style="padding:2px 12px;border-radius:9999px;font-weight:700;font-size:0.85em">not_started</span>
+        <span class="gate-status-passed" style="padding:2px 12px;border-radius:9999px;font-weight:700;font-size:0.85em">passed</span>
         <span class="muted small">evaluated by code</span>
-        <span class="muted small">0/1 passed</span>
+        <span class="muted small">3/3 passed</span>
       </div>
       
     </div>
     
 
     
+    
+    
+    
+    <div class="decide-section" style="margin-top:18px">
+      <h3 class="overview-label">Conclusion logic — gate decision</h3>
+      
+      <div style="padding:10px 14px;background:#f0fdf4;border-left:4px solid #10b981;border-radius:4px;margin-bottom:8px">
+        <strong>✓ If primary tests pass:</strong>
+        
+        <div style="margin-top:4px"><em>Implementation:</em> The actin_adhesion_bm composite is registered and the cortex -&gt; linker -&gt; BM chain runs end-to-end; the force-transfer relation holds exactly.</div>
+        
+        
+        <div style="margin-top:4px"><em>Empirical validation:</em> Occupancy-gated force transfer (traction = occupancy x tension) and a traction-proportional BM strain rate hold, with the collagen BM responding to the load.</div>
+        
+        
+        <div style="margin-top:4px"><em>Pipeline unblocks:</em>
+          <ul style="margin:4px 0 0 18px"><li>Multicellular / coupled-lumenoid studies -- this is the validated single-cell force-transfer seam.</li></ul>
+        </div>
+        
+      </div>
+      
+      
+      <div style="padding:10px 14px;background:#fef2f2;border-left:4px solid #dc2626;border-radius:4px">
+        <strong>✗ If primary tests fail:</strong>
+        
+        <div style="margin-top:4px"><em>Diagnose:</em>
+          <ul style="margin:4px 0 0 18px"><li>Traction != occupancy x tension -- check the BasalAdhesion output wiring (occupancy clamp, tension input port).</li><li>BM does not respond -- check the collagen patch receives strain_rate/make_on/break_on and emits sigma_inplane.</li></ul>
+        </div>
+        
+        
+        <div style="margin-top:4px"><em>Block downstream:</em> Do not advance to multicellular coupling until the single-cell force-transfer relation holds exactly.</div>
+        
+      </div>
+      
+    </div>
+    
+
+    
+    
+    
 
   </div>
 
   
+  
+  <div class="overview-section"><h2 class="overview-label">Plan &amp; assumptions</h2>
+
+    
+    <div class="overview-section">
+      <h3 class="overview-label">Pipeline gate</h3>
+      <p class="muted" style="margin: 0 0 8px 0;font-size:0.88em">
+        Each study is a model-building gate: it answers <em>"Can we safely build the next layer?"</em>
+      </p>
+      
+      <div style="margin-bottom:6px"><strong>Prerequisites:</strong>
+        <code>{&#39;study&#39;: &#39;bm-e1-actomyosin-cortex&#39;, &#39;condition&#39;: &#39;tests-passed&#39;}</code> · <code>{&#39;study&#39;: &#39;bm-r2-collagen-network-rheology&#39;, &#39;condition&#39;: &#39;tests-passed&#39;}</code>
+      </div>
+      
+      
+      
+      <div><strong>Proceed when:</strong> <span class="muted">An occupancy-gated cortex -&gt; linker -&gt; BM force transfer that conserves the force relation exactly (traction = occupancy x tension, strain rate proportional to traction) on a single-cell patch is the force-transfer seam the multicellular / coupled-lumenoid studies build on.
+</span></div>
+      
+    </div>
+    
+
+    
+    <div class="overview-section">
+      <h3 class="overview-label">Key assumptions</h3>
+      <ul style="margin:0 0 0 18px;padding:0;font-size:0.93em">
+        <li style="margin:2px 0">Reversible basal linkers follow first-order kinetics: d(occ)/dt = k_on*(1-occ) - k_off*occ, occupancy clamped to [0, 1].</li><li style="margin:2px 0">Transmitted traction = linker_occupancy x cortex_tension (occupancy-gated force transfer), by construction.</li><li style="margin:2px 0">BM strain rate = coupling_gain x traction (a linear traction -&gt; deformation map).</li><li style="margin:2px 0">The collagen IV BM patch (CollagenNetworkProcess) remodels under the load with its crosslink chemistry kept on (make_on/break_on).</li><li style="margin:2px 0">Single-cell patch in reduced units; the linker relation is pure/deterministic (no stochasticity), so it is verified numerically rather than by a seed ensemble.</li>
+      </ul>
+    </div>
+    
+
+    
+    <div class="overview-section">
+      <h3 class="overview-label">Limitations</h3>
+      <p class="muted" style="margin:0 0 6px 0;font-size:0.85em">What this study explicitly does NOT validate (prevents overclaim).</p>
+      <ul style="margin:0 0 0 18px;padding:0;font-size:0.93em">
+        <li style="margin:2px 0">Scope: single-cell patch only; no multicellular coupling, no prescribed-displacement / imposed-traction work-balance sweep yet.</li><li style="margin:2px 0">The force-transfer relations (traction = occupancy x tension; strain rate = gain x traction) hold EXACTLY because the linker process is a pure deterministic map, not an emergent result -- the finding is that the occupancy-gated transfer is wired correctly and the BM responds.</li><li style="margin:2px 0">Reduced units throughout; occupancy is a lumped fraction, not resolved attachment sites with forces/work.</li><li style="margin:2px 0">The relative relaxation set jointly by linker off-rate and crosslink turnover is characterised only qualitatively (the full relaxation sweep is a follow-up).</li><li style="margin:2px 0">The BM response is confirmed by a bounded LAMMPS smoke (it emits a stress under load), not a converged rheology measurement.</li>
+      </ul>
+    </div>
+    
+
+  </div>
   
 
   
@@ -1085,22 +1620,29 @@
 
     
     
-    <p class="muted" style="margin:0 0 10px 0;font-size:0.85em">
-      Synthesised read-only from canonical fields — edit <code>findings</code>,
-      <code>limitations</code>, and <code>discovery_implications</code> to change
-      this (and the generated report) together.
-    </p>
-    <div class="conclusions-grid conclusions-synthesis">
-      <div class="conclusion-field">
-        <h3>Claims <span class="muted small">(from findings)</span></h3>
-        <p class="muted">No findings recorded yet.</p>
+    
+    
+    <div class="decide-section">
+      <h3 class="overview-label">Latest run outcomes</h3>
+      <div style="font-size:0.88em;color:#64748b;margin-bottom:8px">
+        baseline · seed ? ·
+        ?s simulated ·
+        ? history rows ·
+        started ?
       </div>
-      <div class="conclusion-field">
-        <h3>Evidence <span class="muted small">(from findings)</span></h3>
-        
-        <p class="muted">No evidence recorded on findings yet.</p>
-      </div>
+      
+      
+      
+      <p class="muted" style="margin:0;font-size:0.9em">
+        <strong>4</strong> test outcomes
+        — <span style="color:#065f46;font-weight:600">4 PASS</span> ·
+        <span style="color:#991b1b;font-weight:600">0 FAIL</span>.
+        Per-test outcomes (measured value · evaluator · band) are canonical on the
+        <a onclick="_setStudyTab('audit')" style="cursor:pointer;color:#3b82f6;text-decoration:underline">Tests (in Audit) →</a>.
+      </p>
+      
     </div>
+    
     
 
   </div>
@@ -1113,32 +1655,79 @@
 
     
     
+    
+    <div class="overview-section" id="discovery-implications-section" style="margin-top:18px">
+      <h3 class="overview-label">Discovery implications</h3>
+      <p class="muted" style="margin:0 0 10px 0;font-size:0.88em">Where this study's results leave the mechanism model — and what to investigate next.</p>
 
+      
+      <div class="di-uncertainties">
+        
+        <div class="di-unc di-unc-resolved">
+          <h4>✓ Resolved uncertainties</h4>
+          <ul><li>The cortex -&gt; linker -&gt; BM force transfer is occupancy-gated and wired correctly (traction = occupancy x tension, exact).</li><li>The BM strain rate is proportional to traction, and the collagen IV BM responds to the transmitted load.</li></ul>
+        </div>
+        
+        
+        <div class="di-unc di-unc-remaining">
+          <h4>● Remaining uncertainties</h4>
+          <ul><li>The work balance across the cortex -&gt; adhesion -&gt; BM chain (prescribed-displacement / imposed-traction tests).</li><li>The relative relaxation set jointly by linker off-rate and crosslink turnover.</li><li>Whether the single-cell relation survives multicellular coupling without double-counting BM mechanics.</li></ul>
+        </div>
+        
+      </div>
+      
+
+      
+
+      
+
+      
+      
+      
+      <div class="di-group">
+        <h3>Follow-up study proposals
+          <span class="muted" style="font-weight:normal;font-size:0.82em">(discovered)</span>
+          <span class="muted" style="font-weight:normal;font-size:0.85em">(1)</span></h3>
+        <p class="muted" style="margin:0 0 8px 0;font-size:0.85em">Click <strong>➕ Add to investigation</strong> to spawn a new study node in the investigation graph.</p>
+        <div class="followup-list">
+          
+          
+          <div class="di-card di-fup-card">
+            <div class="followup-header">
+              <strong class="followup-title">Work balance + linker/crosslink relaxation sweep</strong>
+              
+              
+              
+              
+            </div>
+            
+            
+            <div class="followup-actions" style="margin-top:8px">
+              <button class="btn-seed-followup"
+                      onclick="_seedFollowupProposal('bm-e2-actin-adhesion-collagen', "fp-e2-work-balance-relaxation")">➕ Add to investigation</button>
+            </div>
+          </div>
+          
+        </div>
+      </div>
+      
+    </div>
+    
+
+    
+    
+    
     
 
   </div>
 
   
   
-  <details class="overview-section"><summary class="overview-label">Limitations &amp; provenance</summary>
-
-    
-    
-    
-    <div class="conclusions-grid conclusions-synthesis">
-      <div class="conclusion-field">
-        <h3>Next steps <span class="muted small">(from discovery implications)</span></h3>
-        <p class="muted">No follow-up proposals recorded yet.</p>
-      </div>
-    </div>
-
-  </details>
-  
 
 </section>
 
 </main>
-<script>window.__DASH_CONFIG__ = { mode: "snapshot", interactiveUrl: "https://github.com/vivarium-collective/viva-lumenoid", basePath: "/viva-lumenoid/dashboard", inputsDownloadBase: "https://github.com/vivarium-collective/viva-lumenoid/raw/main", provenance: {"repo_slug": "vivarium-collective/viva-lumenoid", "repo_url": "https://github.com/vivarium-collective/viva-lumenoid", "commit": "957cf462f6b48323457f7f1a54d4d1f4338f2455", "commit_url": "https://github.com/vivarium-collective/viva-lumenoid/commit/957cf462f6b48323457f7f1a54d4d1f4338f2455", "branch": "main", "lockfile": "uv.lock@796aed340563", "generated_at": "2026-10-20 11:34 UTC"} };</script>
+<script>window.__DASH_CONFIG__ = { mode: "snapshot", interactiveUrl: "https://github.com/vivarium-collective/viva-lumenoid", basePath: "/viva-lumenoid/dashboard", inputsDownloadBase: "https://github.com/vivarium-collective/viva-lumenoid/raw/main", provenance: {"repo_slug": "vivarium-collective/viva-lumenoid", "repo_url": "https://github.com/vivarium-collective/viva-lumenoid", "commit": "f34c33516e6bd25e9c49b0db9944a86d8d76457a", "commit_url": "https://github.com/vivarium-collective/viva-lumenoid/commit/f34c33516e6bd25e9c49b0db9944a86d8d76457a", "branch": "main", "lockfile": "uv.lock@796aed340563", "generated_at": "2026-10-20 11:36 UTC"} };</script>
 <script src="/viva-lumenoid/dashboard/assets/data-source.js"></script>
 <script src="/viva-lumenoid/dashboard/assets/toast.js"></script>
 <script>

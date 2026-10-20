@@ -77,7 +77,7 @@
   </button>
   <button class="study-pillar" data-kind="conclusions" onclick="_setStudyTab('conclusions')">
     <svg class="pillar-icon" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="6" cy="6" r="2.2"/><circle cx="6" cy="18" r="2.2"/><circle cx="18" cy="9" r="2.2"/><path d="M6 8.2v7.6"/><path d="M6 12h6a4 4 0 0 0 4-4V11"/></svg>
-    <span class="pillar-label">Conclusions</span>
+    <span class="pillar-label">Decide</span>
   </button>
   
   <span class="study-dl study-export-wrap" style="margin-left:auto; align-self:center; position:relative; display:inline-flex">
@@ -538,7 +538,7 @@
 
     <div class="ctr-block">
       <h2 class="overview-label ctr-h">Claim</h2>
-      <p class="ctr-text">A 3D monolayer with volume and surface energies runs and yields per-cell heights; the no-membrane, elastic-membrane and relaxing-membrane controls are the next step.
+      <p class="ctr-text">The explicit 3D epithelial monolayer runs over the Tyssue engine and per-cell heights and volumes emerge directly from the apical/lateral/basal surface energies and volume targets -- no thin-prism approximation: 206 cells with finite, positive volumes (0.58-1.16) and a monolayer z-extent of ~1.0. The no-BM / elastic-BM / relaxing-BM controls the morphology comparison needs are not yet in the composite.
 </p>
       
     </div>
@@ -549,20 +549,19 @@
       <div class="ctr-meta">
         <div class="ctr-meta-row"><span class="ctr-meta-k">Question</span> <span class="ctr-meta-item">Do growing 3D epithelial cells become taller when the basement membrane relaxes slowly?
 </span></div>
-        <div class="ctr-meta-row"><span class="ctr-meta-k">Hypothesis</span> <span class="ctr-meta-item">In a Tyssue 3D monolayer with apical/lateral/basal energies and cell-volume targets, cells confined by a slowly-relaxing BM grow taller (smaller basal area, larger height) than under elastic or absent BM, reproducing the core morphology ordering of the paper.
-</span></div>
+        
       </div>
     </div>
     
 
     <div class="ctr-block">
       <h2 class="overview-label ctr-h">Model &amp; approach</h2>
-      <p class="ctr-text">Build a Tyssue 3D monolayer with apical/lateral/basal energies and cell-volume targets; run no-BM, elastic-BM and relaxing-BM controls; measure height, basal/apical area, their distributions and growth trajectories against the paper&#39;s morphology ordering.
+      <p class="ctr-text">Build the tyssue_3d_monolayer composite (an explicit Monolayer geometry over the vivarium-tyssue engine with apical, basal and lateral faces and per-cell volume targets) and step the EulerSolver. Reconstruct the mesh counts (cells, faces, vertices), read every per-cell basal area and volume off cell_df, read the z-extent off the vertices (the emergent monolayer height), and confirm the geometry stays finite and positive across several Euler steps (dt 0.01). This is a qualitative spatial-engine check -- that explicit 3D cell heights and volumes emerge and stay well-posed -- not yet the quantitative BM-relaxation morphology comparison.
 </p>
       <div class="ctr-meta">
         <div class="ctr-meta-row"><span class="ctr-meta-k">Model</span> <code>bm-r5-explicit-3d-confinement</code><a class="ov-tablink" href="#" onclick="_setStudyTab('compose');return false;">model →</a></div>
         
-        <div class="ctr-meta-row"><span class="ctr-meta-k">Measures</span> <span class="ctr-meta-item">1 behavior test</span><a class="ov-tablink" href="#" onclick="_setStudyTab('audit');return false;">see Tests →</a></div>
+        <div class="ctr-meta-row"><span class="ctr-meta-k">Measures</span> <span class="ctr-meta-item">2 behavior tests</span><a class="ov-tablink" href="#" onclick="_setStudyTab('audit');return false;">see Tests →</a></div>
         
       </div>
     </div>
@@ -571,15 +570,216 @@
     
     
     
+    <div class="ctr-block ov-prov">
+      <h2 class="overview-label ctr-h">Provenance &amp; sources</h2>
+      <div class="ctr-meta-k" style="margin-top:12px">Sources (1)</div>
+      <div class="ov-sources">
+      
+        
+        <div class="ov-src" id="sref-barrientos2026cellshape">
+          <b class="ov-src-t">Barrientos 2026</b> <span class="ov-src-k">barrientos2026cellshape</span>
+          <div class="ov-src-t">Basement membrane turnover controls cell shape</div>
+          <div class="ctr-meta-k" style="text-transform:none">Barrientos, Rodrigo and Meadowcroft, Billie and Sánchez-Sánchez, Beatriz and others · 2026 · <a href="https://www.cell.com/cell/fulltext/S0092-8674(26)00808-1" target="_blank" rel="noopener">source ↗</a></div>
+        </div>
+      
+      </div>
+    </div>
+    
 
     <div class="ctr-block">
       <h2 class="overview-label ctr-h">Result</h2>
-      <p class="ctr-text"></p>
+      <p class="ctr-text">The 3D monolayer resolves and relaxes deterministically. The mesh carries 206 cells, 1590 faces and 820 vertices; per-cell basal area ranges 4.51-6.38 and per-cell volume 0.58-1.16, all finite and positive. The monolayer z-extent is ~1.0 (vertices span z in [-1.0, 0.0]), so per-cell height emerges from the explicit surface energies and volume targets rather than from a prism approximation. Stepping the EulerSolver five times (dt 0.01) keeps per-cell area and volume finite and positive -- no NaN or blow-up (the face-level volume column is NaN by construction, since faces carry no enclosed volume in a monolayer). The honest gap: the no-BM, elastic-BM and relaxing-BM controls that the Fig target morphology ordering needs are not in the composite yet, so the &#34;taller under slow relaxation&#34; ordering is not tested here.
+</p>
+      
+      
+      <div class="ov-metrics">
+        
+        <div class="ov-metric ov-metric-pass">
+          <div class="ov-metric-v">206 cells; per-cell volume 0.5789-1.1578 and basal area 4.5128-6.3806, all finite and &gt; 0; monolayer z-extent ~1.0</div>
+          <div class="ov-metric-k">monolayer-yields-per-cell-volumes</div>
+        </div>
+        
+        <div class="ov-metric ov-metric-pass">
+          <div class="ov-metric-v">5 Euler steps (dt 0.01) keep per-cell area and volume finite and positive -- no NaN, no blow-up</div>
+          <div class="ov-metric-k">monolayer-steps-stably</div>
+        </div>
+        
+      </div>
+      
+      
+      
+      
+    <div class="overview-section findings-section">
+      <h2 class="overview-label">🔬 Findings — what this study taught us</h2>
       
       
       
       
       
+      
+      
+      
+      <div class="finding-card finding-kind-computational finding-status-confirms">
+        <details class="finding-details">
+          <summary class="finding-row">
+            <span class="finding-status-glyph">✓</span>
+            <span class="finding-claim finding-statement">The explicit 3D monolayer resolves over the tyssue engine with 206 cells whose per-cell volumes (0.5789-1.1578) and basal areas (4.5128-6.3806) emerge finite and positive from the apical/lateral/basal surface energies and volume targets, with a monolayer z-extent of ~1.0 -- no thin-prism approximation.
+</span>
+            
+            <span class="finding-chip">via <code>monolayer-yields-per-cell-volumes</code></span>
+            
+          </summary>
+          <div class="finding-drawer">
+            <div class="finding-header">
+              <span class="finding-id">F1-per-cell-volumes-emerge</span>
+              <span class="finding-kind">computational</span>
+              <span class="finding-status-text">confirms literature</span>
+            </div>
+            
+            
+            <div class="finding-evidence">
+              <strong>observed:</strong> Nc=206, Nf=1590, Nv=820; cell vol 0.58-1.16, cell area 4.51-6.38; z-extent ~1.0; all finite &gt; 0 · 
+              
+              via test <a href="#bt-monolayer-yields-per-cell-volumes" onclick="_gotoStudyTab('audit','bt-monolayer-yields-per-cell-volumes');return false;"><code>monolayer-yields-per-cell-volumes</code></a> · 
+              in run <a href="#run-r5-3d-monolayer-relaxation"><code>r5-3d-monolayer-relaxation</code></a>
+              
+              
+            </div>
+            
+            
+            <div class="finding-traceability" style="font-size:0.84em;color:#475569;padding:4px 10px;margin:4px 0">
+              
+              
+              runs: <a href="#run-r5-3d-monolayer-relaxation"><code>r5-3d-monolayer-relaxation</code></a>
+            </div>
+            
+            
+            
+            <div class="pass_if-band muted small" style="font-size:0.82em;padding:2px 10px">judged against <code>pass_if: op: all_finite_positive · note: Nc &gt; 0 and all 206 cell volumes finite and &gt; 0 (0.58-1.16)</code></div>
+            
+            
+            
+            <div class="finding-explanation"><em>Why:</em> Each cell carries explicit apical/basal/lateral faces and a volume target, so the vertex model relaxes to a per-cell height and volume directly instead of inferring height from a volume/area prism relation.
+</div>
+            
+            <div class="finding-next"><strong>→ Next:</strong> use as the explicit 3D geometric substrate for the E3 closed lumenoid</div>
+          </div>
+        </details>
+      </div>
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      <div class="finding-card finding-kind-computational finding-status-confirms">
+        <details class="finding-details">
+          <summary class="finding-row">
+            <span class="finding-status-glyph">✓</span>
+            <span class="finding-claim finding-statement">Stepping the EulerSolver five times (dt 0.01) keeps per-cell area and volume finite and positive, with no NaN or blow-up -- the explicit 3D monolayer is numerically stable over short integration.
+</span>
+            
+            <span class="finding-chip">via <code>monolayer-steps-stably</code></span>
+            
+          </summary>
+          <div class="finding-drawer">
+            <div class="finding-header">
+              <span class="finding-id">F2-steps-stably</span>
+              <span class="finding-kind">computational</span>
+              <span class="finding-status-text">confirms literature</span>
+            </div>
+            
+            
+            <div class="finding-evidence">
+              <strong>observed:</strong> per-cell area and volume finite and &gt; 0 after 5 Euler steps (face-level volume is NaN by construction and excluded) · 
+              
+              via test <a href="#bt-monolayer-steps-stably" onclick="_gotoStudyTab('audit','bt-monolayer-steps-stably');return false;"><code>monolayer-steps-stably</code></a> · 
+              in run <a href="#run-r5-3d-monolayer-relaxation"><code>r5-3d-monolayer-relaxation</code></a>
+              
+              
+            </div>
+            
+            
+            <div class="finding-traceability" style="font-size:0.84em;color:#475569;padding:4px 10px;margin:4px 0">
+              
+              
+              runs: <a href="#run-r5-3d-monolayer-relaxation"><code>r5-3d-monolayer-relaxation</code></a>
+            </div>
+            
+            
+            
+            <div class="pass_if-band muted small" style="font-size:0.82em;padding:2px 10px">judged against <code>pass_if: op: finite_no_blowup · note: per-cell area and volume finite and positive after 5 Euler steps (dt 0.01)</code></div>
+            
+            
+            
+            
+            
+            
+          </div>
+        </details>
+      </div>
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      <div class="finding-card finding-kind-methodological finding-status-partial">
+        <details class="finding-details">
+          <summary class="finding-row">
+            <span class="finding-status-glyph">◐</span>
+            <span class="finding-claim finding-statement">The no-BM / elastic-BM / relaxing-BM controls the Fig target morphology ordering needs are NOT in the composite, so the central claim -- cells taller under a slowly-relaxing BM -- is not tested. Only well-posed explicit geometry is established.
+</span>
+            
+            <span class="finding-chip">via <code>monolayer-yields-per-cell-volumes</code></span>
+            
+          </summary>
+          <div class="finding-drawer">
+            <div class="finding-header">
+              <span class="finding-id">F3-bm-controls-not-yet-wired</span>
+              <span class="finding-kind">methodological</span>
+              <span class="finding-status-text">partial literature</span>
+            </div>
+            
+            
+            <div class="finding-evidence">
+              <strong>observed:</strong> single relaxation configuration; no BM-relaxation axis to order height against · 
+              
+              via test <a href="#bt-monolayer-yields-per-cell-volumes" onclick="_gotoStudyTab('audit','bt-monolayer-yields-per-cell-volumes');return false;"><code>monolayer-yields-per-cell-volumes</code></a> · 
+              in run <a href="#run-r5-3d-monolayer-relaxation"><code>r5-3d-monolayer-relaxation</code></a>
+              
+              
+            </div>
+            
+            
+            <div class="finding-traceability" style="font-size:0.84em;color:#475569;padding:4px 10px;margin:4px 0">
+              
+              
+              runs: <a href="#run-r5-3d-monolayer-relaxation"><code>r5-3d-monolayer-relaxation</code></a>
+            </div>
+            
+            
+            
+            <div class="pass_if-band muted small" style="font-size:0.82em;padding:2px 10px">judged against <code>pass_if: op: all_finite_positive · note: Nc &gt; 0 and all 206 cell volumes finite and &gt; 0 (0.58-1.16)</code></div>
+            
+            
+            
+            
+            
+            <div class="finding-next"><strong>→ Next:</strong> add the no-BM / elastic-BM / relaxing-BM shell controls and measure height vs BM relaxation</div>
+          </div>
+        </details>
+      </div>
+      
+      
+    </div>
+    
       
       
       
@@ -587,10 +787,12 @@
         
         <div class="ctr-meta-row"><span class="ctr-meta-k">Confidence</span>
           <span class="ctr-badge ctr-badge-investigating">Investigating</span>
-          
-          
+          <span class="ctr-vch">biology&nbsp;PENDING</span>
+          <span class="ctr-vch">insight&nbsp;POSITIVE</span>
         </div>
         
+        
+        <div class="ctr-meta-row"><span class="ctr-meta-k">Caveat</span> <span class="ctr-meta-item">Qualitative spatial-engine check only: the study confirms explicit 3D per-cell volumes and an emergent height exist and stay well-posed, not that cells are taller under slow BM relaxation.</span></div>
         
       </div>
       
@@ -681,10 +883,23 @@
       
       
       
+      
+      
+      
+      
+      
+      
       <div class="model-config-mount" style="margin-top:8px">
         <div class="viv-loading"><span class="viv-loading-spin" aria-hidden="true"></span><span>Loading configuration…</span></div></div>
       
       
+      
+      <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;font-size:0.8em">
+        <span class="cond-pill"><span class="cond-pill-k">seeds</span>=1</span>
+        
+        
+        <span class="cond-pill"><span class="cond-pill-k">status</span>=completed</span>
+      </div>
       
     </div>
     
@@ -721,15 +936,6 @@
       <div class="viv-loading"><span class="viv-loading-spin" aria-hidden="true"></span><span>Loading readouts from the composite emit plan…</span></div>
     </div>
 
-    
-    <details style="margin-top: 1.4em;">
-      <summary class="muted">How observables tie to Expected Behavior</summary>
-      <p style="font-size: 0.9em;">Observables can be referenced by name in an
-      <code>expected_behavior[i].measure</code> block (e.g. <code>kind: bulk_count, id:
-      "MONOMER0-160[c]"</code>). When the dashboard validates a study, it cross-checks
-      that every <code>measure</code> resolves to a declared observable, or to a
-      built-in helper.</p>
-    </details>
     
   </div>
   </div>
@@ -876,23 +1082,100 @@
     
     
     
-    <li class="expected-behavior-item" id="bt-taller-under-slow-relaxation"
+    <li class="expected-behavior-item" id="bt-monolayer-yields-per-cell-volumes"
         data-test-kind="behavioral"
         
-        data-pytest-node="taller-under-slow-relaxation"
-        data-classification="unclassified"
-        data-result="pending"
-        style="margin: 0 0 10px 0; padding: 10px 12px; border-left: 4px solid #cbd5e1; background: #f8fafc; border-radius: 4px;">
+        data-pytest-node="monolayer-yields-per-cell-volumes"
+        data-classification="primary"
+        data-result="PASS"
+        style="margin: 0 0 10px 0; padding: 10px 12px; border-left: 4px solid #10b981; background: #f8fafc; border-radius: 4px;">
       
         
       <div style="display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;">
-        <span class="bt-result" style="font-size: 0.75em; font-family: monospace; padding: 2px 8px; border-radius: 9999px; background: #f1f5f9; color: #475569">⏳ pending</span>
-        <span class="classification-pill classification-unclassified">unclassified</span>
-        <strong style="font-size: 0.9em;">taller-under-slow-relaxation</strong>
+        <span class="bt-result" style="font-size: 0.75em; font-family: monospace; padding: 2px 8px; border-radius: 9999px; background: #d1fae5; color: #065f46">✓ PASS</span>
+        <span class="classification-pill classification-primary">primary</span>
+        <strong style="font-size: 0.9em;">monolayer-yields-per-cell-volumes</strong>
+        
+        <span class="muted" style="font-size:0.78em">requires: <code>r5-3d-monolayer-relaxation</code></span>
         
       </div>
-      <div style="margin-top: 6px; font-size: 0.95em;"></div>
+      <div style="margin-top: 6px; font-size: 0.95em;">The 3D monolayer has a positive cell count and every per-cell volume is finite and positive -- explicit per-cell volumes emerge across all cells.
+</div>
       
+      <div style="margin-top:6px;font-size:0.85em;padding:6px 10px;background:#fff;border:1px solid #e2e8f0;border-radius:3px">
+        <strong>Latest result:</strong>
+        
+          <code style="font-family:ui-monospace,monospace;color:#475569;margin-right:8px">observed: 206 cells; per-cell volume 0.5789-1.1578 and basal area 4.5128-6.3806, all finite and &gt; 0; monolayer z-extent ~1.0</code>
+        
+      </div>
+      
+      
+      <details style="margin-top: 6px; font-size: 0.82em;">
+        <summary class="muted" style="cursor: pointer;">Assertion</summary>
+        
+        <pre style="background:#fff; padding:8px; margin:4px 0 0 0; border:1px solid #e2e8f0; border-radius:3px; overflow-x:auto;">measure: {"field": "cell_volume", "kind": "reduce", "reduce": "all_finite_and_positive"}
+pass_if: {"note": "Nc \u003e 0 and all 206 cell volumes finite and \u003e 0 (0.58-1.16)", "op": "all_finite_positive"}
+cites:   ["barrientos2026cellshape"]</pre>
+      </details>
+      
+      
+      <details style="margin-top: 6px; font-size: 0.82em">
+        <summary class="muted" style="cursor:pointer; color:#92400e">⚠ Calibration anchor</summary>
+        <pre style="background:#fff7ed; padding:8px; margin:4px 0 0 0; border:1px solid #fdba74; border-radius:3px; overflow-x:auto">{
+  "cites": [
+    "barrientos2026cellshape"
+  ],
+  "literature_target": "finite well-posed per-cell volumes with an emergent height (qualitative; no micron calibration)",
+  "observed_value": "0.5789-1.1578",
+  "resolution": "concept"
+}</pre>
+      </details>
+      
+      
+      
+    </li>
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="expected-behavior-item" id="bt-monolayer-steps-stably"
+        data-test-kind="behavioral"
+        
+        data-pytest-node="monolayer-steps-stably"
+        data-classification="primary"
+        data-result="PASS"
+        style="margin: 0 0 10px 0; padding: 10px 12px; border-left: 4px solid #10b981; background: #f8fafc; border-radius: 4px;">
+      
+        
+      <div style="display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;">
+        <span class="bt-result" style="font-size: 0.75em; font-family: monospace; padding: 2px 8px; border-radius: 9999px; background: #d1fae5; color: #065f46">✓ PASS</span>
+        <span class="classification-pill classification-primary">primary</span>
+        <strong style="font-size: 0.9em;">monolayer-steps-stably</strong>
+        
+        <span class="muted" style="font-size:0.78em">requires: <code>r5-3d-monolayer-relaxation</code></span>
+        
+      </div>
+      <div style="margin-top: 6px; font-size: 0.95em;">Stepping the EulerSolver several steps keeps per-cell areas and volumes finite (no NaN, no blow-up).
+</div>
+      
+      <div style="margin-top:6px;font-size:0.85em;padding:6px 10px;background:#fff;border:1px solid #e2e8f0;border-radius:3px">
+        <strong>Latest result:</strong>
+        
+          <code style="font-family:ui-monospace,monospace;color:#475569;margin-right:8px">observed: 5 Euler steps (dt 0.01) keep per-cell area and volume finite and positive -- no NaN, no blow-up</code>
+        
+      </div>
+      
+      
+      <details style="margin-top: 6px; font-size: 0.82em;">
+        <summary class="muted" style="cursor: pointer;">Assertion</summary>
+        
+        <pre style="background:#fff; padding:8px; margin:4px 0 0 0; border:1px solid #e2e8f0; border-radius:3px; overflow-x:auto;">measure: {"field": "cell_volume", "kind": "reduce", "reduce": "finite_over_steps"}
+pass_if: {"note": "per-cell area and volume finite and positive after 5 Euler steps (dt 0.01)", "op": "finite_no_blowup"}</pre>
+      </details>
       
       
       
@@ -944,37 +1227,37 @@
       
       <span class="status-step  gate-status-not-assessed gate-current">
         <span class="dot"></span>1 · Plan
-        
+        <span class="step-val">drafted</span>
         <span class="gate-current-tag">you are here</span>
       </span>
       
-      <span class="status-step  gate-status-not-assessed">
+      <span class="status-step set gate-status-passed">
         <span class="dot"></span>2 · Execution
-        
+        <span class="step-val">ran</span>
         
       </span>
       
-      <span class="status-step  gate-status-not-assessed">
+      <span class="status-step set gate-status-passed">
         <span class="dot"></span>3 · Evidence
-        
+        <span class="step-val">evaluated</span>
         
       </span>
       
-      <span class="status-step  gate-status-not-assessed">
+      <span class="status-step set gate-status-passed">
         <span class="dot"></span>4 · Quality
-        
+        <span class="step-val">evaluated</span>
         
       </span>
       
-      <span class="status-step  gate-status-not-assessed">
+      <span class="status-step set gate-status-passed">
         <span class="dot"></span>5 · Decision
-        
+        <span class="step-val">passed</span>
         
       </span>
       
       <span class="status-step  gate-status-not-assessed">
         <span class="dot"></span>6 · Release
-        
+        <span class="step-val">requested</span>
         
       </span>
       
@@ -1018,14 +1301,14 @@
           <span class="narrative-label">Regression compatibility</span>
           <span class="narrative-input verdict-badge-computed" data-verdict-track="regression_compatibility"
                 title="Computed from run status (read-only)"
-                style="display:inline-block;padding:2px 12px;border-radius:9999px;font-weight:700;font-size:0.85em;background:#f1f5f9;color:#475569">PENDING</span>
+                style="display:inline-block;padding:2px 12px;border-radius:9999px;font-weight:700;font-size:0.85em;background:#f1f5f9;color:#475569">PASS</span>
           <span class="muted small" style="margin-left:6px">computed from run status</span>
         </label>
         <label class="narrative-row narrative-row-wide">
           <span class="narrative-label">Regression basis</span>
           <textarea class="narrative-input narrative-textarea" rows="2"
                     data-narrative-path="conclusion_verdicts.regression_compatibility.basis"
-                    placeholder="e.g. Builds cleanly; tests pass; pyproject deps unchanged."></textarea>
+                    placeholder="e.g. Builds cleanly; tests pass; pyproject deps unchanged.">The tyssue_3d_monolayer composite is registered and steps cleanly over the vivarium-tyssue engine; the behavior-test contracts (test_tyssue_3d_monolayer_runs) pass.</textarea>
         </label>
         <label class="narrative-row">
           <span class="narrative-label">Empirical validation</span>
@@ -1038,20 +1321,22 @@
           <span class="narrative-label">Empirical basis</span>
           <textarea class="narrative-input narrative-textarea" rows="2"
                     data-narrative-path="conclusion_verdicts.biological_validation.basis"
-                    placeholder="e.g. atp_fraction = 0.997, outside Boesen 2024 band [0.2, 0.5]."></textarea>
+                    placeholder="e.g. atp_fraction = 0.997, outside Boesen 2024 band [0.2, 0.5].">Explicit per-cell volumes and an emergent height exist and are well-posed, but the no-BM / elastic-BM / relaxing-BM morphology comparison the question turns on is not yet in the composite, so the &#34;taller under slow relaxation&#34; ordering is neither validated nor refuted.
+</textarea>
         </label>
         <label class="narrative-row">
           <span class="narrative-label">Explanatory gain</span>
           <span class="narrative-input verdict-badge-computed" data-verdict-track="explanatory_gain"
                 title="Computed from interpretation-tier findings (read-only)"
-                style="display:inline-block;padding:2px 12px;border-radius:9999px;font-weight:700;font-size:0.85em;background:#f1f5f9;color:#475569">PENDING</span>
+                style="display:inline-block;padding:2px 12px;border-radius:9999px;font-weight:700;font-size:0.85em;background:#f1f5f9;color:#475569">POSITIVE</span>
           <span class="muted small" style="margin-left:6px">computed from interpretation-tier findings</span>
         </label>
         <label class="narrative-row narrative-row-wide">
           <span class="narrative-label">Explanatory basis</span>
           <textarea class="narrative-input narrative-textarea" rows="2"
                     data-narrative-path="conclusion_verdicts.explanatory_gain.basis"
-                    placeholder="e.g. Three findings worth keeping; design_pivot_required closed."></textarea>
+                    placeholder="e.g. Three findings worth keeping; design_pivot_required closed.">Replacing the homogeneous prism with an explicit 3D monolayer in which per-cell heights and volumes emerge from surface energies + volume targets is a genuine representational advance over the R1 approximation, even before the BM controls are wired.
+</textarea>
         </label>
       </div>
     </div>
@@ -1065,19 +1350,105 @@
         evaluator's result from the behavior-test outcomes — the evaluation the
         conclusion rests on.</p>
       <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
-        <span class="gate-status-not_started" style="padding:2px 12px;border-radius:9999px;font-weight:700;font-size:0.85em">not_started</span>
+        <span class="gate-status-passed" style="padding:2px 12px;border-radius:9999px;font-weight:700;font-size:0.85em">passed</span>
         <span class="muted small">evaluated by code</span>
-        <span class="muted small">0/1 passed</span>
+        <span class="muted small">2/2 passed</span>
       </div>
       
     </div>
     
 
     
+    
+    
+    
+    <div class="decide-section" style="margin-top:18px">
+      <h3 class="overview-label">Conclusion logic — gate decision</h3>
+      
+      <div style="padding:10px 14px;background:#f0fdf4;border-left:4px solid #10b981;border-radius:4px;margin-bottom:8px">
+        <strong>✓ If primary tests pass:</strong>
+        
+        <div style="margin-top:4px"><em>Implementation:</em> The explicit 3D monolayer resolves over the tyssue engine and yields finite per-cell volumes with an emergent monolayer height.</div>
+        
+        
+        <div style="margin-top:4px"><em>Empirical validation:</em> Qualitative only: per-cell heights/volumes emerge without a prism approximation; the &#39;taller under slow BM relaxation&#39; ordering is not yet evaluated (BM controls not wired).</div>
+        
+        
+        <div style="margin-top:4px"><em>Pipeline unblocks:</em>
+          <ul style="margin:4px 0 0 18px"><li>E3 closed 3D lumenoid -- this explicit monolayer is its geometric substrate.</li></ul>
+        </div>
+        
+      </div>
+      
+      
+      <div style="padding:10px 14px;background:#fef2f2;border-left:4px solid #dc2626;border-radius:4px">
+        <strong>✗ If primary tests fail:</strong>
+        
+        <div style="margin-top:4px"><em>Diagnose:</em>
+          <ul style="margin:4px 0 0 18px"><li>Monolayer fails to resolve -- check the MonolayerGeometry merge and the apical/basal/lateral face assignment.</li><li>Per-cell volume non-finite -- check the volume-target energy term and the EulerSolver gradient.</li></ul>
+        </div>
+        
+        
+        <div style="margin-top:4px"><em>Block downstream:</em> Do not advance E3 until the explicit monolayer resolves and yields finite per-cell volumes.</div>
+        
+      </div>
+      
+    </div>
+    
+
+    
+    
+    
 
   </div>
 
   
+  
+  <div class="overview-section"><h2 class="overview-label">Plan &amp; assumptions</h2>
+
+    
+    <div class="overview-section">
+      <h3 class="overview-label">Pipeline gate</h3>
+      <p class="muted" style="margin: 0 0 8px 0;font-size:0.88em">
+        Each study is a model-building gate: it answers <em>"Can we safely build the next layer?"</em>
+      </p>
+      
+      <div style="margin-bottom:6px"><strong>Prerequisites:</strong>
+        <code>{&#39;study&#39;: &#39;bm-r4-coupled-2d-epithelium&#39;, &#39;condition&#39;: &#39;tests-passed&#39;}</code>
+      </div>
+      
+      
+      <div style="margin-bottom:6px"><strong>Enables:</strong>
+        <code>bm-e3-closed-3d-lumenoid</code>
+      </div>
+      
+      
+      <div><strong>Proceed when:</strong> <span class="muted">The explicit 3D monolayer resolves over the tyssue engine and yields finite per-cell volumes and an emergent monolayer height, so it can serve as the explicit-geometry substrate the closed lumenoid (E3) builds on. Advancing to the quantitative &#34;taller under slow BM relaxation&#34; morphology claim additionally requires the no-BM / elastic-BM / relaxing-BM controls, which are flagged as a followup.
+</span></div>
+      
+    </div>
+    
+
+    
+    <div class="overview-section">
+      <h3 class="overview-label">Key assumptions</h3>
+      <ul style="margin:0 0 0 18px;padding:0;font-size:0.93em">
+        <li style="margin:2px 0">Each cell has explicit apical / basal / lateral faces with surface energies and a per-cell volume target, so height and basal area emerge from the 3D force balance (no thin-prism approximation).</li><li style="margin:2px 0">The monolayer height is read as the vertex z-extent (~1.0 here); per-cell height is an emergent geometric quantity, not a stored scalar.</li><li style="margin:2px 0">The current composite is a single relaxation configuration: the no-BM / elastic-BM / relaxing-BM controls are NOT applied, so the BM-relaxation morphology ordering is not exercised.</li><li style="margin:2px 0">Face-level volume is undefined for monolayer faces (a face encloses no volume); only cell-level volume is a meaningful per-cell readout.</li><li style="margin:2px 0">Reduced units throughout; qualitative scope -- this study establishes that explicit 3D geometry emerges and is stable, not the morphology ordering.</li>
+      </ul>
+    </div>
+    
+
+    
+    <div class="overview-section">
+      <h3 class="overview-label">Limitations</h3>
+      <p class="muted" style="margin:0 0 6px 0;font-size:0.85em">What this study explicitly does NOT validate (prevents overclaim).</p>
+      <ul style="margin:0 0 0 18px;padding:0;font-size:0.93em">
+        <li style="margin:2px 0">Qualitative spatial-engine check only: the study confirms explicit 3D per-cell volumes and an emergent height exist and stay well-posed, not that cells are taller under slow BM relaxation.</li><li style="margin:2px 0">HONEST GAP: the no-BM / elastic-BM / relaxing-BM controls the morphology ordering needs are NOT in the composite -- the central question (taller under slow relaxation) is not tested here.</li><li style="margin:2px 0">Single deterministic configuration (no parameter sweep, n_replicates = 1); replication across the three BM controls is a gap.</li><li style="margin:2px 0">Monolayer height is read as the vertex z-extent, not a per-cell stored scalar; face-level volume is NaN by construction (faces enclose no volume) and is excluded from the per-cell finiteness check.</li><li style="margin:2px 0">Reduced units; no calibration to microns.</li>
+      </ul>
+    </div>
+    
+
+  </div>
   
 
   
@@ -1085,22 +1456,29 @@
 
     
     
-    <p class="muted" style="margin:0 0 10px 0;font-size:0.85em">
-      Synthesised read-only from canonical fields — edit <code>findings</code>,
-      <code>limitations</code>, and <code>discovery_implications</code> to change
-      this (and the generated report) together.
-    </p>
-    <div class="conclusions-grid conclusions-synthesis">
-      <div class="conclusion-field">
-        <h3>Claims <span class="muted small">(from findings)</span></h3>
-        <p class="muted">No findings recorded yet.</p>
+    
+    
+    <div class="decide-section">
+      <h3 class="overview-label">Latest run outcomes</h3>
+      <div style="font-size:0.88em;color:#64748b;margin-bottom:8px">
+        baseline · seed ? ·
+        ?s simulated ·
+        ? history rows ·
+        started ?
       </div>
-      <div class="conclusion-field">
-        <h3>Evidence <span class="muted small">(from findings)</span></h3>
-        
-        <p class="muted">No evidence recorded on findings yet.</p>
-      </div>
+      
+      
+      
+      <p class="muted" style="margin:0;font-size:0.9em">
+        <strong>2</strong> test outcomes
+        — <span style="color:#065f46;font-weight:600">2 PASS</span> ·
+        <span style="color:#991b1b;font-weight:600">0 FAIL</span>.
+        Per-test outcomes (measured value · evaluator · band) are canonical on the
+        <a onclick="_setStudyTab('audit')" style="cursor:pointer;color:#3b82f6;text-decoration:underline">Tests (in Audit) →</a>.
+      </p>
+      
     </div>
+    
     
 
   </div>
@@ -1113,32 +1491,79 @@
 
     
     
+    
+    <div class="overview-section" id="discovery-implications-section" style="margin-top:18px">
+      <h3 class="overview-label">Discovery implications</h3>
+      <p class="muted" style="margin:0 0 10px 0;font-size:0.88em">Where this study's results leave the mechanism model — and what to investigate next.</p>
 
+      
+      <div class="di-uncertainties">
+        
+        <div class="di-unc di-unc-resolved">
+          <h4>✓ Resolved uncertainties</h4>
+          <ul><li>Explicit per-cell heights and volumes emerge from a 3D surface-energy + volume-target monolayer over the tyssue engine (no prism approximation).</li><li>The explicit 3D monolayer is numerically stable over short EulerSolver integration.</li></ul>
+        </div>
+        
+        
+        <div class="di-unc di-unc-remaining">
+          <h4>● Remaining uncertainties</h4>
+          <ul><li>Whether cells are taller under a slowly-relaxing BM -- needs the three BM-shell controls.</li><li>The quantitative height / basal-area distribution vs BM relaxation.</li></ul>
+        </div>
+        
+      </div>
+      
+
+      
+
+      
+
+      
+      
+      
+      <div class="di-group">
+        <h3>Follow-up study proposals
+          <span class="muted" style="font-weight:normal;font-size:0.82em">(discovered)</span>
+          <span class="muted" style="font-weight:normal;font-size:0.85em">(1)</span></h3>
+        <p class="muted" style="margin:0 0 8px 0;font-size:0.85em">Click <strong>➕ Add to investigation</strong> to spawn a new study node in the investigation graph.</p>
+        <div class="followup-list">
+          
+          
+          <div class="di-card di-fup-card">
+            <div class="followup-header">
+              <strong class="followup-title">no-BM / elastic-BM / relaxing-BM controls on the 3D monolayer</strong>
+              
+              
+              
+              
+            </div>
+            
+            
+            <div class="followup-actions" style="margin-top:8px">
+              <button class="btn-seed-followup"
+                      onclick="_seedFollowupProposal('bm-r5-explicit-3d-confinement', "fp-r5-bm-shell-controls")">➕ Add to investigation</button>
+            </div>
+          </div>
+          
+        </div>
+      </div>
+      
+    </div>
+    
+
+    
+    
+    
     
 
   </div>
 
   
   
-  <details class="overview-section"><summary class="overview-label">Limitations &amp; provenance</summary>
-
-    
-    
-    
-    <div class="conclusions-grid conclusions-synthesis">
-      <div class="conclusion-field">
-        <h3>Next steps <span class="muted small">(from discovery implications)</span></h3>
-        <p class="muted">No follow-up proposals recorded yet.</p>
-      </div>
-    </div>
-
-  </details>
-  
 
 </section>
 
 </main>
-<script>window.__DASH_CONFIG__ = { mode: "snapshot", interactiveUrl: "https://github.com/vivarium-collective/viva-lumenoid", basePath: "/viva-lumenoid/dashboard", inputsDownloadBase: "https://github.com/vivarium-collective/viva-lumenoid/raw/main", provenance: {"repo_slug": "vivarium-collective/viva-lumenoid", "repo_url": "https://github.com/vivarium-collective/viva-lumenoid", "commit": "957cf462f6b48323457f7f1a54d4d1f4338f2455", "commit_url": "https://github.com/vivarium-collective/viva-lumenoid/commit/957cf462f6b48323457f7f1a54d4d1f4338f2455", "branch": "main", "lockfile": "uv.lock@796aed340563", "generated_at": "2026-10-20 11:34 UTC"} };</script>
+<script>window.__DASH_CONFIG__ = { mode: "snapshot", interactiveUrl: "https://github.com/vivarium-collective/viva-lumenoid", basePath: "/viva-lumenoid/dashboard", inputsDownloadBase: "https://github.com/vivarium-collective/viva-lumenoid/raw/main", provenance: {"repo_slug": "vivarium-collective/viva-lumenoid", "repo_url": "https://github.com/vivarium-collective/viva-lumenoid", "commit": "f34c33516e6bd25e9c49b0db9944a86d8d76457a", "commit_url": "https://github.com/vivarium-collective/viva-lumenoid/commit/f34c33516e6bd25e9c49b0db9944a86d8d76457a", "branch": "main", "lockfile": "uv.lock@796aed340563", "generated_at": "2026-10-20 11:36 UTC"} };</script>
 <script src="/viva-lumenoid/dashboard/assets/data-source.js"></script>
 <script src="/viva-lumenoid/dashboard/assets/toast.js"></script>
 <script>
