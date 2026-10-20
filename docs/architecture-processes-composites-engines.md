@@ -123,3 +123,22 @@ that a study is designed but not yet implemented.
   `ClosedLumenoid3D`.
 - Coupling: which vertex-model term receives the BM (basal tension / mobility /
   elastic spring) — spec #5.
+
+---
+
+## Serving the Tyssue composites (runtime deps)
+
+The Tyssue composites (R4/R5/E3) need the vivarium-tyssue engine AND its runtime
+libraries. The engine is an optional dev sibling (installed editable `--no-deps`),
+so its runtime libs are declared as a **locked** extra and installed into the
+serving venv:
+
+```bash
+uv pip install .[tyssue-serve]          # tyssue, scikit-image, tables, quantities (locked)
+uv pip install --no-deps -e ../vivarium-tyssue   # the engine itself (dev sibling)
+```
+
+`viva_lumenoid.tyssue_coupling` applies a numpy-2.x `np.cross` 2D shim
+automatically when a Tyssue composite builds (tyssue's 2D area gradient uses the
+2D cross product numpy 2.x removed). The LAMMPS composites (collagen, actomyosin)
+need the `lammps` binding + the `viva-lammps` engine (the `engines` extra).
