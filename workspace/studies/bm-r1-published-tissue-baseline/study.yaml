@@ -301,9 +301,11 @@ visualizations:
   - name: r1_regime
     address: "html:r1_regime.html"
     config:
-      title: "Confinement regimes -- cell height vs BM stiffness x relaxation (Fig 1G reproduction)"
+      title: "Confinement across BM stiffness × relaxation/doubling, with regime boundary + trajectories (cf. Fig 1)"
+      evidence_status: observed
+      tier: main
       caption: >
-        Cell height across basement-membrane stiffness and relaxation time (relative to the doubling time), reproducing the paper's Figure 1G. The confinement regimes appear: cells are tall where the membrane is stiff and slow to relax, and flat where it is soft or fast.
+        Reduced-order epithelial model predicts cell confinement across the two dimensionless axes the paper uses — BM stiffness relative to the cell and BM relaxation time / proliferation (doubling) time. Panel A maps confinement (h/h₀) with the confinement=1 boundary drawn and the three sampled regimes marked; panels B–D show representative basal-area growth trajectories for the soft/fast, intermediate and stiff/slow corners. This is our analytic reimplementation of the Barrientos Fig 1 model (not a simulation and not a digitized overlay of the published boundaries): the regime topology is consistent with Fig 1 — tall/confined in the stiff, slowly-relaxing corner — and a quantitative boundary overlay vs digitized Fig 1G is the open follow-up.
 
 report:
   title: "R1 -- reduced-order tissue confinement baseline (Fig 1G reproduction)"
