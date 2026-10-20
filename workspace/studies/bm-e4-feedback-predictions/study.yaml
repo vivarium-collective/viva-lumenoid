@@ -411,9 +411,32 @@ visualizations:
   - name: e4_feedback
     address: "html:e4_feedback.html"
     config:
-      title: "Feedback loop + controls (schematic)"
+      title: "Coupling-control time courses: two-way / one-way / uncoupled (engineered-diagnostic)"
+      evidence_status: engineered-diagnostic
+      tier: main
       caption: >
-        Schematic of the growth <-> turnover <-> BM relaxation <-> confinement feedback loop and its one-way/uncoupled/uniform controls. NOT simulated.
+        COUPLING CONTROL (correct software wiring, NOT a mechanistic prediction), real 15-step reduced-order
+        runs (dt 0.02, strain_gain 20, tension_gain 0.02, bm_modulus 50, bm_relaxation 10), reduced units.
+        Aligned time courses of basal BM-shell area, BM stress sigma, basal tension fed back and basal strain
+        rate for three coupling modes in identical conditions. The two-way path returns a nonzero BM reaction
+        (basal tension approx -0.300) that damps the epithelial contraction (basal area 199.0 -> 195.9) while
+        one-way and uncoupled feed back zero (basal tension 0.0, basal area 199.0 -> 164.2); uncoupled leaves
+        the BM inert (sigma 0.0). This demonstrates correct wiring of the coupling controls, NOT a
+        morphogenetic prediction: the explicit-LAMMPS collagen BM is NOT in this loop (reduced-order BM only)
+        and there is no growth trajectory (named gaps).
+  - name: e4_subcycle_convergence
+    address: "html:e4_subcycle_convergence.html"
+    config:
+      title: "BM subcycling convergence (engineered-diagnostic)"
+      evidence_status: engineered-diagnostic
+      tier: supplement
+      caption: >
+        CONVERGENCE CHECK (real two-way reduced-order runs), reduced units. The final BM stress sigma vs the
+        number of BM subcycles per epithelial macro-step (bm_substeps 1/2/4/8: sigma approx -14.98, -15.04,
+        -15.07, -15.09) with the successive-refinement differences |Delta sigma| approx 0.066, 0.033, 0.017
+        halving at each refinement -> the subcycled BM converges. This is BM subcycling convergence only;
+        exchange-cadence convergence (shrinking the epithelium<->BM exchange interval itself) is NOT wired
+        (named gap).
 
 report:
   title: "E4 -- bidirectional epithelium<->BM coupling: controls + convergence (reduced-order BM)"

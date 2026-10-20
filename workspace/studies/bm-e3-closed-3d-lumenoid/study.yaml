@@ -232,9 +232,30 @@ visualizations:
   - name: e3_lumenoid
     address: "html:e3_lumenoid.html"
     config:
-      title: "Closed lumenoid shell (real tyssue run)"
+      title: "Closed 3D lumenoid shell: geometry verification (engineered-diagnostic)"
+      evidence_status: engineered-diagnostic
+      tier: main
       caption: >
-        The actual closed lumenoid shell on the merged LumenoidGeometry, exposing the basal BM-coupling surface (real tyssue run).
+        GEOMETRY VERIFICATION (illustration, not a growing-lumenoid result), real tyssue build, reduced units.
+        A 78-cell closed Tyssue shell on the merged LumenoidGeometry, shown as the 3D shell plus an equatorial
+        section cut (z approx median) at the same scale with a 1-length-unit scale bar; the enclosed lumen and
+        the exposed basal BM-coupling surface are labelled. The counts are GEOMETRY metrics (78 cells, lumen
+        volume 261.7, total cell volume 173.6), not morphogenesis. This verifies the geometry only; lumen
+        filling and BM-regulated morphogenesis remain untested (see supplement).
+  - name: e3_lumen_dynamics
+    address: "html:e3_lumen_dynamics.html"
+    config:
+      title: "Lumen/BM state is static at rest -- no lumen-filling drive wired (hypothesis)"
+      evidence_status: hypothesis
+      tier: supplement
+      caption: >
+        GAP NAMED (hypothesis for a panel not yet producible), real 12-step EulerSolver run, reduced units.
+        The lumen volume (261.7), lumen pressure (0.0) and basal BM-shell surface area (202.5) are FLAT across
+        the run: the shell sits at rest equilibrium and NO lumen-filling drive is wired -- there is no
+        LumenElasticity effector in the force balance and no lumen-volume target ramp, so the lumen is a
+        geometry diagnostic, not a driven degree of freedom. A dynamic lumen-filling / BM-regulated
+        morphogenesis panel is therefore NOT producible from this composite; shown honestly as flat with the
+        gap named.
 
 report:
   title: "E3 -- closed 3D lumenoid (shell runs, lumen readable)"

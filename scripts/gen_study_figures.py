@@ -7,7 +7,9 @@ warnings.filterwarnings("ignore")
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent.parent))
 
 from viva_lumenoid.viz import save_html
-from viva_lumenoid.study_figures import STUDY_FIGURES, EXTRA_STUDY_FIGURES, driving_schema_figure
+from viva_lumenoid.study_figures import (
+    STUDY_FIGURES, EXTRA_STUDY_FIGURES, COMPANION_FIGURES, driving_schema_figure,
+)
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 STUD = ROOT / "workspace" / "studies"
@@ -24,10 +26,14 @@ TITLES = {
     "r5_volume_hist": "R5 supplement — cell-volume distribution appendix (engineered-diagnostic)",
     "r5_bm_hypothesis": "R5 hypothesis — matched BM controls (coupling not in composite)",
     "r6_intervention": "Intervention ordering on cell height (Fig 7 reproduction)",
-    "e1_cortical_tension": "Cortical tension vs myosin contractility (real LAMMPS)",
-    "e2_force_transfer": "Actin → adhesion → collagen BM force transfer (schematic)",
-    "e3_lumenoid": "Closed 3D lumenoid shell (real tyssue run)",
-    "e4_feedback": "Growth↔turnover↔relaxation↔confinement loop (schematic)",
+    "e1_cortical_tension": "E1 — LJ-patch tension: tunability + seed/size sensitivity (engineered-diagnostic)",
+    "e1_tension_components": "E1 (supplement) — pressure components of the LJ-patch tension",
+    "e2_force_transfer": "E2 — force-transfer coupling unit test (engineered-diagnostic)",
+    "e2_bm_response": "E2 (supplement) — actin→adhesion→collagen BM bounded smoke",
+    "e3_lumenoid": "E3 — closed 3D lumenoid shell: geometry verification (engineered-diagnostic)",
+    "e3_lumen_dynamics": "E3 (supplement) — lumen/BM state static at rest (gap: no filling drive)",
+    "e4_feedback": "E4 — coupling-control time courses: two-way / one-way / uncoupled (engineered-diagnostic)",
+    "e4_subcycle_convergence": "E4 (supplement) — BM subcycling convergence",
 }
 
 
@@ -43,6 +49,7 @@ def main():
         results.append(("[investigation]", "driving_schema", "schema", f"FAIL {type(e).__name__}: {e}"))
     all_figs = [(slug, name, fn, kind) for slug, (name, fn, kind) in STUDY_FIGURES.items()]
     all_figs += list(EXTRA_STUDY_FIGURES)
+    all_figs += [(slug, name, fn, kind) for slug, (name, fn, kind) in COMPANION_FIGURES.items()]
     for slug, name, fn, kind in all_figs:
         vdir = STUD / slug / "viz"
         vdir.mkdir(parents=True, exist_ok=True)
