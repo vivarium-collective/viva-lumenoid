@@ -47,6 +47,13 @@ def _register_e2(core):
     return core
 
 
+def _register_coupling(core):
+    """Lazy core extension: the LAMMPS<->Tyssue coupling process (owns both engines
+    internally; the composite core only needs the coupling node + an emitter)."""
+    from ..multiscale_coupling import register_coupling
+    return register_coupling(core)
+
+
 def _params(**kw) -> CollagenParams:
     """CollagenParams from the generator's Configure kwargs (unknown keys dropped)."""
     allowed = set(CollagenParams().to_dict())
@@ -341,6 +348,53 @@ def actin_adhesion_bm(core=None, **kw) -> dict:
             "_type": "step", "address": "local:ram-emitter",
             "config": {"emit": emit},
             "inputs": {k: [k] for k in emit},
+            "outputs": {},
+        },
+    }
+
+
+_COUPLED_PARAMS = {
+    "bm_rods": {"type": "integer", "default": 40,
+                "description": "Collagen rods in the explicit LAMMPS BM patch."},
+    "strain_gain": {"type": "float", "default": 20.0,
+                    "description": "Epithelial basal strain-rate -> BM strain-rate."},
+    "tension_gain": {"type": "float", "default": 0.02,
+                     "description": "BM stress -> added basal contractility (reaction force)."},
+}
+
+_COUPLED_EMIT = {"basal_area": "float", "basal_strain_rate": "float",
+                 "bm_sigma": "float", "basal_tension": "float", "lumen_pressure": "float"}
+
+
+@composite_generator(
+    name="coupled_lumenoid",
+    description="E4 / P3 capstone — bidirectional LAMMPS collagen-BM <-> Tyssue "
+                "epithelium coupling: the lumenoid's basal BM-shell surface stretches "
+                "an explicit LAMMPS collagen IV BM patch, whose stress feeds back as a "
+                "basal tension on the epithelium. The force round-trip the multiscale "
+                "campaign is built toward (explicit-BM realization).",
+    parameters=_COUPLED_PARAMS,
+    core_extensions=[_register_coupling],
+)
+def coupled_lumenoid(core=None, **kw) -> dict:
+    cfg = {
+        "eptm": "workspace/datasets/lumenoid.hf5",
+        "bm_rods": int(kw.get("bm_rods", 40)),
+        "strain_gain": float(kw.get("strain_gain", 20.0)),
+        "tension_gain": float(kw.get("tension_gain", 0.02)),
+        "base_contractility": 0.05,
+    }
+    return {
+        "coupling": {
+            "_type": "process", "address": "local:LammpsTyssueCoupling",
+            "config": cfg,
+            "inputs": {},
+            "outputs": {k: [k] for k in _COUPLED_EMIT},
+        },
+        "emitter": {
+            "_type": "step", "address": "local:ram-emitter",
+            "config": {"emit": _COUPLED_EMIT},
+            "inputs": {k: [k] for k in _COUPLED_EMIT},
             "outputs": {},
         },
     }
