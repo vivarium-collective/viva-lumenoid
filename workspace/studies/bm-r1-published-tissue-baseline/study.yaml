@@ -48,13 +48,14 @@ baseline:
     composite_status: implemented
     params: {}
     note: >
-      Implemented as a reduced-order homogeneous tissue model (TissuePrismProcess):
-      a fixed-volume prism cell whose basal area is set by proliferation against a
-      viscoelastic BM (stiffness + relaxation). Resolves ready and RUNS; the Fig 1
-      confinement regimes separate (verified: stiff/slow-relaxing BM -> confined,
-      taller cell; soft/fast -> spread, flatter). The homogeneous effective-BM
-      reference for R4/R5; sweeping stiffness x relaxation/doubling reproduces the
-      Fig 1G regime map (the study's phase-diagram figure).
+      A homogeneous tissue model: one representative cell of fixed volume whose
+      basal area is set by proliferation pulling against a viscoelastic basement
+      membrane, with cell height following from volume over area. The four
+      confinement regimes of the paper's Figure 1 fall out of how membrane
+      stiffness compares with its relaxation time and the cell doubling time — a
+      stiff, slowly-relaxing membrane confines the cell into a tall shape, while a
+      soft or fast-relaxing one lets it spread flat. This is the simple reference
+      the spatial epithelial models are compared against.
 variants: []
 interventions: []
 runs: []
@@ -65,4 +66,4 @@ visualizations:
     config:
       title: "Confinement regimes — cell height vs BM stiffness × relaxation (Fig 1G reproduction)"
       caption: >
-        REAL run (Barrientos Fig 1G reproduction): cell height swept over BM stiffness × relaxation/doubling from the reduced-order prism model. The confinement regime topology emerges — tall (confined) in the stiff, slowly-relaxing corner.
+        Cell height across basement-membrane stiffness and relaxation time (relative to the doubling time), reproducing the paper's Figure 1G. The confinement regimes appear: cells are tall where the membrane is stiff and slow to relax, and flat where it is soft or fast.

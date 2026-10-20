@@ -47,7 +47,8 @@ baseline:
     composite_status: existing
     params: {}
     note: >
-      reuses the existing collagen-network composite; this study refines its protocol/measurements
+      Uses the collagen IV network model, with the loading protocol and the
+      readouts matched to the paper's measurements.
 variants: []
 interventions: []
 runs: []

@@ -50,12 +50,10 @@ baseline:
     composite_status: implemented
     params: {}
     note: >
-      Implemented over the vivarium-tyssue engine (EulerSolver + the merged
-      CrossSectionGeometry + an annular 2D mesh): resolves ready and steps the
-      vertex model (12-face ring). Needs the numpy-2.x 2D-cross shim in
-      tyssue_coupling (tyssue's 2D area gradient uses np.cross on 2D vectors,
-      removed in numpy 2.x). The homogeneous reference for R1; BM traction/area
-      coupling is the next step.
+      A 2D epithelial sheet with explicit cell height, relaxed against a
+      basement-membrane area law. It is the spatial counterpart of the homogeneous
+      tissue model, so the confinement response can be read cell by cell rather
+      than for one average cell.
 variants: []
 interventions: []
 runs: []
