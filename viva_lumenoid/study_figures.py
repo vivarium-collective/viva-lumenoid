@@ -539,7 +539,433 @@ def r6_intervention_figure():
     return fig
 
 
+# ===========================================================================
+# bm-v1 / bm-v2 / bm-v3 — figure-review upgrade (2026-10-20)
+#
+# These three studies previously had NO figure functions. Each now has a single
+# question-driven primary built from BOUNDED REAL LAMMPS runs (small network,
+# ≤3 seeds, few steps), with its evidence status named in the caption. Shared
+# helpers are NOT touched — the helpers below are v1/v2/v3-namespaced.
+#
+# FIDELITY NOTE (verified in code + at runtime, 2026-10-20): the "faithful"
+# (use_real_angles=True, bending_k>0) path creates ONLY the released NC1 junction
+# angle (angle_coeff 1 = 4.0 @180°; two angles per NC1 crosslink). The released
+# 7S angles (k=1.0 @155° and @60°) and the 7S-specific break cutoff (0.95 vs the
+# NC1 1.35 used for both) are NOT implemented. So these runs are NC1-angle-
+# stabilized, NOT a full reproduction of the released angle set — the figures are
+# captioned accordingly and never claim full faithfulness.
+# ---------------------------------------------------------------------------
+def _vseries_largest_cc(bonds):
+    """Largest connected component (bead count) from a LAMMPS bond list
+    [[bond_type, id1, id2], ...]. Shared by the v1/v2 connectivity readouts."""
+    parent = {}
+
+    def find(a):
+        parent.setdefault(a, a)
+        while parent[a] != a:
+            parent[a] = parent[parent[a]]
+            a = parent[a]
+        return a
+
+    for _bt, i, j in bonds:
+        ri, rj = find(i), find(j)
+        if ri != rj:
+            parent[ri] = rj
+    from collections import Counter
+    sizes = Counter(find(a) for a in parent)
+    return max(sizes.values()) if sizes else 0
+
+
+def _v1_params(seed):
+    """CollagenParams for the v1 NC1-angle-stabilized (faithful-path) network."""
+    from viva_lumenoid.params import CollagenParams
+    return CollagenParams(n_rods=60, box_xy=6.0, slab_thickness=4.0, seed=seed,
+                          use_real_angles=True, bending_k=4.0,
+                          target_strain=0.08, strain_rate=4.0e-3)
+
+
+def _v1_run_seed(seed):
+    """Run the staged stage-1 protocol (assemble→relax-frozen→stretch-frozen→
+    hold-elastic→hold-viscous) on a small NC1-angle-stabilized network. Returns a
+    trajectory dict (continuous time, σ, strain, crosslinks, largest-CC, phase),
+    the as-formed mesh (positions/ids/bonds), and (E_tangent, tau)."""
+    from bigraph_schema import allocate_core
+    from viva_lumenoid.collagen import CollagenNetworkProcess
+    proc = CollagenNetworkProcess(config={"params": _v1_params(seed).to_dict()},
+                                  core=allocate_core())
+    proc.initial_state()
+    tr = {"t": [], "sigma": [], "strain": [], "xl": [], "lcc": [], "phase": []}
+    tt = [0.0]
+    mesh = {}
+
+    def rec(o, phase):
+        tr["t"].append(tt[0]); tr["sigma"].append(float(o["sigma_inplane"]))
+        tr["strain"].append(float(o["strain"])); tr["xl"].append(int(o["n_crosslinks"]))
+        tr["lcc"].append(_vseries_largest_cc(o["bonds"])); tr["phase"].append(phase)
+
+    def step(sr, mk, bk, phase, n):
+        o = {}
+        for _ in range(n):
+            o = proc.update({"strain_rate": sr, "make_on": mk, "break_on": bk}, 1.0)
+            tt[0] += 1.0
+            rec(o, phase)
+        return o
+
+    o = step(0.0, 1.0, 1.0, "assemble", 25)          # make-only assembly (real-angle)
+    mesh = {"pos": np.array(o["positions"]), "types": np.array(o["atom_types"]),
+            "ids": np.array(o["atom_ids"]), "bonds": o["bonds"], "box": o["box_dimensions"]}
+    step(0.0, 0.0, 0.0, "relax", 4)                  # frozen settle
+    step(4.0e-3, 0.0, 0.0, "stretch", 20)            # frozen elastic loading
+    step(0.0, 0.0, 0.0, "hold_elastic", 6)           # elastic plateau (frozen)
+    step(0.0, 0.0, 1.0, "hold_viscous", 30)          # break-only viscous relaxation
+    proc.close()
+
+    strain = np.array(tr["strain"]); sigma = np.array(tr["sigma"])
+    phase = np.array(tr["phase"]); t = np.array(tr["t"])
+    # Tangent modulus over the stretch ramp, fit window strain ∈ [0.01, max].
+    m = (phase == "stretch") & (strain >= 0.01)
+    E = float("nan")
+    if m.sum() >= 2:
+        A = np.vstack([strain[m], np.ones(m.sum())]).T
+        E = float(np.linalg.lstsq(A, sigma[m], rcond=None)[0][0])
+    # Relaxation time from the viscous hold: 1/e crossing of (σ0−σ∞).
+    vm = phase == "hold_viscous"
+    tau = float("nan")
+    if vm.sum() >= 3:
+        tv = t[vm] - t[vm][0]; sv = sigma[vm]
+        amp = sv[0] - sv[-1]
+        if abs(amp) > 1e-6:
+            target = sv[-1] + amp / np.e
+            for k in range(1, len(sv)):
+                if (amp > 0 and sv[k] <= target) or (amp < 0 and sv[k] >= target):
+                    tau = float(tv[k]); break
+    return tr, mesh, E, tau
+
+
+# Fit window + phase palette for the v1 primary.
+_V1_FIT_LO = 0.01
+_V1_SEEDS = (11, 22, 33)
+
+
+def v1_stage1_main_figure():
+    """bm-v1 PRIMARY (evidence: observed — real bounded LAMMPS; tier: main).
+
+    An NC1-angle-stabilized collagen IV network develops tensile stress during
+    imposed biaxial stretching and relaxes when bond remodeling resumes. Four
+    panels: (A) the σ(t) trace with the stretch / frozen-hold / chemistry-on-hold
+    phases shaded; (B) network bond-virial in-plane stress vs strain with the
+    fitted tangent modulus over strain ∈ [0.01, 0.08]; (C) crosslinks vs largest
+    connected component over the protocol; (D) one labeled as-formed network.
+    E and τ are reported across independent seeds with spread. Reduced LJ units.
+
+    HONESTY: NC1-angle-stabilized only — the released 7S angles (155°/60°) and the
+    7S-specific break cutoff are not implemented (named in the caption); τ is not
+    cleanly resolved at this bounded scale (dense multiseed is a mini candidate)."""
+    go = _go()
+    from plotly.subplots import make_subplots
+    runs = [_v1_run_seed(s) for s in _V1_SEEDS]
+    Es = np.array([r[2] for r in runs], dtype=float)
+    taus = np.array([r[3] for r in runs], dtype=float)
+    E_m, E_s = float(np.nanmean(Es)), float(np.nanstd(Es))
+    tau_m, tau_s = float(np.nanmean(taus)), float(np.nanstd(taus))
+
+    fig = make_subplots(
+        rows=2, cols=2,
+        subplot_titles=(
+            "A — σ(t): stretch / frozen-hold / chemistry-on-hold phases",
+            "B — network bond-virial stress vs strain (+ fitted tangent E)",
+            "C — crosslinks vs largest connected component",
+            "D — representative as-formed network (seed 11, NC1 angles active)"))
+
+    # Panel A: σ(t) for each seed + phase shading (built from the seed-11 phase map).
+    tr0 = runs[0][0]
+    t0 = np.array(tr0["t"]); ph0 = np.array(tr0["phase"])
+    bands = [("stretch", "rgba(31,119,180,0.10)", "stretch"),
+             ("hold_elastic", "rgba(120,120,120,0.12)", "frozen hold"),
+             ("hold_viscous", "rgba(44,160,44,0.12)", "chemistry-on hold")]
+    for name, col, label in bands:
+        idx = np.where(ph0 == name)[0]
+        if len(idx):
+            x0, x1 = float(t0[idx[0]]) - 0.5, float(t0[idx[-1]]) + 0.5
+            fig.add_vrect(x0=x0, x1=x1, fillcolor=col, line_width=0, row=1, col=1,
+                          annotation_text=label, annotation_position="top left",
+                          annotation_font=dict(size=9, color="#555"))
+    for i, (tr, *_rest) in enumerate(runs):
+        fig.add_trace(go.Scatter(x=tr["t"], y=tr["sigma"], mode="lines",
+                                 line=dict(color=BLUE, width=1.4),
+                                 opacity=0.55, showlegend=False,
+                                 name=f"seed {_V1_SEEDS[i]}"), row=1, col=1)
+    fig.update_xaxes(title_text="time (LJ)", row=1, col=1)
+    fig.update_yaxes(title_text="σ bond-virial (LJ)", row=1, col=1)
+
+    # Panel B: σ vs strain over the stretch phase, 3 seeds + fitted tangent.
+    all_e, all_s = [], []
+    for i, (tr, *_rest) in enumerate(runs):
+        ph = np.array(tr["phase"]); e = np.array(tr["strain"]); s = np.array(tr["sigma"])
+        m = ph == "stretch"
+        fig.add_trace(go.Scatter(x=e[m], y=s[m], mode="markers",
+                                 marker=dict(color=BLUE, size=6, opacity=0.5),
+                                 showlegend=False), row=1, col=2)
+        fm = m & (e >= _V1_FIT_LO)
+        all_e += e[fm].tolist(); all_s += s[fm].tolist()
+    if len(all_e) >= 2:
+        ae = np.array(all_e); A = np.vstack([ae, np.ones(len(ae))]).T
+        slope, icpt = np.linalg.lstsq(A, np.array(all_s), rcond=None)[0]
+        xs = np.linspace(_V1_FIT_LO, max(ae), 20)
+        fig.add_trace(go.Scatter(x=xs, y=slope * xs + icpt, mode="lines",
+                                 line=dict(color=RED, width=3),
+                                 name=f"tangent E = {E_m:.1f} ± {E_s:.1f} LJ"), row=1, col=2)
+    fig.add_vrect(x0=_V1_FIT_LO, x1=max(all_e) if all_e else 0.08,
+                  fillcolor="rgba(214,39,40,0.06)", line_width=0, row=1, col=2)
+    fig.update_xaxes(title_text="in-plane strain ε", row=1, col=2)
+    fig.update_yaxes(title_text="σ bond-virial (LJ)", row=1, col=2)
+
+    # Panel C: crosslinks + largest connected component over time (seed-11).
+    fig.add_trace(go.Scatter(x=tr0["t"], y=tr0["xl"], mode="lines",
+                             line=dict(color=ORANGE, width=3), name="crosslinks"),
+                  row=2, col=1)
+    fig.add_trace(go.Scatter(x=tr0["t"], y=tr0["lcc"], mode="lines",
+                             line=dict(color=TEAL, width=2, dash="dot"),
+                             name="largest connected component"), row=2, col=1)
+    fig.update_xaxes(title_text="time (LJ)", row=2, col=1)
+    fig.update_yaxes(title_text="count (beads / bonds)", row=2, col=1)
+
+    # Panel D: the representative as-formed network (seed 11), labeled.
+    mesh = runs[0][1]
+    pos = mesh["pos"]; ids = mesh["ids"]; types = mesh["types"]
+    id2i = {int(a): k for k, a in enumerate(ids)}
+    for bt, c, nm in ((1, "rgba(120,120,120,0.35)", None),
+                      (2, BLUE, "NC1 crosslink (angle-braced)"),
+                      (3, ORANGE, "7S crosslink (no angle)")):
+        bx, by = [], []
+        for b in mesh["bonds"]:
+            if b[0] != bt:
+                continue
+            a, c2 = id2i.get(b[1]), id2i.get(b[2])
+            if a is None or c2 is None:
+                continue
+            bx += [pos[a, 0], pos[c2, 0], None]; by += [pos[a, 1], pos[c2, 1], None]
+        fig.add_trace(go.Scatter(x=bx, y=by, mode="lines",
+                                 line=dict(color=c, width=(1 if bt == 1 else 2)),
+                                 name=nm, showlegend=bool(nm), hoverinfo="skip"),
+                      row=2, col=2)
+    is_nc1 = types == 1
+    fig.add_trace(go.Scatter(x=pos[is_nc1, 0], y=pos[is_nc1, 1], mode="markers",
+                             marker=dict(color=BLUE, size=4), name="NC1 bead",
+                             hoverinfo="skip"), row=2, col=2)
+    fig.add_trace(go.Scatter(x=pos[~is_nc1, 0], y=pos[~is_nc1, 1], mode="markers",
+                             marker=dict(color=ORANGE, size=4), name="7S bead",
+                             hoverinfo="skip"), row=2, col=2)
+    fig.update_xaxes(title_text="x (σ)", row=2, col=2, scaleanchor="y2")
+    fig.update_yaxes(title_text="y (σ)", row=2, col=2)
+
+    fig.update_layout(
+        template="plotly_white", height=820, margin=dict(t=96, b=96),
+        legend=dict(orientation="h", y=1.07, x=0, font=dict(size=10)),
+        title="bm-v1 — NC1-angle-stabilized collagen IV network: elastic modulus "
+              "AND remodelling, separated (observed; real bounded LAMMPS, 3 seeds)")
+    fig.add_annotation(
+        x=0.5, y=-0.14, xref="paper", yref="paper", showarrow=False,
+        font=dict(size=11, color="#777"), align="center",
+        text=(f"60-rod NC1-angle-stabilized network (bending_k=4.0, use_real_angles; dense slab), "
+              f"3 seeds. Tangent elastic modulus E = {E_m:.1f} ± {E_s:.1f} LJ "
+              f"(≈ {E_m*2.2:.0f} ± {E_s*2.2:.0f} Pa at kT/σ³≈2.2 Pa — energy scale unresolved), "
+              f"fit over strain ∈ [0.01, 0.08]. Stress is the network BOND-VIRIAL in-plane "
+              f"component (reduced LJ units), not total/hydrostatic. Relaxation τ ≈ {tau_m:.0f} ± {tau_s:.0f} LJ "
+              f"is NOT cleanly resolved at this bounded scale (dense multiseed = mini candidate). "
+              f"NC1 junction angles verified active; released 7S angles (155°/60°) + 7S break cutoff NOT implemented."))
+    return fig
+
+
+def _v2_run_rate(rate, seed, target_strain=0.12, max_steps=140):
+    """One bm-v2 growth-rheology point: assemble, then stretch at `rate` with the
+    crosslink chemistry ON until `target_strain`. Returns (σ_late, strain_reached,
+    crosslinks_per_rod_late, n_steps) with σ averaged over strain ∈ [0.8,1.0]·target."""
+    from bigraph_schema import allocate_core
+    from viva_lumenoid.collagen import CollagenNetworkProcess
+    from viva_lumenoid.params import CollagenParams
+    n_rods = 60
+    p = CollagenParams(n_rods=n_rods, box_xy=6.0, slab_thickness=4.0, seed=seed,
+                       use_real_angles=True, bending_k=4.0)
+    proc = CollagenNetworkProcess(config={"params": p.to_dict()}, core=allocate_core())
+    proc.initial_state()
+    for _ in range(22):
+        proc.update({"strain_rate": 0.0, "make_on": 1.0, "break_on": 1.0}, 1.0)
+    strains, sig, xl = [], [], []
+    o = {}
+    for _ in range(max_steps):
+        o = proc.update({"strain_rate": rate, "make_on": 1.0, "break_on": 1.0}, 1.0)
+        strains.append(float(o["strain"])); sig.append(float(o["sigma_inplane"]))
+        xl.append(int(o["n_crosslinks"]))
+        if o["strain"] >= target_strain:
+            break
+    proc.close()
+    strains = np.array(strains); sig = np.array(sig); xl = np.array(xl)
+    win = strains >= 0.8 * target_strain
+    if not win.any():
+        win = np.ones(len(strains), dtype=bool)
+    return (float(np.mean(sig[win])), float(strains[-1]),
+            float(np.mean(xl[win]) / n_rods), int(len(strains)))
+
+
+_V2_RATES = (2.0e-3, 6.0e-3, 1.8e-2)
+_V2_SEEDS = (11, 22, 33)
+_V2_TARGET_STRAIN = 0.12
+
+
+def v2_rheology_main_figure():
+    """bm-v2 PRIMARY (evidence: observed — bounded-preliminary; tier: main).
+
+    Imposed growth rate ε̇ vs the network's apparent mechanical resistance at a
+    MATCHED total strain, with the paired crosslink-density readout that tests
+    whether the response reflects turnover competition or a rate-dependent change
+    in structure. Three panels: (A) σ(ε̇) at matched strain with per-seed spread,
+    (B) effective viscosity η_eff = σ/ε̇, (C) crosslinks-per-rod at each rate.
+    Error bars summarize 3 independent networks. Reduced LJ units.
+
+    HONESTY: at this bounded scale σ(ε̇) at matched strain is CONFOUNDED by
+    crosslink density (slower stretch allows more assembly time → denser network),
+    so true rate-stiffening cannot be cleanly separated from a density change — a
+    density-matched dense multiseed sweep is a MINI CANDIDATE. τ(ε̇) is not cleanly
+    resolved here (same τ-resolution gap as bm-v1)."""
+    go = _go()
+    from plotly.subplots import make_subplots
+    rates = np.array(_V2_RATES)
+    sig_m, sig_s, eta_m, eta_s, xl_m, xl_s, strain_reached = ([] for _ in range(7))
+    for r in rates:
+        vals = [_v2_run_rate(r, s, target_strain=_V2_TARGET_STRAIN) for s in _V2_SEEDS]
+        sg = np.array([v[0] for v in vals]); xr = np.array([v[2] for v in vals])
+        st = np.array([v[1] for v in vals])
+        sig_m.append(sg.mean()); sig_s.append(sg.std())
+        eta_m.append((sg / r).mean()); eta_s.append((sg / r).std())
+        xl_m.append(xr.mean()); xl_s.append(xr.std()); strain_reached.append(st.mean())
+    sig_m, sig_s = np.array(sig_m), np.array(sig_s)
+    eta_m, eta_s = np.array(eta_m), np.array(eta_s)
+    xl_m, xl_s = np.array(xl_m), np.array(xl_s)
+
+    fig = make_subplots(
+        rows=1, cols=3, horizontal_spacing=0.09,
+        subplot_titles=(
+            "A — σ(ε̇) at matched strain ε=0.12",
+            "B — effective viscosity η_eff = σ/ε̇",
+            "C — crosslinks / rod (paired connectivity)"))
+    fig.add_trace(go.Scatter(x=rates, y=sig_m, error_y=dict(type="data", array=sig_s),
+                             mode="lines+markers", line=dict(color=BLUE, width=3),
+                             marker=dict(size=10), showlegend=False), row=1, col=1)
+    fig.add_trace(go.Scatter(x=rates, y=eta_m, error_y=dict(type="data", array=eta_s),
+                             mode="lines+markers", line=dict(color=ORANGE, width=3),
+                             marker=dict(size=10), showlegend=False), row=1, col=2)
+    fig.add_trace(go.Scatter(x=rates, y=xl_m, error_y=dict(type="data", array=xl_s),
+                             mode="lines+markers", line=dict(color=GREEN, width=3),
+                             marker=dict(size=10), showlegend=False), row=1, col=3)
+    fig.update_xaxes(title_text="strain rate ε̇ (1/LJ)", type="log", row=1, col=1)
+    fig.update_xaxes(title_text="strain rate ε̇ (1/LJ)", type="log", row=1, col=2)
+    fig.update_xaxes(title_text="strain rate ε̇ (1/LJ)", type="log", row=1, col=3)
+    fig.update_yaxes(title_text="σ bond-virial (LJ)", row=1, col=1)
+    fig.update_yaxes(title_text="η_eff = σ/ε̇ (LJ·time)", row=1, col=2)
+    fig.update_yaxes(title_text="crosslinks / rod", row=1, col=3)
+    fig.update_layout(
+        template="plotly_white", height=520, margin=dict(t=92, b=118),
+        title="bm-v2 — growth rate vs apparent mechanical resistance, with the paired "
+              "connectivity readout (observed, bounded-preliminary; 3 seeds)")
+    fig.add_annotation(
+        x=0.5, y=-0.30, xref="paper", yref="paper", showarrow=False,
+        font=dict(size=11, color="#777"), align="center",
+        text=(f"60-rod NC1-angle-stabilized network, chemistry ON during stretch; "
+              f"σ averaged over strain ∈ [0.096, 0.12] (matched-strain plateau criterion), 3 seeds. "
+              f"σ(ε̇) is nearly flat/overlapping across rates ({sig_m[0]:.2f}→{sig_m[-1]:.2f} LJ) while "
+              f"crosslinks/rod FALLS with rate ({xl_m[0]:.2f}→{xl_m[-1]:.2f}) — the resistance is CONFOUNDED "
+              f"by rate-dependent assembly time, not a clean rate-stiffening signal. "
+              f"η_eff falls {eta_m[0]:.0f}→{eta_m[-1]:.0f} LJ·time (De = τ·ε̇ not reported — τ unresolved). "
+              f"Stress = network bond-virial in-plane component, reduced LJ units. "
+              f"A density-matched dense multiseed sweep is the mini candidate to separate the two."))
+    return fig
+
+
+def _v3_run_point(nc1, svns, make_prob, seed):
+    """One bm-v3 central-force control point: angles OFF (bending_k=0), assemble at
+    the given crosslink caps, then measure the athermal (energy-minimization)
+    modulus. Returns (measured z, athermal_modulus). z = 1 + crosslinks/rod."""
+    from bigraph_schema import allocate_core
+    from viva_lumenoid.collagen import CollagenNetworkProcess
+    from viva_lumenoid.params import CollagenParams
+    n_rods = 60
+    p = CollagenParams(n_rods=n_rods, box_xy=6.0, slab_thickness=4.0, seed=seed,
+                       bending_k=0.0, use_real_angles=False,          # CENTRAL FORCE
+                       nc1_max_crosslinks=nc1, svns_max_crosslinks=svns, make_prob=make_prob)
+    proc = CollagenNetworkProcess(config={"params": p.to_dict()}, core=allocate_core())
+    proc.initial_state()
+    o = {}
+    for _ in range(22):
+        o = proc.update({"strain_rate": 0.0, "make_on": 1.0, "break_on": 1.0}, 1.0)
+    z = 1.0 + o["n_crosslinks"] / n_rods
+    E = proc.athermal_modulus(target_strain=0.03, n_increments=4, minimize_iters=1500)
+    proc.close()
+    return float(z), float(E)
+
+
+_V3_RUNGS = ((1, 3, 0.12), (2, 4, 0.25), (3, 5, 0.40), (5, 8, 0.60))
+_V3_SEEDS = (11, 22, 33)
+
+
+def v3_centralforce_control_figure():
+    """bm-v3 PRIMARY, framed as a NEGATIVE CONTROL (evidence: engineered-diagnostic;
+    tier: main). "Central-force control does not reproduce the released network."
+
+    With the angular potentials intentionally removed (bending_k=0), changing the
+    allowable end-link valency sweeps the measured coordination z but does NOT
+    produce a reproducibly positive athermal modulus across sampled connectivities
+    and seeds. Measured z is on the x-axis; each seed's modulus is a point with a
+    zero reference and the ensemble mean ± spread. The z=4 Maxwell line is drawn
+    only as the idealized 2D central-force heuristic — it is NOT a threshold for
+    the released angle-stabilized, finite-thickness network.
+
+    This artificial control must not be read as the mechanism of softness in the
+    published model (which carries junction angles and is soft for other reasons)."""
+    go = _go()
+    zs_all, es_all, z_mean, E_mean, E_sd = [], [], [], [], []
+    for nc1, svns, mp in _V3_RUNGS:
+        pts = [_v3_run_point(nc1, svns, mp, s) for s in _V3_SEEDS]
+        z = np.array([p[0] for p in pts]); E = np.array([p[1] for p in pts])
+        zs_all += z.tolist(); es_all += E.tolist()
+        z_mean.append(z.mean()); E_mean.append(E.mean()); E_sd.append(E.std())
+    z_mean, E_mean, E_sd = np.array(z_mean), np.array(E_mean), np.array(E_sd)
+
+    fig = go.Figure()
+    fig.add_hline(y=0.0, line=dict(color="#444", width=1.5),
+                  annotation_text="zero modulus (reproducibly soft by design)",
+                  annotation_position="bottom right", annotation_font=dict(size=11, color="#444"))
+    fig.add_trace(go.Scatter(x=zs_all, y=es_all, mode="markers",
+                             marker=dict(color=PURPLE, size=8, opacity=0.5),
+                             name="per-seed modulus (angles OFF)"))
+    fig.add_trace(go.Scatter(x=z_mean, y=E_mean, error_y=dict(type="data", array=E_sd),
+                             mode="lines+markers", line=dict(color=PURPLE, width=3),
+                             marker=dict(size=12), name="ensemble mean ± SD"))
+    fig.add_vline(x=4.0, line=dict(color="#aaa", width=1.5, dash="dash"),
+                  annotation_text="z=4 Maxwell (idealized 2D central-force heuristic — "
+                                  "NOT a threshold for the released angle-stabilized network)",
+                  annotation_position="top left", annotation_font=dict(size=10, color="#999"))
+    fig.update_layout(
+        title="bm-v3 — central-force control does NOT reproduce the released network "
+              "(engineered-diagnostic / negative control; all angles OFF)",
+        xaxis=dict(title="measured coordination z = 1 + crosslinks/rod", range=[1.0, 4.3]),
+        yaxis_title="athermal elastic modulus (LJ)")
+    fig.add_annotation(
+        x=0.5, y=-0.20, xref="paper", yref="paper", showarrow=False,
+        font=dict(size=11, color="#777"), align="center",
+        text=(f"60-rod network, bending_k=0 (angular potentials removed), crosslink caps swept "
+              f"NC1×1/7S×3 → NC1×5/7S×8, 3 seeds. Measured z rises {z_mean[0]:.2f}→{z_mean[-1]:.2f} "
+              f"(never near 4); the athermal (energy-minimization) modulus is scattered about zero "
+              f"with seed-spread exceeding the mean at every rung (CIs span 0) — not reproducibly "
+              f"positive. Athermal modulus (released-code LAMMPS, reduced LJ units). This is a "
+              f"counterfactual with angle terms DISABLED, NOT a reproduction of the published model."))
+    return _layout(fig, height=600)
+
+
 STUDY_FIGURES = {
+    "bm-v1-stage1-modulus-remodelling": ("v1_stage1_main", v1_stage1_main_figure, "data"),
+    "bm-v2-stress-vs-strainrate": ("v2_rheology_main", v2_rheology_main_figure, "data"),
+    "bm-v3-junction-bending-rigidity": ("v3_centralforce_control", v3_centralforce_control_figure, "data"),
     "bm-r1-published-tissue-baseline": ("r1_regime", r1_regime_figure, "data"),
     "bm-r2-collagen-network-rheology": ("r2_fig2e", r2_fig2e_figure, "data"),
     "bm-r3-network-expansion-supply": ("r3_supply", r3_supply_figure, "data"),
