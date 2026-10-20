@@ -35,6 +35,18 @@ def _register_tyssue(core):
     return _r(core)
 
 
+def _register_e2(core):
+    """Lazy core extension for the E2 coupling: the LAMMPS model seam (cortex) +
+    the collagen network + controller + the basal-adhesion linker process."""
+    from ..actomyosin import register_actomyosin
+    from ..collagen import register_viva_lumenoid
+    from ..adhesion import register_adhesion
+    core = register_actomyosin(core)   # LammpsModelProcess + actomyosin-cortex plugin
+    core = register_viva_lumenoid(core)  # CollagenNetworkProcess + StagedStretchController
+    core = register_adhesion(core)       # BasalAdhesion
+    return core
+
+
 def _params(**kw) -> CollagenParams:
     """CollagenParams from the generator's Configure kwargs (unknown keys dropped)."""
     allowed = set(CollagenParams().to_dict())
@@ -268,3 +280,67 @@ def tyssue_3d_monolayer(core=None, **kw) -> dict:
         ref_effector="FaceAreaElasticity", parameters=parameters,
         settings={"threshold_length": 0.03},
     )
+
+
+_E2_PARAMS = {
+    "contractility": {"type": "float", "default": 1.5,
+                      "description": "Cortex myosin-activity proxy (drives cortex tension)."},
+    "k_on": {"type": "float", "default": 0.5, "description": "Basal-linker binding rate."},
+    "k_off": {"type": "float", "default": 0.1, "description": "Basal-linker unbinding rate."},
+    "coupling_gain": {"type": "float", "default": 1.0e-4,
+                      "description": "Transmitted traction -> BM strain rate."},
+    "n_rods": {"type": "integer", "default": 40,
+               "description": "Collagen rods in the single-cell BM patch."},
+}
+
+
+@composite_generator(
+    name="actin_adhesion_bm",
+    description="E2 (extension) — actin-adhesion-collagen force transfer: an "
+                "actomyosin cortex (LAMMPS seam) pulls through reversible basal "
+                "linkers (BasalAdhesion) on a collagen IV BM patch "
+                "(CollagenNetworkProcess). Measures traction, linker occupancy and "
+                "the BM deformation on a single-cell patch.",
+    parameters=_E2_PARAMS,
+    core_extensions=[_register_e2],
+)
+def actin_adhesion_bm(core=None, **kw) -> dict:
+    from ..params import CollagenParams
+    cortex_params = {"n": 6, "contractility": float(kw.get("contractility", 1.5))}
+    adhesion = {"k_on": float(kw.get("k_on", 0.5)), "k_off": float(kw.get("k_off", 0.1)),
+                "coupling_gain": float(kw.get("coupling_gain", 1.0e-4)),
+                "make_on": 1.0, "break_on": 1.0}
+    bm_params = CollagenParams(n_rods=int(kw.get("n_rods", 40)), box_xy=10.0,
+                               slab_thickness=2.0, assemble_steps=800, hold_steps=400).to_dict()
+    emit = {"cortex_tension": "float", "traction": "float",
+            "linker_occupancy": "float", "bm_sigma": "float", "bm_strain": "float"}
+    return {
+        "cortex": {
+            "_type": "process", "address": "local:LammpsModelProcess",
+            "config": {"model": "actomyosin-cortex", "params": cortex_params},
+            "inputs": {},
+            "outputs": {"cortical_tension": ["cortex_tension"]},
+        },
+        "adhesion": {
+            "_type": "process", "address": "local:BasalAdhesion",
+            "config": adhesion,
+            "inputs": {"cortex_tension": ["cortex_tension"]},
+            "outputs": {"traction": ["traction"], "linker_occupancy": ["linker_occupancy"],
+                        "bm_strain_rate": ["bm_strain_rate"],
+                        "make_on": ["make_on"], "break_on": ["break_on"]},
+        },
+        "bm": {
+            "_type": "process", "address": "local:CollagenNetworkProcess",
+            "config": {"params": bm_params},
+            "inputs": {"strain_rate": ["bm_strain_rate"], "make_on": ["make_on"],
+                       "break_on": ["break_on"]},
+            "outputs": {"sigma_inplane": ["bm_sigma"], "strain": ["bm_strain"],
+                        "n_crosslinks": ["bm_xlinks"]},
+        },
+        "emitter": {
+            "_type": "step", "address": "local:ram-emitter",
+            "config": {"emit": emit},
+            "inputs": {k: [k] for k in emit},
+            "outputs": {},
+        },
+    }
