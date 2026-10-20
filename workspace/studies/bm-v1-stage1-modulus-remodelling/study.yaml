@@ -53,7 +53,7 @@ pipeline_gate:
     - bm-v5-porosity-bundling
   proceed_condition: >
     A stable (if soft) stage-1 modulus + a correct remodelling mechanism unblock
-    the rigidity (bm-v3), bending (bm-v4) and geometric-readout (bm-v5) follow-ups.
+    the rigidity, bending and geometric-readout follow-ups.
 
 question: >
   Can the clean-room collagen IV network separate an elastic modulus from a
@@ -73,10 +73,10 @@ purpose:
 
 key_assumptions:
   - "One protomer = one two-bead rod; junction flexibility folded into a finite intra-rod bond (dynamic junction angles omitted in v1-minimal)."
-  - "No excluded volume — every pair coefficient is zero (spec #2: the released input scripts set eps=0)."
+  - "No excluded volume — every pair coefficient is zero."
   - "Crosslink make/break locked at FactorMult = 0.66 (make/break ratio 1.52), as in the released input scripts."
-  - "Quasi-2D slab; rods lie in-plane; thickness/layer count deferred (spec #9)."
-  - "Energy unit = kT, so stress unit = kT/a³ ≈ 2.5 Pa; absolute pascals not yet claimed (spec #4)."
+  - "Quasi-2D slab; rods lie in-plane; thickness/layer count deferred."
+  - "Energy unit = kT, so stress unit = kT/a³ ≈ 2.5 Pa; absolute pascals not yet claimed."
 
 baseline:
   - name: collagen-iv-network-stage1
@@ -197,7 +197,7 @@ readouts:
     units: dimensionless
     status: measured
   - name: porosity
-    description: Pore-size distribution from the network positions. Deferred to a follow-up (spec readout, EM/cryo-ET comparator).
+    description: Pore-size distribution from the network positions. Deferred to a follow-up.
     store_path: "network/positions"
     units: nm
     status: deferred
@@ -260,7 +260,7 @@ conclusion_logic:
     biological_validation: "Qualitative match to the paper's very-soft regime; absolute Pa gated on the energy-scale decision."
     pipeline_unblocks:
       - "Stage 2 — σ(ε̇) sweep on the growing (biaxially stretching) substrate."
-      - "Energy-scale + calibration decisions (spec #4/#10)."
+      - "Energy-scale + calibration decisions."
   if_primary_tests_fail:
     diagnose:
       - "Network under-percolated — raise make_prob or assemble length."
@@ -269,12 +269,12 @@ conclusion_logic:
     block_downstream: "Do not proceed to stage 2 until stage 1 gives a stable modulus."
 
 limitations:
-  - "Cross-check (2026-10-01): the released code includes NC1/7S junction angles (bending: angle_coeff 1 = 4.0 @180°, plus 7S angles) and a 3σ rod (r0=3.0). This study's floppy ~0 modulus is an artifact of omitting those angles (bending_k=0) and using a 1σ rod; it does not represent the published model. See references/cross-check-vs-released-code.md."
-  - "Network is floppy (z ≤ 3 < 4): central-force crosslinks alone give ~zero modulus; rigidity needs junction bending / bundling (FP1)."
+  - "Cross-check: the released code includes NC1/7S junction angles (bending: angle_coeff 1 = 4.0 @180°, plus 7S angles) and a 3σ rod (r0=3.0). This study's floppy ~0 modulus is an artifact of omitting those angles (bending_k=0) and using a 1σ rod; it does not represent the published model."
+  - "Network is floppy (z ≤ 3 < 4): central-force crosslinks alone give ~zero modulus; rigidity needs junction bending / bundling."
   - "τ below detection while floppy — the relaxable stress is small; a rigid network is needed to resolve it."
-  - "No dynamic junction angles; persistence length is only approximately represented (spec: LAMMPS puts l_p as soft angles at junctions) — the load-bearing v2 gap."
+  - "No dynamic junction angles; persistence length is only approximately represented — the load-bearing v2 gap."
   - "No excluded volume, so pore-size / bundling readouts are not yet physical (deferred)."
-  - "Modulus reported in LJ units / as a ratio, not calibrated pascals (spec #4)."
+  - "Modulus reported in LJ units / as a ratio, not calibrated pascals."
   - "Parameters transcribed from the spec's sheet, not ported from the authors' input scripts; those scripts are now public (Zenodo 10.5281/zenodo.20719515) but not yet cross-checked against this build."
 
 design_pivot_required:
@@ -282,17 +282,17 @@ design_pivot_required:
     status: open
     question: LAMMPS or Smoldyn for stages 1–2?
     alternatives: ["LAMMPS now (runs today)", "Smoldyn (flexible fibers + surface binders, needs Vivarium packaging)"]
-    requested_response: "Confirm LAMMPS through stage 2; revisit at stage 3 (spec #2)."
+    requested_response: "Confirm LAMMPS through stage 2; revisit at stage 3."
   - id: energy-scale
     status: open
     question: Can the modulus be reported in pascals?
     alternatives: ["Fit the energy unit to a measured modulus (modulus becomes an input)", "Keep kT and report a ratio (paper's s_E)"]
-    requested_response: "Decide with the coupling contract (spec #4/#5)."
+    requested_response: "Decide with the coupling contract."
   - id: calibration-vs-validation
     status: open
     question: Which readout calibrates and which validates?
     alternatives: ["Remodelling time calibrates MP + the time unit → cannot also validate", "Porosity / bundling / modulus as independent tests"]
-    requested_response: "Pick the accountable readout before running (spec #10)."
+    requested_response: "Pick the accountable readout before running."
 
 visualizations:
   - name: cross-check
@@ -328,7 +328,7 @@ report:
   title: "Stage 1 — collagen IV modulus & remodelling (clean-room v1)"
   verdict: >
     The staged protocol runs on real LAMMPS with the parameters corrected to the
-    released code (2026-10-01). The elastic modulus is small and consistent with
+    released code. The elastic modulus is small and consistent with
     zero at this network size (~±1 Pa across seeds), consistent with the published
     model's own ≈0.03 Pa linear modulus. The remodelling mechanism is correct
     (crosslinks hold at a make/break steady state, freeze under load, and decay
@@ -356,7 +356,7 @@ findings:
     kind: methodological
     status: novel
     statement: >
-      LAMMPS `fix bond/break` models only OVER-STRETCH breaking, not a force-
+      LAMMPS `fix bond/break` models only over-stretch breaking, not a force-
       independent off-rate — small Rmax dissolves the network, large Rmax saturates
       it. Replacing it with a controlled random-deletion off-rate gives a make/break
       steady state and crosslink turnover.
@@ -364,7 +364,7 @@ findings:
       from_run: stage1-seed-ensemble
       from_test: relaxation-decays-not-densifies
       observed: "crosslinks 45→401 (old, densifies) vs steady ~54 then decay 46→3 (off-rate)"
-    explanation: "Breaking must be length-independent to be a controllable rate (spec: force-independent in v1)."
+    explanation: "Breaking must be length-independent to be a controllable rate."
     next_action: "adopted in viva_lumenoid/collagen.py; guarded by a regression test"
     next_action_type: refine_representation
     provenance:
@@ -385,7 +385,7 @@ findings:
       range: "≈0.03 Pa (Meadowcroft supplement, near-floppy)"
     explanation: >
       Maxwell counting: NC1 beads reach z = 2, 7S beads z = 4, mean ≤ 3 < 4 → floppy
-      regardless of crosslink density. (Scoped to the ANGLE-OFF transcription; the
+      regardless of crosslink density. (Scoped to the angle-off transcription; the
       released model carries junction angles and is soft for other reasons — bm-v3.)
     next_action: "seed FP1 (junction-bending rigidity study)"
     next_action_type: escalate_model
@@ -433,7 +433,7 @@ discovery_implications:
     - "The ~0 modulus is rigidity-percolation physics (z < 4), not a measurement failure."
   remaining_uncertainties:
     - "τ (remodelling time) — below detection until the network is rigid."
-    - "Absolute modulus in pascals — energy scale still open (spec #4)."
+    - "Absolute modulus in pascals — energy scale still open."
   followup_study_proposals:
     - {id: fp1-junction-bending, title: "Junction-bending rigidity study", seeded_study: bm-v3-junction-bending-rigidity}
     - {id: fp2-offrate-calibration, title: "Off-rate → τ calibration to the ≈20 h lifetime"}
@@ -448,14 +448,14 @@ conclusion_verdicts:
       Consistent with the published ≈0.03 Pa (near-floppy) modulus; the floppiness
       is mechanistically explained by connectivity (z < 4).
   explanatory_gain:
-    result: POSITIVE
+    result: positive
     basis: >
       Identifies WHY the BM network is soft — connectivity below rigidity percolation —
       telling the vertex model that BM stiffness comes from bending/bundling, not crosslink count.
 
 expert_review_status: requested
 expert_questions:
-  - "Energy scale (spec decision #4): should the elastic modulus be reported in absolute pascals — by fitting the LJ energy unit to a measured BM modulus — or kept in reduced units / reported as the ratio s_E? Our faithful value is ~3 LJ (\u2248 6 Pa at kT/\u03c3\u00b3\u22482.2 Pa); the published figure is \u22480.03 Pa under the authors' own s_E. Which convention should the AICS vertex-model coupling use?"
+  - "Energy scale: should the elastic modulus be reported in absolute pascals — by fitting the LJ energy unit to a measured BM modulus — or kept in reduced units / reported as the ratio s_E? Our faithful value is ~3 LJ (\u2248 6 Pa at kT/\u03c3\u00b3\u22482.2 Pa); the published figure is \u22480.03 Pa under the authors' own s_E. Which convention should the AICS vertex-model coupling use?"
   - "Equilibrium crosslink fraction / GCE: the absolute modulus scales strongly with crosslink fraction (E\u22480 at 0.72 crosslinks/rod \u2192 \u22488 Pa at 2.5/rod). Our make-only path saturates at ~2.6/rod, while the authors' GCE (Nucleation/Death) + distance-gated breaking sets a specific equilibrium fraction. What equilibrium crosslink fraction (or free-monomer concentration / off-rate) should we target to match the published network?"
 
 bibliography:

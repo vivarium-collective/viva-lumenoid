@@ -215,10 +215,10 @@ findings:
     kind: computational
     status: partial
     statement: >
-      The AS-FORMED restraint path — bending pinned via `fix restrain` AFTER
+      The as-formed restraint path — bending pinned via `fix restrain` AFTER
       assembly — is ill-conditioned at v1 size: |E| jumps to tens–hundreds but
       scatters and sign-flips across seeds (k=80 per-seed −570…+54, median −210),
-      so it yields no calibratable value. SUPERSEDED by F3: the ill-conditioning
+      so it yields no calibratable value. superseded by F3: the ill-conditioning
       was an artifact of applying bending after assembly, not an intrinsic limit.
     evidence:
       from_run: bending-athermal-sweep
@@ -228,7 +228,7 @@ findings:
       The stiff, pre-stressed, disordered small network has many near-degenerate
       energy minima; the equibiaxial-stress modulus is dominated by pre-stress and
       finite-size buckling rather than the intrinsic shear modulus. Creating the
-      angles DURING assembly (F3) lets the network equilibrate compatible with
+      angles during assembly (F3) lets the network equilibrate compatible with
       them and removes this pathology.
     next_action: "superseded — see F3 (real angles during assembly)"
     next_action_type: refine_representation
@@ -240,7 +240,7 @@ findings:
     status: confirms
     statement: >
       Creating real harmonic angles as the crosslinks form (use_real_angles,
-      matching the released bond/react templates) yields a POSITIVE, well-
+      matching the released bond/react templates) yields a positive, well-
       conditioned, reproducible modulus — per-seed 36.7/27.6/37.5 LJ (same sign,
       tight IQR). So the released model is not floppy once its angles are
       faithfully active; the modulus is finite and strongly density-dependent
@@ -250,11 +250,11 @@ findings:
       from_test: reproducible-modulus
       observed: "real angles during assembly: per-seed 36.7/27.6/37.5 LJ; reproducible=true"
     explanation: >
-      Equilibrating the network WITH the angles active (rather than pinning them
+      Equilibrating the network with the angles active (rather than pinning them
       on afterwards) removes the pre-stress / near-degenerate-minima pathology of
       F2. The remaining gap for an absolute Pa value is matching the released
       make+break crosslink density (the make-only real-angle path over-crosslinks),
-      which needs per-angle deletion or the GCE, plus the energy-scale decision (#4).
+      which needs per-angle deletion or the GCE, plus the energy-scale decision.
     next_action: "match the released dense make+break crosslink density (GCE) for an absolute modulus"
     next_action_type: calibrate
     provenance:
@@ -265,7 +265,7 @@ conclusion_logic:
     implementation_status: "Bending implemented; floppy baseline clean; reproducible modulus via angles-during-assembly."
     biological_validation: "Bending confirmed as the mechanics-governing constraint; the released model is not floppy once its angles are faithfully active."
     pipeline_unblocks:
-      - "An absolute-Pa modulus, once the released make+break crosslink density (GCE) and the energy scale (#4) are matched."
+      - "An absolute-Pa modulus, once the released make+break crosslink density (GCE) and the energy scale are matched."
   if_primary_tests_fail:
     diagnose:
       - "Modulus ill-conditioned — enlarge the network and remove pre-stress before measuring."
@@ -289,7 +289,7 @@ discovery_implications:
     - "The athermal minimisation measures the floppy modulus deterministically (removes the dynamic-measurement noise)."
     - "A reproducible, positive bending modulus IS obtained with real angles created during assembly (36.7/27.6/37.5 LJ) — the as-formed-restraint ill-conditioning was an artifact, not an intrinsic limit."
   remaining_uncertainties:
-    - "The ABSOLUTE (Pa) modulus — blocked on matching the released make+break crosslink density (GCE) and the energy-scale decision (#4)."
+    - "The ABSOLUTE (Pa) modulus — blocked on matching the released make+break crosslink density (GCE) and the energy-scale decision."
   followup_study_proposals:
     - {id: fp3-absolute-modulus-via-density-match, title: "Absolute bending modulus by matching the released make+break density (GCE)"}
 
@@ -312,7 +312,7 @@ visualizations:
       title: "FP1 — junction bending response"
 
 limitations:
-  - "Cross-check (2026-10-01): junction bending is NOT a new ingredient — the released code already sets KangNC1=4.0 (@180°) plus two 7S angles. Re-scope as 'match the released angle set', not 'add bending'. See references/cross-check-vs-released-code.md."
+  - "Cross-check: junction bending is not a new ingredient — the released code already sets KangNC1=4.0 (@180°) plus two 7S angles. Re-scope as 'match the released angle set', not 'add bending'."
   - "Clean-room parameters transcribed from the spec; the authors' LAMMPS input scripts are now public (Zenodo 10.5281/zenodo.20719515) and not yet cross-checked against this build."
   - "The bending modulus is ill-conditioned at 200 rods (pre-stress + finite-size); not calibratable yet."
   - "Bending targets are pinned from a thermally-noisy as-formed geometry (a pre-stress source)."
@@ -343,7 +343,7 @@ report:
 expert_review_status: requested
 expert_questions:
   - "Exact turnover (cross-check gap): to reproduce the authors' equilibrium crosslink fraction and remodelling kinetics, do we need their custom-patched GCE (Nucleation/Death with the density penalty) + distance-gated bond/react breaking, or is matching the free-monomer concentration / a force-independent off-rate sufficient for the modulus and \u03c4 the vertex model needs?"
-  - "Engine for stage 3 (spec decision #2): stages 1\u20132 run on LAMMPS. Should stage 3 (surface-attached linkers / flexible fibers) stay on LAMMPS or move to Smoldyn, and when do the Smoldyn surface binders land?"
+  - "Engine for stage 3: stages 1\u20132 run on LAMMPS. Should stage 3 (surface-attached linkers / flexible fibers) stay on LAMMPS or move to Smoldyn, and when do the Smoldyn surface binders land?"
 
 bibliography:
   sources:
