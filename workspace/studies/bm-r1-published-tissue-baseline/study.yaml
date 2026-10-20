@@ -1,11 +1,12 @@
 schema_version: 3
 name: bm-r1-published-tissue-baseline
-status: planned
+status: in-progress
 title: "Reduced-order tissue-mechanics baseline"
 kind: reproduction
-phase: Design
-confidence: Planned
-
+phase: Build
+confidence: Investigating
+claim: >
+  The homogeneous prism model recovers the four confinement regimes: cells grow tall under a stiff, slowly-relaxing membrane and spread under a soft, fast-relaxing one.
 question: >
   How do basement-membrane stiffness and relaxation, relative to the proliferation (doubling)
   time, control growth-dependent epithelial confinement?

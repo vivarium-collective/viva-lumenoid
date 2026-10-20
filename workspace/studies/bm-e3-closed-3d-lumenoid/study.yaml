@@ -1,11 +1,12 @@
 schema_version: 3
 name: bm-e3-closed-3d-lumenoid
-status: planned
+status: in-progress
 title: "Closed 3D lumenoid morphogenesis"
 kind: extension
-phase: Design
-confidence: Planned
-
+phase: Build
+confidence: Investigating
+claim: >
+  A closed lumenoid with a lumen pressure and a basal membrane surface runs the vertex model; attaching an explicit membrane and reading curvature-dependent shape is next.
 question: >
   How do lumen pressure/volume and a basement-membrane shell set cell shape and curvature-
   dependent growth in a closed 3D lumenoid?

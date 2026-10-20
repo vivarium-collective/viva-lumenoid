@@ -1,11 +1,12 @@
 schema_version: 3
 name: bm-r2-collagen-network-rheology
-status: planned
+status: in-progress
 title: "Faithful collagen IV network rheology"
 kind: reproduction
-phase: Design
-confidence: Planned
-
+phase: Build
+confidence: Investigating
+claim: >
+  The faithful collagen IV network runs under staged loading; the quantitative match to the paper's stress traces and relaxation-vs-turnover slope is still in progress.
 question: >
   Is basement-membrane stress relaxation proportional to collagen IV molecular residence
   (turnover) time?

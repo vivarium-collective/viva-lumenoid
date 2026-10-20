@@ -1,11 +1,12 @@
 schema_version: 3
 name: bm-r4-coupled-2d-epithelium
-status: planned
+status: in-progress
 title: "Coupled 2D epithelial sheet"
 kind: reproduction
-phase: Design
-confidence: Planned
-
+phase: Build
+confidence: Investigating
+claim: >
+  A 2D epithelial sheet with an explicit cell-height degree of freedom relaxes under the vertex model; wiring the membrane traction and comparing confinement to the homogeneous baseline is in progress.
 question: >
   Do the paper's confinement regimes survive explicit cell topology and heterogeneous growth
   in a spatial 2D epithelium?
