@@ -35,7 +35,21 @@ result: >
   absence of pre-stress rather than from sub-isostatic connectivity. The
   rigidity-percolation story is retired as the explanation.
 
-seeded_from:
+# Figure-review provenance (2026-10-20) — the primary is reframed as a clearly
+# marked NEGATIVE CONTROL (engineered-diagnostic), not a reproduction.
+figure_review:
+  date: "2026-10-20"
+  resolution: >
+    v3-centralforce-control is the primary: angles OFF (bending_k=0), modulus vs
+    MEASURED z with a zero reference and per-seed scatter, titled as a control. The
+    z=4 Maxwell line is annotated as an idealized 2D central-force heuristic, not a
+    threshold for the released angle-stabilized finite-thickness network.
+  key_numbers: >
+    Real bounded LAMMPS, 60-rod network, 3 seeds (11/22/33). Measured z rises
+    1.17 → 1.36 → 1.46 → 1.61 across crosslink caps NC1×1/7S×3 → NC1×5/7S×8; the
+    athermal modulus is scattered about zero with CIs spanning 0 at every rung
+    (e.g. 0.09±0.12, -3.52±4.89, 0.03±0.04, 1.18±2.72 LJ) — not reproducibly
+    positive, by design.
   study: bm-v1-stage1-modulus-remodelling
   proposal_id: fp1-junction-bending
   finding: F2-floppy-below-rigidity-percolation
@@ -170,14 +184,14 @@ behavior_tests:
     measure: {kind: max, field: coordination_z}
     pass_if: {op: lt, value: 4.0, field: max_z}
     units: dimensionless
-    requires_simulation: "true"
+    requires_simulation: rigidity-connectivity-sweep
   - name: modulus-stays-floppy
     classification: primary
     description: The modulus is consistent with zero at every rung while z < 4.
     measure: {kind: value, field: elastic_modulus_vs_z, ensemble: 3}
     pass_if: {op: consistent_with_zero, note: "all CIs span 0"}
     units: kT/a^3
-    requires_simulation: "true"
+    requires_simulation: rigidity-connectivity-sweep
     cites: [meadowcroft2025nonequilibrium]
     calibration_anchor:
       observed_value: "z 1.24→2.03 (angles off); modulus consistent with 0"
@@ -218,18 +232,58 @@ conclusion_logic:
     block_downstream: "Nothing downstream is blocked — this is a diagnostic follow-up, not a pipeline gate."
 
 visualizations:
+  # PRIMARY (figure-review 2026-10-20): the central-force NEGATIVE CONTROL.
+  - name: v3-centralforce-control
+    address: "html:v3_centralforce_control.html"
+    config:
+      title: "Central-force control does not reproduce the released network"
+      evidence_status: engineered-diagnostic
+      tier: main
+      caption: >
+        With angular potentials intentionally removed (bending_k=0), changing the
+        allowable end-link valency does not produce a reproducibly positive modulus
+        across sampled connectivities. This artificial control must NOT be
+        interpreted as the mechanism of softness in the published model. Measured
+        coordination z = 1 + crosslinks/rod is on the x-axis; each seed's athermal
+        (energy-minimization) modulus is a point with a zero reference and the
+        ensemble mean ± SD (released-code LAMMPS, reduced LJ units; 60-rod network,
+        3 seeds 11/22/33). z rises 1.17 → 1.61 across the swept crosslink caps and
+        never approaches 4; the modulus is scattered about zero with seed-spread
+        exceeding the mean at every rung (every CI spans 0) — not reproducibly
+        positive, by design. The z=4 Maxwell line is drawn ONLY as the idealized 2D
+        central-force heuristic — it is NOT a threshold for the released,
+        angle-stabilized, finite-thickness network, which carries junction angles
+        and is soft for other reasons (missing components, thin-sheet geometry, no
+        pre-stress).
+  # Demoted (figure-review): superseded diagnostic + rigidity movies.
+  - name: rigidity-diagnostic
+    address: "html:rigidity_diagnostic.html"
+    config:
+      title: "Rigidity sweep — modulus vs coordination z (superseded)"
+      evidence_status: engineered-diagnostic
+      tier: supplement
+      caption: >
+        The earlier modulus-vs-z sweep; superseded as the primary by
+        v3-centralforce-control (which frames it explicitly as a negative control
+        with the zero reference and the Maxwell-line caveat). Supplement.
   - name: rigidity-movie
     address: "html:rigidity_movie.html"
     config:
       title: "Simulation movie — high-connectivity network (NC1×5 + 7S×8)"
+      evidence_status: engineered-diagnostic
+      tier: supplement
+      caption: >
+        Optional animation of the high-connectivity angle-off network; removed from
+        the main narrative (a control, not a result). Supplement.
   - name: rigidity-movie-3d
     address: "html:rigidity_movie_3d.html"
     config:
       title: "3D view — the connected network, rotatable"
-  - name: rigidity-diagnostic
-    address: "html:rigidity_diagnostic.html"
-    config:
-      title: "Rigidity sweep — modulus vs coordination z"
+      evidence_status: engineered-diagnostic
+      tier: supplement
+      caption: >
+        3D rotatable view of the same angle-off network; supplement (removed from
+        the main narrative).
 
 limitations:
   - "Cross-check: the released model is not central-force — it sets NC1/7S junction angles (bending). The rigidity-percolation premise here is general physics but does not describe the published model, which is angle-stabilized."

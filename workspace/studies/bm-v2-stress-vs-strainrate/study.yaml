@@ -18,13 +18,20 @@ experiment: >
   η = σ/ε̇ per rate and locate any viscous→elastic crossover.
 
 result: >
-  With the faithful, density-calibrated model (angles active during assembly, areal
-  density 3.0 rods/σ², a 12σ slab), the two numbers a vertex model needs are
-  tabulated against growth rate ε̇ over a seed ensemble. The effective elastic
-  modulus E(ε̇) rises from ≈7 Pa at ε̇=5e-4 to ≈11 Pa at ε̇=8e-3 — the network
-  stiffens as growth outpaces remodelling — while the remodelling time τ(ε̇) ≈ 36-51
-  τ stays roughly constant, set by crosslink kinetics rather than rate. These give E
-  and τ as functions of growth rate, ready to hand to a vertex model offline.
+  FIGURE-REVIEW RECONCILIATION (2026-10-20): the earlier definitive claim — a
+  "faithful, density-calibrated, seed-ensemble" E(ε̇) rising ≈7→11 Pa (stiffening)
+  with τ(ε̇)≈36-51 τ — was drawn from a SINGLE seed [12345] at UN-matched total
+  strain and is not supported. Re-running the sweep at a MATCHED total strain
+  (ε=0.12) over 3 independent seeds (real bounded LAMMPS, 60-rod NC1-angle-
+  stabilized network) shows σ(ε̇) nearly flat/overlapping across rates
+  (1.24±0.29 → 1.01±0.20 → 0.99±0.37 LJ for ε̇ = 2e-3 / 6e-3 / 1.8e-2) WHILE the
+  crosslink density falls with rate (2.00 → 1.31 → 1.04 crosslinks/rod), because a
+  slower stretch leaves more wall-clock time for crosslink assembly. The apparent
+  mechanical resistance is therefore CONFOUNDED by rate-dependent density, not a
+  clean rate-stiffening signal; η_eff = σ/ε̇ falls 621 → 55 LJ·time. τ(ε̇) is not
+  cleanly resolved at this bounded scale, so De = τ·ε̇ is not reported. A
+  density-matched dense multi-seed sweep (Mac-mini candidate) is required to
+  separate true rate-stiffening from the density confound and to resolve τ(ε̇).
 
 question: What is σ(ε̇), and where does the network cross from viscous to elastic?
 
@@ -144,21 +151,21 @@ behavior_tests:
     measure: {kind: count, field: rates}
     pass_if: {op: gt, value: 0, field: n_rates}
     units: count
-    requires_simulation: "true"
+    requires_simulation: stage2-strainrate-sweep
   - name: viscosity-defined
     classification: primary
     description: A low-rate effective viscosity is computed.
     measure: {kind: value, field: eta_lowrate}
     pass_if: {op: finite, field: eta_lowrate}
     units: kT·τ/a^3
-    requires_simulation: "true"
+    requires_simulation: stage2-strainrate-sweep
   - name: viscous-plateau-vs-elastic
     classification: secondary
     description: σ(ε̇) shows a viscous plateau (η ~ const) at slow rates before stiffening.
     measure: {kind: slope, field: eta_effective, versus: strain_rate, scale: log}
     pass_if: {op: plateau, note: "η ~ const at slow ε̇"}
     units: kT·τ/a^3
-    requires_simulation: "true"
+    requires_simulation: stage2-strainrate-sweep
     blocked_by_requirements: ["slower rates / larger equilibrated network to expose the viscous regime"]
 
 conclusion_logic:
@@ -183,43 +190,104 @@ limitations:
 report:
   title: "Stage 2 — σ(ε̇) on the growing substrate"
   verdict: >
-    Produces the investigation's coupling deliverable: from the faithful,
-    density-calibrated model, the effective modulus E(ε̇) (≈7→11 Pa, stiffening
-    with growth rate) and the remodelling time τ(ε̇) (≈36–51 τ, roughly constant)
-    tabulated vs growth rate — the two numbers the AICS vertex model takes in the
-    offline coupling. Absolute Pa still depends on the energy-scale decision.
-  confidence: medium
+    Bounded-preliminary. At a matched total strain over 3 independent seeds, the
+    network's apparent mechanical resistance does NOT cleanly stiffen with growth
+    rate — σ(ε̇) is flat/overlapping while crosslink density falls with rate, so the
+    response is confounded by rate-dependent assembly time. The earlier definitive
+    ≈7→11 Pa stiffening deliverable (single seed, un-matched strain) is retracted.
+    A density-matched dense multi-seed sweep (Mac-mini candidate) is needed before
+    any E(ε̇)/τ(ε̇) table is handed to the vertex model. Absolute Pa still depends on
+    the energy-scale decision.
+  confidence: low
   evidence_quality: preliminary
   main_insight: >
-    The clean-room network is stiff/elastic on the sampled timescales — remodelling
-    is too slow relative to the imposed strain to give a viscous plateau yet.
+    At matched strain, σ(ε̇) tracks the (rate-dependent) crosslink density more than
+    the rate itself — the connectivity confound must be controlled before a true
+    rate-stiffening claim can be made.
+
+# Figure-review reconciliation (2026-10-20) — resolves the definitive-claim vs
+# single-seed/un-matched-strain mismatch the review flagged.
+figure_review:
+  date: "2026-10-20"
+  resolution: >
+    The study is reset to bounded-preliminary. The headline deliverable is the
+    3-panel v2-rheology-main (σ(ε̇), η_eff(ε̇), crosslinks/rod(ε̇)) at matched total
+    strain over 3 seeds. The old single-seed E(ε̇)/τ(ε̇) coupling table is demoted
+    to supplement (engineered-diagnostic) and no longer presented as validated.
+  key_numbers: >
+    σ(ε̇=2e-3/6e-3/1.8e-2) = 1.24±0.29 / 1.01±0.20 / 0.99±0.37 LJ at matched ε=0.12;
+    crosslinks/rod = 2.00±0.08 / 1.31±0.09 / 1.04±0.06; η_eff = 621 / 169 / 55 LJ·time.
+  mini_candidate: >
+    Density-matched dense multi-seed σ(ε̇) sweep (hold crosslink density fixed across
+    rates; resolve τ(ε̇) for De) — a Mac-mini candidate; bounded local compute cannot
+    separate rate-stiffening from the density confound.
 
 visualizations:
+  # PRIMARY (figure-review 2026-10-20): the 3-panel rheology summary with the
+  # paired connectivity readout.
+  - name: v2-rheology-main
+    address: "html:v2_rheology_main.html"
+    config:
+      title: "Growth rate vs apparent mechanical resistance (+ paired connectivity)"
+      evidence_status: observed
+      tier: main
+      caption: >
+        Imposed growth rate ε̇ changes the network's apparent mechanical resistance;
+        the paired crosslink-density readout assesses whether the response reflects
+        turnover competition or a rate-dependent change in structure. (A) σ(ε̇) is
+        the network BOND-VIRIAL in-plane stress (reduced LJ units) read at a MATCHED
+        total strain ε=0.12 (σ averaged over strain ∈ [0.096, 0.12]); (B) effective
+        viscosity η_eff = σ/ε̇; (C) crosslinks-per-rod at each rate. Error bars are
+        3 independent networks (seeds 11/22/33; 60-rod NC1-angle-stabilized network,
+        chemistry ON during stretch; real bounded LAMMPS). HONEST CONCLUSION: at
+        this bounded scale σ(ε̇) is nearly flat/overlapping across rates
+        (1.24→1.01→0.99 LJ) WHILE crosslinks/rod falls with rate (2.00→1.31→1.04) —
+        the apparent resistance is CONFOUNDED by rate-dependent assembly time, not a
+        clean rate-stiffening signal. η_eff falls 621→55 LJ·time. De = τ·ε̇ is not
+        reported because τ is not resolved at this scale. A density-matched dense
+        multi-seed sweep (Mac-mini candidate) is required to separate true
+        rate-stiffening from the density confound.
+  # Demoted (figure-review): the stress-derived E(ε̇)/τ(ε̇) deliverable + movies.
   - name: coupling
     address: "html:coupling.html"
     config:
-      title: "Vertex-model coupling — E(ε̇) and τ(ε̇) (the deliverable)"
-  - name: stage2-movie
-    address: "html:stage2_movie.html"
-    config:
-      title: "Simulation movie — the growing substrate stretches"
+      title: "Vertex-model coupling — E(ε̇) and τ(ε̇) (stress-derived)"
+      evidence_status: engineered-diagnostic
+      tier: supplement
       caption: >
-        The box outline grows with the imposed equibiaxial strain (the strain
-        reads off the box), synced to the σ(t) trace. Frames are made coherent —
-        each bead is drawn at its nearest periodic image of the network centroid —
-        so boundary crossings no longer teleport a box width across timepoints.
-  - name: stage2-movie-3d
-    address: "html:stage2_movie_3d.html"
-    config:
-      title: "3D view — the slab stretching, rotatable"
-      caption: >
-        Same coherent, box-deforming clip in 3D. The Simularium trajectory
-        (Analysis tab) additionally embeds the stress-vs-strain and time-series
-        plots and the per-frame deforming box.
+        The earlier single-seed E(ε̇)/τ(ε̇) coupling table. Demoted: these are
+        stress-derived quantities presented from a single seed [12345] and are not
+        independently validated; they belong AFTER the primary rheology summary, not
+        as a headline deliverable. Supplement.
   - name: stage2-diagnostic
     address: "html:stage2_diagnostic.html"
     config:
       title: "Stage 2 — σ(ε̇) diagnostic"
+      evidence_status: engineered-diagnostic
+      tier: supplement
+      caption: >
+        Near-duplicate σ(ε̇) diagnostic; a smoke/diagnostic view, not an independent
+        finding. Supplement.
+  - name: stage2-movie
+    address: "html:stage2_movie.html"
+    config:
+      title: "Simulation movie — the growing substrate stretches"
+      evidence_status: engineered-diagnostic
+      tier: supplement
+      caption: >
+        Optional animation of the growing substrate (box outline grows with the
+        imposed equibiaxial strain, synced to σ(t); frames are periodic-image
+        coherent). Retained as the single optional movie, removed from the linear
+        narrative. Supplement.
+  - name: stage2-movie-3d
+    address: "html:stage2_movie_3d.html"
+    config:
+      title: "3D view — the slab stretching, rotatable"
+      evidence_status: engineered-diagnostic
+      tier: supplement
+      caption: >
+        3D rotatable view of the same deforming clip; supplement (removed from the
+        linear narrative).
 
 expert_review_status: requested
 expert_questions:
