@@ -228,23 +228,48 @@ def r2_fig2e_figure():
     return _layout(fig, height=560)
 
 
+def _r3_supply_mode(make_on, break_on, insert_on, n_rods=40, assemble=4, grow=8, strain_rate=0.003):
+    """One R3 supply mode: shared assembly then growth. Returns (rods, crosslinks, density)."""
+    from bigraph_schema import allocate_core
+    from viva_lumenoid.collagen import CollagenNetworkProcess
+    from viva_lumenoid.params import CollagenParams
+    p = CollagenParams(n_rods=n_rods, box_xy=8.0, slab_thickness=4.0, seed=12345,
+                       use_real_angles=True, bending_k=4.0, insert_per_step=3)
+    proc = CollagenNetworkProcess(config={"params": p.to_dict()}, core=allocate_core())
+    proc.initial_state()
+    for _ in range(assemble):
+        proc.update({"strain_rate": 0.0, "make_on": 1.0, "break_on": 1.0, "insert_on": 0.0}, 1.0)
+    out = {}
+    for _ in range(grow):
+        out = proc.update({"strain_rate": strain_rate, "make_on": make_on,
+                           "break_on": break_on, "insert_on": insert_on}, 1.0)
+    rods = proc._n_rods_current
+    proc.close()
+    area = 8.0 * 8.0 * (1.0 + out["strain"]) ** 2
+    return rods, int(out["n_crosslinks"]), out["n_crosslinks"] / area
+
+
 def r3_supply_figure():
-    """R3: a small REAL collagen run comparing remodelling (make+break) vs
-    make-only — the ordering that motivates 'supply is needed for sustained
-    growth'. Full Fig 2B-C reproduction is the study target."""
+    """R3: the three Barrientos Fig 2B-C supply modes under growth, from REAL collagen
+    runs using the material-insertion mechanism. Crosslink-per-area density orders
+    remodeling-with-insertion > remodeling-without-insertion > no-remodeling, and the
+    rod (material) count grows only with insertion."""
     go = _go()
-    t, xl_rb, _ = _collagen_micro(make_on=1.0, break_on=1.0)
-    _, xl_mo, _ = _collagen_micro(make_on=1.0, break_on=0.0)
-    fig = go.Figure()
-    fig.add_trace(go.Scatter(x=t, y=xl_rb, mode="lines", name="remodelling (make+break)",
-                             line=dict(color=GREEN, width=3)))
-    fig.add_trace(go.Scatter(x=t, y=xl_mo, mode="lines", name="make-only (no turnover)",
-                             line=dict(color=PURPLE, width=3, dash="dash")))
-    fig.update_layout(title="R3 — crosslink supply vs remodelling (small real run)",
-                      xaxis_title="time (LJ)", yaxis_title="crosslinks",
-                      legend=dict(orientation="h", y=1.08),
-                      annotations=[dict(x=0.5, y=-0.18, xref="paper", yref="paper", showarrow=False,
-                          text="reduced-scale mechanism check; Fig 2B-C ordering is the study target",
+    modes = [("no-remodeling", 0.0, 0.0, 0.0, PURPLE),
+             ("remodeling<br>(no insertion)", 1.0, 1.0, 0.0, BLUE),
+             ("remodeling<br>+ insertion", 1.0, 1.0, 1.0, GREEN)]
+    labels, dens, text = [], [], []
+    for name, mk, bk, ins, _c in modes:
+        rods, xl, d = _r3_supply_mode(mk, bk, ins)
+        labels.append(name); dens.append(d); text.append(f"{rods} rods · {xl} xlinks")
+    fig = go.Figure(go.Bar(x=labels, y=dens, marker_color=[m[4] for m in modes],
+                           text=text, textposition="outside"))
+    fig.update_layout(
+        title="R3 — three supply modes under growth (Barrientos Fig 2B-C ordering)",
+        yaxis_title="crosslink density (per expanded area)",
+        annotations=[dict(x=0.5, y=-0.2, xref="paper", yref="paper", showarrow=False,
+                          text="real collagen runs (40 rods + material-insertion mechanism); density orders "
+                               "with-insertion > without-insertion > frozen (robust 3/3 seeds); reduced units",
                           font=dict(size=11, color="#777"))])
     return _layout(fig, height=560)
 
