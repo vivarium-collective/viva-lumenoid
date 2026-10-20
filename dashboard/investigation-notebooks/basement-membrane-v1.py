@@ -651,22 +651,22 @@ else:
 # **faithful-angles**
 
 # faithful-angles
-_save_viz('bm-v4-junction-bending', 'faithful-angles', _render_one('html:faithful_angles.html', {'title': 'Faithful angles — the modulus becomes reproducible (headline)'}, RUNS_DB, STUDY_YAML))
-
-# **bending-movie**
-
-# bending-movie
-_save_viz('bm-v4-junction-bending', 'bending-movie', _render_one('html:bending_movie.html', {'title': 'Simulation movie — rods pinned at crosslink angles'}, RUNS_DB, STUDY_YAML))
-
-# **bending-movie-3d**
-
-# bending-movie-3d
-_save_viz('bm-v4-junction-bending', 'bending-movie-3d', _render_one('html:bending_movie_3d.html', {'title': '3D view — the bending-pinned network, rotatable'}, RUNS_DB, STUDY_YAML))
+_save_viz('bm-v4-junction-bending', 'faithful-angles', _render_one('html:bm_v4_faithful_angles.html', {'title': 'Junction angles formed during assembly stabilise the modulus', 'evidence_status': 'observed', 'tier': 'main', 'caption': 'Per-seed equibiaxial-stretch tangent modulus (reduced LJ units, kT/σ³; ×2.2 → Pa, carrying the unresolved-energy-scale caveat) at matched box (13σ), density and loading protocol for three controls — central force (angles off, k=0), post-hoc as-formed harmonic restraints (k=4), and real NC1 harmonic angles created DURING assembly (k=4, 180°). Real LAMMPS (run_faithful_comparison; 3 seeds 11/22/33, one deterministic run each). Forming the angles during assembly gives positive, reproducible per-seed moduli (36.7/27.6/37.5 kT/σ³ ≈ 81/61/83 Pa) where the central-force control is consistent with zero (−0.54/−1.32/−1.14) and the post-hoc restraint sign-flips (0.9/−2.53/−0.47); connectivity is an important covariate (panel B: modulus rises monotonically with crosslinks/rod). The paper already has angle terms — this is matching the released angle set applied the released way (angles active during assembly), NOT a novel physical correction. FIDELITY GAP (named): only the NC1 junction angle (k=4 @180°, create_bonds single/angle type 1) is implemented; the two released 7S angles (k≈1 @155° and @60°) are NOT. The absolute Pa value additionally depends on matching the released make+break crosslink density — the dense-config, multi-seed reproducible value is a Mac-mini candidate.\n'}, RUNS_DB, STUDY_YAML))
 
 # **bending-diagnostic**
 
 # bending-diagnostic
-_save_viz('bm-v4-junction-bending', 'bending-diagnostic', _render_one('html:bending_diagnostic.html', {'title': 'FP1 — junction bending response'}, RUNS_DB, STUDY_YAML))
+_save_viz('bm-v4-junction-bending', 'bending-diagnostic', _render_one('html:bending_diagnostic.html', {'title': 'Junction-bending stiffness ladder (diagnostic)', 'evidence_status': 'engineered-diagnostic', 'tier': 'supplement', 'caption': 'Athermal elastic modulus vs the junction-bending stiffness bending_k (reduced LJ, kT/σ³), swept around the released NC1 value k=4.0. A parameter ladder / conditioning diagnostic: the paper already sets these angle terms, so sweeping bending_k is a sensitivity check, not a novel physical correction. Superseded for the headline claim by the angle-during-assembly figure above.\n'}, RUNS_DB, STUDY_YAML))
+
+# **bending-movie**
+
+# bending-movie
+_save_viz('bm-v4-junction-bending', 'bending-movie', _render_one('html:bending_movie.html', {'title': 'Simulation movie — bending-pinned network (supplement)', 'evidence_status': 'engineered-diagnostic', 'tier': 'supplement', 'caption': 'Optional animation of the junction-bending network assembling at the released NC1 stiffness (k=4.0). Illustrative spatial context; not a quantitative result. 2D top-down projection of the quasi-2D slab.\n'}, RUNS_DB, STUDY_YAML))
+
+# **bending-movie-3d**
+
+# bending-movie-3d
+_save_viz('bm-v4-junction-bending', 'bending-movie-3d', _render_one('html:bending_movie_3d.html', {'title': '3D view — the bending-pinned network (supplement)', 'evidence_status': 'engineered-diagnostic', 'tier': 'supplement', 'caption': 'Rotatable 3D view of the same bending-network clip (z exaggerated for visibility). Illustrative; not a quantitative result.\n'}, RUNS_DB, STUDY_YAML))
 
 # ### Acceptance criteria
 #
@@ -749,20 +749,30 @@ else:
 #
 # _Results are shown by the figures below, produced by the run above._
 
-# **assembly-movie**
+# **pore-size-coverage**
 
-# assembly-movie
-_save_viz('bm-v5-porosity-bundling', 'assembly-movie', _render_one('html:assembly_movie.html', {'title': 'Simulation movie — a porous collagen IV mesh forms'}, RUNS_DB, STUDY_YAML))
+# pore-size-coverage
+_save_viz('bm-v5-porosity-bundling', 'pore-size-coverage', _render_one('html:bm_v5_porosity.html', {'title': 'Simulated pore size reaches the corneal-EM reference at density', 'evidence_status': 'observed', 'tier': 'main', 'caption': 'Simulated pore-diameter distribution (maximal-inscribed-disc / distance-transform method, periodic plane) at three areal-coverage rungs; lengths via σ = 125 nm. Real assembled-network geometry (single deterministic run, seed 12345; box 13σ, 12σ slab, assemble 10000). Median pore falls with coverage (88 → 62 → 54 nm) and the densest network reaches the corneal-EM REFERENCE band (72 ± 40 nm; Abrams 2000, low-voltage SEM), shaded. Panels C/D show the mesh at low (200 rods) vs high (500 rods) density as a 2D top-down projection of the quasi-2D slab, with matched 2σ ≈ 250 nm scale bars. The corneal-EM band is a cross-system REFERENCE for an open-mesh length scale, NOT validation for lumenoid BM; the match holds at one coverage, it is not a universal property.\n'}, RUNS_DB, STUDY_YAML))
+
+# **protomers-per-strand**
+
+# protomers-per-strand
+_save_viz('bm-v5-porosity-bundling', 'protomers-per-strand', _render_one('html:bm_v5_bundling.html', {'title': 'The NC1/7S-only network under-bundles (no lateral-association bond)', 'evidence_status': 'observed', 'tier': 'main', 'caption': 'Protomers-per-strand distribution at the densest network. STRAND DEFINITION: a connected component of rods whose minimum-image midpoints lie within the measured cell-deposited lateral spacing (59.5 nm ≈ 0.48σ) AND run ≤22° parallel. Real geometry (single deterministic run, seed 12345). Strands are predominantly isolated protomers (mean 1.38, 76% singletons, max 6; ~6% of rods in strands of 5–7), below the PFHR-9 REFERENCE band (5–7 protomers/strand; Pokidysheva 2025, immuno-gold SEM), shaded. The shortfall is consistent with the released NC1/7S topology having no explicit lateral-association bond; it is NOT evidence that NC1/7S chemistry alone recapitulates bundled BM. The PFHR-9 band is a cross-system reference, not validation; the missing lateral association is the named gap.\n'}, RUNS_DB, STUDY_YAML))
 
 # **porosity-bundling**
 
 # porosity-bundling
-_save_viz('bm-v5-porosity-bundling', 'porosity-bundling', _render_one('html:porosity_bundling.html', {'title': 'Stage 5 — porosity & bundling vs measured BM'}, RUNS_DB, STUDY_YAML))
+_save_viz('bm-v5-porosity-bundling', 'porosity-bundling', _render_one('html:porosity_bundling.html', {'title': 'Stage 5 — combined porosity & bundling panel (supplement)', 'evidence_status': 'observed', 'tier': 'supplement', 'caption': 'The original 2×2 panel (pore histogram + density scaling + strand sizes + pore map), retained as a combined reference. Superseded for the headline narrative by the two split story figures above. Same real geometry; the measured bands are cross-system references, not validation.\n'}, RUNS_DB, STUDY_YAML))
 
 # **evidence-map**
 
 # evidence-map
-_save_viz('bm-v5-porosity-bundling', 'evidence-map', _render_one('html:evidence_map.html', {'title': 'Evidence map — readouts vs measured comparators'}, RUNS_DB, STUDY_YAML))
+_save_viz('bm-v5-porosity-bundling', 'evidence-map', _render_one('html:evidence_map.html', {'title': 'Comparison-audit — readouts vs measured comparators (supplement)', 'evidence_status': 'engineered-diagnostic', 'tier': 'supplement', 'caption': "A comparison-audit forest plot of every spec comparator (geometry, pores, modulus, bundling, time) with the model's own values where run. The panels span incompatible units and biological systems, so it is an audit table, not a single scientific claim — kept in supplement per the figure review.\n"}, RUNS_DB, STUDY_YAML))
+
+# **assembly-movie**
+
+# assembly-movie
+_save_viz('bm-v5-porosity-bundling', 'assembly-movie', _render_one('html:assembly_movie.html', {'title': 'Simulation movie — a porous collagen IV mesh forms (supplement)', 'evidence_status': 'engineered-diagnostic', 'tier': 'supplement', 'caption': 'Optional animation of the collagen IV mesh assembling. Illustrative spatial context; the quantitative pore/bundle readouts are in the two main figures. 2D top-down projection of the quasi-2D slab.\n'}, RUNS_DB, STUDY_YAML))
 
 # ### Acceptance criteria
 #

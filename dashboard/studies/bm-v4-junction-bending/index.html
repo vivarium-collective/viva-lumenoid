@@ -1200,7 +1200,7 @@
         <span class="classification-pill classification-primary">primary</span>
         <strong style="font-size: 0.9em;">floppy-baseline-clean</strong>
         
-        <span class="muted" style="font-size:0.78em">requires: <code>true</code></span>
+        <span class="muted" style="font-size:0.78em">requires: <code>bending-athermal-sweep</code></span>
         
       </div>
       <div style="margin-top: 6px; font-size: 0.95em;">Athermal minimisation measures the floppy (k=0) modulus as ~0 (deterministic).</div>
@@ -1246,7 +1246,7 @@ pass_if: {"op": "near_zero", "tol": 0.1}</pre>
         <span class="classification-pill classification-primary">primary</span>
         <strong style="font-size: 0.9em;">bending-changes-mechanics</strong>
         
-        <span class="muted" style="font-size:0.78em">requires: <code>true</code></span>
+        <span class="muted" style="font-size:0.78em">requires: <code>bending-athermal-sweep</code></span>
         
       </div>
       <div style="margin-top: 6px; font-size: 0.95em;">Bending produces a large mechanical response (|E| &gt;&gt; floppy).</div>
@@ -1292,7 +1292,7 @@ pass_if: {"note": "|E| jumps orders of magnitude above floppy", "op": "gt", "val
         <span class="classification-pill classification-primary">primary</span>
         <strong style="font-size: 0.9em;">reproducible-modulus</strong>
         
-        <span class="muted" style="font-size:0.78em">requires: <code>true</code></span>
+        <span class="muted" style="font-size:0.78em">requires: <code>bending-athermal-sweep</code></span>
         
       </div>
       <div style="margin-top: 6px; font-size: 0.95em;">The bending modulus is reproducible across seeds (a usable value). PASSES with real angles created during assembly (use_real_angles): per-seed 36.7/27.6/37.5 LJ (same sign, tight), vs the as-formed restraint&#39;s sign-flipping. The absolute value depends on crosslink density (calibrated to the authors&#39; dataNucType9_dense, bm-v1) and the energy-scale decision.
@@ -1573,7 +1573,7 @@ pass_if: {"note": "IQR \u003c 0.5\u00b7|median| \u2014 met by the real-angle pat
       <h3 class="overview-label">Limitations</h3>
       <p class="muted" style="margin:0 0 6px 0;font-size:0.85em">What this study explicitly does NOT validate (prevents overclaim).</p>
       <ul style="margin:0 0 0 18px;padding:0;font-size:0.93em">
-        <li style="margin:2px 0">Cross-check: junction bending is not a new ingredient — the released code already sets KangNC1=4.0 (@180°) plus two 7S angles. Re-scope as &#39;match the released angle set&#39;, not &#39;add bending&#39;.</li><li style="margin:2px 0">Clean-room parameters transcribed from the spec; the authors&#39; LAMMPS input scripts are now public (Zenodo 10.5281/zenodo.20719515) and not yet cross-checked against this build.</li><li style="margin:2px 0">The bending modulus is ill-conditioned at 200 rods (pre-stress + finite-size); not calibratable yet.</li><li style="margin:2px 0">Bending targets are pinned from a thermally-noisy as-formed geometry (a pre-stress source).</li><li style="margin:2px 0">Only equibiaxial stress-strain slope is used; a shear or energy-curvature modulus may be better conditioned.</li>
+        <li style="margin:2px 0">Cross-check: junction bending is not a new ingredient — the released code already sets KangNC1=4.0 (@180°) plus two 7S angles. Re-scope as &#39;match the released angle set&#39;, not &#39;add bending&#39;.</li><li style="margin:2px 0">Clean-room parameters transcribed from the spec; the authors&#39; LAMMPS input scripts are now public (Zenodo 10.5281/zenodo.20719515) and not yet cross-checked against this build.</li><li style="margin:2px 0">Angle-set fidelity: only the NC1 junction angle (k=4 @180°) is created in the real-angle path; the two released 7S angles (k≈1 @155°, @60°) are NOT yet implemented — a named fidelity gap, not a reproduction.</li><li style="margin:2px 0">RESOLVED (supersedes the earlier &#39;ill-conditioned, not calibratable&#39; limitation): the sign-flipping/ill-conditioning was an artifact of the post-hoc as-formed-restraint path; creating the angles during assembly gives a positive, reproducible per-seed modulus (36.7/27.6/37.5 LJ). Only the as-formed-restraint CONTROL remains ill-conditioned (it pins targets to a thermally-noisy as-formed geometry).</li><li style="margin:2px 0">Absolute Pa still open: the real-angle path assembles make-only and over-crosslinks; matching the released make+break crosslink density (per-angle deletion / GCE) for an absolute modulus is a Mac-mini candidate (the recorded 3-seed run took ~200 s).</li><li style="margin:2px 0">Only the equibiaxial stress-strain tangent (and the athermal-minimised modulus for the diagnostic ladder) are used; a shear or energy-curvature modulus may be better conditioned.</li>
       </ul>
     </div>
     
@@ -1693,7 +1693,7 @@ pass_if: {"note": "IQR \u003c 0.5\u00b7|median| \u2014 met by the real-angle pat
 </section>
 
 </main>
-<script>window.__DASH_CONFIG__ = { mode: "snapshot", interactiveUrl: "https://github.com/vivarium-collective/viva-lumenoid", basePath: "/viva-lumenoid/dashboard", inputsDownloadBase: "https://github.com/vivarium-collective/viva-lumenoid/raw/main", provenance: {"repo_slug": "vivarium-collective/viva-lumenoid", "repo_url": "https://github.com/vivarium-collective/viva-lumenoid", "commit": "9c97b43234e256ed1ea3d92f2e072656662ac338", "commit_url": "https://github.com/vivarium-collective/viva-lumenoid/commit/9c97b43234e256ed1ea3d92f2e072656662ac338", "branch": "main", "lockfile": "uv.lock@23a8fcc2b0be", "generated_at": "2026-10-20 13:01 UTC"} };</script>
+<script>window.__DASH_CONFIG__ = { mode: "snapshot", interactiveUrl: "https://github.com/vivarium-collective/viva-lumenoid", basePath: "/viva-lumenoid/dashboard", inputsDownloadBase: "https://github.com/vivarium-collective/viva-lumenoid/raw/main", provenance: {"repo_slug": "vivarium-collective/viva-lumenoid", "repo_url": "https://github.com/vivarium-collective/viva-lumenoid", "commit": "4756d907d33c2b515ab2a3f54e1d88df518e4e94", "commit_url": "https://github.com/vivarium-collective/viva-lumenoid/commit/4756d907d33c2b515ab2a3f54e1d88df518e4e94", "branch": "main", "lockfile": "uv.lock@23a8fcc2b0be", "generated_at": "2026-10-20 13:08 UTC"} };</script>
 <script src="/viva-lumenoid/dashboard/assets/data-source.js"></script>
 <script src="/viva-lumenoid/dashboard/assets/toast.js"></script>
 <script>
