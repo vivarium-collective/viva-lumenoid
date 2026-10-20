@@ -59,3 +59,11 @@ baseline:
 variants: []
 interventions: []
 runs: []
+
+visualizations:
+  - name: r4_sheet
+    address: "html:r4_sheet.html"
+    config:
+      title: "Relaxed 2D epithelial sheet (real tyssue run)"
+      caption: >
+        The actual 2D epithelial sheet after relaxation on the merged CrossSectionGeometry (real tyssue EulerSolver run).

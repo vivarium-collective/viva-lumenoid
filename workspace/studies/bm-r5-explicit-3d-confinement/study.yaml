@@ -52,3 +52,11 @@ baseline:
 variants: []
 interventions: []
 runs: []
+
+visualizations:
+  - name: r5_monolayer
+    address: "html:r5_monolayer.html"
+    config:
+      title: "Explicit 3D confinement (real tyssue run)"
+      caption: >
+        The stepped 3D monolayer (MonolayerGeometry) and its real cell-volume distribution (real tyssue run).

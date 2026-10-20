@@ -57,3 +57,11 @@ baseline:
 variants: []
 interventions: []
 runs: []
+
+visualizations:
+  - name: e3_lumenoid
+    address: "html:e3_lumenoid.html"
+    config:
+      title: "Closed lumenoid shell (real tyssue run)"
+      caption: >
+        The actual closed lumenoid shell on the merged LumenoidGeometry, exposing the basal BM-coupling surface (real tyssue run).

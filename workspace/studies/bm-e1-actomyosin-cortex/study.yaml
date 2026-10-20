@@ -58,3 +58,11 @@ baseline:
 variants: []
 interventions: []
 runs: []
+
+visualizations:
+  - name: e1_cortical_tension
+    address: "html:e1_cortical_tension.html"
+    config:
+      title: "Cortical tension vs contractility (real LAMMPS)"
+      caption: >
+        REAL LAMMPS result: cortical tension rises with the myosin-contractility proxy, run over the viva-lammps model-plugin seam.
