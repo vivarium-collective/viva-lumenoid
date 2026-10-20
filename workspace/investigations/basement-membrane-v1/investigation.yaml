@@ -148,36 +148,46 @@ studies:
 at_a_glance:
   - study: bm-v1-stage1-modulus-remodelling
     role: >
-      Stage 1 + the cross-check headline. Runs the staged protocol with the
-      parameters corrected to the released code. Modulus is very soft, consistent
-      with zero at v1 size (~±1 Pa) and with the published ≈0.03 Pa; the remodelling
-      mechanism is correct but τ is below detection at v1 scale. Carries the
-      cross-check and modulus-ladder figures.
+      Stage 1 membrane build. The staged protocol runs on real LAMMPS and the
+      NC1-angle-stabilized network reports a finite elastic modulus (E ≈ 4.98 ± 2.15
+      LJ, ≈11 ± 5 Pa, 3 seeds; energy-scale caveat). Scoped honestly as
+      NC1-angle-stabilized, not a full reproduction — only the NC1 junction angle is
+      implemented; the released 7S angles (155°/60°) and the 7S break cutoff are not.
+      τ is unresolved at this bounded scale (dense-multiseed mini candidate).
+      Diagnostics / modulus-ladder / movies demoted to supplement.
   - study: bm-v2-stress-vs-strainrate
     role: >
-      Stage 2 + the coupling deliverable. Sweeps the equibiaxial growth rate ε̇ and,
-      from the faithful density-calibrated model, tabulates the effective modulus
-      E(ε̇) (≈7→11 Pa, stiffening with rate) and remodelling time τ(ε̇) (≈36–51 τ,
-      ≈constant) — the two numbers the AICS vertex model takes (offline coupling).
+      Stage 2 growth-rate sweep (bounded-preliminary). At MATCHED strain the apparent
+      stress σ(ε̇) is flat/overlapping across rates while crosslink density falls with
+      rate — so the apparent rate-resistance is confounded by rate-dependent assembly
+      time, NOT clean rate-stiffening. The earlier single-seed "≈7→11 Pa stiffening"
+      claim is RETRACTED. A density-matched dense-multiseed run (resolving τ(ε̇) for a
+      Deborah number) is the open mini candidate.
   - study: bm-v3-junction-bending-rigidity
     role: >
-      Follow-up (explanation superseded). The rigidity-percolation story is retired
-      by the cross-check: the released model has junction angles, so it is not a
-      central-force network and z<4 does not explain its softness. The sweep now
-      documents only that our angles-off transcription is sub-isostatic and soft.
+      Central-force negative control (engineered-diagnostic). With junction angles
+      OFF, the athermal modulus vs measured connectivity z (1.17→1.61, never near 4)
+      scatters about zero with CIs spanning 0 — not reproducibly positive, by design.
+      This control shows central-force counting does NOT reproduce the released
+      (angle-stabilized) network; the z=4 Maxwell line is an idealized 2D heuristic,
+      not a threshold for this finite-thickness network.
   - study: bm-v4-junction-bending
     role: >
-      Follow-up (reframed). Bending is a released feature (NC1 k=4.0), not an add-on.
-      Swept around k=4.0: our as-formed-restraint realization is ill-conditioned and
-      bending does not make the network stiff — the released model has the angles and
-      is still soft. A faithful run needs angles active during assembly.
+      The faithful-angles headline. Forming NC1 junction angles DURING assembly gives
+      a positive, reproducible modulus (per-seed ≈36.7/27.6/37.5 kT/σ³, ≈61–83 Pa) —
+      in contrast to the central-force control (≈0) and the ill-conditioned post-hoc
+      restraint (sign-flipping). So bending-during-assembly is what stabilizes the
+      released model's mechanics; connectivity remains a covariate. (Only the NC1
+      angle is implemented; 7S angles are the stated gap. Reduced LJ modulus; Pa
+      depends on the energy scale.)
   - study: bm-v5-porosity-bundling
     role: >
-      Geometric readouts. Reads porosity +
-      bundling off the real network against measured BM. Pore diameter reaches the
-      corneal-EM band (72 ± 40 nm) at realistic density; the NC1/7S-only topology
-      under-bundles (mean ~1 protomer/strand, below the measured 5–7), because the
-      released model has no lateral-association bond. Carries the evidence map.
+      Geometric readouts, two story-driven figures. Pore size (CDF + median vs areal
+      coverage: 88→62→54 nm) reaches the corneal-EM band (72 ± 40 nm) at the densest
+      condition — shown as a CROSS-SYSTEM reference, not validation for lumenoids. The
+      NC1/7S-only topology under-bundles (mean 1.38 protomers/strand, 76% singletons,
+      below the measured 5–7) because the released model has no explicit
+      lateral-association bond — stated as a known shortfall. Evidence-map demoted.
   - study: bm-r1-published-tissue-baseline
     role: >
       Reimplements the paper's homogeneous tissue model — a fixed-volume cell
@@ -199,14 +209,20 @@ at_a_glance:
       ordering with-insertion > without > none, 3/3 seeds) — the Figure-2B/C ordering.
   - study: bm-r4-coupled-2d-epithelium
     role: >
-      A 2D epithelial sheet with a membrane area law set from the network rheology.
-      Its homogeneous limit must match the tissue baseline; it then tests whether the
-      regimes survive explicit cell shapes and uneven growth.
+      Spatial 2D epithelium (preliminary). A 12-cell Tyssue sheet relaxes to a finite
+      uniform geometry — a real mesh readout vs the R1 benchmark. Honest gap: the
+      current tyssue_2d_sheet carries only line-tension / preferred-area, no BM
+      stiffness / relaxation / traction, so the BM-dependent confinement test cannot
+      run yet (shown as a hypothesis panel); the bare mesh snapshot is an architecture
+      thumbnail, not confinement, and the planar z=0 geometry is not a real 3D height.
   - study: bm-r5-explicit-3d-confinement
     role: >
-      A 3D monolayer where cell height and basal area emerge directly. Cases with no
-      membrane, an elastic membrane, and a relaxing membrane isolate what membrane
-      relaxation contributes to cell height, and set up the lumenoid.
+      Explicit 3D monolayer (preliminary). A 206-cell closed mesh with finite,
+      conserved per-cell volumes (<0.01% drift) and a per-cell area distribution —
+      a geometry verification. Honest gap: tyssue_3d_monolayer has only
+      contractility / volume-elasticity, no BM-shell coupling, so the no-BM /
+      elastic-BM / relaxing-BM confinement cases are not wired yet (hypothesis panel);
+      height is uniform within a run.
   - study: bm-r6-perlecan-growth-perturbations
     role: >
       Carries an inferred collagen lifetime for control, perlecan gain/loss and
@@ -217,24 +233,33 @@ at_a_glance:
       per the paper). The growth-rate axis (faster growth → flatter) is also correct.
   - study: bm-e1-actomyosin-cortex
     role: >
-      A new study, not in the paper: a coarse actomyosin cortex whose tension and
-      relaxation are measured so they can stand in for the epithelial model's
-      cortical energy.
+      Extension, engineering verification (not in the paper). A coarse LJ bead cortex
+      shows effective tension rising monotonically with the attraction (well-depth)
+      PROXY — relabelled honestly as a proxy, not biological myosin activity, with
+      seed/size sensitivity. Gap: no explicit filaments/motors, and the LAMMPS model
+      exposes no strain input, so force-strain curves are not producible yet.
   - study: bm-e2-actin-adhesion-collagen
     role: >
-      A new study: an active cortex coupled through reversible basal adhesions to a
-      collagen patch in one cell, measuring the transmitted traction, the fraction of
-      bound adhesions, and the membrane's deformation, before scaling to many cells.
+      Extension, coupling unit-test. Occupancy-gated force transfer (traction =
+      occupancy × tension; BM strain-rate = gain × traction) holds BY CONSTRUCTION —
+      shown with a real zero-linker control (occupancy/traction → 0) and a bounded
+      cortex→adhesion→BM smoke. Gap: force-conserving multiscale coupling and
+      integrin mechanics are not established; it is a deterministic mapping, not
+      emergent.
   - study: bm-e3-closed-3d-lumenoid
     role: >
-      A new study: a closed curved epithelium with a lumen pressure and a membrane
-      shell, using an effective membrane first and a resolved collagen patch later,
-      to predict how curvature shapes lumen growth and cells.
+      Extension, geometry verification. A closed 78-cell Tyssue shell with a labelled
+      basal BM-coupling surface and a single enclosed lumen (section cut + scale).
+      Gap: no lumen-filling drive is wired (pressure 0 at rest), so lumen growth and
+      BM-regulated morphogenesis are shown as flat/honest, untested.
   - study: bm-e4-feedback-predictions
     role: >
-      A new study: tests growth-driven turnover, uneven membranes,
-      contractility-dependent confinement, and partial adhesion or network failure
-      against matched controls — the predictions that go beyond the paper.
+      Extension, coupling control (not a novel prediction yet). Real 3-mode
+      reduced-order time courses: two-way returns a nonzero BM reaction (basal_tension
+      −0.30, damping contraction) while one-way/uncoupled disable it as designed, and
+      BM subcycling converges (|Δσ| 0.066→0.033→0.017). Gaps: explicit LAMMPS BM is
+      not in the loop, there is no growth trajectory, and exchange-cadence convergence
+      is not wired — correct software wiring, not a mechanistic prediction.
 
 acceptance_criteria:
   - study: bm-v1-stage1-modulus-remodelling
