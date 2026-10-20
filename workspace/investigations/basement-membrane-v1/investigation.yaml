@@ -211,10 +211,10 @@ at_a_glance:
     role: >
       Carries an inferred collagen lifetime for control, perlecan gain/loss and
       growth-rate conditions through BM relaxation to cell shape, keeping inferred
-      and predicted quantities separate. RED FLAG: its perlecan ordering
-      (gain → taller) CONTRADICTS the paper (overexpression → shorter); marked
-      contradicted, gate failed, pending a perlecan-direction audit. The growth-rate
-      axis (faster growth → flatter) is correct.
+      and predicted quantities separate. Reproduces Fig 7 — perlecan knockdown
+      taller > control > overexpression shorter — after a review-caught correction of
+      an inverted perlecan direction (overexpression shortens the collagen lifetime,
+      per the paper). The growth-rate axis (faster growth → flatter) is also correct.
   - study: bm-e1-actomyosin-cortex
     role: >
       A new study, not in the paper: a coarse actomyosin cortex whose tension and
@@ -269,9 +269,11 @@ executive:
     and carry recorded evidence — but each is scoped honestly by evidence status
     (observed / reproduced / engineered-diagnostic / hypothesis / contradicted, per
     docs/figure-conventions.md), not scored as paper reproduction on a smoke test or
-    a geometry screenshot. The membrane-build (v1–v5) and the Fig-1/Fig-2 direction
-    (R1, R2, R3) are the strongest results; the spatial and extension studies are
-    preliminary; and R6's perlecan prediction CONTRADICTS the paper (see verdict).
+    a geometry screenshot. The membrane-build (v1–v5) and the paper reproductions
+    (R1 Fig 1 regime topology, R2 Fig 2E direction, R3 Fig 2B/C supply ordering, R6
+    Fig 7 perlecan ordering) are the strongest results; the spatial and extension
+    studies are preliminary. R6 reproduces Fig 7 only after a review-caught fix: its
+    perlecan direction had been inverted and was corrected against the paper.
   verdict: >
     The membrane model is complete: it reproduces the published elastic modulus and
     separates a reproducible elastic modulus from a reproducible remodelling time,
@@ -324,21 +326,20 @@ executive:
     (with-insertion > without-insertion > no-remodeling, 3/3 seeds). These are the
     campaign's solid reproductions (direction/ordering, reduced units).
     ---
-    RED FLAG — R6 contradicts the paper. The perlecan prediction is OPPOSITE the
-    paper's reported morphology: our model assumes perlecan stabilizes collagen
-    (gain → longer lifetime → slower relaxation → taller cell) and predicts
-    gain > control > loss in height, whereas the paper reports perlecan
-    overexpression → faster BM relaxation → SHORTER/wider cells. The mechanics sign
-    (longer relaxation → taller) is internally correct and matches R1; the
-    disagreement is the unaudited perlecan → collagen-turnover direction. R6 is
-    therefore NOT a Figure-7 reproduction — it is marked contradicted and its gate
-    failed, pending an audit of the perlecan direction against the paper (a one-line
-    sign inversion in turnover_shape.py if the paper confirms faster turnover under
-    overexpression). The spatial (R4/R5) and extension (E1–E4) studies run and are
+    R6 reproduces Figure 7 — after a review-caught correction. The figure review
+    flagged that the model's perlecan ordering was inverted (it had perlecan
+    stabilizing collagen → gain taller). An audit against the paper (Barrientos et
+    al. Cell 2026: perlecan promotes collagen IV bond breakage, so overexpression
+    SHORTENS the lifetime, measured ~1 h vs ~20 h control, knockdown ~500 h) fixed
+    the perlecan_factor direction; the mechanics (relaxation → height) were already
+    correct. R6 now reproduces the paper's ordering — perlecan knockdown taller >
+    control > overexpression shorter — with a substantial effect (~19% loss-vs-gain).
+    This is the figure review doing its job: a decisive sign error found and fixed
+    against the source. The spatial (R4/R5) and extension (E1–E4) studies run and are
     preliminary engineering/verification results, not paper reproductions.
   verdict_status: in-progress
   decisions_needed:
-    - "PERLECAN DIRECTION (R6 red flag, decisive): the figure review reports the paper has perlecan overexpression → faster BM relaxation → shorter/wider cells; our model assumes the opposite (perlecan stabilizes collagen → gain taller). Confirm the paper's perlecan → collagen-turnover direction; if it is faster-turnover-under-overexpression, invert the perlecan_factor → lifetime mapping in turnover_shape.py so R6 reproduces Fig 7 (otherwise keep it as a genuine mechanistic disagreement)."
+    - "Perlecan direction (R6): RESOLVED — verified against the paper (perlecan promotes collagen IV bond breakage; overexpression ~1 h, control ~20 h, knockdown ~500 h lifetime) and the perlecan_factor mapping was inverted so R6 reproduces Fig 7. Left here as a sanity-check item for the expert to confirm the reading."
     - "Reproduction conventions: the article alone does not fix every convention needed to reproduce it. Acquire the supplemental tissue-model equations and the precise Figure 1 parameter values."
     - "Released turnover kinetics: pin down the grand-canonical monomer exchange, the distance-gated breaking, the 7S-specific mechanics, and the original stress-to-energy conversion before freezing the collagen reference."
     - "Collagen supply law: a fixed concentration (for reproducing the paper) or a secretion flux (for the lumenoid hypothesis). Decide per study."

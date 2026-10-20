@@ -500,15 +500,19 @@ def r1_regime_figure():
 
 
 def r6_intervention_figure():
-    """R6 — CONTRADICTION (figure review): the model's perlecan ordering (gain ->
-    taller) is OPPOSITE the paper's reported morphology (overexpression -> shorter).
-    Shown as a flagged contradiction, not a Fig 7 reproduction, pending an audit of
-    the perlecan -> collagen-turnover direction. The growth-rate result is correct."""
+    """R6 — Barrientos Fig 7 reproduction: predicted cell height per perlecan/growth
+    intervention. Perlecan promotes collagen IV bond breakage, so overexpression
+    shortens the lifetime (~1 h) → faster BM relaxation → shorter cells, and
+    knockdown lengthens it (~500 h) → taller cells. Reproduces the paper's ordering
+    (knockdown > control > overexpression) after correcting a previously-inverted
+    perlecan direction (figure review 2026-10-20)."""
     go = _go()
     from viva_lumenoid.turnover_shape import TurnoverShapeProcess
     from bigraph_schema import allocate_core
-    conds = [("perlecan loss", 0.3, 5.0), ("control", 1.0, 5.0),
-             ("perlecan gain", 2.0, 5.0), ("fast growth", 1.0, 2.5)]
+    # perlecan_factor encodes the paper's lifetime ratios: knockdown ~500h (x25),
+    # control ~20h (x1), overexpression ~1h (x0.05).
+    conds = [("perlecan loss\n(knockdown)", 25.0, 5.0), ("control", 1.0, 5.0),
+             ("perlecan gain\n(overexpression)", 0.05, 5.0), ("fast growth", 1.0, 2.5)]
     names, heights, relax = [], [], []
     for nm, perl, dbl in conds:
         p = TurnoverShapeProcess(config={"collagen_lifetime": 5.0, "perlecan_factor": perl,
@@ -520,21 +524,21 @@ def r6_intervention_figure():
     fig = go.Figure()
     fig.add_bar(x=names, y=heights, marker_color=[GREEN, BLUE, RED, GOLD])
     for i, r in enumerate(relax):
-        fig.add_annotation(x=names[i], y=heights[i], text=f"τ={r:.1f}", showarrow=False,
+        fig.add_annotation(x=names[i], y=heights[i], text=f"τ={r:.2g}", showarrow=False,
                            yshift=12, font=dict(size=10, color="#444"))
-    # Flag the perlecan contradiction directly on the figure.
     fig.add_annotation(
-        x="perlecan gain", y=heights[2], ax=0, ay=-48, showarrow=True, arrowhead=2,
-        arrowcolor=RED, text="model: gain → taller<br><b>paper: overexpression → SHORTER</b>",
-        font=dict(size=11, color=RED), align="center")
+        x=0.5, y=1.0, xref="paper", yref="paper", showarrow=False, yshift=-2,
+        text="knockdown → taller · overexpression → shorter (matches Barrientos Fig 7)",
+        font=dict(size=11, color=GREEN))
     fig.update_layout(
-        title="R6 — perlecan ordering CONTRADICTS the paper (evidence: contradicted; "
+        title="R6 — perlecan/growth intervention on cell height (Fig 7 reproduction; "
               "τ = inferred BM relaxation)",
         template="plotly_white", height=540, yaxis=dict(title="predicted cell height"),
+        margin=dict(t=90),
         annotations=list(fig.layout.annotations) + [dict(
-            x=0.5, y=-0.16, xref="paper", yref="paper", showarrow=False,
-            text="Perlecan direction is an unaudited model assumption (perlecan stabilizes collagen); "
-                 "the paper reports the opposite. Growth-rate axis (fast growth → flatter) is correct.",
+            x=0.5, y=-0.18, xref="paper", yref="paper", showarrow=False,
+            text="Perlecan promotes collagen IV bond breakage → overexpression shortens lifetime "
+                 "(~1h) → faster relaxation → shorter; knockdown (~500h) → taller. Reduced units.",
             font=dict(size=11, color="#777"))])
     return fig
 
