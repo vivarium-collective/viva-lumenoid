@@ -433,9 +433,10 @@ def r1_regime_figure():
 
 
 def r6_intervention_figure():
-    """R6 — Fig 7 reproduction (REAL): predicted cell height per perlecan/growth
-    intervention from the turnover->shape pipeline (inferred relaxation annotated).
-    Reproduces the intervention rank-order: perlecan gain -> taller > control > loss."""
+    """R6 — CONTRADICTION (figure review): the model's perlecan ordering (gain ->
+    taller) is OPPOSITE the paper's reported morphology (overexpression -> shorter).
+    Shown as a flagged contradiction, not a Fig 7 reproduction, pending an audit of
+    the perlecan -> collagen-turnover direction. The growth-rate result is correct."""
     go = _go()
     from viva_lumenoid.turnover_shape import TurnoverShapeProcess
     from bigraph_schema import allocate_core
@@ -454,10 +455,20 @@ def r6_intervention_figure():
     for i, r in enumerate(relax):
         fig.add_annotation(x=names[i], y=heights[i], text=f"τ={r:.1f}", showarrow=False,
                            yshift=12, font=dict(size=10, color="#444"))
+    # Flag the perlecan contradiction directly on the figure.
+    fig.add_annotation(
+        x="perlecan gain", y=heights[2], ax=0, ay=-48, showarrow=True, arrowhead=2,
+        arrowcolor=RED, text="model: gain → taller<br><b>paper: overexpression → SHORTER</b>",
+        font=dict(size=11, color=RED), align="center")
     fig.update_layout(
-        title="R6 — intervention ordering: predicted cell height by condition "
-              "(Fig 7 reproduction; τ = inferred BM relaxation)",
-        template="plotly_white", height=520, yaxis=dict(title="predicted cell height"))
+        title="R6 — perlecan ordering CONTRADICTS the paper (evidence: contradicted; "
+              "τ = inferred BM relaxation)",
+        template="plotly_white", height=540, yaxis=dict(title="predicted cell height"),
+        annotations=list(fig.layout.annotations) + [dict(
+            x=0.5, y=-0.16, xref="paper", yref="paper", showarrow=False,
+            text="Perlecan direction is an unaudited model assumption (perlecan stabilizes collagen); "
+                 "the paper reports the opposite. Growth-rate axis (fast growth → flatter) is correct.",
+            font=dict(size=11, color="#777"))])
     return fig
 
 
