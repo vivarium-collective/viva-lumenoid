@@ -3594,7 +3594,7 @@ dependencies = [
 [[package]]
 name = "vivarium-workbench"
 version = "0.4.1"
-source = { git = "https://github.com/vivarium-collective/vivarium-workbench.git?branch=main#8aa886764bace86dc49429fdf3e3c96490c75661" }
+source = { git = "https://github.com/vivarium-collective/vivarium-workbench.git?branch=main#7d0eb6dff4ce48a9c7d619b6162913cf808b5995" }
 dependencies = [
     { name = "bigraph-schema" },
     { name = "boto3" },
@@ -3605,6 +3605,7 @@ dependencies = [
     { name = "numpy", version = "2.4.6", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.12'" },
     { name = "numpy", version = "2.5.3", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.12'" },
     { name = "process-bigraph" },
+    { name = "psutil" },
     { name = "pydantic" },
     { name = "pypdf" },
     { name = "pytest-json-report" },
