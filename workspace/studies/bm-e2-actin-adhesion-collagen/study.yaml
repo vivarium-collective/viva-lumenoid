@@ -1,11 +1,12 @@
 schema_version: 3
 name: bm-e2-actin-adhesion-collagen
-status: planned
+status: in-progress
 title: "Actin–adhesion–collagen force transfer"
 kind: extension
-phase: Design
-confidence: Planned
-
+phase: Build
+confidence: Investigating
+claim: >
+  An active cortex transmits force through reversible basal linkers to a collagen membrane patch; the transmitted traction scales with linker occupancy and cortical tension.
 question: >
   How does active cortical contractility transfer force through reversible basal adhesions
   into the collagen IV basement membrane?

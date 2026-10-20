@@ -1,11 +1,12 @@
 schema_version: 3
 name: bm-e1-actomyosin-cortex
-status: planned
+status: in-progress
 title: "Explicit actomyosin cortex mechanics"
 kind: extension
-phase: Design
-confidence: Planned
-
+phase: Build
+confidence: Investigating
+claim: >
+  A coarse actomyosin cortex carries a cortical tension that rises with contractility, giving a tension that can be mapped onto the vertex model's cortical energy.
 question: >
   Can a coarse explicit actomyosin filament/crosslink/motor model reproduce the cortical
   tension, strain response and relaxation that an effective Tyssue cortical-energy term

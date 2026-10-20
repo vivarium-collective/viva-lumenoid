@@ -1,11 +1,12 @@
 schema_version: 3
 name: bm-r3-network-expansion-supply
-status: planned
+status: in-progress
 title: "Network expansion & collagen supply"
 kind: reproduction
-phase: Design
-confidence: Planned
-
+phase: Build
+confidence: Investigating
+claim: >
+  The three supply conditions run from a shared initial state; matching the paper's ordering in network area, concentration and connectivity is in progress.
 question: >
   Why are both crosslink remodeling and collagen replacement (insertion) necessary for
   sustained basement-membrane growth?

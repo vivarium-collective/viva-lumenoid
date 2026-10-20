@@ -1,11 +1,12 @@
 schema_version: 3
 name: bm-e4-feedback-predictions
-status: planned
+status: in-progress
 title: "LAMMPS–Tyssue coupled lumenoid"
 kind: extension
-phase: Design
-confidence: Planned
-
+phase: Build
+confidence: Investigating
+claim: >
+  The epithelium and its collagen membrane are coupled both ways: the growing basal surface stretches the membrane and the membrane's stress pushes back as a basal tension, with controls and convergence in place.
 question: >
   When do growth-driven turnover, spatial BM heterogeneity, contractility-dependent
   confinement, partial adhesion and network failure change cell height and lumenoid growth

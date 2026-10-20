@@ -1,11 +1,12 @@
 schema_version: 3
 name: bm-r5-explicit-3d-confinement
-status: planned
+status: in-progress
 title: "Explicit 3D cell confinement"
 kind: reproduction
-phase: Design
-confidence: Planned
-
+phase: Build
+confidence: Investigating
+claim: >
+  A 3D monolayer with volume and surface energies runs and yields per-cell heights; the no-membrane, elastic-membrane and relaxing-membrane controls are the next step.
 question: >
   Do growing 3D epithelial cells become taller when the basement membrane relaxes slowly?
 
