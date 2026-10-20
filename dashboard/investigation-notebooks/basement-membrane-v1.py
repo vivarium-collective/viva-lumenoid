@@ -1125,17 +1125,17 @@ _save_viz('bm-r5-explicit-3d-confinement', 'r5_monolayer', _render_one('html:r5_
 #
 # Each composite is a process-bigraph *document* — named processes wired by `inputs`/`outputs` ports over shared stores. Below, each composite shows what it does, then a **parameter cell** with its tunable knobs (the current default and what each one means). Edit any value, then re-run the **Run** section to rebuild and re-simulate with your changes.
 
-# **Composite `viva_lumenoid.composites.turnover_shape_pipeline`** — `spec_viva_lumenoid_composites_turnover_shape_pipeline` (materialized from its `@composite_generator`)
+# **The model — `viva_lumenoid.composites.turnover_shape_pipeline`**
+#
+# R6 — turnover->relaxation->shape inference pipeline: an inferred collagen IV lifetime (modulated by perlecan) sets the BM relaxation time, which the reduced-order prism model turns into a predicted cell shape. Inferred (relaxation) and predicted (shape) are kept distinct; conditions are control / perlecan gain-loss / growth rate.
 
-spec_viva_lumenoid_composites_turnover_shape_pipeline = materialize_composite('viva_lumenoid.composites.turnover_shape_pipeline')
-describe_spec(spec_viva_lumenoid_composites_turnover_shape_pipeline)
-
-# === Edit parameters for this composite, then run the Run cell ===
-# ov_viva_lumenoid_composites_turnover_shape_pipeline maps each tunable parameter to its current value (the generator's
-# defaults). Edit any entry; the Run cell rebuilds the composite with it.
-ov_viva_lumenoid_composites_turnover_shape_pipeline = dict(spec_viva_lumenoid_composites_turnover_shape_pipeline['_overrides'])
-import json as _json; print(_json.dumps(ov_viva_lumenoid_composites_turnover_shape_pipeline, indent=2, default=str))
-# e.g.:  ov_viva_lumenoid_composites_turnover_shape_pipeline['<parameter>'] = <value>
+# === Parameters — edit any value, then re-run from the Run cell below ===
+# Each entry is the composite's current default; the comment explains it.
+ov_viva_lumenoid_composites_turnover_shape_pipeline = {
+    'collagen_lifetime': 5.0,   # Inferred collagen IV molecular lifetime.
+    'perlecan_factor'  : 1.0,   # Perlecan modulation: >1 stabilizes (longer lifetime), <1 destabilizes.
+    'doubling_time'    : 5.0,   # Growth-rate condition (cell doubling time).
+}
 
 # ### Run
 #
