@@ -445,3 +445,50 @@ def tissue_prism_baseline(core=None, **kw) -> dict:
             "outputs": {},
         },
     }
+
+
+def _register_turnover_shape(core):
+    """Lazy core extension for the turnover->shape pipeline (R6)."""
+    from ..turnover_shape import register_turnover_shape
+    return register_turnover_shape(core)
+
+
+_R6_PARAMS = {
+    "collagen_lifetime": {"type": "float", "default": 5.0,
+                          "description": "Inferred collagen IV molecular lifetime."},
+    "perlecan_factor": {"type": "float", "default": 1.0,
+                        "description": "Perlecan modulation: >1 stabilizes (longer lifetime), <1 destabilizes."},
+    "doubling_time": {"type": "float", "default": 5.0,
+                      "description": "Growth-rate condition (cell doubling time)."},
+}
+
+_R6_EMIT = {"inferred_relaxation": "float", "basal_area": "float",
+            "cell_height": "float", "confinement": "float"}
+
+
+@composite_generator(
+    name="turnover_shape_pipeline",
+    description="R6 — turnover->relaxation->shape inference pipeline: an inferred "
+                "collagen IV lifetime (modulated by perlecan) sets the BM relaxation "
+                "time, which the reduced-order prism model turns into a predicted "
+                "cell shape. Inferred (relaxation) and predicted (shape) are kept "
+                "distinct; conditions are control / perlecan gain-loss / growth rate.",
+    parameters=_R6_PARAMS,
+    core_extensions=[_register_turnover_shape],
+)
+def turnover_shape_pipeline(core=None, **kw) -> dict:
+    cfg = {k: v for k, v in kw.items() if k in _R6_PARAMS}
+    return {
+        "pipeline": {
+            "_type": "process", "address": "local:TurnoverShapeProcess",
+            "config": cfg,
+            "inputs": {},
+            "outputs": {k: [k] for k in _R6_EMIT},
+        },
+        "emitter": {
+            "_type": "step", "address": "local:ram-emitter",
+            "config": {"emit": _R6_EMIT},
+            "inputs": {k: [k] for k in _R6_EMIT},
+            "outputs": {},
+        },
+    }
