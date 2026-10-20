@@ -53,3 +53,11 @@ baseline:
 variants: []
 interventions: []
 runs: []
+
+visualizations:
+  - name: e2_force_transfer
+    address: "html:e2_force_transfer.html"
+    config:
+      title: "Force transfer (schematic)"
+      caption: >
+        Schematic of the cortex -> reversible basal linkers -> collagen BM force transfer E2 will measure. NOT simulated.

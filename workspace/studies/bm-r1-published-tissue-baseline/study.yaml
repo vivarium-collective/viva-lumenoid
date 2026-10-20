@@ -52,3 +52,11 @@ baseline:
 variants: []
 interventions: []
 runs: []
+
+visualizations:
+  - name: r1_regime
+    address: "html:r1_regime.html"
+    config:
+      title: "Confinement regimes (Fig 1G design target)"
+      caption: >
+        Design target (Barrientos Fig 1G): the four stiffness x relaxation regimes R1 aims to recover. Schematic of the expected phase diagram - NOT simulated.

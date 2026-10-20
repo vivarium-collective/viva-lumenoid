@@ -51,3 +51,11 @@ baseline:
 variants: []
 interventions: []
 runs: []
+
+visualizations:
+  - name: r3_supply
+    address: "html:r3_supply.html"
+    config:
+      title: "Supply vs remodelling (small real run)"
+      caption: >
+        A small REAL collagen run contrasting remodelling (make+break) vs make-only - the ordering behind 'supply sustains growth'. Full Fig 2B-C reproduction is the study target.

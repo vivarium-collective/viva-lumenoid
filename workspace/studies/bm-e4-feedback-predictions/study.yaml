@@ -54,3 +54,11 @@ baseline:
 variants: []
 interventions: []
 runs: []
+
+visualizations:
+  - name: e4_feedback
+    address: "html:e4_feedback.html"
+    config:
+      title: "Feedback loop + controls (schematic)"
+      caption: >
+        Schematic of the growth <-> turnover <-> BM relaxation <-> confinement feedback loop and its one-way/uncoupled/uniform controls. NOT simulated.

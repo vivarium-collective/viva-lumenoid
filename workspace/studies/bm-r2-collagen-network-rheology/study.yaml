@@ -58,3 +58,11 @@ baseline:
 variants: []
 interventions: []
 runs: []
+
+visualizations:
+  - name: r2_rheology
+    address: "html:r2_rheology.html"
+    config:
+      title: "Collagen network assembly + stress (small real run)"
+      caption: >
+        A small REAL collagen IV run: the NC1/7S network assembles and carries in-plane stress. Full Fig 2D/2E reproduction (relaxation vs turnover rate) is the study target.

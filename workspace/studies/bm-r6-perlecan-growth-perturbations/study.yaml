@@ -54,3 +54,11 @@ baseline:
 variants: []
 interventions: []
 runs: []
+
+visualizations:
+  - name: r6_perturbation
+    address: "html:r6_perturbation.html"
+    config:
+      title: "Intervention ordering (Fig 7 design target)"
+      caption: >
+        Design target (Fig 7): the expected perlecan / growth-rate intervention ordering on cell height. Schematic - NOT simulated.
