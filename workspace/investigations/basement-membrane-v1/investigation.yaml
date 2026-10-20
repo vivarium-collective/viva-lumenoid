@@ -71,35 +71,38 @@ description: |
   network centroid), so boundary crossings no longer teleport across timepoints.
   See `feedback/` for the imported reviewer file.
 
-  **Upgrade campaign (2026-10-19) — from BM reproduction to multiscale
-  morphogenesis.** With Barrientos et al. ("Basement membrane turnover controls
-  cell shape", Cell 2026, 189:5611–5624) now published, this investigation is
-  reframed from "the two numbers the vertex model needs" into a staged
-  reproduction+extension campaign. Strategy: first reproduce the published tissue
-  and collagen-network results quantitatively (R1–R3), then replace homogeneous
-  tissue mechanics with spatial 2D/3D Tyssue models and bidirectional LAMMPS–Tyssue
-  coupling (R4–R6), then add explicitly-modelled actomyosin and a closed lumenoid
-  geometry (E1–E4). Reproduction, verification and new predictions are reported
-  separately.
+  **From membrane reproduction to multiscale morphogenesis.** With Barrientos et al.
+  ("Basement membrane turnover controls cell shape", Cell 2026, 189:5611–5624) now
+  published, this investigation has grown from producing the two numbers a vertex
+  model needs into a staged reproduction-and-extension study. The plan is to first
+  reproduce the published tissue and collagen-network results quantitatively, then
+  replace homogeneous tissue mechanics with spatial 2D and 3D epithelial models
+  coupled both ways to the membrane, and finally add an explicit actomyosin cortex
+  and a closed lumenoid geometry. Reproductions, verification, and new predictions
+  are reported separately.
 
-  **Coupling hierarchy (interchangeable, not additive).** 2D planar Tyssue sheet
-  (+ BM traction/area law, height via a prism relation) → 2D cross-section → 3D
-  monolayer (apical/basal/lateral surfaces + volume constraints) → closed 3D
-  lumenoid (lumen volume/pressure + BM shell). Mechanical contract: epithelial
-  basal geometry/displacements pass to the BM; the BM returns reaction
-  forces/traction to the basal DOFs. Effective constitutive BM and explicit LAMMPS
-  BM are interchangeable alternatives, never additive parallel forces.
+  **Coupling hierarchy.** The epithelium is modelled at increasing spatial detail:
+  a 2D planar sheet (with a membrane traction/area law and height from a prism
+  relation), a height-resolving 2D cross-section, a 3D monolayer with apical, basal
+  and lateral surfaces and volume constraints, and a closed 3D lumenoid with lumen
+  volume and pressure and a membrane shell. The mechanical contract is the same at
+  every level: the epithelial basal geometry drives the membrane, and the membrane
+  returns reaction forces to the basal degrees of freedom. An effective constitutive
+  membrane and an explicit collagen membrane are interchangeable alternatives, never
+  summed.
 
-  **Execution gates.** P0 — retire superseded BM claims; frozen faithful reference
-  settings + reproducible R2 stress tests. P1 — direct numerical reproduction of
-  Figures 1–2 (R1–R3). P2 — verified 2D/3D Tyssue studies (R4–R5); cell-height and
-  area response. P3 — bidirectional basal-force coupling with convergence and
-  reduced-order agreement. P4 — actin (E1–E2), closed lumenoid (E3), new predictive
-  perturbations (E4). The existing bm-v1…v5 studies are the P0 reproduction core:
-  bm-v3 is retained as a counterfactual (central-force) control, and bm-v4's native
-  junction angles fold into the faithful reference rather than being a novel
-  ingredient. The superseded "floppy because junction angles are absent" narrative
-  is retired by the released-code cross-check (see executive findings 3–6).
+  **How the work is staged.** The reproduction core is settled first — retire the
+  superseded membrane claims, freeze the faithful reference settings, and establish
+  reproducible stress tests. Then comes the direct numerical reproduction of the
+  paper's tissue and collagen-network figures, then verified 2D and 3D epithelial
+  studies that establish the cell-height and area response, then bidirectional
+  coupling with convergence and agreement between the explicit and reduced-order
+  membranes, and finally the actomyosin cortex, the closed lumenoid, and the new
+  predictive perturbations. The original collagen-network studies are that
+  reproduction core; one is kept as a central-force counterfactual, and the native
+  junction angles of another fold into the faithful reference rather than counting
+  as a new ingredient. The earlier idea that the network is soft because junction
+  angles are absent is retired by the cross-check against the released code.
 
   **Engine note.** The downstream epithelial vertex model is `vivarium-tyssue`,
   imported into the workspace as an optional dev sibling engine (R4–R6, E3–E4 build
@@ -303,21 +306,20 @@ executive:
     the apparent large discrepancy with the paper disappears.
   verdict_status: in-progress
   decisions_needed:
-    - "Reproduction conventions: acquire the supplemental tissue-model equations and precise Figure 1 parameter values — the article alone does not fix every reproduction convention (gates R1)."
-    - "Released turnover kinetics: resolve the full GCE-style monomer-exchange / distance-gated-break implementation, the 7S-specific mechanics, and the original stress/energy conversion before freezing the R2 reference (P0)."
-    - "Collagen supply law: fixed-concentration (reference reproduction, R3) vs secretion-flux-driven (new lumenoid hypothesis, E3/E4) — decide per study."
-    - "3D calibration data: obtain lumenoid geometry timecourses, cell height/volume, BM thickness and collagen-vs-laminin staining before calibrating R5/E3."
-    - "Actin fidelity: use a validated reduced cortical model (Tyssue cortical energy) unless molecularly-resolved actin (E1) changes a measurable prediction — explicit go/no-go decision."
-    - "Process/composite modularity: converge the collagen-network composites on ONE general, parameterized network builder reused across stage1/stage2/R2/R3 (chemistry, bending_k, density, strain protocol as config) rather than near-duplicate generators."
-    - "Absolute (Pa) modulus path: the faithful angle-stabilized model now reproduces the published ≈0.03 Pa and gives a reproducible reduced-unit modulus (bm-v4, E≈3 LJ). An EXACT absolute value additionally needs the released GCE + distance-gated 7S break (0.95) + dense initial config — implement these, or accept the reduced-unit value and resolve via the energy-scale decision (#4)? (Cross-check + param correction already DONE 2026-10-01; see references/cross-check-vs-released-code.md.)"
-    - "Engine for stages 1–2: LAMMPS now; revisit Smoldyn at stage 3 (spec #2)."
-    - "Secretion: fixed concentration vs fixed flux (spec #3)."
-    - "Energy scale: report modulus in Pa (fit to a measured modulus) or keep kT and report a ratio (spec #4)."
-    - "Coupling contract: which vertex-model term receives the BM — basal tension, mobility, or elastic spring (spec #5)."
-    - "Linker values: density, spring constant, off-rate; sweep off-rate as a multiple of the crosslink break rate (spec #6)."
-    - "Growth rate ε̇ from the lumenoid radius time course — still requested (spec #7)."
-    - "Slab thickness / layer count — one z-stack away (spec #9)."
-    - "Which readout calibrates vs validates — remodelling time calibrates MP and the time unit, so it cannot also validate (spec #10)."
+    - "Reproduction conventions: the article alone does not fix every convention needed to reproduce it. Acquire the supplemental tissue-model equations and the precise Figure 1 parameter values."
+    - "Released turnover kinetics: pin down the grand-canonical monomer exchange, the distance-gated breaking, the 7S-specific mechanics, and the original stress-to-energy conversion before freezing the collagen reference."
+    - "Collagen supply law: a fixed concentration (for reproducing the paper) or a secretion flux (for the lumenoid hypothesis). Decide per study."
+    - "3D calibration data: obtain lumenoid geometry over time, cell height and volume, membrane thickness, and collagen-versus-laminin staining before calibrating the 3D models."
+    - "Actin fidelity: use a validated reduced cortical model unless a molecularly-resolved actin cortex changes a measurable prediction. An explicit go/no-go call."
+    - "Composite modularity: keep the collagen-network composites as thin selections over one general, parameterized network builder (chemistry, bending stiffness, density, and strain protocol as configuration), rather than near-duplicate generators."
+    - "Absolute modulus in pascals: the angle-stabilized model reproduces the published ≈0.03 Pa and gives a reproducible modulus in reduced units (E ≈ 3 LJ). An exact value in pascals additionally needs the released monomer exchange, the distance-gated 7S break (0.95), and the dense starting configuration — or accept the reduced-unit value and settle the energy-scale choice below."
+    - "Engine for the early stages: LAMMPS now, with Smoldyn revisited when surface binders are added."
+    - "Energy scale: report the modulus in pascals (fit to a measured modulus) or keep kT units and report a ratio."
+    - "Coupling contract: which vertex-model term receives the membrane — a basal tension, a mobility, or an elastic spring."
+    - "Linker values: density, spring constant, and off-rate; sweep the off-rate as a multiple of the crosslink break rate."
+    - "Growth rate: extract ε̇ from the lumenoid radius over time (still needed)."
+    - "Slab thickness and layer count (one z-stack away)."
+    - "Which readout calibrates and which validates: the remodelling time calibrates the formation probability and the time unit, so it cannot also validate."
 
 glossary:
   - term: protomer

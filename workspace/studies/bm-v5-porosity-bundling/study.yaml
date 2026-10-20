@@ -11,12 +11,12 @@ gate_status: passed
 design_status: drafted
 
 claim: >
-  Of the two geometric readouts the spec asks the network to reproduce, one is
-  met and one is not: the simulated pore-size distribution reaches the measured
-  corneal-EM band (72 ± 40 nm) at realistic density, while the protomers-per-
-  strand distribution stays near 1, below the measured 5–7. The released NC1/7S
-  topology has no lateral-association bond, so it cannot form multi-protomer
-  strands — a limitation the spec identifies in advance.
+  Of the two geometric readouts the model should reproduce, one is met and one is
+  not. The simulated pore-size distribution reaches the measured corneal-EM band
+  (72 ± 40 nm) at realistic density, while the protomers-per-strand distribution
+  stays near 1, below the measured 5-7. The released NC1/7S topology has no
+  lateral-association bond, so it cannot form multi-protomer strands — a limitation
+  identified in advance.
 
 experiment: >
   Assemble the real LAMMPS collagen IV network at several densities, then read
@@ -26,13 +26,13 @@ experiment: >
   place both against the measured comparators.
 
 result: >
-  Re-run 2026-10-01 with the parameters corrected to the released code (3σ rod,
-  σ≈125 nm). Pore median falls with coverage and lands near/within the corneal-EM
-  band (72 ± 40 nm) at the densest network (median ~54 nm); the open mesh is
-  realistic, and pore size is a density knob, not a universal. Bundling stays near
-  1 (mean ~1.29 protomers/strand, mostly singletons, max ~6). With no lateral-
-  association bond, the NC1/7S topology cannot build the 5–7-protomer strands
-  measured in the PFHR-9 scaffold.
+  With the parameters corrected to the released code (a 3σ rod, σ≈125 nm), the pore
+  median falls with coverage and lands near or within the measured corneal-EM band
+  (72 ± 40 nm) at the densest network (median ~54 nm): the open mesh is realistic,
+  and pore size is a density knob rather than a fixed property. Bundling stays near
+  1 (mean ~1.29 protomers per strand, mostly singletons, up to ~6). With no
+  lateral-association bond, the NC1/7S topology cannot build the 5-7-protomer
+  strands measured in the PFHR-9 scaffold.
 
 # Canonical DAG edge (supersedes the legacy parent_studies shim).
 pipeline_gate:

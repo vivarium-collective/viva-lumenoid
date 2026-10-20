@@ -11,15 +11,14 @@ gate_status: passed
 design_status: drafted
 
 claim: >
-  Junction bending is a released feature (NC1 angle k=4.0 @180°, plus 7S angles),
-  not a new ingredient. HOW it is applied decides whether it yields a usable
-  modulus. Our original as-formed `fix restrain` (pinned on AFTER assembly) is
-  ill-conditioned — sign-flipping, no reproducible value. The FAITHFUL path
-  (2026-10-02), creating real harmonic angles as the crosslinks form so the
-  network equilibrates with them active (matching the released bond/react
-  templates), yields a POSITIVE, well-conditioned, reproducible modulus. So the
-  released model is not floppy once the angles are faithfully active; its modulus
-  is finite and strongly density-dependent.
+  Junction bending is a released feature (an NC1 angle of stiffness 4.0 at 180°,
+  plus 7S angles), not a new ingredient; how it is applied decides whether it gives
+  a usable modulus. Pinning as-formed restraints on after assembly is
+  ill-conditioned — the sign flips and no reproducible value emerges. Creating real
+  harmonic angles as the crosslinks form, so the network equilibrates with them
+  active (matching the released bond/react templates), gives a positive,
+  well-conditioned, reproducible modulus. The released model is not floppy once its
+  angles are active; its modulus is finite and strongly density-dependent.
 
 experiment: >
   Implement bending via LAMMPS `fix restrain` pinned to each junction's as-formed
@@ -29,18 +28,19 @@ experiment: >
   stiffness bending_k.
 
 result: >
-  Three ways of applying the released NC1 bending (k=4.0), 3 seeds each at the
-  corrected params: central-force (angles off) E per-seed −0.54/−1.32/−1.14
-  (consistent with zero); as-formed `fix restrain` 0.9/−2.53/−0.47 (ill-
-  conditioned, sign-flipping); REAL angles created during assembly
-  36.7/27.6/37.5 LJ — positive, same sign, reproducible. The angle-during-
-  assembly fix resolves the ill-conditioning. The modulus is strongly density-
-  dependent (≈79 Pa at 2.9 crosslinks/rod → ≈7 Pa at 1.0/rod). Per-angle deletion
-  is now implemented (delete-all + recreate on break), so the stiff network also
-  REMODELS in the viscous hold — giving a reproducible remodelling time (τ ≈ 40 τ,
-  bm-v1) alongside the modulus. Assembly stays make-only because make+break at
-  this scale is too sparse to percolate (≈0.18/rod); matching the released dense
-  make+break balance needs the authors' dense initial config + GCE.
+  Three ways of applying the released NC1 bending (stiffness 4.0), three seeds each
+  at the corrected parameters: central-force (angles off) gives per-seed moduli of
+  −0.54/−1.32/−1.14 LJ (consistent with zero); as-formed restraints give
+  0.9/−2.53/−0.47 (ill-conditioned, sign-flipping); and real angles created during
+  assembly give 36.7/27.6/37.5 LJ — positive, same sign, reproducible. Creating the
+  angles during assembly resolves the ill-conditioning. The modulus is strongly
+  density-dependent (≈79 Pa at 2.9 crosslinks per rod, falling to ≈7 Pa at 1.0 per
+  rod). With per-angle deletion in place (delete all and recreate on break), the
+  stiff network also remodels during the viscous hold, giving a reproducible
+  remodelling time (τ ≈ 40 τ) alongside the modulus. Assembly stays formation-only
+  because allowing both formation and breaking at this scale is too sparse to
+  percolate (≈0.18 per rod); matching the released dense balance needs the authors'
+  dense initial configuration and grand-canonical monomer exchange.
 
 seeded_from:
   study: bm-v3-junction-bending-rigidity
