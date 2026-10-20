@@ -118,6 +118,14 @@ class CollagenParams:
     slab_thickness: float = 2.0        # thin z; quasi-2D (authors' dense config = 12σ)
     seed: int = 12345
 
+    # ---- material insertion / collagen supply (R3 Fig 2B-C third mode) ----
+    # New two-bead rods supplied per insertion step (0 = no supply). Enables the
+    # remodeling-WITH-insertion mode: fresh rods are created mid-run (via
+    # create_atoms/create_bonds, see CollagenNetworkProcess._insert_rods) so the
+    # network can REPLACE material diluted by expansion — the third supply mode
+    # of Barrientos Fig 2B-C, which remodeling-without-insertion cannot express.
+    insert_per_step: int = 0
+
     # ---- stage-1 protocol (spec: stretch, hold, then chemistry on) --------
     assemble_steps: int = 8000         # form the initial crosslinked network
     target_strain: float = 0.15        # equibiaxial in-plane strain to reach
@@ -132,7 +140,8 @@ class CollagenParams:
         # coerce the count/step/seed fields back to int so numpy and LAMMPS get
         # the integers they require.
         for f in ('nc1_max_crosslinks', 'svns_max_crosslinks', 'make_every',
-                  'break_every', 'n_rods', 'seed', 'assemble_steps', 'hold_steps'):
+                  'break_every', 'n_rods', 'seed', 'assemble_steps', 'hold_steps',
+                  'insert_per_step'):
             setattr(self, f, int(round(getattr(self, f))))
 
     def to_dict(self) -> dict[str, Any]:

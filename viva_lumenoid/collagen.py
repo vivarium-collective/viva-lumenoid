@@ -115,13 +115,20 @@ class CollagenNetworkProcess(Process):
         self._chem_was_active = False
         self._angled = set()        # NC1 crosslinks that already have real angles
         self._lx0 = None  # initial box length, for strain
+        # Material insertion (R3 supply mode): current rod count (grows as rods are
+        # inserted), next free molecule id, and a dedicated RNG so insertion sites
+        # are reproducible and independent of the break-deletion RNG stream.
+        self._n_rods_current = None
+        self._next_mol = None
+        self._insert_rng = None
 
     def inputs(self):
         # make_on: formation (fix bond/create) on/off.
         # break_on: force-independent off-rate (random deletion) on/off.
         # Separately controllable so the staged protocol can run "breakage off,
         # then on" (spec Fig 2D) without formation confounding the relaxation.
-        return {'strain_rate': 'float', 'make_on': 'float', 'break_on': 'float'}
+        return {'strain_rate': 'float', 'make_on': 'float', 'break_on': 'float',
+                'insert_on': 'float'}
 
     def outputs(self):
         return {
@@ -160,6 +167,12 @@ class CollagenNetworkProcess(Process):
         boxlo, boxhi, *_ = self._lmp.extract_box()
         self._lx0 = boxhi[0] - boxlo[0]
         self._v0 = (boxhi[0] - boxlo[0]) * (boxhi[1] - boxlo[1]) * (boxhi[2] - boxlo[2])
+        # Material-insertion bookkeeping: rods start at n_rods, molecule ids 1..n_rods
+        # are used by the initial network (see network.build_network_data), so the
+        # next inserted rod takes molecule id n_rods+1.
+        self._n_rods_current = self._params.n_rods
+        self._next_mol = self._params.n_rods + 1
+        self._insert_rng = np.random.default_rng(self._params.seed + 777)
 
     def _apply_deform(self, rate):
         if rate is None:
@@ -200,6 +213,63 @@ class CollagenNetworkProcess(Process):
             for name in ('xlink_nc1', 'xlink_7s'):
                 self._lmp.command(f'unfix {name}')
             self._make_on = False
+            self._fixes_dirty = True
+
+    def _insert_rods(self, n_new):
+        """Supply ``n_new`` fresh two-bead rods mid-run (R3 material-insertion mode).
+
+        Each rod is an NC1 bead (type 1) + a 7S bead (type 2) joined by one
+        intra-rod bond (type 1), placed at a random in-plane position/orientation
+        in the slab — the same layout ``network.build_network_data`` lays down at
+        build, but added live. Rods are NEVER deleted (``_break_crosslinks`` only
+        removes crosslink bonds), so atom ids stay contiguous 1..natoms and the
+        two new beads take ids natoms+1, natoms+2.
+
+        KEY INSIGHT: the formation fix is ``fix ... bond/create ... 1 1 ...`` — it
+        filters candidate partners by atom TYPE (1-1 for NC1, 2-2 for 7S), not by
+        a static group, so an inserted type-1/type-2 bead is automatically
+        crosslink-eligible on the next run with no fix redefinition. The nve /
+        langevin fixes act on ``all``, so new atoms integrate + thermostat
+        automatically. Setting ``_fixes_dirty`` forces the next ``run`` to do a
+        full setup (``pre yes``), rebuilding neighbor lists + the atom map for the
+        new atoms.
+
+        Insertion centers are clamped to ``[half, box_xy - half]`` so BOTH beads
+        land inside the simulation box — ``create_atoms single`` silently skips a
+        point outside the box, which would leave a half-rod and make the following
+        ``create_bonds`` reference a non-existent atom.
+        """
+        n_new = int(n_new)
+        if n_new <= 0:
+            return
+        p = self._params
+        lmp = self._lmp
+        half = p.bond_length / 2.0
+        zmid = p.slab_thickness / 2.0
+        lo, hi = half, max(half, p.box_xy - half)
+        created = 0
+        for _ in range(n_new):
+            nat = lmp.get_natoms()
+            i1, i2 = nat + 1, nat + 2          # contiguous ids (rods never deleted)
+            cx = float(self._insert_rng.uniform(lo, hi))
+            cy = float(self._insert_rng.uniform(lo, hi))
+            cz = zmid + float(self._insert_rng.uniform(-0.1, 0.1))
+            theta = float(self._insert_rng.uniform(0.0, math.pi))
+            dx = half * math.cos(theta)
+            dy = half * math.sin(theta)
+            lmp.command(f'create_atoms 1 single {cx - dx} {cy - dy} {cz} units box')
+            lmp.command(f'create_atoms 2 single {cx + dx} {cy + dy} {cz} units box')
+            lmp.command(f'set atom {i1} mol {self._next_mol}')
+            lmp.command(f'set atom {i2} mol {self._next_mol}')
+            lmp.command(f'create_bonds single/bond 1 {i1} {i2}')
+            self._next_mol += 1
+            self._n_rods_current += 1
+            created += 1
+        if created:
+            # Refresh the type groups (static, so new atoms are not auto-added) and
+            # force a full setup so the new atoms/bonds enter the neighbor lists.
+            lmp.command('group nc1 type 1')
+            lmp.command('group svns type 2')
             self._fixes_dirty = True
 
     def _break_crosslinks(self, interval):
@@ -341,7 +411,12 @@ class CollagenNetworkProcess(Process):
         boxlo, boxhi, *_ = lmp.extract_box()
         lx, ly, lz = (boxhi[i] - boxlo[i] for i in range(3))
         nbonds = int(lmp.extract_global('nbonds'))
-        n_crosslinks = max(0, nbonds - self._params.n_rods)  # total minus intra-rod
+        # Crosslinks = total bonds minus intra-rod bonds. Each rod (initial OR
+        # inserted) carries exactly one intra-rod bond, so subtract the CURRENT
+        # rod count, not the initial one — otherwise inserted rods' intra-rod
+        # bonds would be miscounted as crosslinks.
+        n_rods_now = self._n_rods_current if self._n_rods_current is not None else self._params.n_rods
+        n_crosslinks = max(0, nbonds - n_rods_now)
         ids = lmp.numpy.extract_atom('id')[:nlocal].copy()
         nb, bdata = lmp.gather_bonds()
         bonds = (np.array(bdata, dtype=int).reshape(-1, 3).tolist() if nb else [])
@@ -427,6 +502,11 @@ class CollagenNetworkProcess(Process):
                 elif self._chem_was_active and not chem_active:
                     self._rebuild_restraints()   # freeze-in the assembled network
                 self._chem_was_active = chem_active
+            # Material insertion (R3 supply mode): create fresh rods when insert_on
+            # is asserted, AFTER the make/break/angle topology changes so the new
+            # rods enter on the next integration and are crosslink-eligible.
+            if bool(state.get('insert_on', 0.0) and state['insert_on'] >= 0.5):
+                self._insert_rods(self._params.insert_per_step)
         n_steps = max(1, int(round(interval / self._dt)))
         # fix deform re-establishes its strain ramp during run setup, so while
         # deforming we must run with `pre yes` every step or the box stalls after
