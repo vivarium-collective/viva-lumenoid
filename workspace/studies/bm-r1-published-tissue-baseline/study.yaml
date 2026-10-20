@@ -45,10 +45,16 @@ expected_behavior:
 baseline:
   - name: bm-r1-published-tissue-baseline
     composite: viva_lumenoid.composites.tissue_prism_baseline
-    composite_status: planned
+    composite_status: implemented
     params: {}
     note: >
-      PLANNED composite — design target, not yet implemented (expected unresolved-composite lint gap)
+      Implemented as a reduced-order homogeneous tissue model (TissuePrismProcess):
+      a fixed-volume prism cell whose basal area is set by proliferation against a
+      viscoelastic BM (stiffness + relaxation). Resolves ready and RUNS; the Fig 1
+      confinement regimes separate (verified: stiff/slow-relaxing BM -> confined,
+      taller cell; soft/fast -> spread, flatter). The homogeneous effective-BM
+      reference for R4/R5; sweeping stiffness x relaxation/doubling reproduces the
+      Fig 1G regime map (the study's phase-diagram figure).
 variants: []
 interventions: []
 runs: []
