@@ -1,10 +1,12 @@
 """R6 -- turnover->relaxation->shape inference pipeline.
 
 Pure-process contracts for study bm-r6-perlecan-growth-perturbations. These lock
-the Barrientos Fig 7 intervention ordering (perlecan gain -> longer collagen
-lifetime -> slower BM relaxation -> more confinement -> taller cell), the linear
-inferred-relaxation scaling, the inferred/predicted output split, and the
-growth-rate effect.
+the Barrientos Fig 7 intervention ordering. Perlecan promotes collagen IV bond
+breakage, so perlecan KNOCKDOWN lengthens the collagen lifetime -> slower BM
+relaxation -> more confinement -> TALLER cell, and OVEREXPRESSION shortens it ->
+faster relaxation -> shorter cell. perlecan_factor is the lifetime multiplier:
+< 1 overexpression, > 1 knockdown. Also locks the linear inferred-relaxation
+scaling, the inferred/predicted output split, and the growth-rate effect.
 """
 
 
@@ -32,8 +34,9 @@ def test_turnover_shape_pipeline_registered():
 
 def test_perlecan_intervention_ordering():
     # behavior_test: perlecan-intervention-ordering (primary)
-    # perlecan gain > control > loss (Barrientos Fig 7 ordering).
-    assert _height(2.0) > _height(1.0) > _height(0.3)
+    # Barrientos Fig 7: knockdown (longer lifetime, factor>1) -> taller >
+    # control > overexpression (shorter lifetime, factor<1) -> shorter.
+    assert _height(25.0) > _height(1.0) > _height(0.05)
 
 
 def test_inferred_relaxation_scales_with_perlecan():

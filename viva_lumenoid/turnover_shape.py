@@ -6,9 +6,15 @@ relaxation time, which the reduced-order prism model (R1) turns into a PREDICTED
 cell shape. The two are kept distinct — ``inferred_relaxation`` is read off the
 turnover inference, ``cell_height`` / ``confinement`` are the mechanical
 prediction. Conditions: control, perlecan gain/loss (changes the lifetime), and
-growth-rate change (changes the doubling time). Perlecan stabilizing collagen ->
-longer lifetime -> slower BM relaxation -> more confinement (taller cells), the
-paper's intervention ordering.
+growth-rate change (changes the doubling time).
+
+Perlecan DESTABILIZES the collagen IV network ("perlecan promotes bond breakage",
+Barrientos et al. Cell 2026): perlecan overexpression SHORTENS the collagen IV
+lifetime (measured ~1 h vs ~20 h control), giving FASTER BM relaxation and
+SHORTER/fatter cells; perlecan knockdown LENGTHENS the lifetime (~500 h), giving
+slower relaxation and TALLER/thinner cells. So ``perlecan_factor`` < 1 models
+overexpression and > 1 models knockdown. (An earlier version had this inverted and
+predicted the opposite ordering; corrected against the paper 2026-10-20.)
 """
 from __future__ import annotations
 
@@ -22,7 +28,7 @@ class TurnoverShapeProcess(Process):
 
     config_schema = {
         "collagen_lifetime": {"_type": "float", "_default": 5.0},  # inferred collagen IV lifetime
-        "perlecan_factor": {"_type": "float", "_default": 1.0},    # >1 stabilizes, <1 destabilizes
+        "perlecan_factor": {"_type": "float", "_default": 1.0},    # lifetime multiplier: <1 = overexpression (shortens), >1 = knockdown (lengthens)
         "doubling_time": {"_type": "float", "_default": 5.0},      # growth-rate condition
         "bm_stiffness": {"_type": "float", "_default": 1.0},
     }
