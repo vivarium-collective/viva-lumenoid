@@ -403,32 +403,74 @@ def driving_schema_figure():
     return fig
 
 
-def r1_regime_figure():
-    """R1 — Fig 1G reproduction (REAL): final cell height over BM stiffness x
-    relaxation/doubling, from the reduced-order prism model. The confinement regime
-    topology emerges — tall (confined) in the stiff, slowly-relaxing corner."""
-    go = _go()
+def _prism_trajectory(stiffness, relax_over_doubling, doubling=5.0, steps=40, dt=0.2):
+    """A single reduced-order prism trajectory: confinement + basal area over time."""
     from viva_lumenoid.tissue_prism import TissuePrismProcess
     from bigraph_schema import allocate_core
-    stiff = np.geomspace(0.1, 10.0, 12)
-    relax = np.geomspace(0.5, 50.0, 12)   # doubling fixed at 5 -> y is relaxation/doubling
-    H = np.zeros((len(relax), len(stiff)))
-    for i, tau in enumerate(relax):
+    p = TissuePrismProcess(config={"bm_stiffness": float(stiffness),
+                                   "bm_relaxation": float(relax_over_doubling * doubling),
+                                   "doubling_time": float(doubling)}, core=allocate_core())
+    t, area, conf = [], [], []
+    for i in range(steps):
+        o = p.update({}, dt)
+        t.append(i * dt); area.append(o["basal_area"]); conf.append(o["confinement"])
+    return np.array(t), np.array(area), np.array(conf)
+
+
+def r1_regime_figure():
+    """R1 — reduced-order reimplementation of the Barrientos Fig-1 tissue model.
+
+    Panel A: confinement across the TWO dimensionless axes the paper uses — BM
+    stiffness relative to the cell and BM relaxation time / proliferation (doubling)
+    time — with the confinement=1 boundary drawn and the three sampled regimes
+    marked. Panels B–D: representative basal-area growth trajectories for the
+    soft/fast, intermediate and stiff/slow corners. This is our analytic
+    reimplementation, compared to Fig 1 at the level of regime topology; it is not a
+    digitized overlay of the published boundaries (evidence: observed)."""
+    go = _go()
+    from plotly.subplots import make_subplots
+    stiff = np.geomspace(0.1, 10.0, 14)
+    ratio = np.geomspace(0.1, 10.0, 14)   # BM relaxation / doubling time (dimensionless)
+    C = np.zeros((len(ratio), len(stiff)))
+    for i, r in enumerate(ratio):
         for j, k in enumerate(stiff):
-            p = TissuePrismProcess(config={"bm_stiffness": float(k), "bm_relaxation": float(tau),
-                                           "doubling_time": 5.0}, core=allocate_core())
-            o = {}
-            for _ in range(40):
-                o = p.update({}, 0.2)
-            H[i, j] = o["cell_height"]
-    fig = go.Figure(data=go.Heatmap(z=H, x=stiff, y=relax / 5.0, colorscale="Viridis",
-                                    colorbar=dict(title="cell<br>height")))
+            _, _, conf = _prism_trajectory(k, r)
+            C[i, j] = conf[-1]
+    corners = [("soft / fast-relaxing", 0.2, 0.2, GREEN),
+               ("intermediate", 1.0, 1.0, BLUE),
+               ("stiff / slow-relaxing", 8.0, 8.0, RED)]
+
+    fig = make_subplots(
+        rows=3, cols=2, column_widths=[0.62, 0.38], row_heights=[1, 1, 1],
+        specs=[[{"rowspan": 3}, {}], [None, {}], [None, {}]],
+        subplot_titles=("A — confinement phase map (reduced-order reimplementation)",
+                        "B — soft / fast-relaxing", "C — intermediate", "D — stiff / slow-relaxing"))
+    fig.add_trace(go.Heatmap(z=C, x=stiff, y=ratio, colorscale="Viridis",
+                             colorbar=dict(title="confinement<br>(h/h₀)", len=0.95)),
+                  row=1, col=1)
+    # confinement = 1 regime boundary (spread below, confined above)
+    fig.add_trace(go.Contour(z=C, x=stiff, y=ratio, showscale=False,
+                             contours=dict(start=1.0, end=1.0, size=1.0, coloring="none"),
+                             line=dict(color="white", width=2),
+                             hoverinfo="skip"), row=1, col=1)
+    for nm, k, r, col in corners:
+        fig.add_trace(go.Scatter(x=[k], y=[r], mode="markers+text", text=[nm.split()[0]],
+                                 textposition="top center",
+                                 marker=dict(color=col, size=12, line=dict(color="white", width=1.5)),
+                                 showlegend=False), row=1, col=1)
+    fig.update_xaxes(title_text="BM stiffness (relative to cell)", type="log", row=1, col=1)
+    fig.update_yaxes(title_text="BM relaxation / doubling time", type="log", row=1, col=1)
+    for idx, (nm, k, r, col) in enumerate(corners):
+        rr = idx + 1
+        t, area, _ = _prism_trajectory(k, r)
+        fig.add_trace(go.Scatter(x=t, y=area, mode="lines", line=dict(color=col, width=3),
+                                 showlegend=False), row=rr, col=2)
+        fig.update_yaxes(title_text="basal area", row=rr, col=2)
+    fig.update_xaxes(title_text="time (∝ cell number)", row=3, col=2)
     fig.update_layout(
-        title="R1 — confinement regimes: cell height vs BM stiffness × relaxation/doubling "
-              "(Fig 1G reproduction)",
-        template="plotly_white", height=560,
-        xaxis=dict(title="BM stiffness", type="log"),
-        yaxis=dict(title="BM relaxation / doubling time", type="log"))
+        title="R1 — reduced-order tissue model: confinement regimes vs BM stiffness × "
+              "relaxation/doubling (cf. Barrientos Fig 1; evidence: observed)",
+        template="plotly_white", height=640, margin=dict(t=90))
     return fig
 
 

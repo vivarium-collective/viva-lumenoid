@@ -355,14 +355,18 @@ visualizations:
     address: "html:r2_fig2e.html"
     config:
       title: "Stress-relaxation time τ vs collagen residence (Barrientos Fig 2E)"
+      evidence_status: observed
+      tier: main
       caption: >
         REAL measured data (dense multi-seed sweep: 300 rods, density 3.0, 12σ slab, 4 seeds): the stress-relaxation time τ rises monotonically with collagen residence time (37→102 LJ over residence 12.5→200), reproducing the Fig 2E direction. τ carries an intrinsic relaxation floor (~37 LJ) at fast turnover and is residence-dominated above residence ~50; the modulus is turnover-independent (3.19 LJ). The open marker (residence 200) resolved at only 1/4 seeds.
   - name: r2_rheology
     address: "html:r2_rheology.html"
     config:
-      title: "Collagen network assembly + stress (small real run)"
+      title: "Collagen network assembly + stress — 40-rod smoke test (methods)"
+      evidence_status: engineered-diagnostic
+      tier: supplement
       caption: >
-        A small REAL collagen IV run: the NC1/7S network assembles and carries in-plane stress — the mechanism at reduced scale behind the Fig 2E curve above.
+        A small 40-rod LAMMPS smoke test confirms that bonds form and the simulated network reports finite in-plane stress (network bond-virial, reduced LJ units); it does not establish the lifetime–relaxation law — that is the primary figure above. Methods/verification only.
 
 report:
   title: "R2 -- collagen IV network rheology (Fig-2E direction reproduced)"
