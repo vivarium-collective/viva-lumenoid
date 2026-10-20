@@ -1264,17 +1264,19 @@ _save_viz('bm-e1-actomyosin-cortex', 'e1_cortical_tension', _render_one('html:e1
 #
 # Each composite is a process-bigraph *document* — named processes wired by `inputs`/`outputs` ports over shared stores. Below, each composite shows what it does, then a **parameter cell** with its tunable knobs (the current default and what each one means). Edit any value, then re-run the **Run** section to rebuild and re-simulate with your changes.
 
-# **Composite `viva_lumenoid.composites.actin_adhesion_bm`** — `spec_viva_lumenoid_composites_actin_adhesion_bm` (materialized from its `@composite_generator`)
+# **The model — `viva_lumenoid.composites.actin_adhesion_bm`**
+#
+# E2 (extension) — actin-adhesion-collagen force transfer: an actomyosin cortex (LAMMPS seam) pulls through reversible basal linkers (BasalAdhesion) on a collagen IV BM patch (CollagenNetworkProcess). Measures traction, linker occupancy and the BM deformation on a single-cell patch.
 
-spec_viva_lumenoid_composites_actin_adhesion_bm = materialize_composite('viva_lumenoid.composites.actin_adhesion_bm')
-describe_spec(spec_viva_lumenoid_composites_actin_adhesion_bm)
-
-# === Edit parameters for this composite, then run the Run cell ===
-# ov_viva_lumenoid_composites_actin_adhesion_bm maps each tunable parameter to its current value (the generator's
-# defaults). Edit any entry; the Run cell rebuilds the composite with it.
-ov_viva_lumenoid_composites_actin_adhesion_bm = dict(spec_viva_lumenoid_composites_actin_adhesion_bm['_overrides'])
-import json as _json; print(_json.dumps(ov_viva_lumenoid_composites_actin_adhesion_bm, indent=2, default=str))
-# e.g.:  ov_viva_lumenoid_composites_actin_adhesion_bm['<parameter>'] = <value>
+# === Parameters — edit any value, then re-run from the Run cell below ===
+# Each entry is the composite's current default; the comment explains it.
+ov_viva_lumenoid_composites_actin_adhesion_bm = {
+    'contractility': 1.5,   # Cortex myosin-activity proxy (drives cortex tension).
+    'k_on'         : 0.5,   # Basal-linker binding rate.
+    'k_off'        : 0.1,   # Basal-linker unbinding rate.
+    'coupling_gain': 0.0001,   # Transmitted traction -> BM strain rate.
+    'n_rods'       : 40,   # Collagen rods in the single-cell BM patch.
+}
 
 # ### Run
 #
