@@ -37,6 +37,14 @@ dev = ["pytest>=7.4", "jsonschema[format-nongpl]>=4.21"]
 # LAMMPS itself must be provided by the environment (the PyPI `lammps` wheel is
 # MPICH-linked; on macOS point it at homebrew's MPI-free liblammps_serial).
 engines = ["viva-lammps", "viva-smoldyn", "lammps"]
+# Runtime libraries the vivarium-tyssue engine needs to actually RUN the Tyssue
+# composites (R4/R5/E3): tyssue itself + its hdf5 (tables), image (scikit-image)
+# and units (quantities) deps. The engine is installed editable --no-deps (see the
+# note above + README), so these are declared here and locked so the SERVING venv
+# is reproducible: `uv pip install .[tyssue-serve]`. The numpy-2.x 2D-cross shim
+# that tyssue's 2D geometry needs lives in viva_lumenoid.tyssue_coupling (applied
+# automatically when a Tyssue composite builds).
+tyssue-serve = ["tyssue>=1.0", "scikit-image", "tables", "quantities"]
 
 [build-system]
 requires = ["hatchling"]
