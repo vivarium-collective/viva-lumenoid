@@ -17,6 +17,9 @@ STUD = ROOT / "workspace" / "studies"
 INV = ROOT / "workspace" / "investigations" / "basement-membrane-v1"
 
 TITLES = {
+    "r4_growth_coupling": "R4 main — 2D coupled growth: preferred area → emergent realized area + height (observed)",
+    "r5_growth_confinement": "R5 main — 3D monolayer growth: preferred-volume growth + BM confinement → height (observed)",
+    "e4_growth_feedback": "E4 main — growth-driven two-way feedback: realized basal growth lags the target (observed)",
     "r1_regime": "Confinement regimes: cell height vs BM stiffness × relaxation (Fig 1G reproduction)",
     "r2_rheology": "Collagen IV network assembly + stress (small real run)",
     "r3_supply": "Crosslink supply vs remodelling (small real run)",

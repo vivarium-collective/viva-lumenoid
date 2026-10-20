@@ -119,6 +119,26 @@ key_assumptions:
   - "bm_substeps subcycles the reduced-order BM relaxation within each coupling step; convergence is successive-refinement error shrinking as substeps double."
   - "Reduced units throughout; this is a v0 single patch, not a spatially resolved lumenoid, and no absolute calibration to microns/pascals is claimed."
 
+model_assumptions_declaration:
+  preferred_vs_realized: "explicit (new) — a growing PREFERRED cell volume + basal area drives the loop; the REALIZED basal-area fold emerges from the vertex model + BM reaction and lags the target (it is NOT hard-coded to it)"
+  load_control_vs_reaction: "both — two-way (forward drive + reaction fed back), one-way (forward only), uncoupled (BM inert) controls"
+  geometry_dimension: "v0 single lumenoid patch (not spatially resolved)"
+  material_representation: "reduced-order effective BM on the PRIMARY growth path; the explicit-LAMMPS collagen BM is a SEPARATE verification gate (numerically delicate — see F5)"
+  growth_vs_division: "growth only — ramped preferred cell volume + basal area (growth_mode); proliferation (cell division) is OFF"
+  calibration_limits: "reduced units; BM stress/tension magnitudes are reduced-unit, not calibrated; gains uncalibrated for the explicit path"
+
+meeting_alignment_2026_10_20:
+  disposition: revise
+  note: >
+    Most important mechanistic follow-up (2026-10-20 review). The prior two-way loop had NO
+    growth trajectory, so the two-way vs one-way difference was a contractility-wiring result,
+    not a growth finding. This revision wires an epithelial PREFERRED growth trajectory
+    (preferred cell volume + basal area ramped; division OFF) so basal displacement is
+    growth-driven. The REALIZED basal-area fold now emerges from the mechanics and differs by
+    coupling mode (two-way 1.006 vs one-way/uncoupled 0.767) while lagging the preferred target
+    (1.150) — verified NOT hard-coded to the target. Reduced BM is the primary path; the
+    explicit-LAMMPS BM remains a separate, numerically-delicate verification gate.
+
 parent_studies:
   - {study: bm-e3-closed-3d-lumenoid, condition: tests-passed}
   - {study: bm-r6-perlecan-growth-perturbations, condition: tests-passed}
@@ -356,6 +376,20 @@ simulation_set:
 
 # Canonical run record -- feeds the dashboard's Ran . Tests . Verdict strip.
 runs:
+  - name: e4-growth-coupling-controls
+    base_model: viva_lumenoid.multiscale_coupling.LammpsTyssueCoupling
+    status: completed
+    provenance: {kind: simulation}
+    outcomes:
+      growth-drives-basal-displacement:
+        result: PASS
+        observed: "preferred basal-area fold grows to 1.150 under growth_mode=exponential; realized fold responds (two-way 1.006) — displacement is growth-driven, not contractility alone"
+      realized-growth-not-hardcoded:
+        result: PASS
+        observed: "realized basal-area fold (two-way 1.006; one-way/uncoupled 0.767) LAGS/differs from the preferred target (1.150) and varies by coupling mode — it emerges from the mechanics, not hard-coded to the target"
+      growth-two-way-reaction-vs-controls:
+        result: PASS
+        observed: "under growth, two-way returns a nonzero basal tension (2.824); one-way and uncoupled feed back exactly 0.0 — the coupling-control contract holds with a growth trajectory"
   - name: e4-coupling-controls
     base_model: viva_lumenoid.composites.coupled_lumenoid
     status: completed
@@ -431,6 +465,34 @@ readouts:
     status: measured
 
 behavior_tests:
+  - name: growth-drives-basal-displacement
+    classification: primary
+    description: >
+      With growth_mode active, the preferred basal-area fold grows and the realized fold
+      responds -- basal displacement is driven by preferred growth, not contractility alone.
+    measure: {kind: scalar, field: preferred_area_fold}
+    pass_if: {op: ">", value: 1.0, note: "preferred fold 1.150 > 1.0; realized responds (two-way 1.006)"}
+    units: fold
+    requires_simulation: e4-growth-coupling-controls
+    cites: [barrientos2026cellshape]
+  - name: realized-growth-not-hardcoded
+    classification: primary
+    description: >
+      The realized basal-area fold lags/differs from the preferred target and varies by
+      coupling mode -- it emerges from the mechanics and is NOT hard-coded to the target.
+    measure: {kind: scalar, field: realized_area_fold}
+    pass_if: {op: "<", value: 1.150, note: "two-way realized 1.006 and one-way/uncoupled 0.767 both < preferred 1.150; mode-dependent"}
+    units: fold
+    requires_simulation: e4-growth-coupling-controls
+  - name: growth-two-way-reaction-vs-controls
+    classification: primary
+    description: >
+      Under a growth trajectory the two-way mode returns a nonzero basal reaction tension while
+      one-way and uncoupled feed back exactly zero -- the coupling-control contract under growth.
+    measure: {kind: threshold, field: basal_tension, case: "two-way"}
+    pass_if: {op: ne, value: 0.0, note: "two-way basal tension 2.824 != 0; one-way/uncoupled 0.0"}
+    units: reduced
+    requires_simulation: e4-growth-coupling-controls
   - name: two-way-feeds-back-reaction
     classification: primary
     description: >
@@ -563,21 +625,45 @@ limitations:
   - "Exchange-cadence convergence (the epithelium<->BM macro-step interval) is STILL not wired on either path -- only the within-step BM subcycling was probed."
 
 visualizations:
-  - name: feedback_predictions_movie
-    address: "gif:bm-e4-feedback-predictions.gif"
+  - name: e4_growth_feedback
+    address: "html:e4_growth_feedback.html"
     config:
-      title: "E4 — LAMMPS collagen BM ↔ Tyssue epithelium coupling (movie)"
+      title: "Growth-driven two-way feedback: realized basal growth lags the target"
       evidence_status: observed
       tier: main
       caption: >
-        The capstone coupling, animated: LEFT the Tyssue epithelium (basal tension annotated), RIGHT the explicit LAMMPS collagen IV BM patch (stress σ annotated) it is coupled to. The two evolve together through the bidirectional loop — the epithelium's basal-area change strains the collagen BM, whose stress feeds back as basal tension. Real explicit-BM dynamics (reduced units).
+        MAIN (evidence: observed) — the growth-driven two-way feedback (2026-10-20 review).
+        The epithelial PREFERRED geometry grows (cell volume + basal area ramped; division
+        OFF), driving basal displacement; the reduced-order BM reacts and feeds a reaction
+        tension back. Synchronized series for uncoupled / one-way / two-way: (A) preferred vs
+        realized basal-area fold — realized EMERGES and differs by mode (two-way 1.006 vs
+        one-way/uncoupled 0.767) and lags the preferred target (1.150), i.e. it is NOT
+        hard-coded to the target; (B) BM reaction stress; (C) basal reaction tension fed back
+        (two-way nonzero, one-way/uncoupled exactly 0). Reduced-order BM path; the
+        explicit-LAMMPS BM is a SEPARATE verification gate (numerically delicate — see F5).
+        BM stress/tension magnitudes are reduced-unit, not calibrated.
+  - name: feedback_predictions_movie
+    address: "gif:bm-e4-feedback-predictions.gif"
+    config:
+      title: "E4 — LAMMPS collagen BM ↔ Tyssue epithelium coupling (movie, demoted)"
+      evidence_status: engineered-diagnostic
+      tier: supplement
+      caption: >
+        SUPPLEMENT (demoted + relabelled 2026-10-20) — previously tier:main / observed, but it
+        animates the explicit-LAMMPS path, which is numerically delicate and divergent at scale
+        (see finding F5); re-scoped to engineered-diagnostic so a divergent demonstration is not
+        presented as a headline result. LEFT the Tyssue epithelium (basal tension annotated),
+        RIGHT the explicit LAMMPS collagen IV BM patch (stress σ annotated) it is coupled to.
+        The bidirectional loop runs bounded only in the stable small-rods regime (reduced units).
   - name: e4_feedback
     address: "html:e4_feedback.html"
     config:
-      title: "Coupling-control time courses: two-way / one-way / uncoupled (engineered-diagnostic)"
+      title: "Coupling-control time courses: two-way / one-way / uncoupled (engineered-diagnostic, demoted)"
       evidence_status: engineered-diagnostic
-      tier: main
+      tier: supplement
       caption: >
+        SUPPLEMENT (demoted 2026-10-20 — superseded as main by the growth-driven figure above;
+        this one has NO growth trajectory). Original caption:
         COUPLING CONTROL (correct software wiring, NOT a mechanistic prediction), real 15-step reduced-order
         runs (dt 0.02, strain_gain 20, tension_gain 0.02, bm_modulus 50, bm_relaxation 10), reduced units.
         Aligned time courses of basal BM-shell area, BM stress sigma, basal tension fed back and basal strain
@@ -747,6 +833,31 @@ findings:
     next_action_type: escalate_model
     provenance:
       run_ids: [e4-explicit-bm-subcycling-sweep, e4-explicit-coupling-controls]
+  - id: F6-growth-driven-feedback-realized-not-hardcoded
+    kind: computational
+    status: confirms
+    tier: mechanism
+    mechanism_origin: emergent
+    statement: >
+      With an epithelial PREFERRED growth trajectory now wired (preferred cell volume + basal
+      area ramped; division OFF), the basal displacement is growth-driven and the REALIZED
+      basal-area fold emerges from the mechanics: it differs by coupling mode (two-way 1.006 vs
+      one-way/uncoupled 0.767) and LAGS the preferred target (1.150) — it is NOT hard-coded to
+      the target. The two-way mode returns a nonzero basal reaction tension (2.824) under growth
+      while one-way/uncoupled feed back exactly 0. This supplies the growth trajectory the prior
+      two-way/one-way difference lacked, so the coupling difference is now observed under growth.
+    evidence:
+      from_run: e4-growth-coupling-controls
+      from_test: realized-growth-not-hardcoded
+      observed: "preferred fold 1.150; realized two-way 1.006, one-way/uncoupled 0.767; two-way basal tension 2.824 vs 0.0 controls (reduced BM; reduced units)"
+    explanation: >
+      growth_mode ramps the Tyssue preferred cell-volume + basal-area targets; the realized basal
+      area relaxes toward them but the BM reaction (and, in two-way, the fed-back tension) shape
+      the outcome, so the realized fold emerges and lags rather than tracking the target.
+    next_action: "repeat on the explicit-LAMMPS path once its subcycling is stable (F5); add soft/rigid-BM and linear/exponential growth sweeps"
+    next_action_type: extend
+    provenance:
+      run_ids: [e4-growth-coupling-controls]
 
 followup_proposals:
   - id: fp-e4-explicit-lammps-bm
@@ -815,13 +926,16 @@ conclusion_verdicts:
   biological_validation:
     result: MIXED
     basis: >
-      Reduced-order path: PASS -- the three coupling controls behave correctly and the BM
-      subcycling converges. Explicit-LAMMPS-BM path: the real bidirectional loop runs with correct
-      feedback DIRECTIONALITY (two-way basal_tension != 0, one-way == 0), closing E4's main gap,
-      BUT two reduced-path behaviors do not transfer -- the explicit collagen carries intrinsic
-      stress (uncoupled bm_sigma != 0) and its subcycling DIVERGES (stable only at coarse
-      subcycling / ~40 rods). The explicit demonstration is therefore scoped to the bounded stable
-      regime; stability + gain calibration are open.
+      Growth-driven path (NEW, the meeting's priority): a preferred growth trajectory is now wired
+      (division OFF), so the two-way/one-way difference is observed UNDER growth; the realized
+      basal-area fold emerges and lags the preferred target (two-way 1.006, one-way/uncoupled
+      0.767, target 1.150) and is verified NOT hard-coded. Reduced-order path: PASS -- the three
+      coupling controls behave correctly and the BM subcycling converges. Explicit-LAMMPS-BM path:
+      the real bidirectional loop runs with correct feedback DIRECTIONALITY (two-way basal_tension
+      != 0, one-way == 0), BUT two reduced-path behaviors do not transfer -- the explicit collagen
+      carries intrinsic stress (uncoupled bm_sigma != 0) and its subcycling DIVERGES (stable only
+      at coarse subcycling / ~40 rods), so it stays a separate verification gate; stability + gain
+      calibration are open. Reduced units; BM stress/tension magnitudes are not calibrated.
   explanatory_gain:
     result: POSITIVE
     basis: >

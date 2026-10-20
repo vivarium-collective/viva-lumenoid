@@ -101,6 +101,18 @@ key_assumptions:
   - "Connectivity is read as crosslink count and crosslink-per-area density (accounting for expansion dilution); largest-connected-component is a deferred readout."
   - "Reduced (LJ) units; the claim is the three-mode ORDERING (direction), robust across seeds, not an absolute area/concentration calibration."
 
+model_assumptions_declaration:
+  preferred_vs_realized: "n/a — imposed network expansion, a PRE-COUPLING control (not epithelial preferred growth)"
+  load_control_vs_reaction: "imposed equibiaxial growth (strain_rate 0.003) + material insertion"
+  geometry_dimension: "2D slab"
+  material_representation: "explicit-LAMMPS"
+  growth_vs_division: "neither — formation-dominant, not full make/break turnover; no division"
+  calibration_limits: "reduced units; density is a per-area connectivity proxy, not largest-connected-component"
+
+meeting_alignment_2026_10_20:
+  disposition: revise
+  note: "The meeting requires BM deformation arising from PREFERRED epithelial growth; the existing imposed network expansion is a pre-coupling control. Explicitly mark formation-dominant dynamics (no substantial bond breaking) as INSUFFICIENT to reproduce turnover-mediated adaptation."
+
 parent_studies:
   - {study: bm-r2-collagen-network-rheology, condition: tests-passed}
 

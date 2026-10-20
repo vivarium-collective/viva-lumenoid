@@ -90,6 +90,20 @@ key_assumptions:
   - "Reduced LJ units throughout: tension, pressure, temperature and contractility are dimensionless; no calibration to pN/um or pascals is claimed."
   - "Single cortex patch (36 beads, periodic): no neighbours, no explicit coupling to the BM here -- that is E2."
 
+model_assumptions_declaration:
+  preferred_vs_realized: "n/a — actomyosin cortex patch, not a cell-geometry study"
+  load_control_vs_reaction: "no strain input exposed by the LAMMPS model"
+  geometry_dimension: "2D bead patch"
+  material_representation: "explicit-LAMMPS (coarse beads, not resolved filaments/motors)"
+  growth_vs_division: "n/a"
+  calibration_limits: "reduced LJ units; LJ well depth is a myosin-activity PROXY, not biological myosin activity; no pN/micron calibration"
+
+meeting_alignment_2026_10_20:
+  disposition: revise
+  note: >
+    Explicit LAMMPS actin is a FUTURE extension, not a dependency of the agreed basic BM-Tyssue
+    feedback milestone. Keep separate from the next 2D/3D model acceptance gates.
+
 parent_studies:
   - {study: bm-r5-explicit-3d-confinement, condition: tests-passed}
 
@@ -320,7 +334,7 @@ report:
 
 findings:
   - id: F1-cortical-tension-monotone-in-contractility
-    kind: biological
+    kind: computational
     status: confirms
     tier: interpretation
     mechanism_origin: engineered
@@ -328,7 +342,8 @@ findings:
       The explicit actomyosin cortex carries a cortical tension that rises strictly and
       monotonically with the myosin-contractility proxy: tau = -0.395, 0.602, 2.580, 3.978 at
       contractility 0.5, 1.0, 2.0, 3.0 -- a tunable active tension that maps onto a Tyssue
-      cortical-energy parameter.
+      cortical-energy parameter. (engineering verification over an LJ-activity proxy, not
+      biological myosin evidence)
     evidence:
       from_run: e1-contractility-sweep
       from_test: cortex-tension-monotone-in-contractility

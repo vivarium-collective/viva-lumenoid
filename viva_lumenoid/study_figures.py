@@ -1910,6 +1910,232 @@ def bm_v5_bundling_figure():
     return fig
 
 
+# ===========================================================================
+# Meeting-aligned coupled-growth figures (2026-10-20 review): PREFERRED (target)
+# geometry drives emergent REALIZED geometry through a cell<->BM reaction. These
+# are the new MAIN (observed) figures for R4/R5/E4; the former static mains are
+# demoted to supplement.
+# ===========================================================================
+
+def r4_growth_coupling_figure():
+    """R4 MAIN (observed) — the agreed 2D coupled-growth experiment.
+
+    A reduced-order 2D CROSS-SECTION of prism cells (viva_lumenoid.growth_runs):
+    a PREFERRED (target) basal area A0(t) grows (division OFF), the REALIZED area
+    A(t) lags it because a viscoelastic BM resists spreading, and cell height is
+    RECONSTRUCTED from a fixed-volume assumption (h = V0/A). The resolved
+    vertex-model sheet (tyssue_2d_sheet) is a static mesh at the engine level, so
+    the causal experiment is run here and labelled as such.
+
+    A — target A0(t) vs realized A(t) for a free (no-BM) and a stiff/slow BM: the
+        preferred-vs-realized gap IS the confinement. B — reconstructed mean cell
+        height h(t): a stiff BM confines spreading and drives height up. C — BM
+        reaction stress across stiffness/relaxation regimes. D — a BM-stiffness
+        gradient across the row -> a spatial cell-height gradient."""
+    from plotly.subplots import make_subplots
+    from .growth_runs import run_sheet_growth_2d
+    go = _go()
+    free = run_sheet_growth_2d(bm_stiffness=0.0, steps=60, label="free (no BM)")
+    stiff = run_sheet_growth_2d(bm_stiffness=5.0, bm_relaxation=50.0, steps=60,
+                                label="stiff / slow BM")
+    grad = run_sheet_growth_2d(bm_stiffness=3.0, stiffness_gradient=1.6,
+                               bm_relaxation=50.0, steps=60)
+    fig = make_subplots(
+        rows=2, cols=2, vertical_spacing=0.16, horizontal_spacing=0.13,
+        subplot_titles=(
+            "A — preferred vs realized basal area (the confinement gap)",
+            "B — reconstructed cell height h = V₀/A",
+            "C — BM reaction stress vs time",
+            "D — BM-stiffness gradient → spatial height gradient"))
+    # A: preferred (shared) + realized for free & stiff
+    fig.add_trace(go.Scatter(x=stiff.t, y=stiff.a_pref, mode="lines",
+                             line=dict(color="#555", width=2, dash="dash"),
+                             name="preferred A₀(t)"), row=1, col=1)
+    fig.add_trace(go.Scatter(x=free.t, y=free.a_mean, mode="lines",
+                             line=dict(color=GREEN, width=3), name="realized — free"), row=1, col=1)
+    fig.add_trace(go.Scatter(x=stiff.t, y=stiff.a_mean, mode="lines",
+                             line=dict(color=RED, width=3), name="realized — stiff BM"), row=1, col=1)
+    fig.update_xaxes(title_text="time (reduced)", row=1, col=1)
+    fig.update_yaxes(title_text="basal area (reduced)", row=1, col=1)
+    # B: reconstructed height
+    fig.add_trace(go.Scatter(x=free.t, y=free.height_mean, mode="lines",
+                             line=dict(color=GREEN, width=3), name="height — free",
+                             showlegend=False), row=1, col=2)
+    fig.add_trace(go.Scatter(x=stiff.t, y=stiff.height_mean, mode="lines",
+                             line=dict(color=RED, width=3), name="height — stiff BM",
+                             showlegend=False), row=1, col=2)
+    fig.update_xaxes(title_text="time (reduced)", row=1, col=2)
+    fig.update_yaxes(title_text="reconstructed height h/h₀", row=1, col=2)
+    # C: BM stress for a stiffness/relaxation set
+    for k, tau, col, nm in [(1.0, 10.0, BLUE, "soft / fast"), (3.0, 20.0, ORANGE, "mid"),
+                            (5.0, 50.0, RED, "stiff / slow")]:
+        r = run_sheet_growth_2d(bm_stiffness=k, bm_relaxation=tau, steps=60)
+        fig.add_trace(go.Scatter(x=r.t, y=r.stress_mean, mode="lines",
+                                 line=dict(color=col, width=2.5),
+                                 name=f"BM {nm} (k={k}, τ={tau})"), row=2, col=1)
+    fig.update_xaxes(title_text="time (reduced)", row=2, col=1)
+    fig.update_yaxes(title_text="BM reaction stress", row=2, col=1)
+    # D: spatial row colored by final reconstructed height
+    fig.add_trace(go.Scatter(
+        x=grad.x, y=grad.height_cells_final, mode="markers",
+        marker=dict(size=15, color=grad.height_cells_final, colorscale="Viridis",
+                    colorbar=dict(title="height", x=1.0, len=0.42, y=0.19),
+                    line=dict(color="#333", width=1)),
+        showlegend=False), row=2, col=2)
+    fig.update_xaxes(title_text="cell position across the sheet (stiffness gradient →)", row=2, col=2)
+    fig.update_yaxes(title_text="reconstructed cell height", row=2, col=2)
+    fig.update_layout(
+        title="R4 — 2D coupled growth: preferred area drives emergent realized area + height "
+              "(observed; reduced-order cross-section)",
+        template="plotly_white", height=820,
+        legend=dict(orientation="h", y=-0.1, x=0, font=dict(size=10)),
+        annotations=list(fig.layout.annotations) + [dict(
+            x=0.5, y=-0.17, xref="paper", yref="paper", showarrow=False,
+            text="Growth = a ramped PREFERRED basal area (division OFF). Realized area emerges from the "
+                 "mechanical balance and LAGS the target under a stiff BM (it is not hard-coded). Height is "
+                 "RECONSTRUCTED under a fixed-volume assumption (reduced units). The resolved vertex-model "
+                 "sheet (tyssue_2d_sheet) is static at the engine level — this reduced-order cross-section is "
+                 "the effective-BM realization.", font=dict(size=10.5, color="#777"))])
+    return fig
+
+
+def r5_growth_confinement_figure():
+    """R5 MAIN (observed) — real Tyssue 3D monolayer under preferred-volume growth.
+
+    The preferred cell VOLUME + basal area are ramped (isotropic growth, division
+    OFF) on a real MonolayerGeometry; a ReducedBM reaction resists basal spreading.
+    A — preferred vs realized total cell volume. B — basal area, free vs stiff BM
+    (a stiff BM confines spreading). C — mean cell height, free vs stiff (under the
+    near-incompressible volume elasticity, confinement drives height up —
+    directional). D — per-cell final height distribution coloured by height."""
+    from plotly.subplots import make_subplots
+    from .growth_runs import run_monolayer_growth_3d
+    go = _go()
+    free = run_monolayer_growth_3d(rate=0.4, bm_stiffness=0.0, steps=18, label="free")
+    stiff = run_monolayer_growth_3d(rate=0.4, bm_stiffness=5.0, bm_relaxation=50.0,
+                                    steps=18, label="stiff / slow BM")
+    fig = make_subplots(
+        rows=2, cols=2, vertical_spacing=0.16, horizontal_spacing=0.13,
+        subplot_titles=("A — preferred vs realized total cell volume",
+                        "B — basal area: free vs stiff BM (confinement)",
+                        "C — mean cell height: free vs stiff BM",
+                        "D — per-cell final height (stiff BM)"))
+    fig.add_trace(go.Scatter(x=stiff.t, y=stiff.v_pref, mode="lines",
+                             line=dict(color="#555", width=2, dash="dash"),
+                             name="preferred V₀(t)"), row=1, col=1)
+    fig.add_trace(go.Scatter(x=stiff.t, y=stiff.v_real, mode="lines",
+                             line=dict(color=RED, width=3), name="realized V(t)"), row=1, col=1)
+    fig.update_xaxes(title_text="time (reduced)", row=1, col=1)
+    fig.update_yaxes(title_text="total cell volume", row=1, col=1)
+    fig.add_trace(go.Scatter(x=free.t, y=free.basal_area, mode="lines",
+                             line=dict(color=GREEN, width=3), name="free (no BM)"), row=1, col=2)
+    fig.add_trace(go.Scatter(x=stiff.t, y=stiff.basal_area, mode="lines",
+                             line=dict(color=RED, width=3), name="stiff / slow BM"), row=1, col=2)
+    fig.update_xaxes(title_text="time (reduced)", row=1, col=2)
+    fig.update_yaxes(title_text="mean basal area", row=1, col=2)
+    fig.add_trace(go.Scatter(x=free.t, y=free.height_mean, mode="lines",
+                             line=dict(color=GREEN, width=3), showlegend=False), row=2, col=1)
+    fig.add_trace(go.Scatter(x=stiff.t, y=stiff.height_mean, mode="lines",
+                             line=dict(color=RED, width=3), showlegend=False), row=2, col=1)
+    fig.update_xaxes(title_text="time (reduced)", row=2, col=1)
+    fig.update_yaxes(title_text="mean cell height (z-extent)", row=2, col=1)
+    hf = np.sort(stiff.heights_final)
+    fig.add_trace(go.Scatter(
+        x=np.arange(hf.size), y=hf, mode="markers",
+        marker=dict(size=5, color=hf, colorscale="Viridis",
+                    colorbar=dict(title="height", x=1.0, len=0.42, y=0.19)),
+        showlegend=False), row=2, col=2)
+    fig.update_xaxes(title_text="cell (sorted)", row=2, col=2)
+    fig.update_yaxes(title_text="final cell height", row=2, col=2)
+    fig.update_layout(
+        title="R5 — 3D monolayer growth: preferred-volume growth + BM confinement → emergent height "
+              "(observed; real Tyssue)",
+        template="plotly_white", height=820,
+        legend=dict(orientation="h", y=-0.1, x=0, font=dict(size=10)),
+        annotations=list(fig.layout.annotations) + [dict(
+            x=0.5, y=-0.17, xref="paper", yref="paper", showarrow=False,
+            text="Real Tyssue MonolayerGeometry. Growth = ramped preferred cell volume + basal area (division "
+                 "OFF). A stiff/slow BM confines basal spreading (B, robust) and, under the near-incompressible "
+                 "volume elasticity, drives volume into cell HEIGHT (C, directional — not a calibrated height "
+                 "prediction). Cell height is the emergent apical-basal z-extent (reduced units).",
+            font=dict(size=10.5, color="#777"))])
+    return fig
+
+
+def _e4_growth_series(coupling_mode="two-way", rate=0.35, bm_modulus=50.0,
+                      bm_relaxation=10.0, n=20, dt=0.02):
+    """Step the growth-driven LAMMPS<->Tyssue coupling (reduced BM) and record the
+    synchronized per-step series the meeting asked for."""
+    from bigraph_schema import allocate_core
+    from .multiscale_coupling import LammpsTyssueCoupling
+    p = LammpsTyssueCoupling(config={
+        "bm_mode": "reduced", "coupling_mode": coupling_mode,
+        "growth_mode": "exponential", "growth_rate": rate,
+        "strain_gain": 20.0, "tension_gain": 0.02,
+        "bm_modulus": bm_modulus, "bm_relaxation": bm_relaxation}, core=allocate_core())
+    t, pref, real, sigma, tension = [], [], [], [], []
+    tt = 0.0
+    for _ in range(n):
+        o = p.update({}, dt)
+        tt += dt
+        t.append(tt); pref.append(o["preferred_area_fold"]); real.append(o["realized_area_fold"])
+        sigma.append(o["bm_sigma"]); tension.append(o["basal_tension"])
+    p.close()
+    return dict(t=np.array(t), pref=np.array(pref), real=np.array(real),
+                sigma=np.array(sigma), tension=np.array(tension))
+
+
+def e4_growth_feedback_figure():
+    """E4 MAIN (observed) — growth-driven two-way feedback (reduced BM).
+
+    The epithelial PREFERRED geometry grows (division OFF), driving basal
+    displacement; the BM reacts and feeds a reaction tension back. Synchronized
+    series for uncoupled / one-way / two-way coupling. The REALIZED basal-area
+    fold emerges from the mechanics and lags the preferred target under a stiff
+    BM — it is NOT hard-coded to the target. The explicit-LAMMPS BM is a SEPARATE
+    verification gate (numerically delicate — see the companion), not this path."""
+    from plotly.subplots import make_subplots
+    go = _go()
+    two = _e4_growth_series("two-way", bm_modulus=120.0, bm_relaxation=40.0)
+    one = _e4_growth_series("one-way", bm_modulus=120.0, bm_relaxation=40.0)
+    unc = _e4_growth_series("uncoupled", bm_modulus=120.0, bm_relaxation=40.0)
+    fig = make_subplots(
+        rows=1, cols=3, horizontal_spacing=0.08,
+        subplot_titles=("A — preferred vs realized basal-area fold",
+                        "B — BM reaction stress",
+                        "C — basal reaction tension fed back"))
+    fig.add_trace(go.Scatter(x=two["t"], y=two["pref"], mode="lines",
+                             line=dict(color="#555", width=2, dash="dash"),
+                             name="preferred (target)"), row=1, col=1)
+    for s, col, nm in [(unc, GREEN, "uncoupled"), (one, ORANGE, "one-way"), (two, RED, "two-way")]:
+        fig.add_trace(go.Scatter(x=s["t"], y=s["real"], mode="lines", line=dict(color=col, width=3),
+                                 name=f"realized — {nm}"), row=1, col=1)
+    fig.update_xaxes(title_text="time (reduced)", row=1, col=1)
+    fig.update_yaxes(title_text="basal-area fold (A/A₀)", row=1, col=1)
+    for s, col, nm in [(unc, GREEN, "uncoupled"), (one, ORANGE, "one-way"), (two, RED, "two-way")]:
+        fig.add_trace(go.Scatter(x=s["t"], y=s["sigma"], mode="lines", line=dict(color=col, width=3),
+                                 name=nm, showlegend=False), row=1, col=2)
+        fig.add_trace(go.Scatter(x=s["t"], y=s["tension"], mode="lines", line=dict(color=col, width=3),
+                                 name=nm, showlegend=False), row=1, col=3)
+    fig.update_xaxes(title_text="time (reduced)", row=1, col=2)
+    fig.update_yaxes(title_text="BM stress σ", row=1, col=2)
+    fig.update_xaxes(title_text="time (reduced)", row=1, col=3)
+    fig.update_yaxes(title_text="basal tension fed back", row=1, col=3)
+    fig.update_layout(
+        title="E4 — growth-driven two-way feedback: realized basal growth lags the preferred target "
+              "(observed; reduced BM)",
+        template="plotly_white", height=520,
+        legend=dict(orientation="h", y=-0.22, x=0, font=dict(size=10)),
+        annotations=list(fig.layout.annotations) + [dict(
+            x=0.5, y=-0.4, xref="paper", yref="paper", showarrow=False,
+            text="Basal displacement is now GROWTH-driven (preferred cell volume + basal area ramped; division "
+                 "OFF). Realized growth EMERGES from the mechanics — under the two-way stiff BM it lags the "
+                 "preferred target, and it is not hard-coded to it. one-way feeds no reaction back; uncoupled "
+                 "does not drive the BM. Explicit-LAMMPS BM is a separate verification gate (delicate). Reduced units.",
+            font=dict(size=10.5, color="#777"))])
+    return fig
+
+
 STUDY_FIGURES = {
     "bm-v1-stage1-modulus-remodelling": ("v1_stage1_main", v1_stage1_main_figure, "data"),
     "bm-v2-stress-vs-strainrate": ("v2_rheology_main", v2_rheology_main_figure, "data"),
@@ -1917,13 +2143,13 @@ STUDY_FIGURES = {
     "bm-r1-published-tissue-baseline": ("r1_regime", r1_regime_figure, "data"),
     "bm-r2-collagen-network-rheology": ("r2_fig2e", r2_fig2e_figure, "data"),
     "bm-r3-network-expansion-supply": ("r3_supply", r3_supply_figure, "data"),
-    "bm-r4-coupled-2d-epithelium": ("r4_confinement", r4_confinement_figure, "data"),
-    "bm-r5-explicit-3d-confinement": ("r5_monolayer", r5_monolayer_figure, "data"),
+    "bm-r4-coupled-2d-epithelium": ("r4_growth_coupling", r4_growth_coupling_figure, "data"),
+    "bm-r5-explicit-3d-confinement": ("r5_growth_confinement", r5_growth_confinement_figure, "data"),
     "bm-r6-perlecan-growth-perturbations": ("r6_intervention", r6_intervention_figure, "data"),
     "bm-e1-actomyosin-cortex": ("e1_cortical_tension", e1_cortical_tension_figure, "data"),
     "bm-e2-actin-adhesion-collagen": ("e2_force_transfer", e2_force_transfer_figure, "light"),
     "bm-e3-closed-3d-lumenoid": ("e3_lumenoid", e3_lumenoid_figure, "data"),
-    "bm-e4-feedback-predictions": ("e4_feedback", e4_feedback_figure, "data"),
+    "bm-e4-feedback-predictions": ("e4_growth_feedback", e4_growth_feedback_figure, "data"),
     "bm-v4-junction-bending": ("bm_v4_faithful_angles", bm_v4_faithful_angles_figure, "data"),
     "bm-v5-porosity-bundling": ("bm_v5_porosity", bm_v5_porosity_figure, "data"),
 }
@@ -1953,4 +2179,9 @@ EXTRA_STUDY_FIGURES = [
     ("bm-r4-coupled-2d-epithelium", "r4_bm_hypothesis", r4_bm_confinement_hypothesis, "schematic"),
     ("bm-r5-explicit-3d-confinement", "r5_volume_hist", r5_volume_hist_figure, "data"),
     ("bm-r5-explicit-3d-confinement", "r5_bm_hypothesis", r5_bm_controls_hypothesis, "schematic"),
+    # 2026-10-20 meeting-alignment: former static mains, now supplements beneath
+    # the coupled-growth mains above.
+    ("bm-r4-coupled-2d-epithelium", "r4_confinement", r4_confinement_figure, "data"),
+    ("bm-r5-explicit-3d-confinement", "r5_monolayer", r5_monolayer_figure, "data"),
+    ("bm-e4-feedback-predictions", "e4_feedback", e4_feedback_figure, "data"),
 ]
