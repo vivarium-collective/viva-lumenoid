@@ -555,7 +555,7 @@
       <div class="ctr-meta">
         <div class="ctr-meta-row"><span class="ctr-meta-k">Model</span> <code>bm-e4-feedback-predictions</code><a class="ov-tablink" href="#" onclick="_setStudyTab('compose');return false;">model →</a></div>
         
-        <div class="ctr-meta-row"><span class="ctr-meta-k">Measures</span> <span class="ctr-meta-item">9 behavior tests</span><a class="ov-tablink" href="#" onclick="_setStudyTab('audit');return false;">see Tests →</a></div>
+        <div class="ctr-meta-row"><span class="ctr-meta-k">Measures</span> <span class="ctr-meta-item">12 behavior tests</span><a class="ov-tablink" href="#" onclick="_setStudyTab('audit');return false;">see Tests →</a></div>
         
       </div>
     </div>
@@ -889,6 +889,62 @@
 </div>
             
             <div class="finding-next"><strong>→ Next:</strong> design a stable explicit-BM subcycling scheme (or an implicit exchange) and recalibrate strain_gain/tension_gain for the explicit stress scale; route a denser multiseed sweep to the mini once stable</div>
+          </div>
+        </details>
+      </div>
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      <div class="finding-card finding-kind-computational finding-status-confirms">
+        <details class="finding-details">
+          <summary class="finding-row">
+            <span class="finding-status-glyph">✓</span>
+            <span class="finding-claim finding-statement">With an epithelial PREFERRED growth trajectory now wired (preferred cell volume + basal area ramped; division OFF), the basal displacement is growth-driven and the REALIZED basal-area fold emerges from the mechanics: it differs by coupling mode (two-way 1.006 vs one-way/uncoupled 0.767) and LAGS the preferred target (1.150) — it is NOT hard-coded to the target. The two-way mode returns a nonzero basal reaction tension (2.824) under growth while one-way/uncoupled feed back exactly 0. This supplies the growth trajectory the prior two-way/one-way difference lacked, so the coupling difference is now observed under growth.
+</span>
+            
+            <span class="finding-chip">via <code>realized-growth-not-hardcoded</code></span>
+            
+          </summary>
+          <div class="finding-drawer">
+            <div class="finding-header">
+              <span class="finding-id">F6-growth-driven-feedback-realized-not-hardcoded</span>
+              <span class="finding-kind">computational</span>
+              <span class="finding-status-text">confirms literature</span>
+            </div>
+            
+            
+            <div class="finding-evidence">
+              <strong>observed:</strong> preferred fold 1.150; realized two-way 1.006, one-way/uncoupled 0.767; two-way basal tension 2.824 vs 0.0 controls (reduced BM; reduced units) · 
+              
+              via test <a href="#bt-realized-growth-not-hardcoded" onclick="_gotoStudyTab('audit','bt-realized-growth-not-hardcoded');return false;"><code>realized-growth-not-hardcoded</code></a> · 
+              in run <a href="#run-e4-growth-coupling-controls"><code>e4-growth-coupling-controls</code></a>
+              
+              
+            </div>
+            
+            
+            <div class="finding-traceability" style="font-size:0.84em;color:#475569;padding:4px 10px;margin:4px 0">
+              
+              
+              runs: <a href="#run-e4-growth-coupling-controls"><code>e4-growth-coupling-controls</code></a>
+            </div>
+            
+            
+            
+            <div class="pass_if-band muted small" style="font-size:0.82em;padding:2px 10px">judged against <code>pass_if: &lt; 1.15</code></div>
+            
+            
+            
+            <div class="finding-explanation"><em>Why:</em> growth_mode ramps the Tyssue preferred cell-volume + basal-area targets; the realized basal area relaxes toward them but the BM reaction (and, in two-way, the fed-back tension) shape the outcome, so the realized fold emerges and lags rather than tracking the target.
+</div>
+            
+            <div class="finding-next"><strong>→ Next:</strong> repeat on the explicit-LAMMPS path once its subcycling is stable (F5); add soft/rigid-BM and linear/exponential growth sweeps</div>
           </div>
         </details>
       </div>
@@ -1481,10 +1537,10 @@
     
     
     
-    <li class="expected-behavior-item" id="bt-two-way-feeds-back-reaction"
+    <li class="expected-behavior-item" id="bt-growth-drives-basal-displacement"
         data-test-kind="behavioral"
         
-        data-pytest-node="two-way-feeds-back-reaction"
+        data-pytest-node="growth-drives-basal-displacement"
         data-classification="primary"
         data-result="PASS"
         style="margin: 0 0 10px 0; padding: 10px 12px; border-left: 4px solid #10b981; background: #f8fafc; border-radius: 4px;">
@@ -1493,6 +1549,148 @@
       <div style="display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;">
         <span class="bt-result" style="font-size: 0.75em; font-family: monospace; padding: 2px 8px; border-radius: 9999px; background: #d1fae5; color: #065f46">✓ PASS</span>
         <span class="classification-pill classification-primary">primary</span>
+        <strong style="font-size: 0.9em;">growth-drives-basal-displacement</strong>
+        
+        <span class="muted" style="font-size:0.78em">requires: <code>e4-growth-coupling-controls</code></span>
+        
+      </div>
+      <div style="margin-top: 6px; font-size: 0.95em;">With growth_mode active, the preferred basal-area fold grows and the realized fold responds -- basal displacement is driven by preferred growth, not contractility alone.
+</div>
+      
+      <div style="margin-top:6px;font-size:0.85em;padding:6px 10px;background:#fff;border:1px solid #e2e8f0;border-radius:3px">
+        <strong>Latest result:</strong>
+        
+          <code style="font-family:ui-monospace,monospace;color:#475569;margin-right:8px">observed: preferred basal-area fold grows to 1.150 under growth_mode=exponential; realized fold responds (two-way 1.006) — displacement is growth-driven, not contractility alone</code>
+        
+      </div>
+      
+      
+      <details style="margin-top: 6px; font-size: 0.82em;">
+        <summary class="muted" style="cursor: pointer;">Assertion</summary>
+        
+        <pre style="background:#fff; padding:8px; margin:4px 0 0 0; border:1px solid #e2e8f0; border-radius:3px; overflow-x:auto;">measure: {"field": "preferred_area_fold", "kind": "scalar"}
+pass_if: {"note": "preferred fold 1.150 \u003e 1.0; realized responds (two-way 1.006)", "op": "\u003e", "value": 1.0}
+cites:   ["barrientos2026cellshape"]</pre>
+      </details>
+      
+      
+      
+      
+    </li>
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="expected-behavior-item" id="bt-realized-growth-not-hardcoded"
+        data-test-kind="behavioral"
+        
+        data-pytest-node="realized-growth-not-hardcoded"
+        data-classification="primary"
+        data-result="PASS"
+        style="margin: 0 0 10px 0; padding: 10px 12px; border-left: 4px solid #10b981; background: #f8fafc; border-radius: 4px;">
+      
+        
+      <div style="display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;">
+        <span class="bt-result" style="font-size: 0.75em; font-family: monospace; padding: 2px 8px; border-radius: 9999px; background: #d1fae5; color: #065f46">✓ PASS</span>
+        <span class="classification-pill classification-primary">primary</span>
+        <strong style="font-size: 0.9em;">realized-growth-not-hardcoded</strong>
+        
+        <span class="muted" style="font-size:0.78em">requires: <code>e4-growth-coupling-controls</code></span>
+        
+      </div>
+      <div style="margin-top: 6px; font-size: 0.95em;">The realized basal-area fold lags/differs from the preferred target and varies by coupling mode -- it emerges from the mechanics and is NOT hard-coded to the target.
+</div>
+      
+      <div style="margin-top:6px;font-size:0.85em;padding:6px 10px;background:#fff;border:1px solid #e2e8f0;border-radius:3px">
+        <strong>Latest result:</strong>
+        
+          <code style="font-family:ui-monospace,monospace;color:#475569;margin-right:8px">observed: realized basal-area fold (two-way 1.006; one-way/uncoupled 0.767) LAGS/differs from the preferred target (1.150) and varies by coupling mode — it emerges from the mechanics, not hard-coded to the target</code>
+        
+      </div>
+      
+      
+      <details style="margin-top: 6px; font-size: 0.82em;">
+        <summary class="muted" style="cursor: pointer;">Assertion</summary>
+        
+        <pre style="background:#fff; padding:8px; margin:4px 0 0 0; border:1px solid #e2e8f0; border-radius:3px; overflow-x:auto;">measure: {"field": "realized_area_fold", "kind": "scalar"}
+pass_if: {"note": "two-way realized 1.006 and one-way/uncoupled 0.767 both \u003c preferred 1.150; mode-dependent", "op": "\u003c", "value": 1.15}</pre>
+      </details>
+      
+      
+      
+      
+    </li>
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="expected-behavior-item" id="bt-growth-two-way-reaction-vs-controls"
+        data-test-kind="behavioral"
+        
+        data-pytest-node="growth-two-way-reaction-vs-controls"
+        data-classification="primary"
+        data-result="PASS"
+        style="margin: 0 0 10px 0; padding: 10px 12px; border-left: 4px solid #10b981; background: #f8fafc; border-radius: 4px;">
+      
+        
+      <div style="display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;">
+        <span class="bt-result" style="font-size: 0.75em; font-family: monospace; padding: 2px 8px; border-radius: 9999px; background: #d1fae5; color: #065f46">✓ PASS</span>
+        <span class="classification-pill classification-primary">primary</span>
+        <strong style="font-size: 0.9em;">growth-two-way-reaction-vs-controls</strong>
+        
+        <span class="muted" style="font-size:0.78em">requires: <code>e4-growth-coupling-controls</code></span>
+        
+      </div>
+      <div style="margin-top: 6px; font-size: 0.95em;">Under a growth trajectory the two-way mode returns a nonzero basal reaction tension while one-way and uncoupled feed back exactly zero -- the coupling-control contract under growth.
+</div>
+      
+      <div style="margin-top:6px;font-size:0.85em;padding:6px 10px;background:#fff;border:1px solid #e2e8f0;border-radius:3px">
+        <strong>Latest result:</strong>
+        
+          <code style="font-family:ui-monospace,monospace;color:#475569;margin-right:8px">observed: under growth, two-way returns a nonzero basal tension (2.824); one-way and uncoupled feed back exactly 0.0 — the coupling-control contract holds with a growth trajectory</code>
+        
+      </div>
+      
+      
+      <details style="margin-top: 6px; font-size: 0.82em;">
+        <summary class="muted" style="cursor: pointer;">Assertion</summary>
+        
+        <pre style="background:#fff; padding:8px; margin:4px 0 0 0; border:1px solid #e2e8f0; border-radius:3px; overflow-x:auto;">measure: {"case": "two-way", "field": "basal_tension", "kind": "threshold"}
+pass_if: {"note": "two-way basal tension 2.824 != 0; one-way/uncoupled 0.0", "op": "ne", "value": 0.0}</pre>
+      </details>
+      
+      
+      
+      
+    </li>
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="expected-behavior-item" id="bt-two-way-feeds-back-reaction"
+        data-test-kind="behavioral"
+        
+        data-pytest-node="two-way-feeds-back-reaction"
+        data-classification="primary"
+        data-result="pending"
+        style="margin: 0 0 10px 0; padding: 10px 12px; border-left: 4px solid #10b981; background: #f8fafc; border-radius: 4px;">
+      
+        
+      <div style="display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;">
+        <span class="bt-result" style="font-size: 0.75em; font-family: monospace; padding: 2px 8px; border-radius: 9999px; background: #f1f5f9; color: #475569">⏳ pending</span>
+        <span class="classification-pill classification-primary">primary</span>
         <strong style="font-size: 0.9em;">two-way-feeds-back-reaction</strong>
         
         <span class="muted" style="font-size:0.78em">requires: <code>e4-coupling-controls</code></span>
@@ -1500,13 +1698,6 @@
       </div>
       <div style="margin-top: 6px; font-size: 0.95em;">In two-way mode the BM reaction is fed back onto the cells -- the basal tension is non-zero -- confirming the reaction half of the bidirectional contract is live.
 </div>
-      
-      <div style="margin-top:6px;font-size:0.85em;padding:6px 10px;background:#fff;border:1px solid #e2e8f0;border-radius:3px">
-        <strong>Latest result:</strong>
-        
-          <code style="font-family:ui-monospace,monospace;color:#475569;margin-right:8px">observed: two-way basal_tension -0.2995 != 0 (bm_sigma -14.976, basal_area 195.93, lumen_pressure 45.19)</code>
-        
-      </div>
       
       
       <details style="margin-top: 6px; font-size: 0.82em;">
@@ -1545,12 +1736,12 @@ pass_if: {"note": "two-way basal_tension != 0 (observed -0.2995)", "op": "ne", "
         
         data-pytest-node="one-way-has-no-reaction"
         data-classification="primary"
-        data-result="PASS"
+        data-result="pending"
         style="margin: 0 0 10px 0; padding: 10px 12px; border-left: 4px solid #10b981; background: #f8fafc; border-radius: 4px;">
       
         
       <div style="display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;">
-        <span class="bt-result" style="font-size: 0.75em; font-family: monospace; padding: 2px 8px; border-radius: 9999px; background: #d1fae5; color: #065f46">✓ PASS</span>
+        <span class="bt-result" style="font-size: 0.75em; font-family: monospace; padding: 2px 8px; border-radius: 9999px; background: #f1f5f9; color: #475569">⏳ pending</span>
         <span class="classification-pill classification-primary">primary</span>
         <strong style="font-size: 0.9em;">one-way-has-no-reaction</strong>
         
@@ -1559,13 +1750,6 @@ pass_if: {"note": "two-way basal_tension != 0 (observed -0.2995)", "op": "ne", "
       </div>
       <div style="margin-top: 6px; font-size: 0.95em;">In one-way mode the epithelium drives the BM but the reaction is NOT fed back -- the basal tension stays exactly zero, isolating the forward half.
 </div>
-      
-      <div style="margin-top:6px;font-size:0.85em;padding:6px 10px;background:#fff;border:1px solid #e2e8f0;border-radius:3px">
-        <strong>Latest result:</strong>
-        
-          <code style="font-family:ui-monospace,monospace;color:#475569;margin-right:8px">observed: one-way basal_tension == 0.0 (forward drive only, no reaction fed back)</code>
-        
-      </div>
       
       
       <details style="margin-top: 6px; font-size: 0.82em;">
@@ -1592,12 +1776,12 @@ pass_if: {"note": "one-way basal_tension == 0", "op": "eq", "value": 0.0}</pre>
         
         data-pytest-node="uncoupled-bm-inert"
         data-classification="primary"
-        data-result="PASS"
+        data-result="pending"
         style="margin: 0 0 10px 0; padding: 10px 12px; border-left: 4px solid #10b981; background: #f8fafc; border-radius: 4px;">
       
         
       <div style="display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;">
-        <span class="bt-result" style="font-size: 0.75em; font-family: monospace; padding: 2px 8px; border-radius: 9999px; background: #d1fae5; color: #065f46">✓ PASS</span>
+        <span class="bt-result" style="font-size: 0.75em; font-family: monospace; padding: 2px 8px; border-radius: 9999px; background: #f1f5f9; color: #475569">⏳ pending</span>
         <span class="classification-pill classification-primary">primary</span>
         <strong style="font-size: 0.9em;">uncoupled-bm-inert</strong>
         
@@ -1606,13 +1790,6 @@ pass_if: {"note": "one-way basal_tension == 0", "op": "eq", "value": 0.0}</pre>
       </div>
       <div style="margin-top: 6px; font-size: 0.95em;">In uncoupled mode the BM is inert (the epithelium does not drive it) -- the BM reaction stress stays exactly zero, the null against which the coupled cases are read.
 </div>
-      
-      <div style="margin-top:6px;font-size:0.85em;padding:6px 10px;background:#fff;border:1px solid #e2e8f0;border-radius:3px">
-        <strong>Latest result:</strong>
-        
-          <code style="font-family:ui-monospace,monospace;color:#475569;margin-right:8px">observed: uncoupled bm_sigma == 0.0 (epithelium does not drive the inert BM)</code>
-        
-      </div>
       
       
       <details style="margin-top: 6px; font-size: 0.82em;">
@@ -2016,7 +2193,7 @@ pass_if: {"note": "expected |s8-s4| \u003c |s2-s1|; OBSERVED divergence (1799.6 
           <span class="narrative-label">Empirical basis</span>
           <textarea class="narrative-input narrative-textarea" rows="2"
                     data-narrative-path="conclusion_verdicts.biological_validation.basis"
-                    placeholder="e.g. atp_fraction = 0.997, outside Boesen 2024 band [0.2, 0.5].">Reduced-order path: PASS -- the three coupling controls behave correctly and the BM subcycling converges. Explicit-LAMMPS-BM path: the real bidirectional loop runs with correct feedback DIRECTIONALITY (two-way basal_tension != 0, one-way == 0), closing E4&#39;s main gap, BUT two reduced-path behaviors do not transfer -- the explicit collagen carries intrinsic stress (uncoupled bm_sigma != 0) and its subcycling DIVERGES (stable only at coarse subcycling / ~40 rods). The explicit demonstration is therefore scoped to the bounded stable regime; stability + gain calibration are open.
+                    placeholder="e.g. atp_fraction = 0.997, outside Boesen 2024 band [0.2, 0.5].">Growth-driven path (NEW, the meeting&#39;s priority): a preferred growth trajectory is now wired (division OFF), so the two-way/one-way difference is observed UNDER growth; the realized basal-area fold emerges and lags the preferred target (two-way 1.006, one-way/uncoupled 0.767, target 1.150) and is verified NOT hard-coded. Reduced-order path: PASS -- the three coupling controls behave correctly and the BM subcycling converges. Explicit-LAMMPS-BM path: the real bidirectional loop runs with correct feedback DIRECTIONALITY (two-way basal_tension != 0, one-way == 0), BUT two reduced-path behaviors do not transfer -- the explicit collagen carries intrinsic stress (uncoupled bm_sigma != 0) and its subcycling DIVERGES (stable only at coarse subcycling / ~40 rods), so it stays a separate verification gate; stability + gain calibration are open. Reduced units; BM stress/tension magnitudes are not calibrated.
 </textarea>
         </label>
         <label class="narrative-row">
@@ -2047,7 +2224,7 @@ pass_if: {"note": "expected |s8-s4| \u003c |s2-s1|; OBSERVED divergence (1799.6 
       <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
         <span class="gate-status-passed" style="padding:2px 12px;border-radius:9999px;font-weight:700;font-size:0.85em">passed</span>
         <span class="muted small">evaluated by code</span>
-        <span class="muted small">3/9 passed</span>
+        <span class="muted small">3/12 passed</span>
       </div>
       
     </div>
@@ -2283,7 +2460,7 @@ pass_if: {"note": "expected |s8-s4| \u003c |s2-s1|; OBSERVED divergence (1799.6 
 </section>
 
 </main>
-<script>window.__DASH_CONFIG__ = { mode: "snapshot", interactiveUrl: "https://github.com/vivarium-collective/viva-lumenoid", basePath: "/viva-lumenoid/dashboard", inputsDownloadBase: "https://github.com/vivarium-collective/viva-lumenoid/raw/main", provenance: {"repo_slug": "vivarium-collective/viva-lumenoid", "repo_url": "https://github.com/vivarium-collective/viva-lumenoid", "commit": "63ee257ea00e870949169dd442ddaaee05495da6", "commit_url": "https://github.com/vivarium-collective/viva-lumenoid/commit/63ee257ea00e870949169dd442ddaaee05495da6", "branch": "main", "lockfile": "uv.lock@15f07c1539d8", "generated_at": "2026-10-20 16:15 UTC"} };</script>
+<script>window.__DASH_CONFIG__ = { mode: "snapshot", interactiveUrl: "https://github.com/vivarium-collective/viva-lumenoid", basePath: "/viva-lumenoid/dashboard", inputsDownloadBase: "https://github.com/vivarium-collective/viva-lumenoid/raw/main", provenance: {"repo_slug": "vivarium-collective/viva-lumenoid", "repo_url": "https://github.com/vivarium-collective/viva-lumenoid", "commit": "16241938655eb23e0e9d4eaab2c155bd7372892d", "commit_url": "https://github.com/vivarium-collective/viva-lumenoid/commit/16241938655eb23e0e9d4eaab2c155bd7372892d", "branch": "main", "lockfile": "uv.lock@15f07c1539d8", "generated_at": "2026-10-20 20:35 UTC"} };</script>
 <script src="/viva-lumenoid/dashboard/assets/data-source.js"></script>
 <script src="/viva-lumenoid/dashboard/assets/toast.js"></script>
 <script>

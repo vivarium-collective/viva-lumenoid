@@ -44,6 +44,18 @@
 
 
 
+<div class="composite-lint-banner" role="alert"
+     style="margin:8px 0 14px 0;padding:10px 14px;background:#fffbeb;border:1px solid #f59e0b;border-left-width:5px;border-radius:6px;color:#92400e;font-size:0.9em">
+  
+  <div>⚠ composite not found in registry: <code>viva_lumenoid.growth_runs.run_sheet_growth_2d</code></div>
+  
+  <div style="margin-top:4px;font-size:0.86em;color:#a16207">
+    This study references a composite that doesn't resolve — it may not declare a
+    real, registered composite. Add a <code>.composite.yaml</code> and register it
+    in <code>core.py</code>, or fix the ref.
+  </div>
+</div>
+
 
 
 
@@ -554,7 +566,7 @@
       <div class="ctr-meta">
         <div class="ctr-meta-row"><span class="ctr-meta-k">Model</span> <code>bm-r4-coupled-2d-epithelium</code><a class="ov-tablink" href="#" onclick="_setStudyTab('compose');return false;">model →</a></div>
         
-        <div class="ctr-meta-row"><span class="ctr-meta-k">Measures</span> <span class="ctr-meta-item">2 behavior tests</span><a class="ov-tablink" href="#" onclick="_setStudyTab('audit');return false;">see Tests →</a></div>
+        <div class="ctr-meta-row"><span class="ctr-meta-k">Measures</span> <span class="ctr-meta-item">6 behavior tests</span><a class="ov-tablink" href="#" onclick="_setStudyTab('audit');return false;">see Tests →</a></div>
         
       </div>
     </div>
@@ -588,13 +600,23 @@
       <div class="ov-metrics">
         
         <div class="ov-metric ov-metric-pass">
-          <div class="ov-metric-v">all 12 cell-faces relax to basal area 5.0 and explicit height 1.9319; every area and height finite and &gt; 0</div>
-          <div class="ov-metric-k">sheet-yields-finite-areas</div>
+          <div class="ov-metric-v">under a stiff/slow BM the realized mean area (1.105) lags the preferred target (1.616) by a 0.317 gap; free-BM gap is 0.116 — the realized area is not hard-coded to the target</div>
+          <div class="ov-metric-k">growth-realized-lags-preferred</div>
         </div>
         
         <div class="ov-metric ov-metric-pass">
-          <div class="ov-metric-v">5 Euler steps (dt 0.01) keep per-cell area and height finite and positive -- no NaN, no blow-up</div>
-          <div class="ov-metric-k">sheet-steps-stably</div>
+          <div class="ov-metric-v">stiff/slow BM confines spreading (realized area 1.105 vs free 1.428) and raises reconstructed height (0.905 vs 0.700); BM carries reaction stress 0.471</div>
+          <div class="ov-metric-k">stiff-bm-confines-and-heightens</div>
+        </div>
+        
+        <div class="ov-metric ov-metric-pass">
+          <div class="ov-metric-v">with no preferred growth the realized area stays 1.000 and BM reaction stress stays 0.0 — no growth-driven strain</div>
+          <div class="ov-metric-k">no-growth-no-bm-strain</div>
+        </div>
+        
+        <div class="ov-metric ov-metric-pass">
+          <div class="ov-metric-v">a BM-stiffness gradient across the row gives a spatial reconstructed-height gradient: 0.761 (soft end) → 0.910 (stiff end)</div>
+          <div class="ov-metric-k">stiffness-gradient-makes-height-gradient</div>
         </div>
         
       </div>
@@ -771,6 +793,179 @@
       </div>
       
       
+      
+      
+      
+      
+      
+      
+      
+      <div class="finding-card finding-kind-computational finding-status-confirms">
+        <details class="finding-details">
+          <summary class="finding-row">
+            <span class="finding-status-glyph">✓</span>
+            <span class="finding-claim finding-statement">A ramped PREFERRED basal area (division OFF) drives a growing REALIZED area that emerges from the mechanical balance and LAGS the target under BM resistance: at a stiff/slow BM the realized area (1.105) lags the preferred target (1.616) by a 0.317 gap, vs a 0.116 gap with no BM. The realized area is not hard-coded to the target — the lag is the confinement.
+</span>
+            
+            <span class="finding-chip">via <code>growth-realized-lags-preferred</code></span>
+            
+          </summary>
+          <div class="finding-drawer">
+            <div class="finding-header">
+              <span class="finding-id">F4-preferred-growth-drives-emergent-realized-area</span>
+              <span class="finding-kind">computational</span>
+              <span class="finding-status-text">confirms literature</span>
+            </div>
+            
+            
+            <div class="finding-evidence">
+              <strong>observed:</strong> stiff-BM gap 0.317 &gt; free-BM gap 0.116; realized 1.105 &lt; preferred 1.616; zero-growth control: area 1.000, stress 0.0 · 
+              
+              via test <a href="#bt-growth-realized-lags-preferred" onclick="_gotoStudyTab('audit','bt-growth-realized-lags-preferred');return false;"><code>growth-realized-lags-preferred</code></a> · 
+              in run <a href="#run-r4-coupled-growth"><code>r4-coupled-growth</code></a>
+              
+              
+            </div>
+            
+            
+            <div class="finding-traceability" style="font-size:0.84em;color:#475569;padding:4px 10px;margin:4px 0">
+              
+              
+              runs: <a href="#run-r4-coupled-growth"><code>r4-coupled-growth</code></a>
+            </div>
+            
+            
+            
+            <div class="pass_if-band muted small" style="font-size:0.82em;padding:2px 10px">judged against <code>pass_if: &gt; 0.05</code></div>
+            
+            
+            
+            <div class="finding-explanation"><em>Why:</em> The preferred area sets the FaceAreaElasticity target; the realized area relaxes toward it but a viscoelastic BM reaction (stiffness + relaxation) opposes spreading, so the realized geometry lags — the two-way cell&lt;-&gt;BM feedback the 2026-10-20 review asked for.
+</div>
+            
+            <div class="finding-next"><strong>→ Next:</strong> promote to the resolved vertex-model sheet once a deformable 2D geometry is available; cross-check against R1</div>
+          </div>
+        </details>
+      </div>
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      <div class="finding-card finding-kind-computational finding-status-confirms">
+        <details class="finding-details">
+          <summary class="finding-row">
+            <span class="finding-status-glyph">✓</span>
+            <span class="finding-claim finding-statement">A stiff/slow BM confines basal spreading (realized area 1.105 vs 1.428 free) and raises the reconstructed cell height (0.905 vs 0.700 free) — the confinement → taller-cell response, here in a reduced-order 2D cross-section under a fixed-volume height reconstruction.
+</span>
+            
+            <span class="finding-chip">via <code>stiff-bm-confines-and-heightens</code></span>
+            
+          </summary>
+          <div class="finding-drawer">
+            <div class="finding-header">
+              <span class="finding-id">F5-stiff-bm-confines-and-raises-height</span>
+              <span class="finding-kind">computational</span>
+              <span class="finding-status-text">confirms literature</span>
+            </div>
+            
+            
+            <div class="finding-evidence">
+              <strong>observed:</strong> stiff height 0.905 &gt; free 0.700; stiff area 1.105 &lt; free 1.428; BM stress 0.471 · 
+              
+              via test <a href="#bt-stiff-bm-confines-and-heightens" onclick="_gotoStudyTab('audit','bt-stiff-bm-confines-and-heightens');return false;"><code>stiff-bm-confines-and-heightens</code></a> · 
+              in run <a href="#run-r4-coupled-growth"><code>r4-coupled-growth</code></a>
+              
+              
+            </div>
+            
+            
+            <div class="finding-traceability" style="font-size:0.84em;color:#475569;padding:4px 10px;margin:4px 0">
+              
+              
+              runs: <a href="#run-r4-coupled-growth"><code>r4-coupled-growth</code></a>
+            </div>
+            
+            
+            
+            <div class="pass_if-band muted small" style="font-size:0.82em;padding:2px 10px">judged against <code>pass_if: &gt; 0.0</code></div>
+            
+            
+            
+            <div class="finding-expected">
+              
+              
+              cites: <a class="ov-cite" href="#sref-barrientos2026cellshape" title="Basement membrane turnover controls cell shape">Barrientos 2026</a>
+            </div>
+            <div class="finding-exp-summary"><em>Reference says:</em> qualitatively consistent with the paper&#39;s confinement direction (stiffer/slower BM → taller cells); relative, not an absolute height prediction</div>
+            
+            
+            
+            <div class="finding-next"><strong>→ Next:</strong> calibrate against R1 under matched assumptions; resolve on the 3D monolayer (R5)</div>
+          </div>
+        </details>
+      </div>
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      <div class="finding-card finding-kind-computational finding-status-confirms">
+        <details class="finding-details">
+          <summary class="finding-row">
+            <span class="finding-status-glyph">✓</span>
+            <span class="finding-claim finding-statement">A BM-stiffness gradient across the sheet produces a spatial reconstructed-height gradient — 0.761 at the soft end to 0.910 at the stiff end — so spatial BM heterogeneity maps to spatial cell-shape heterogeneity, the spatial readout the resolved sheet could not give.
+</span>
+            
+            <span class="finding-chip">via <code>stiffness-gradient-makes-height-gradient</code></span>
+            
+          </summary>
+          <div class="finding-drawer">
+            <div class="finding-header">
+              <span class="finding-id">F6-bm-stiffness-gradient-makes-spatial-height-gradient</span>
+              <span class="finding-kind">computational</span>
+              <span class="finding-status-text">confirms literature</span>
+            </div>
+            
+            
+            <div class="finding-evidence">
+              <strong>observed:</strong> height 0.761 (soft end) → 0.910 (stiff end) under a linear stiffness gradient · 
+              
+              via test <a href="#bt-stiffness-gradient-makes-height-gradient" onclick="_gotoStudyTab('audit','bt-stiffness-gradient-makes-height-gradient');return false;"><code>stiffness-gradient-makes-height-gradient</code></a> · 
+              in run <a href="#run-r4-coupled-growth"><code>r4-coupled-growth</code></a>
+              
+              
+            </div>
+            
+            
+            <div class="finding-traceability" style="font-size:0.84em;color:#475569;padding:4px 10px;margin:4px 0">
+              
+              
+              runs: <a href="#run-r4-coupled-growth"><code>r4-coupled-growth</code></a>
+            </div>
+            
+            
+            
+            <div class="pass_if-band muted small" style="font-size:0.82em;padding:2px 10px">judged against <code>pass_if: &gt; 0.0</code></div>
+            
+            
+            
+            
+            
+            
+          </div>
+        </details>
+      </div>
+      
+      
     </div>
     
       
@@ -780,8 +975,8 @@
         
         <div class="ctr-meta-row"><span class="ctr-meta-k">Confidence</span>
           <span class="ctr-badge ctr-badge-investigating">Investigating</span>
-          <span class="ctr-vch">biology&nbsp;PENDING</span>
-          <span class="ctr-vch">insight&nbsp;NEUTRAL</span>
+          <span class="ctr-vch">biology&nbsp;MIXED</span>
+          <span class="ctr-vch">insight&nbsp;POSITIVE</span>
         </div>
         
         
@@ -1175,6 +1370,167 @@ pass_if: {"note": "per-cell area and height finite and positive after 5 Euler st
       
     </li>
     
+    
+    
+    
+    
+    
+    
+    
+    <li class="expected-behavior-item" id="bt-growth-realized-lags-preferred"
+        data-test-kind="behavioral"
+        
+        data-pytest-node="growth-realized-lags-preferred"
+        data-classification="primary"
+        data-result="pending"
+        style="margin: 0 0 10px 0; padding: 10px 12px; border-left: 4px solid #10b981; background: #f8fafc; border-radius: 4px;">
+      
+        
+      <div style="display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;">
+        <span class="bt-result" style="font-size: 0.75em; font-family: monospace; padding: 2px 8px; border-radius: 9999px; background: #f1f5f9; color: #475569">⏳ pending</span>
+        <span class="classification-pill classification-primary">primary</span>
+        <strong style="font-size: 0.9em;">growth-realized-lags-preferred</strong>
+        
+        <span class="muted" style="font-size:0.78em">requires: <code>r4-coupled-growth</code></span>
+        
+      </div>
+      <div style="margin-top: 6px; font-size: 0.95em;">Under a stiff/slow BM the realized mean basal area lags the growing preferred target (the realized area emerges from the mechanics and is NOT hard-coded to the target).
+</div>
+      
+      
+      <details style="margin-top: 6px; font-size: 0.82em;">
+        <summary class="muted" style="cursor: pointer;">Assertion</summary>
+        
+        <pre style="background:#fff; padding:8px; margin:4px 0 0 0; border:1px solid #e2e8f0; border-radius:3px; overflow-x:auto;">measure: {"field": "stiff_gap", "kind": "scalar"}
+pass_if: {"note": "stiff-BM preferred-vs-realized gap 0.317 \u003e free-BM gap 0.116 \u003e 0", "op": "\u003e", "value": 0.05}
+cites:   ["barrientos2026cellshape"]</pre>
+      </details>
+      
+      
+      
+      
+    </li>
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="expected-behavior-item" id="bt-stiff-bm-confines-and-heightens"
+        data-test-kind="behavioral"
+        
+        data-pytest-node="stiff-bm-confines-and-heightens"
+        data-classification="primary"
+        data-result="pending"
+        style="margin: 0 0 10px 0; padding: 10px 12px; border-left: 4px solid #10b981; background: #f8fafc; border-radius: 4px;">
+      
+        
+      <div style="display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;">
+        <span class="bt-result" style="font-size: 0.75em; font-family: monospace; padding: 2px 8px; border-radius: 9999px; background: #f1f5f9; color: #475569">⏳ pending</span>
+        <span class="classification-pill classification-primary">primary</span>
+        <strong style="font-size: 0.9em;">stiff-bm-confines-and-heightens</strong>
+        
+        <span class="muted" style="font-size:0.78em">requires: <code>r4-coupled-growth</code></span>
+        
+      </div>
+      <div style="margin-top: 6px; font-size: 0.95em;">A stiff/slow BM confines basal spreading (smaller realized area) and raises the reconstructed cell height relative to the free (no-BM) control.
+</div>
+      
+      
+      <details style="margin-top: 6px; font-size: 0.82em;">
+        <summary class="muted" style="cursor: pointer;">Assertion</summary>
+        
+        <pre style="background:#fff; padding:8px; margin:4px 0 0 0; border:1px solid #e2e8f0; border-radius:3px; overflow-x:auto;">measure: {"field": "stiff_height", "kind": "scalar"}
+pass_if: {"note": "stiff height 0.905 \u003e free height 0.700; stiff area 1.105 \u003c free area 1.428", "op": "\u003e", "value": 0.0}</pre>
+      </details>
+      
+      
+      
+      
+    </li>
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="expected-behavior-item" id="bt-no-growth-no-bm-strain"
+        data-test-kind="behavioral"
+        
+        data-pytest-node="no-growth-no-bm-strain"
+        data-classification="primary"
+        data-result="pending"
+        style="margin: 0 0 10px 0; padding: 10px 12px; border-left: 4px solid #10b981; background: #f8fafc; border-radius: 4px;">
+      
+        
+      <div style="display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;">
+        <span class="bt-result" style="font-size: 0.75em; font-family: monospace; padding: 2px 8px; border-radius: 9999px; background: #f1f5f9; color: #475569">⏳ pending</span>
+        <span class="classification-pill classification-primary">primary</span>
+        <strong style="font-size: 0.9em;">no-growth-no-bm-strain</strong>
+        
+        <span class="muted" style="font-size:0.78em">requires: <code>r4-coupled-growth</code></span>
+        
+      </div>
+      <div style="margin-top: 6px; font-size: 0.95em;">With no preferred growth, the realized area stays at its initial value and the BM carries no reaction stress (zero preferred growth → no growth-driven BM strain).
+</div>
+      
+      
+      <details style="margin-top: 6px; font-size: 0.82em;">
+        <summary class="muted" style="cursor: pointer;">Assertion</summary>
+        
+        <pre style="background:#fff; padding:8px; margin:4px 0 0 0; border:1px solid #e2e8f0; border-radius:3px; overflow-x:auto;">measure: {"field": "no_growth_area_change", "kind": "scalar"}
+pass_if: {"note": "realized area 1.000, BM stress 0.0 under mode=none", "op": "\u003c", "value": 0.001}</pre>
+      </details>
+      
+      
+      
+      
+    </li>
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="expected-behavior-item" id="bt-stiffness-gradient-makes-height-gradient"
+        data-test-kind="behavioral"
+        
+        data-pytest-node="stiffness-gradient-makes-height-gradient"
+        data-classification="secondary"
+        data-result="pending"
+        style="margin: 0 0 10px 0; padding: 10px 12px; border-left: 4px solid #cbd5e1; background: #f8fafc; border-radius: 4px;">
+      
+        
+      <div style="display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;">
+        <span class="bt-result" style="font-size: 0.75em; font-family: monospace; padding: 2px 8px; border-radius: 9999px; background: #f1f5f9; color: #475569">⏳ pending</span>
+        <span class="classification-pill classification-secondary">secondary</span>
+        <strong style="font-size: 0.9em;">stiffness-gradient-makes-height-gradient</strong>
+        
+        <span class="muted" style="font-size:0.78em">requires: <code>r4-coupled-growth</code></span>
+        
+      </div>
+      <div style="margin-top: 6px; font-size: 0.95em;">A BM-stiffness gradient across the sheet produces a spatial reconstructed-height gradient (stiffer cells are more confined and taller).
+</div>
+      
+      
+      <details style="margin-top: 6px; font-size: 0.82em;">
+        <summary class="muted" style="cursor: pointer;">Assertion</summary>
+        
+        <pre style="background:#fff; padding:8px; margin:4px 0 0 0; border:1px solid #e2e8f0; border-radius:3px; overflow-x:auto;">measure: {"field": "height_gradient_stiff_end", "kind": "scalar"}
+pass_if: {"note": "height 0.910 at the stiff end vs 0.761 at the soft end", "op": "\u003e", "value": 0.0}</pre>
+      </details>
+      
+      
+      
+      
+    </li>
+    
   </ul>
   
   </div>
@@ -1307,28 +1663,28 @@ pass_if: {"note": "per-cell area and height finite and positive after 5 Euler st
           <span class="narrative-label">Empirical validation</span>
           <span class="narrative-input verdict-badge-computed" data-verdict-track="biological_validation"
                 title="Computed from the gate evaluator (read-only)"
-                style="display:inline-block;padding:2px 12px;border-radius:9999px;font-weight:700;font-size:0.85em;background:#f1f5f9;color:#475569">PENDING</span>
+                style="display:inline-block;padding:2px 12px;border-radius:9999px;font-weight:700;font-size:0.85em;background:#f1f5f9;color:#475569">MIXED</span>
           <span class="muted small" style="margin-left:6px">computed from gate evaluator</span>
         </label>
         <label class="narrative-row narrative-row-wide">
           <span class="narrative-label">Empirical basis</span>
           <textarea class="narrative-input narrative-textarea" rows="2"
                     data-narrative-path="conclusion_verdicts.biological_validation.basis"
-                    placeholder="e.g. atp_fraction = 0.997, outside Boesen 2024 band [0.2, 0.5].">The sheet yields finite, well-posed per-cell geometry, but the figure-level confinement comparison to R1 and the BM-traction coupling are not yet in the composite, so no biological regime is validated or refuted here.
+                    placeholder="e.g. atp_fraction = 0.997, outside Boesen 2024 band [0.2, 0.5].">The coupled-growth experiment now DEMONSTRATES the preferred→realized→BM-reaction→height chain in a reduced-order 2D cross-section (stiff BM lags the target by a 0.317 gap and raises height 0.70→0.91; zero-growth gives no BM strain; a stiffness gradient makes a spatial height gradient) — qualitatively consistent with the paper&#39;s confinement direction. It is NOT yet a calibrated reproduction, and the resolved vertex-model sheet remains a static substrate at the engine level (a named limitation), so the resolved-sheet and absolute-height claims stay pending.
 </textarea>
         </label>
         <label class="narrative-row">
           <span class="narrative-label">Explanatory gain</span>
           <span class="narrative-input verdict-badge-computed" data-verdict-track="explanatory_gain"
                 title="Computed from interpretation-tier findings (read-only)"
-                style="display:inline-block;padding:2px 12px;border-radius:9999px;font-weight:700;font-size:0.85em;background:#f1f5f9;color:#475569">NEUTRAL</span>
+                style="display:inline-block;padding:2px 12px;border-radius:9999px;font-weight:700;font-size:0.85em;background:#f1f5f9;color:#475569">POSITIVE</span>
           <span class="muted small" style="margin-left:6px">computed from interpretation-tier findings</span>
         </label>
         <label class="narrative-row narrative-row-wide">
           <span class="narrative-label">Explanatory basis</span>
           <textarea class="narrative-input narrative-textarea" rows="2"
                     data-narrative-path="conclusion_verdicts.explanatory_gain.basis"
-                    placeholder="e.g. Three findings worth keeping; design_pivot_required closed.">Establishes that an explicit spatial epithelial substrate runs and is numerically stable; it does not yet add biological understanding of confinement beyond the homogeneous R1 model.
+                    placeholder="e.g. Three findings worth keeping; design_pivot_required closed.">Delivers the agreed two-way coupled-growth experiment (preferred vs realized area, reconstructed height, BM stress, stiffness/relaxation stratification, spatial height gradient) that the prior static-substrate result could not — the causal confinement mechanism is now exercised, not just asserted.
 </textarea>
         </label>
       </div>
@@ -1345,7 +1701,7 @@ pass_if: {"note": "per-cell area and height finite and positive after 5 Euler st
       <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
         <span class="gate-status-passed" style="padding:2px 12px;border-radius:9999px;font-weight:700;font-size:0.85em">passed</span>
         <span class="muted small">evaluated by code</span>
-        <span class="muted small">2/2 passed</span>
+        <span class="muted small">2/6 passed</span>
       </div>
       
     </div>
@@ -1556,7 +1912,7 @@ pass_if: {"note": "per-cell area and height finite and positive after 5 Euler st
 </section>
 
 </main>
-<script>window.__DASH_CONFIG__ = { mode: "snapshot", interactiveUrl: "https://github.com/vivarium-collective/viva-lumenoid", basePath: "/viva-lumenoid/dashboard", inputsDownloadBase: "https://github.com/vivarium-collective/viva-lumenoid/raw/main", provenance: {"repo_slug": "vivarium-collective/viva-lumenoid", "repo_url": "https://github.com/vivarium-collective/viva-lumenoid", "commit": "63ee257ea00e870949169dd442ddaaee05495da6", "commit_url": "https://github.com/vivarium-collective/viva-lumenoid/commit/63ee257ea00e870949169dd442ddaaee05495da6", "branch": "main", "lockfile": "uv.lock@15f07c1539d8", "generated_at": "2026-10-20 16:15 UTC"} };</script>
+<script>window.__DASH_CONFIG__ = { mode: "snapshot", interactiveUrl: "https://github.com/vivarium-collective/viva-lumenoid", basePath: "/viva-lumenoid/dashboard", inputsDownloadBase: "https://github.com/vivarium-collective/viva-lumenoid/raw/main", provenance: {"repo_slug": "vivarium-collective/viva-lumenoid", "repo_url": "https://github.com/vivarium-collective/viva-lumenoid", "commit": "16241938655eb23e0e9d4eaab2c155bd7372892d", "commit_url": "https://github.com/vivarium-collective/viva-lumenoid/commit/16241938655eb23e0e9d4eaab2c155bd7372892d", "branch": "main", "lockfile": "uv.lock@15f07c1539d8", "generated_at": "2026-10-20 20:35 UTC"} };</script>
 <script src="/viva-lumenoid/dashboard/assets/data-source.js"></script>
 <script src="/viva-lumenoid/dashboard/assets/toast.js"></script>
 <script>
