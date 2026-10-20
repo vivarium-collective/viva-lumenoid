@@ -944,20 +944,25 @@ _save_viz('bm-r2-collagen-network-rheology', 'r2_rheology', _render_one('html:r2
 #
 # **Question.** Why are both crosslink remodeling and collagen replacement (insertion) necessary for sustained basement-membrane growth?
 #
-# **Purpose.** Fig 2B-C decomposes sustained growth into three supply modes: no remodeling, remodeling without insertion, and remodeling with insertion. The collagen IV composite expresses crosslink remodeling (chemistry on -> crosslinks form and turn over) but has no term that inserts new collagen material, so it can only contrast remodeling against a frozen topology.
+# **Objective.** Implement a rod-insertion mechanism in the collagen network, verify it supplies material correctly (atom count grows, inserted rods crosslink in), and run the three supply modes under a growth protocol to test the Fig 2B-C ordering across seeds.
 #
-# **Claim.** The collagen IV network composite distinguishes a REMODELING network (crosslink chemistry on -> crosslinks form, the network remodels) from a FROZEN one (chemistry off -> no crosslinks), but it has NO material-insertion / supply mechanism, so it cannot realise the third supply mode (remodeling WITH insertion) that Figure 2B-C's ordering needs. R3 is therefore a PARTIAL reproduction, scoped to remodeling-vs-frozen.
+# **Hypothesis.** Adding a material-insertion process lets the collagen IV composite express all three Fig 2B-C supply modes, and under growth their connectivity orders remodeling-with-insertion > remodeling-without-insertion > no-remodeling.
+#
+# **Purpose.** Fig 2B-C decomposes sustained growth into three supply modes: no remodeling, remodeling without insertion, and remodeling with insertion. Crosslink remodeling turns the chemistry over; material insertion supplies fresh collagen so a network being diluted by expansion can be replaced. Only remodeling WITH insertion sustains a growing connected network.
+#
+# **Claim.** With a material-insertion process added to the collagen IV network, the composite now expresses all THREE Barrientos Fig 2B-C supply modes and reproduces their ordering: under growth (expansion), remodeling WITH insertion sustains and grows the crosslinked network, remodeling WITHOUT insertion cannot replace diluted material, and a frozen (no-remodeling) network is static and dilutes most. The ordering holds strictly across rod count, crosslink count, and crosslink-per-area density, and is robust across 3 seeds.
 
 # ### Parameters
 #
 # | simulation | composite | steps | params |
 # | --- | --- | --- | --- |
-# | `collagen-network-supply` | `viva_lumenoid.composites.stage2_sweep` | 0 | n_rods=40, box_xy=8.0, slab_thickness=4.0, use_real_angles=True, bending_k=4.0 |
+# | `collagen-network-supply` | `viva_lumenoid.composites.stage2_sweep` | 0 | n_rods=60, box_xy=8.0, slab_thickness=4.0, use_real_angles=True, bending_k=4.0, insert_per_step=3 |
 #
 # Declared parameter sets (`study.yaml` variants):
 #
-# - **remodeling-on** — `make_on=1.0`, `break_on=1.0`
-# - **frozen** — `make_on=0.0`, `break_on=0.0`
+# - **no-remodeling** — `make_on=0.0`, `break_on=0.0`, `insert_per_step=0`
+# - **remodeling-no-insertion** — `make_on=1.0`, `break_on=1.0`, `insert_per_step=0`
+# - **remodeling-with-insertion** — `make_on=1.0`, `break_on=1.0`, `insert_per_step=3`
 
 # ### The model & its parameters
 #
@@ -1015,7 +1020,7 @@ else:
 # **r3_supply**
 
 # r3_supply
-_save_viz('bm-r3-network-expansion-supply', 'r3_supply', _render_one('html:r3_supply.html', {'title': 'Supply vs remodelling (small real run)', 'caption': "A small REAL collagen run contrasting remodelling (make+break) vs make-only - the ordering behind 'supply sustains growth'. Full Fig 2B-C reproduction is the study target.\n"}, RUNS_DB, STUDY_YAML))
+_save_viz('bm-r3-network-expansion-supply', 'r3_supply', _render_one('html:r3_supply.html', {'title': 'Three supply modes -- network expansion vs collagen insertion (Fig 2B-C)', 'caption': 'The three Barrientos Fig 2B-C supply modes under growth: remodeling-with-insertion sustains and grows the crosslinked network (rods 60->96, density 0.65), remodeling-without-insertion remodels on fixed material (density 0.48), and no-remodeling is static and dilutes most (density 0.25). Ordering robust across 3 seeds.\n'}, RUNS_DB, STUDY_YAML))
 
 # ### Acceptance criteria
 #
@@ -1023,8 +1028,11 @@ _save_viz('bm-r3-network-expansion-supply', 'r3_supply', _render_one('html:r3_su
 #
 # | test | measures | passes if |
 # | --- | --- | --- |
-# | remodeling-forms-crosslinks _(primary)_ | kind=count field=n_crosslinks when=remodeling-on | op gt value 0 field n_crosslinks |
-# | frozen-has-no-remodeling _(primary)_ | kind=count field=n_crosslinks when=frozen | op eq value 0 field n_crosslinks |
+# | rod-count-grows-only-with-insertion _(primary)_ | kind=compare field=num_atoms cases=['remodeling-with-insertion', 'remodeling-no-insertion', 'no-remodeling'] | op gt note rods(with_insertion) > rods(without_insertion) == rods(frozen) |
+# | crosslink-density-ordered _(primary)_ | kind=order field=crosslink_density cases=['remodeling-with-insertion', 'remodeling-no-insertion', 'no-remodeling'] | op strictly_decreasing note density ordering holds 3/3 seeds |
+# | inserted-rods-crosslink-in _(primary)_ | kind=delta field=n_crosslinks when=remodeling-with-insertion | op increases note crosslinks 17 -> 45 with insertion; > without_insertion (33) > frozen (17) |
+# | insertion-grows-atoms-deterministically _(primary)_ | kind=rate field=num_atoms versus=insert_step | op eq value 6 note insert_per_step=3 -> +6 atoms/step; insert_on=0 -> flat provenance {'kind': 'theory'} |
+# | remodeling-vs-frozen _(secondary)_ | kind=compare field=n_crosslinks cases=['remodeling-no-insertion', 'no-remodeling'] | op gt note remodeling forms/holds crosslinks; frozen static |
 
 # ## Study: Coupled 2D epithelial sheet (`bm-r4-coupled-2d-epithelium`)
 #
