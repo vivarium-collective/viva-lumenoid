@@ -945,6 +945,11 @@ else:
 #
 # _Results are shown by the figures below, produced by the run above._
 
+# **collagen_network_rheology_movie**
+
+# collagen_network_rheology_movie
+_save_viz('bm-r2-collagen-network-rheology', 'collagen_network_rheology_movie', _render_one('gif:bm-r2-collagen-network-rheology.gif', {'title': 'R2 — collagen IV network remodeling (movie)', 'evidence_status': 'observed', 'tier': 'supplement', 'caption': 'Animated movie of the real NC1/7S collagen network under staged growth loading: beads are NC1 (orange) and 7S (blue) ends, grey segments are crosslink bonds forming and breaking as the network remodels. Illustrative companion to the quantitative Fig-2E figure; reduced units.\n'}, RUNS_DB, STUDY_YAML))
+
 # **r2_fig2e**
 
 # r2_fig2e
@@ -1042,6 +1047,11 @@ else:
 #
 # _Results are shown by the figures below, produced by the run above._
 
+# **network_expansion_supply_movie**
+
+# network_expansion_supply_movie
+_save_viz('bm-r3-network-expansion-supply', 'network_expansion_supply_movie', _render_one('gif:bm-r3-network-expansion-supply.gif', {'title': 'R3 — collagen network, remodeling + supply (movie)', 'evidence_status': 'observed', 'tier': 'supplement', 'caption': 'Animated movie of the collagen network with crosslink turnover AND material insertion (the third Fig-2B/C supply mode): new rods appear and crosslink in as the network expands. Illustrative companion to the three-mode ordering figure.\n'}, RUNS_DB, STUDY_YAML))
+
 # **r3_supply**
 
 # r3_supply
@@ -1121,6 +1131,11 @@ else:
 # ### Visualizations
 #
 # _Results are shown by the figures below, produced by the run above._
+
+# **coupled_2d_epithelium_movie**
+
+# coupled_2d_epithelium_movie
+_save_viz('bm-r4-coupled-2d-epithelium', 'coupled_2d_epithelium_movie', _render_one('gif:bm-r4-coupled-2d-epithelium.gif', {'title': 'R4 — 2D epithelial sheet relaxing (movie)', 'evidence_status': 'observed', 'tier': 'supplement', 'caption': 'Animated movie of the 12-cell 2D Tyssue sheet relaxing to its finite geometry (edges in blue). Verifies mesh construction; the planar z=0 geometry does not compute a real 3D height (see the quantitative panel + the BM-coupling gap).\n'}, RUNS_DB, STUDY_YAML))
 
 # **r4_confinement**
 
@@ -1208,6 +1223,11 @@ else:
 # ### Visualizations
 #
 # _Results are shown by the figures below, produced by the run above._
+
+# **explicit_3d_confinement_movie**
+
+# explicit_3d_confinement_movie
+_save_viz('bm-r5-explicit-3d-confinement', 'explicit_3d_confinement_movie', _render_one('gif:bm-r5-explicit-3d-confinement.gif', {'title': 'R5 — 3D monolayer (movie)', 'evidence_status': 'observed', 'tier': 'supplement', 'caption': 'Animated movie of the 206-cell closed 3D Tyssue monolayer (xy projection of the mesh edges). Geometry verification with conserved per-cell volumes; BM-shell coupling is not wired (see the hypothesis panel).\n'}, RUNS_DB, STUDY_YAML))
 
 # **r5_monolayer**
 
@@ -1397,6 +1417,11 @@ else:
 #
 # _Results are shown by the figures below, produced by the run above._
 
+# **actomyosin_cortex_movie**
+
+# actomyosin_cortex_movie
+_save_viz('bm-e1-actomyosin-cortex', 'actomyosin_cortex_movie', _render_one('gif:bm-e1-actomyosin-cortex.gif', {'title': 'E1 — actomyosin cortex contracting (movie)', 'evidence_status': 'engineered-diagnostic', 'tier': 'supplement', 'caption': 'Animated movie of the LJ bead patch contracting under the well-depth proxy. Engineering verification of tunable effective tension — NOT explicit actin filaments/motors; the x-axis proxy is not biological myosin activity.\n'}, RUNS_DB, STUDY_YAML))
+
 # **e1_cortical_tension**
 
 # e1_cortical_tension
@@ -1491,6 +1516,11 @@ else:
 #
 # _Results are shown by the figures below, produced by the run above._
 
+# **actin_adhesion_collagen_movie**
+
+# actin_adhesion_collagen_movie
+_save_viz('bm-e2-actin-adhesion-collagen', 'actin_adhesion_collagen_movie', _render_one('gif:bm-e2-actin-adhesion-collagen.gif', {'title': 'E2 — actomyosin cortex, coupling input (movie)', 'evidence_status': 'engineered-diagnostic', 'tier': 'supplement', 'caption': 'Animated movie of the cortex bead patch that drives the deterministic occupancy-gated force transfer in E2. Coupling unit-test input, not emergent integrin mechanics.\n'}, RUNS_DB, STUDY_YAML))
+
 # **e2_force_transfer**
 
 # e2_force_transfer
@@ -1573,6 +1603,11 @@ else:
 # ### Visualizations
 #
 # _Results are shown by the figures below, produced by the run above._
+
+# **closed_3d_lumenoid_movie**
+
+# closed_3d_lumenoid_movie
+_save_viz('bm-e3-closed-3d-lumenoid', 'closed_3d_lumenoid_movie', _render_one('gif:bm-e3-closed-3d-lumenoid.gif', {'title': 'E3 — closed 3D lumenoid shell (movie)', 'evidence_status': 'observed', 'tier': 'supplement', 'caption': 'Animated movie of the closed 78-cell Tyssue lumenoid shell (xy projection). Geometry verification of the closed lumen + basal BM-coupling surface; no lumen-filling drive is wired yet (pressure 0 at rest).\n'}, RUNS_DB, STUDY_YAML))
 
 # **e3_lumenoid**
 
@@ -1668,6 +1703,11 @@ else:
 # ### Visualizations
 #
 # _Results are shown by the figures below, produced by the run above._
+
+# **feedback_predictions_movie**
+
+# feedback_predictions_movie
+_save_viz('bm-e4-feedback-predictions', 'feedback_predictions_movie', _render_one('gif:bm-e4-feedback-predictions.gif', {'title': 'E4 — LAMMPS collagen BM ↔ Tyssue epithelium coupling (movie)', 'evidence_status': 'observed', 'tier': 'main', 'caption': "The capstone coupling, animated: LEFT the Tyssue epithelium (basal tension annotated), RIGHT the explicit LAMMPS collagen IV BM patch (stress σ annotated) it is coupled to. The two evolve together through the bidirectional loop — the epithelium's basal-area change strains the collagen BM, whose stress feeds back as basal tension. Real explicit-BM dynamics (reduced units).\n"}, RUNS_DB, STUDY_YAML))
 
 # **e4_feedback**
 
