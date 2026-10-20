@@ -37,6 +37,14 @@ def test_contractility_raises_cortical_tension():
     assert _run(3.0)["cortical_tension"] > _run(1.0)["cortical_tension"]
 
 
+def test_cortical_tension_monotone_in_contractility():
+    pytest.importorskip("lammps")
+    # E1 primary contract: cortical tension rises strictly along the full
+    # contractility sweep {0.5, 1.0, 2.0, 3.0} (the myosin-activity proxy).
+    tensions = [_run(eps)["cortical_tension"] for eps in (0.5, 1.0, 2.0, 3.0)]
+    assert all(lo < hi for lo, hi in zip(tensions, tensions[1:])), tensions
+
+
 def test_model_is_registered():
     pytest.importorskip("pbg_lammps")
     from pbg_lammps.model import get_model
