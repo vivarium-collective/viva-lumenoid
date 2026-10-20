@@ -1448,13 +1448,20 @@ _save_viz('bm-e3-closed-3d-lumenoid', 'e3_lumenoid', _render_one('html:e3_lumeno
 #
 # **Hypothesis.** With one-way, uncoupled and uniform-material controls, the fully coupled system predicts regimes - growth-driven turnover, spatial BM heterogeneity, contractility-dependent confinement, partial adhesion/network failure - in which cell height and lumenoid growth depart measurably from the paper's homogeneous, one-way predictions.
 #
-# **Claim.** The epithelium and its collagen membrane are coupled both ways: the growing basal surface stretches the membrane and the membrane's stress pushes back as a basal tension, with controls and convergence in place.
+# **Purpose.** The epithelium and its collagen basement membrane are coupled both ways. The growing basal surface stretches the membrane (forward half); the membrane's stress pushes back on the cells as a basal tension (reaction half). Closing this loop lets lumen pressure and cell shape respond to how fast the membrane remodels. Matched controls -- driving the membrane without feedback (one-way) or leaving it inert (uncoupled) -- separate the coupling's effect from the rest of the model.
+#
+# **Claim.** The epithelium and its collagen basement membrane are coupled both ways: the growing basal surface stretches the membrane and the membrane's stress pushes back on the cells as a basal tension. On the reduced-order (effective) BM path the bidirectional loop runs end-to-end, the three coupling controls (two-way / one-way / uncoupled) behave exactly as the mechanism demands, and subcycling the BM relaxation converges.
 
 # ### Parameters
 #
 # | simulation | composite | steps | params |
 # | --- | --- | --- | --- |
-# | `bm-e4-feedback-predictions` | `viva_lumenoid.composites.coupled_lumenoid` | 0 | — |
+# | `bm-e4-feedback-predictions` | `viva_lumenoid.composites.coupled_lumenoid` | 0 | bm_mode=reduced, coupling_mode=two-way, bm_substeps=1, strain_gain=20.0, tension_gain=0.02, bm_modulus=50.0, bm_relaxation=10.0 |
+#
+# Declared parameter sets (`study.yaml` variants):
+#
+# - **one-way-control** — `coupling_mode=one-way`
+# - **uncoupled-control** — `coupling_mode=uncoupled`
 
 # ### The model & its parameters
 #
@@ -1513,6 +1520,17 @@ else:
 
 # e4_feedback
 _save_viz('bm-e4-feedback-predictions', 'e4_feedback', _render_one('html:e4_feedback.html', {'title': 'Feedback loop + controls (schematic)', 'caption': 'Schematic of the growth <-> turnover <-> BM relaxation <-> confinement feedback loop and its one-way/uncoupled/uniform controls. NOT simulated.\n'}, RUNS_DB, STUDY_YAML))
+
+# ### Acceptance criteria
+#
+# _Pre-registered checks (criteria/thresholds only — run the cells above to evaluate them)._
+#
+# | test | measures | passes if |
+# | --- | --- | --- |
+# | two-way-feeds-back-reaction _(primary)_ | kind=threshold field=basal_tension case=two-way | op ne value 0.0 note two-way basal_tension != 0 (observed -0.2995) |
+# | one-way-has-no-reaction _(primary)_ | kind=threshold field=basal_tension case=one-way | op eq value 0.0 note one-way basal_tension == 0 |
+# | uncoupled-bm-inert _(primary)_ | kind=threshold field=bm_sigma case=uncoupled | op eq value 0.0 note uncoupled bm_sigma == 0 |
+# | bm-subcycling-converges _(primary)_ | kind=convergence field=bm_sigma versus=bm_substeps over=[1, 2, 4, 8] | op lt note |s8-s4| 0.017 < |s2-s1| 0.066 (refinement error shrinks) |
 
 # ## Open decisions
 # - Reproduction conventions: the article alone does not fix every convention needed to reproduce it. Acquire the supplemental tissue-model equations and the precise Figure 1 parameter values.

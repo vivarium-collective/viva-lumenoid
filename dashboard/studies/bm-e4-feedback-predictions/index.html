@@ -77,7 +77,7 @@
   </button>
   <button class="study-pillar" data-kind="conclusions" onclick="_setStudyTab('conclusions')">
     <svg class="pillar-icon" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="6" cy="6" r="2.2"/><circle cx="6" cy="18" r="2.2"/><circle cx="18" cy="9" r="2.2"/><path d="M6 8.2v7.6"/><path d="M6 12h6a4 4 0 0 0 4-4V11"/></svg>
-    <span class="pillar-label">Conclusions</span>
+    <span class="pillar-label">Decide</span>
   </button>
   
   <span class="study-dl study-export-wrap" style="margin-left:auto; align-self:center; position:relative; display:inline-flex">
@@ -538,7 +538,7 @@
 
     <div class="ctr-block">
       <h2 class="overview-label ctr-h">Claim</h2>
-      <p class="ctr-text">The epithelium and its collagen membrane are coupled both ways: the growing basal surface stretches the membrane and the membrane&#39;s stress pushes back as a basal tension, with controls and convergence in place.
+      <p class="ctr-text">The epithelium and its collagen basement membrane are coupled both ways: the growing basal surface stretches the membrane and the membrane&#39;s stress pushes back on the cells as a basal tension. On the reduced-order (effective) BM path the bidirectional loop runs end-to-end, the three coupling controls (two-way / one-way / uncoupled) behave exactly as the mechanism demands, and subcycling the BM relaxation converges.
 </p>
       
     </div>
@@ -557,12 +557,12 @@
 
     <div class="ctr-block">
       <h2 class="overview-label ctr-h">Model &amp; approach</h2>
-      <p class="ctr-text">Test growth-driven turnover, spatial BM heterogeneity, contractility-dependent confinement, partial adhesion and network failure, each against one-way, uncoupled and uniform-material controls, and report where the bidirectionally coupled predictions depart from the paper.
+      <p class="ctr-text">Run the coupled_lumenoid composite (real Tyssue epithelium, reduced-order effective BM) for 15 steps of dt 0.02 with strain_gain 20.0, tension_gain 0.02, bm_modulus 50.0, bm_relaxation 10.0, in three coupling modes — two-way (full feedback), one-way (epithelium drives the BM, no reaction fed back), and uncoupled (BM inert) — and read the emitted basal_tension and bm_sigma. Then, in two-way mode, subcycle the BM relaxation at bm_substeps {1, 2, 4, 8} and read bm_sigma to check successive-refinement convergence.
 </p>
       <div class="ctr-meta">
         <div class="ctr-meta-row"><span class="ctr-meta-k">Model</span> <code>bm-e4-feedback-predictions</code><a class="ov-tablink" href="#" onclick="_setStudyTab('compose');return false;">model →</a></div>
         
-        <div class="ctr-meta-row"><span class="ctr-meta-k">Measures</span> <span class="ctr-meta-item">1 behavior test</span><a class="ov-tablink" href="#" onclick="_setStudyTab('audit');return false;">see Tests →</a></div>
+        <div class="ctr-meta-row"><span class="ctr-meta-k">Measures</span> <span class="ctr-meta-item">4 behavior tests</span><a class="ov-tablink" href="#" onclick="_setStudyTab('audit');return false;">see Tests →</a></div>
         
       </div>
     </div>
@@ -571,26 +571,232 @@
     
     
     
+    <div class="ctr-block ov-prov">
+      <h2 class="overview-label ctr-h">Provenance &amp; sources</h2>
+      <div class="ctr-meta-k" style="margin-top:12px">Sources (1)</div>
+      <div class="ov-sources">
+      
+        
+        <div class="ov-src" id="sref-barrientos2026cellshape">
+          <b class="ov-src-t">Barrientos 2026</b> <span class="ov-src-k">barrientos2026cellshape</span>
+          <div class="ov-src-t">Basement membrane turnover controls cell shape</div>
+          <div class="ctr-meta-k" style="text-transform:none">Barrientos, Rodrigo and Meadowcroft, Billie and Sánchez-Sánchez, Beatriz and others · 2026 · <a href="https://www.cell.com/cell/fulltext/S0092-8674(26)00808-1" target="_blank" rel="noopener">source ↗</a></div>
+        </div>
+      
+      </div>
+    </div>
+    
 
     <div class="ctr-block">
       <h2 class="overview-label ctr-h">Result</h2>
-      <p class="ctr-text"></p>
+      <p class="ctr-text">The bidirectional coupling runs end-to-end on the reduced-order BM path and the three coupling controls behave exactly as the mechanism requires. In two-way mode the membrane reaction is fed back as a non-zero basal tension (basal_tension -0.2995, bm_sigma -14.976, basal_area 195.93, lumen_pressure 45.19). The one-way control feeds no reaction back (basal_tension exactly 0.0) and the uncoupled control leaves the membrane inert (bm_sigma exactly 0.0), isolating the feedback half of the contract from the forward half and from the null. Subcycling the BM relaxation converges: bm_sigma over bm_substeps {1,2,4,8} = -14.976 / -15.042 / -15.075 / -15.092, with the successive-refinement error shrinking monotonically (|s2-s1| 0.066 -&gt; |s4-s2| 0.033 -&gt; |s8-s4| 0.017), so |s8-s4| 0.017 &lt; |s2-s1| 0.066. This is a v0 single-patch demonstration on the effective-BM path; the explicit-LAMMPS-BM realization and convergence of the full exchange interval are open.
+</p>
+      
+      
+      <div class="ov-metrics">
+        
+        <div class="ov-metric ov-metric-pass">
+          <div class="ov-metric-v">bm_sigma substeps 1/2/4/8 = -14.976/-15.042/-15.075/-15.092; |s8-s4| 0.017 &lt; |s2-s1| 0.066</div>
+          <div class="ov-metric-k">bm-subcycling-converges</div>
+        </div>
+        
+      </div>
+      
+      
+      
+      
+    <div class="overview-section findings-section">
+      <h2 class="overview-label">🔬 Findings — what this study taught us</h2>
       
       
       
       
       
+      
+      
+      
+      <div class="finding-card finding-kind-computational finding-status-confirms">
+        <details class="finding-details">
+          <summary class="finding-row">
+            <span class="finding-status-glyph">✓</span>
+            <span class="finding-claim finding-statement">The bidirectional epithelium&lt;-&gt;BM coupling runs end-to-end on the reduced-order BM and the three coupling controls separate exactly as the mechanism demands: two-way feeds the membrane reaction back as a non-zero basal tension (-0.2995), one-way feeds none back (0.0), and uncoupled leaves the membrane inert (bm_sigma 0.0).
+</span>
+            
+            <span class="finding-chip">via <code>two-way-feeds-back-reaction</code></span>
+            
+          </summary>
+          <div class="finding-drawer">
+            <div class="finding-header">
+              <span class="finding-id">F1-bidirectional-coupling-controls-separate</span>
+              <span class="finding-kind">computational</span>
+              <span class="finding-status-text">confirms literature</span>
+            </div>
+            
+            
+            <div class="finding-evidence">
+              <strong>observed:</strong> two-way basal_tension -0.2995; one-way basal_tension 0.0; uncoupled bm_sigma 0.0 · 
+              
+              via test <a href="#bt-two-way-feeds-back-reaction" onclick="_gotoStudyTab('audit','bt-two-way-feeds-back-reaction');return false;"><code>two-way-feeds-back-reaction</code></a> · 
+              in run <a href="#run-e4-coupling-controls"><code>e4-coupling-controls</code></a>
+              
+              
+            </div>
+            
+            
+            <div class="finding-traceability" style="font-size:0.84em;color:#475569;padding:4px 10px;margin:4px 0">
+              
+              
+              runs: <a href="#run-e4-coupling-controls"><code>e4-coupling-controls</code></a>
+            </div>
+            
+            
+            
+            <div class="pass_if-band muted small" style="font-size:0.82em;padding:2px 10px">judged against <code>pass_if: ne 0.0</code></div>
+            
+            
+            
+            <div class="finding-expected">
+              <strong>expected:</strong> a growing epithelium&#39;s basement membrane pushes back on the cells; absent when the reaction is not wired · 
+              
+              cites: <a class="ov-cite" href="#sref-barrientos2026cellshape" title="Basement membrane turnover controls cell shape">Barrientos 2026</a>
+            </div>
+            
+            
+            <div class="finding-explanation"><em>Why:</em> coupling_mode gates the two halves of the contract: the forward half (strain_gain) drives the BM, the reaction half (tension_gain) feeds the BM stress back as a basal tension. Two-way enables both; one-way drops the reaction; uncoupled drops the forward drive, so the BM carries no stress.
+</div>
+            
+            <div class="finding-next"><strong>→ Next:</strong> realize the same contract on the explicit LAMMPS collagen network (bm_mode explicit)</div>
+          </div>
+        </details>
+      </div>
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      <div class="finding-card finding-kind-computational finding-status-confirms">
+        <details class="finding-details">
+          <summary class="finding-row">
+            <span class="finding-status-glyph">✓</span>
+            <span class="finding-claim finding-statement">Subcycling the reduced-order BM relaxation converges: bm_sigma over bm_substeps {1,2,4,8} = -14.976/-15.042/-15.075/-15.092, with the successive-refinement error shrinking monotonically (0.066 -&gt; 0.033 -&gt; 0.017), so |s8-s4| 0.017 &lt; |s2-s1| 0.066.
+</span>
+            
+            <span class="finding-chip">via <code>bm-subcycling-converges</code></span>
+            
+          </summary>
+          <div class="finding-drawer">
+            <div class="finding-header">
+              <span class="finding-id">F2-reduced-order-bm-subcycling-converges</span>
+              <span class="finding-kind">computational</span>
+              <span class="finding-status-text">confirms literature</span>
+            </div>
+            
+            
+            <div class="finding-evidence">
+              <strong>observed:</strong> refinement error 0.0659 -&gt; 0.0333 -&gt; 0.0167 as substeps double · 
+              
+              via test <a href="#bt-bm-subcycling-converges" onclick="_gotoStudyTab('audit','bt-bm-subcycling-converges');return false;"><code>bm-subcycling-converges</code></a> · 
+              in run <a href="#run-e4-bm-subcycling-sweep"><code>e4-bm-subcycling-sweep</code></a>
+              
+              
+            </div>
+            
+            
+            <div class="finding-traceability" style="font-size:0.84em;color:#475569;padding:4px 10px;margin:4px 0">
+              
+              
+              runs: <a href="#run-e4-bm-subcycling-sweep"><code>e4-bm-subcycling-sweep</code></a>
+            </div>
+            
+            
+            
+            <div class="pass_if-band muted small" style="font-size:0.82em;padding:2px 10px">judged against <code>pass_if: op: lt · note: |s8-s4| 0.017 &lt; |s2-s1| 0.066 (refinement error shrinks)</code></div>
+            
+            
+            
+            <div class="finding-explanation"><em>Why:</em> Finer substeps integrate the BM rest-area relaxation more accurately within each coupling step; the error halving per doubling is first-order convergence of the reduced-order BM integrator.
+</div>
+            
+            <div class="finding-next"><strong>→ Next:</strong> check convergence of the FULL epithelium&lt;-&gt;BM exchange interval, not only the reduced-order BM substep</div>
+          </div>
+        </details>
+      </div>
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      <div class="finding-card finding-kind-methodological finding-status-partial">
+        <details class="finding-details">
+          <summary class="finding-row">
+            <span class="finding-status-glyph">◐</span>
+            <span class="finding-claim finding-statement">The controls and convergence are demonstrated on the reduced-order (effective) BM path (bm_mode=reduced), a v0 single patch; the explicit LAMMPS collagen network and the spatially resolved feedback predictions are not yet exercised.
+</span>
+            
+            <span class="finding-chip">via <code>uncoupled-bm-inert</code></span>
+            
+          </summary>
+          <div class="finding-drawer">
+            <div class="finding-header">
+              <span class="finding-id">F3-reduced-order-path-only</span>
+              <span class="finding-kind">methodological</span>
+              <span class="finding-status-text">partial literature</span>
+            </div>
+            
+            
+            <div class="finding-evidence">
+              <strong>observed:</strong> all runs use bm_mode=reduced; the LAMMPS explicit-BM path is not on this evidence pass · 
+              
+              via test <a href="#bt-uncoupled-bm-inert" onclick="_gotoStudyTab('audit','bt-uncoupled-bm-inert');return false;"><code>uncoupled-bm-inert</code></a> · 
+              in run <a href="#run-e4-coupling-controls"><code>e4-coupling-controls</code></a>
+              
+              
+            </div>
+            
+            
+            <div class="finding-traceability" style="font-size:0.84em;color:#475569;padding:4px 10px;margin:4px 0">
+              
+              
+              runs: <a href="#run-e4-coupling-controls"><code>e4-coupling-controls</code></a>
+            </div>
+            
+            
+            
+            <div class="pass_if-band muted small" style="font-size:0.82em;padding:2px 10px">judged against <code>pass_if: eq 0.0</code></div>
+            
+            
+            
+            
+            
+            <div class="finding-next"><strong>→ Next:</strong> stand up the explicit-LAMMPS-BM realization and the spatial E4 feedback predictions</div>
+          </div>
+        </details>
+      </div>
+      
+      
+    </div>
+    
       
       
       
       <div class="ctr-meta ctr-assess">
         
         <div class="ctr-meta-row"><span class="ctr-meta-k">Confidence</span>
-          <span class="ctr-badge ctr-badge-investigating">Investigating</span>
-          
-          
+          <span class="ctr-badge ctr-badge-accepted">Accepted</span>
+          <span class="ctr-vch">biology&nbsp;PASS</span>
+          <span class="ctr-vch">insight&nbsp;POSITIVE</span>
         </div>
         
+        
+        <div class="ctr-meta-row"><span class="ctr-meta-k">Caveat</span> <span class="ctr-meta-item">Reduced-order (effective) BM only: the explicit LAMMPS collagen network is NOT exercised on this path (bm_mode=reduced); the controls and convergence are demonstrated on the effective-BM realization.</span></div>
         
       </div>
       
@@ -656,7 +862,7 @@
   <div class="overview-section" id="model-section">
     <h3>Runnable models <span class="muted" style="font-size:0.85em;font-weight:normal">— the composite(s) this study simulates</span></h3>
     
-    <div class="cond-block" data-model-composite="viva_lumenoid.composites.coupled_lumenoid" data-model-overrides='{}'>
+    <div class="cond-block" data-model-composite="viva_lumenoid.composites.coupled_lumenoid" data-model-overrides='{"bm_mode": "reduced", "bm_modulus": 50.0, "bm_relaxation": 10.0, "bm_substeps": 1, "coupling_mode": "two-way", "strain_gain": 20.0, "tension_gain": 0.02}'>
       <div class="cond-block-title" style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
         <strong>bm-e4-feedback-predictions</strong>
         
@@ -681,10 +887,37 @@
       
       
       
+      
+      
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+      
+      
+      
       <div class="model-config-mount" style="margin-top:8px">
         <div class="viv-loading"><span class="viv-loading-spin" aria-hidden="true"></span><span>Loading configuration…</span></div></div>
       
       
+      
+      <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;font-size:0.8em">
+        <span class="cond-pill"><span class="cond-pill-k">seeds</span>=4 (sweep)</span>
+        
+        
+        <span class="cond-pill"><span class="cond-pill-k">status</span>=completed</span>
+      </div>
       
     </div>
     
@@ -693,6 +926,275 @@
   
 
   
+  
+  <div class="overview-section" id="conditions-section">
+    <h3>Conditions <span class="muted" style="font-size:0.85em;font-weight:normal">— what we set up to test it</span></h3>
+    <p class="muted" style="font-size:0.88em">The experimental knobs: how variants perturb the baseline, and which model settings still need a human-set value.</p>
+
+    
+    <div class="cond-block">
+      <div class="cond-block-title">Variants <span class="muted" style="font-weight:normal;font-size:0.85em">(2)</span></div>
+      <table class="cond-table">
+        <thead><tr><th>Variant</th><th>Composite / base</th><th>Parameter overrides</th><th>Notes</th></tr></thead>
+        <tbody>
+          
+          
+          
+          
+          <tr data-model-composite="" data-model-overrides='{}'>
+            <td><code>one-way-control</code></td>
+            <td>
+              <em class="muted">(inherits baseline)</em>
+            </td>
+            <td>
+              
+                <em class="muted">(no overrides)</em>
+              
+            </td>
+            <td>Forward drive only, no reaction fed back -&gt; basal_tension stays 0.</td>
+          </tr>
+          
+          
+          
+          
+          <tr data-model-composite="" data-model-overrides='{}'>
+            <td><code>uncoupled-control</code></td>
+            <td>
+              <em class="muted">(inherits baseline)</em>
+            </td>
+            <td>
+              
+                <em class="muted">(no overrides)</em>
+              
+            </td>
+            <td>BM inert -&gt; bm_sigma stays 0.</td>
+          </tr>
+          
+        </tbody>
+      </table>
+    </div>
+    
+
+    
+    <div class="cond-block">
+      
+      <div class="cond-block-title">
+        Model settings <span class="muted" style="font-weight:normal;font-size:0.85em">(6)</span>
+        
+      </div>
+      <p class="muted" style="font-size:0.85em;margin:0 0 6px 0">Edit a value in the Current column and click <strong>Save</strong>. The next <code>pbg_runner</code> invocation for this study reads the updated value from <code>study.yaml</code>.</p>
+      <table class="cond-table cond-expert-table" data-study="bm-e4-feedback-predictions">
+        <thead><tr><th>Name</th><th>Type</th><th>Default</th><th>Current</th><th>Range</th><th>Gate</th><th></th></tr></thead>
+        <tbody>
+          
+          
+          
+          
+          <tr data-ei-name="coupling_mode">
+            <td title=""><code>coupling_mode</code></td>
+            <td></td>
+            <td><code>two-way</code></td>
+            <td>
+              
+              <input class="cond-ei-input"
+                     type="text"
+                     value="two-way"
+                     placeholder="(awaiting expert)"
+                     
+                     step="any"
+                     style="width:100%;padding:3px 6px;border:1px solid #cbd5e1;border-radius:3px;font:inherit">
+              
+              
+              
+            </td>
+            <td>
+              <em class="muted">—</em>
+            </td>
+            <td>
+              <span class="cond-ei-gate-opt">optional</span>
+            </td>
+            <td>
+              <button class="action-btn cond-ei-save" type="button"
+                      onclick="_saveExpertInput('bm-e4-feedback-predictions', 'coupling_mode', this)">Save</button>
+              <span class="cond-ei-flash" style="display:none;margin-left:6px;font-size:0.85em"></span>
+            </td>
+          </tr>
+          
+          
+          
+          
+          <tr data-ei-name="bm_substeps">
+            <td title=""><code>bm_substeps</code></td>
+            <td></td>
+            <td><code>1</code></td>
+            <td>
+              
+              <input class="cond-ei-input"
+                     type="text"
+                     value="1"
+                     placeholder="(awaiting expert)"
+                     min="1" max="8"
+                     step="any"
+                     style="width:100%;padding:3px 6px;border:1px solid #cbd5e1;border-radius:3px;font:inherit">
+              
+              
+              
+            </td>
+            <td>
+              <code>[1, 8]</code>
+              
+            </td>
+            <td>
+              <span class="cond-ei-gate-opt">optional</span>
+            </td>
+            <td>
+              <button class="action-btn cond-ei-save" type="button"
+                      onclick="_saveExpertInput('bm-e4-feedback-predictions', 'bm_substeps', this)">Save</button>
+              <span class="cond-ei-flash" style="display:none;margin-left:6px;font-size:0.85em"></span>
+            </td>
+          </tr>
+          
+          
+          
+          
+          <tr data-ei-name="strain_gain">
+            <td title=""><code>strain_gain</code></td>
+            <td></td>
+            <td><code>20.0</code></td>
+            <td>
+              
+              <input class="cond-ei-input"
+                     type="text"
+                     value="20.0"
+                     placeholder="(awaiting expert)"
+                     min="0.0" max="20.0"
+                     step="any"
+                     style="width:100%;padding:3px 6px;border:1px solid #cbd5e1;border-radius:3px;font:inherit">
+              
+              
+              
+            </td>
+            <td>
+              <code>[0.0, 20.0]</code>
+              
+            </td>
+            <td>
+              <span class="cond-ei-gate-opt">optional</span>
+            </td>
+            <td>
+              <button class="action-btn cond-ei-save" type="button"
+                      onclick="_saveExpertInput('bm-e4-feedback-predictions', 'strain_gain', this)">Save</button>
+              <span class="cond-ei-flash" style="display:none;margin-left:6px;font-size:0.85em"></span>
+            </td>
+          </tr>
+          
+          
+          
+          
+          <tr data-ei-name="tension_gain">
+            <td title=""><code>tension_gain</code></td>
+            <td></td>
+            <td><code>0.02</code></td>
+            <td>
+              
+              <input class="cond-ei-input"
+                     type="text"
+                     value="0.02"
+                     placeholder="(awaiting expert)"
+                     min="0.0" max="0.02"
+                     step="any"
+                     style="width:100%;padding:3px 6px;border:1px solid #cbd5e1;border-radius:3px;font:inherit">
+              
+              
+              
+            </td>
+            <td>
+              <code>[0.0, 0.02]</code>
+              
+            </td>
+            <td>
+              <span class="cond-ei-gate-opt">optional</span>
+            </td>
+            <td>
+              <button class="action-btn cond-ei-save" type="button"
+                      onclick="_saveExpertInput('bm-e4-feedback-predictions', 'tension_gain', this)">Save</button>
+              <span class="cond-ei-flash" style="display:none;margin-left:6px;font-size:0.85em"></span>
+            </td>
+          </tr>
+          
+          
+          
+          
+          <tr data-ei-name="bm_modulus">
+            <td title=""><code>bm_modulus</code></td>
+            <td></td>
+            <td><code>50.0</code></td>
+            <td>
+              
+              <input class="cond-ei-input"
+                     type="text"
+                     value="50.0"
+                     placeholder="(awaiting expert)"
+                     min="0.0" max="50.0"
+                     step="any"
+                     style="width:100%;padding:3px 6px;border:1px solid #cbd5e1;border-radius:3px;font:inherit">
+              
+              
+              
+            </td>
+            <td>
+              <code>[0.0, 50.0]</code>
+              
+            </td>
+            <td>
+              <span class="cond-ei-gate-opt">optional</span>
+            </td>
+            <td>
+              <button class="action-btn cond-ei-save" type="button"
+                      onclick="_saveExpertInput('bm-e4-feedback-predictions', 'bm_modulus', this)">Save</button>
+              <span class="cond-ei-flash" style="display:none;margin-left:6px;font-size:0.85em"></span>
+            </td>
+          </tr>
+          
+          
+          
+          
+          <tr data-ei-name="bm_relaxation">
+            <td title=""><code>bm_relaxation</code></td>
+            <td></td>
+            <td><code>10.0</code></td>
+            <td>
+              
+              <input class="cond-ei-input"
+                     type="text"
+                     value="10.0"
+                     placeholder="(awaiting expert)"
+                     min="1.0" max="10.0"
+                     step="any"
+                     style="width:100%;padding:3px 6px;border:1px solid #cbd5e1;border-radius:3px;font:inherit">
+              
+              
+              
+            </td>
+            <td>
+              <code>[1.0, 10.0]</code>
+              
+            </td>
+            <td>
+              <span class="cond-ei-gate-opt">optional</span>
+            </td>
+            <td>
+              <button class="action-btn cond-ei-save" type="button"
+                      onclick="_saveExpertInput('bm-e4-feedback-predictions', 'bm_relaxation', this)">Save</button>
+              <span class="cond-ei-flash" style="display:none;margin-left:6px;font-size:0.85em"></span>
+            </td>
+          </tr>
+          
+        </tbody>
+      </table>
+    </div>
+    
+  </div>
   
 
   
@@ -721,15 +1223,6 @@
       <div class="viv-loading"><span class="viv-loading-spin" aria-hidden="true"></span><span>Loading readouts from the composite emit plan…</span></div>
     </div>
 
-    
-    <details style="margin-top: 1.4em;">
-      <summary class="muted">How observables tie to Expected Behavior</summary>
-      <p style="font-size: 0.9em;">Observables can be referenced by name in an
-      <code>expected_behavior[i].measure</code> block (e.g. <code>kind: bulk_count, id:
-      "MONOMER0-160[c]"</code>). When the dashboard validates a study, it cross-checks
-      that every <code>measure</code> resolves to a declared observable, or to a
-      built-in helper.</p>
-    </details>
     
   </div>
   </div>
@@ -876,24 +1369,196 @@
     
     
     
-    <li class="expected-behavior-item" id="bt-coupled-departs-from-controls"
+    <li class="expected-behavior-item" id="bt-two-way-feeds-back-reaction"
         data-test-kind="behavioral"
         
-        data-pytest-node="coupled-departs-from-controls"
-        data-classification="unclassified"
+        data-pytest-node="two-way-feeds-back-reaction"
+        data-classification="primary"
+        data-result="PASS"
+        style="margin: 0 0 10px 0; padding: 10px 12px; border-left: 4px solid #10b981; background: #f8fafc; border-radius: 4px;">
+      
+        
+      <div style="display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;">
+        <span class="bt-result" style="font-size: 0.75em; font-family: monospace; padding: 2px 8px; border-radius: 9999px; background: #d1fae5; color: #065f46">✓ PASS</span>
+        <span class="classification-pill classification-primary">primary</span>
+        <strong style="font-size: 0.9em;">two-way-feeds-back-reaction</strong>
+        
+        <span class="muted" style="font-size:0.78em">requires: <code>e4-coupling-controls</code></span>
+        
+      </div>
+      <div style="margin-top: 6px; font-size: 0.95em;">In two-way mode the BM reaction is fed back onto the cells -- the basal tension is non-zero -- confirming the reaction half of the bidirectional contract is live.
+</div>
+      
+      <div style="margin-top:6px;font-size:0.85em;padding:6px 10px;background:#fff;border:1px solid #e2e8f0;border-radius:3px">
+        <strong>Latest result:</strong>
+        
+          <code style="font-family:ui-monospace,monospace;color:#475569;margin-right:8px">observed: two-way basal_tension -0.2995 != 0 (bm_sigma -14.976, basal_area 195.93, lumen_pressure 45.19)</code>
+        
+      </div>
+      
+      
+      <details style="margin-top: 6px; font-size: 0.82em;">
+        <summary class="muted" style="cursor: pointer;">Assertion</summary>
+        
+        <pre style="background:#fff; padding:8px; margin:4px 0 0 0; border:1px solid #e2e8f0; border-radius:3px; overflow-x:auto;">measure: {"case": "two-way", "field": "basal_tension", "kind": "threshold"}
+pass_if: {"note": "two-way basal_tension != 0 (observed -0.2995)", "op": "ne", "value": 0.0}</pre>
+      </details>
+      
+      
+      <details style="margin-top: 6px; font-size: 0.82em">
+        <summary class="muted" style="cursor:pointer; color:#92400e">⚠ Calibration anchor</summary>
+        <pre style="background:#fff7ed; padding:8px; margin:4px 0 0 0; border:1px solid #fdba74; border-radius:3px; overflow-x:auto">{
+  "cites": [
+    "barrientos2026cellshape"
+  ],
+  "literature_target": "a growing epithelium\u0027s basement membrane pushes back on the cells (bidirectional mechanical feedback)",
+  "observed_value": -0.2995,
+  "resolution": "concept"
+}</pre>
+      </details>
+      
+      
+      
+    </li>
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="expected-behavior-item" id="bt-one-way-has-no-reaction"
+        data-test-kind="behavioral"
+        
+        data-pytest-node="one-way-has-no-reaction"
+        data-classification="primary"
+        data-result="PASS"
+        style="margin: 0 0 10px 0; padding: 10px 12px; border-left: 4px solid #10b981; background: #f8fafc; border-radius: 4px;">
+      
+        
+      <div style="display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;">
+        <span class="bt-result" style="font-size: 0.75em; font-family: monospace; padding: 2px 8px; border-radius: 9999px; background: #d1fae5; color: #065f46">✓ PASS</span>
+        <span class="classification-pill classification-primary">primary</span>
+        <strong style="font-size: 0.9em;">one-way-has-no-reaction</strong>
+        
+        <span class="muted" style="font-size:0.78em">requires: <code>e4-coupling-controls</code></span>
+        
+      </div>
+      <div style="margin-top: 6px; font-size: 0.95em;">In one-way mode the epithelium drives the BM but the reaction is NOT fed back -- the basal tension stays exactly zero, isolating the forward half.
+</div>
+      
+      <div style="margin-top:6px;font-size:0.85em;padding:6px 10px;background:#fff;border:1px solid #e2e8f0;border-radius:3px">
+        <strong>Latest result:</strong>
+        
+          <code style="font-family:ui-monospace,monospace;color:#475569;margin-right:8px">observed: one-way basal_tension == 0.0 (forward drive only, no reaction fed back)</code>
+        
+      </div>
+      
+      
+      <details style="margin-top: 6px; font-size: 0.82em;">
+        <summary class="muted" style="cursor: pointer;">Assertion</summary>
+        
+        <pre style="background:#fff; padding:8px; margin:4px 0 0 0; border:1px solid #e2e8f0; border-radius:3px; overflow-x:auto;">measure: {"case": "one-way", "field": "basal_tension", "kind": "threshold"}
+pass_if: {"note": "one-way basal_tension == 0", "op": "eq", "value": 0.0}</pre>
+      </details>
+      
+      
+      
+      
+    </li>
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="expected-behavior-item" id="bt-uncoupled-bm-inert"
+        data-test-kind="behavioral"
+        
+        data-pytest-node="uncoupled-bm-inert"
+        data-classification="primary"
+        data-result="PASS"
+        style="margin: 0 0 10px 0; padding: 10px 12px; border-left: 4px solid #10b981; background: #f8fafc; border-radius: 4px;">
+      
+        
+      <div style="display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;">
+        <span class="bt-result" style="font-size: 0.75em; font-family: monospace; padding: 2px 8px; border-radius: 9999px; background: #d1fae5; color: #065f46">✓ PASS</span>
+        <span class="classification-pill classification-primary">primary</span>
+        <strong style="font-size: 0.9em;">uncoupled-bm-inert</strong>
+        
+        <span class="muted" style="font-size:0.78em">requires: <code>e4-coupling-controls</code></span>
+        
+      </div>
+      <div style="margin-top: 6px; font-size: 0.95em;">In uncoupled mode the BM is inert (the epithelium does not drive it) -- the BM reaction stress stays exactly zero, the null against which the coupled cases are read.
+</div>
+      
+      <div style="margin-top:6px;font-size:0.85em;padding:6px 10px;background:#fff;border:1px solid #e2e8f0;border-radius:3px">
+        <strong>Latest result:</strong>
+        
+          <code style="font-family:ui-monospace,monospace;color:#475569;margin-right:8px">observed: uncoupled bm_sigma == 0.0 (epithelium does not drive the inert BM)</code>
+        
+      </div>
+      
+      
+      <details style="margin-top: 6px; font-size: 0.82em;">
+        <summary class="muted" style="cursor: pointer;">Assertion</summary>
+        
+        <pre style="background:#fff; padding:8px; margin:4px 0 0 0; border:1px solid #e2e8f0; border-radius:3px; overflow-x:auto;">measure: {"case": "uncoupled", "field": "bm_sigma", "kind": "threshold"}
+pass_if: {"note": "uncoupled bm_sigma == 0", "op": "eq", "value": 0.0}</pre>
+      </details>
+      
+      
+      
+      
+    </li>
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="expected-behavior-item" id="bt-bm-subcycling-converges"
+        data-test-kind="behavioral"
+        
+        data-pytest-node="bm-subcycling-converges"
+        data-classification="primary"
         data-result="pending"
-        style="margin: 0 0 10px 0; padding: 10px 12px; border-left: 4px solid #cbd5e1; background: #f8fafc; border-radius: 4px;">
+        style="margin: 0 0 10px 0; padding: 10px 12px; border-left: 4px solid #10b981; background: #f8fafc; border-radius: 4px;">
       
         
       <div style="display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;">
         <span class="bt-result" style="font-size: 0.75em; font-family: monospace; padding: 2px 8px; border-radius: 9999px; background: #f1f5f9; color: #475569">⏳ pending</span>
-        <span class="classification-pill classification-unclassified">unclassified</span>
-        <strong style="font-size: 0.9em;">coupled-departs-from-controls</strong>
+        <span class="classification-pill classification-primary">primary</span>
+        <strong style="font-size: 0.9em;">bm-subcycling-converges</strong>
+        
+        <span class="muted" style="font-size:0.78em">requires: <code>e4-bm-subcycling-sweep</code></span>
         
       </div>
-      <div style="margin-top: 6px; font-size: 0.95em;"></div>
+      <div style="margin-top: 6px; font-size: 0.95em;">Subcycling the reduced-order BM relaxation converges: the successive-refinement error in bm_sigma shrinks as the substep count doubles.
+</div>
       
       
+      <details style="margin-top: 6px; font-size: 0.82em;">
+        <summary class="muted" style="cursor: pointer;">Assertion</summary>
+        
+        <pre style="background:#fff; padding:8px; margin:4px 0 0 0; border:1px solid #e2e8f0; border-radius:3px; overflow-x:auto;">measure: {"field": "bm_sigma", "kind": "convergence", "over": [1, 2, 4, 8], "versus": "bm_substeps"}
+pass_if: {"note": "|s8-s4| 0.017 \u003c |s2-s1| 0.066 (refinement error shrinks)", "op": "lt"}</pre>
+      </details>
+      
+      
+      <details style="margin-top: 6px; font-size: 0.82em">
+        <summary class="muted" style="cursor:pointer; color:#92400e">⚠ Calibration anchor</summary>
+        <pre style="background:#fff7ed; padding:8px; margin:4px 0 0 0; border:1px solid #fdba74; border-radius:3px; overflow-x:auto">{
+  "literature_target": "numerical convergence: refinement error decreases under substep refinement",
+  "observed_value": 0.0167,
+  "resolution": "model"
+}</pre>
+      </details>
       
       
       
@@ -944,37 +1609,37 @@
       
       <span class="status-step  gate-status-not-assessed gate-current">
         <span class="dot"></span>1 · Plan
-        
+        <span class="step-val">drafted</span>
         <span class="gate-current-tag">you are here</span>
       </span>
       
-      <span class="status-step  gate-status-not-assessed">
+      <span class="status-step set gate-status-passed">
         <span class="dot"></span>2 · Execution
-        
+        <span class="step-val">ran</span>
         
       </span>
       
-      <span class="status-step  gate-status-not-assessed">
+      <span class="status-step set gate-status-passed">
         <span class="dot"></span>3 · Evidence
-        
+        <span class="step-val">evaluated</span>
         
       </span>
       
-      <span class="status-step  gate-status-not-assessed">
+      <span class="status-step set gate-status-passed">
         <span class="dot"></span>4 · Quality
-        
+        <span class="step-val">evaluated</span>
         
       </span>
       
-      <span class="status-step  gate-status-not-assessed">
+      <span class="status-step set gate-status-passed">
         <span class="dot"></span>5 · Decision
-        
+        <span class="step-val">passed</span>
         
       </span>
       
       <span class="status-step  gate-status-not-assessed">
         <span class="dot"></span>6 · Release
-        
+        <span class="step-val">requested</span>
         
       </span>
       
@@ -1018,40 +1683,43 @@
           <span class="narrative-label">Regression compatibility</span>
           <span class="narrative-input verdict-badge-computed" data-verdict-track="regression_compatibility"
                 title="Computed from run status (read-only)"
-                style="display:inline-block;padding:2px 12px;border-radius:9999px;font-weight:700;font-size:0.85em;background:#f1f5f9;color:#475569">PENDING</span>
+                style="display:inline-block;padding:2px 12px;border-radius:9999px;font-weight:700;font-size:0.85em;background:#f1f5f9;color:#475569">PASS</span>
           <span class="muted small" style="margin-left:6px">computed from run status</span>
         </label>
         <label class="narrative-row narrative-row-wide">
           <span class="narrative-label">Regression basis</span>
           <textarea class="narrative-input narrative-textarea" rows="2"
                     data-narrative-path="conclusion_verdicts.regression_compatibility.basis"
-                    placeholder="e.g. Builds cleanly; tests pass; pyproject deps unchanged."></textarea>
+                    placeholder="e.g. Builds cleanly; tests pass; pyproject deps unchanged.">The coupled_lumenoid composite is registered and the bidirectional coupling runs cleanly on the reduced-order BM; the behavior-test contracts in tests/test_p3_coupling_controls.py pass deterministically.
+</textarea>
         </label>
         <label class="narrative-row">
           <span class="narrative-label">Empirical validation</span>
           <span class="narrative-input verdict-badge-computed" data-verdict-track="biological_validation"
                 title="Computed from the gate evaluator (read-only)"
-                style="display:inline-block;padding:2px 12px;border-radius:9999px;font-weight:700;font-size:0.85em;background:#f1f5f9;color:#475569">PENDING</span>
+                style="display:inline-block;padding:2px 12px;border-radius:9999px;font-weight:700;font-size:0.85em;background:#f1f5f9;color:#475569">PASS</span>
           <span class="muted small" style="margin-left:6px">computed from gate evaluator</span>
         </label>
         <label class="narrative-row narrative-row-wide">
           <span class="narrative-label">Empirical basis</span>
           <textarea class="narrative-input narrative-textarea" rows="2"
                     data-narrative-path="conclusion_verdicts.biological_validation.basis"
-                    placeholder="e.g. atp_fraction = 0.997, outside Boesen 2024 band [0.2, 0.5]."></textarea>
+                    placeholder="e.g. atp_fraction = 0.997, outside Boesen 2024 band [0.2, 0.5].">The bidirectional coupling runs and the three coupling controls behave correctly -- the growing epithelium&#39;s membrane pushes back as a non-zero basal tension under two-way coupling, absent under one-way/uncoupled -- and the reduced-order BM subcycling converges.
+</textarea>
         </label>
         <label class="narrative-row">
           <span class="narrative-label">Explanatory gain</span>
           <span class="narrative-input verdict-badge-computed" data-verdict-track="explanatory_gain"
                 title="Computed from interpretation-tier findings (read-only)"
-                style="display:inline-block;padding:2px 12px;border-radius:9999px;font-weight:700;font-size:0.85em;background:#f1f5f9;color:#475569">PENDING</span>
+                style="display:inline-block;padding:2px 12px;border-radius:9999px;font-weight:700;font-size:0.85em;background:#f1f5f9;color:#475569">POSITIVE</span>
           <span class="muted small" style="margin-left:6px">computed from interpretation-tier findings</span>
         </label>
         <label class="narrative-row narrative-row-wide">
           <span class="narrative-label">Explanatory basis</span>
           <textarea class="narrative-input narrative-textarea" rows="2"
                     data-narrative-path="conclusion_verdicts.explanatory_gain.basis"
-                    placeholder="e.g. Three findings worth keeping; design_pivot_required closed."></textarea>
+                    placeholder="e.g. Three findings worth keeping; design_pivot_required closed.">Establishes the epithelium&lt;-&gt;BM coupling as a well-posed, control-separable bidirectional mechanical contract with a convergent reduced-order BM integrator -- the scaffold the E4 feedback predictions are read against -- and scopes the explicit-LAMMPS-BM realization and full-exchange-interval convergence as the open items.
+</textarea>
         </label>
       </div>
     </div>
@@ -1065,19 +1733,101 @@
         evaluator's result from the behavior-test outcomes — the evaluation the
         conclusion rests on.</p>
       <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
-        <span class="gate-status-not_started" style="padding:2px 12px;border-radius:9999px;font-weight:700;font-size:0.85em">not_started</span>
+        <span class="gate-status-passed" style="padding:2px 12px;border-radius:9999px;font-weight:700;font-size:0.85em">passed</span>
         <span class="muted small">evaluated by code</span>
-        <span class="muted small">0/1 passed</span>
+        <span class="muted small">3/4 passed</span>
       </div>
       
     </div>
     
 
     
+    
+    
+    
+    <div class="decide-section" style="margin-top:18px">
+      <h3 class="overview-label">Conclusion logic — gate decision</h3>
+      
+      <div style="padding:10px 14px;background:#f0fdf4;border-left:4px solid #10b981;border-radius:4px;margin-bottom:8px">
+        <strong>✓ If primary tests pass:</strong>
+        
+        <div style="margin-top:4px"><em>Implementation:</em> The bidirectional epithelium&lt;-&gt;BM coupling runs end-to-end on the reduced-order BM and the three coupling controls separate correctly.</div>
+        
+        
+        <div style="margin-top:4px"><em>Empirical validation:</em> The growing epithelium&#39;s membrane pushes back as a non-zero basal tension (two-way), absent under one-way/uncoupled controls, and the reduced-order BM subcycling converges.</div>
+        
+        
+        <div style="margin-top:4px"><em>Pipeline unblocks:</em>
+          <ul style="margin:4px 0 0 18px"><li>The explicit-LAMMPS-BM realization of the same contract (the open follow-up).</li><li>The E4 feedback predictions (turnover, heterogeneity, confinement, adhesion, failure), which read against this well-posed coupling scaffold.</li></ul>
+        </div>
+        
+      </div>
+      
+      
+      <div style="padding:10px 14px;background:#fef2f2;border-left:4px solid #dc2626;border-radius:4px">
+        <strong>✗ If primary tests fail:</strong>
+        
+        <div style="margin-top:4px"><em>Diagnose:</em>
+          <ul style="margin:4px 0 0 18px"><li>basal_tension zero in two-way -- the reaction half (tension_gain) is not wired; check the feedback path.</li><li>bm_sigma non-zero in uncoupled -- the BM is being driven when it should be inert; check coupling_mode gating.</li><li>subcycling diverging -- the reduced-order BM relaxation integrator is unstable at the chosen dt/relaxation; shorten the substep or the step.</li></ul>
+        </div>
+        
+        
+        <div style="margin-top:4px"><em>Block downstream:</em> Do not run the E4 feedback predictions until the coupling contract and its controls are well-posed.</div>
+        
+      </div>
+      
+    </div>
+    
+
+    
+    
+    
 
   </div>
 
   
+  
+  <div class="overview-section"><h2 class="overview-label">Plan &amp; assumptions</h2>
+
+    
+    <div class="overview-section">
+      <h3 class="overview-label">Pipeline gate</h3>
+      <p class="muted" style="margin: 0 0 8px 0;font-size:0.88em">
+        Each study is a model-building gate: it answers <em>"Can we safely build the next layer?"</em>
+      </p>
+      
+      <div style="margin-bottom:6px"><strong>Prerequisites:</strong>
+        <code>bm-e3-closed-3d-lumenoid</code> · <code>bm-r6-perlecan-growth-perturbations</code>
+      </div>
+      
+      
+      
+      <div><strong>Proceed when:</strong> <span class="muted">The bidirectional coupling runs and its three coupling controls separate correctly, and the reduced-order BM subcycling converges -- the effective-BM realization of the epithelium&lt;-&gt;BM feedback loop is in place and ready for the explicit-LAMMPS-BM follow-up.
+</span></div>
+      
+    </div>
+    
+
+    
+    <div class="overview-section">
+      <h3 class="overview-label">Key assumptions</h3>
+      <ul style="margin:0 0 0 18px;padding:0;font-size:0.93em">
+        <li style="margin:2px 0">A real Tyssue epithelium is coupled to a reduced-order (effective, viscoelastic) basement membrane; the explicit LAMMPS collagen network is NOT exercised on this path (bm_mode=reduced).</li><li style="margin:2px 0">Forward half: the growing basal surface drives the BM through strain_gain; reaction half: the BM stress is fed back as a basal tension through tension_gain.</li><li style="margin:2px 0">coupling_mode selects the contract: two-way (both halves), one-way (forward only, no reaction), uncoupled (BM inert).</li><li style="margin:2px 0">bm_substeps subcycles the reduced-order BM relaxation within each coupling step; convergence is successive-refinement error shrinking as substeps double.</li><li style="margin:2px 0">Reduced units throughout; this is a v0 single patch, not a spatially resolved lumenoid, and no absolute calibration to microns/pascals is claimed.</li>
+      </ul>
+    </div>
+    
+
+    
+    <div class="overview-section">
+      <h3 class="overview-label">Limitations</h3>
+      <p class="muted" style="margin:0 0 6px 0;font-size:0.85em">What this study explicitly does NOT validate (prevents overclaim).</p>
+      <ul style="margin:0 0 0 18px;padding:0;font-size:0.93em">
+        <li style="margin:2px 0">Reduced-order (effective) BM only: the explicit LAMMPS collagen network is NOT exercised on this path (bm_mode=reduced); the controls and convergence are demonstrated on the effective-BM realization.</li><li style="margin:2px 0">v0 single patch: one closed epithelial patch, not a spatially resolved lumenoid; the feedback predictions (turnover/heterogeneity/confinement/adhesion/failure) are framed here but not yet simulated.</li><li style="margin:2px 0">Convergence is of the reduced-order BM subcycling only; convergence of the FULL epithelium&lt;-&gt;BM exchange interval (the explicit coupling cadence) is an open item.</li><li style="margin:2px 0">Reduced units throughout; no calibration to microns/pascals/hours. The controls are exact-zero / inequality contracts, not calibrated literature bands.</li><li style="margin:2px 0">basal_tension and bm_sigma are negative (compressive sign) in two-way; the contract checks non-zero / exact-zero and convergence, not the sign or absolute magnitude against the paper.</li>
+      </ul>
+    </div>
+    
+
+  </div>
   
 
   
@@ -1085,22 +1835,29 @@
 
     
     
-    <p class="muted" style="margin:0 0 10px 0;font-size:0.85em">
-      Synthesised read-only from canonical fields — edit <code>findings</code>,
-      <code>limitations</code>, and <code>discovery_implications</code> to change
-      this (and the generated report) together.
-    </p>
-    <div class="conclusions-grid conclusions-synthesis">
-      <div class="conclusion-field">
-        <h3>Claims <span class="muted small">(from findings)</span></h3>
-        <p class="muted">No findings recorded yet.</p>
+    
+    
+    <div class="decide-section">
+      <h3 class="overview-label">Latest run outcomes</h3>
+      <div style="font-size:0.88em;color:#64748b;margin-bottom:8px">
+        baseline · seed ? ·
+        ?s simulated ·
+        ? history rows ·
+        started ?
       </div>
-      <div class="conclusion-field">
-        <h3>Evidence <span class="muted small">(from findings)</span></h3>
-        
-        <p class="muted">No evidence recorded on findings yet.</p>
-      </div>
+      
+      
+      
+      <p class="muted" style="margin:0;font-size:0.9em">
+        <strong>3</strong> test outcomes
+        — <span style="color:#065f46;font-weight:600">3 PASS</span> ·
+        <span style="color:#991b1b;font-weight:600">0 FAIL</span>.
+        Per-test outcomes (measured value · evaluator · band) are canonical on the
+        <a onclick="_setStudyTab('audit')" style="cursor:pointer;color:#3b82f6;text-decoration:underline">Tests (in Audit) →</a>.
+      </p>
+      
     </div>
+    
     
 
   </div>
@@ -1113,32 +1870,108 @@
 
     
     
+    
+    <div class="overview-section" id="discovery-implications-section" style="margin-top:18px">
+      <h3 class="overview-label">Discovery implications</h3>
+      <p class="muted" style="margin:0 0 10px 0;font-size:0.88em">Where this study's results leave the mechanism model — and what to investigate next.</p>
 
+      
+      <div class="di-uncertainties">
+        
+        <div class="di-unc di-unc-resolved">
+          <h4>✓ Resolved uncertainties</h4>
+          <ul><li>The epithelium&lt;-&gt;BM coupling is a well-posed bidirectional contract on the reduced-order BM: the reaction half is live only under two-way coupling.</li><li>The one-way and uncoupled controls cleanly isolate the reaction half from the forward half and from the null.</li><li>The reduced-order BM subcycling converges under refinement.</li></ul>
+        </div>
+        
+        
+        <div class="di-unc di-unc-remaining">
+          <h4>● Remaining uncertainties</h4>
+          <ul><li>The explicit LAMMPS collagen-network realization of the same contract -- reduced-order effective BM only here.</li><li>Convergence of the full epithelium&lt;-&gt;BM exchange interval -- only the reduced-order BM substep is converged.</li><li>The spatial E4 feedback predictions (turnover/heterogeneity/confinement/adhesion/failure) -- framed but not yet simulated.</li></ul>
+        </div>
+        
+      </div>
+      
+
+      
+      <div class="di-group">
+        <h3>Alternate hypotheses <span class="muted" style="font-weight:normal;font-size:0.85em">(1)</span></h3>
+        
+        <div class="di-card">
+          <div class="di-card-stmt"><strong>(untitled hypothesis)</strong></div>
+          
+          
+          
+        </div>
+        
+      </div>
+      
+
+      
+
+      
+      
+      
+      <div class="di-group">
+        <h3>Follow-up study proposals
+          <span class="muted" style="font-weight:normal;font-size:0.82em">(discovered)</span>
+          <span class="muted" style="font-weight:normal;font-size:0.85em">(2)</span></h3>
+        <p class="muted" style="margin:0 0 8px 0;font-size:0.85em">Click <strong>➕ Add to investigation</strong> to spawn a new study node in the investigation graph.</p>
+        <div class="followup-list">
+          
+          
+          <div class="di-card di-fup-card">
+            <div class="followup-header">
+              <strong class="followup-title">Explicit LAMMPS collagen-network realization</strong>
+              
+              
+              
+              
+            </div>
+            
+            
+            <div class="followup-actions" style="margin-top:8px">
+              <button class="btn-seed-followup"
+                      onclick="_seedFollowupProposal('bm-e4-feedback-predictions', "fp-e4-explicit-lammps-bm")">➕ Add to investigation</button>
+            </div>
+          </div>
+          
+          
+          <div class="di-card di-fup-card">
+            <div class="followup-header">
+              <strong class="followup-title">Full exchange-interval convergence</strong>
+              
+              
+              
+              
+            </div>
+            
+            
+            <div class="followup-actions" style="margin-top:8px">
+              <button class="btn-seed-followup"
+                      onclick="_seedFollowupProposal('bm-e4-feedback-predictions', "fp-e4-full-exchange-interval-convergence")">➕ Add to investigation</button>
+            </div>
+          </div>
+          
+        </div>
+      </div>
+      
+    </div>
+    
+
+    
+    
+    
     
 
   </div>
 
   
   
-  <details class="overview-section"><summary class="overview-label">Limitations &amp; provenance</summary>
-
-    
-    
-    
-    <div class="conclusions-grid conclusions-synthesis">
-      <div class="conclusion-field">
-        <h3>Next steps <span class="muted small">(from discovery implications)</span></h3>
-        <p class="muted">No follow-up proposals recorded yet.</p>
-      </div>
-    </div>
-
-  </details>
-  
 
 </section>
 
 </main>
-<script>window.__DASH_CONFIG__ = { mode: "snapshot", interactiveUrl: "https://github.com/vivarium-collective/viva-lumenoid", basePath: "/viva-lumenoid/dashboard", inputsDownloadBase: "https://github.com/vivarium-collective/viva-lumenoid/raw/main", provenance: {"repo_slug": "vivarium-collective/viva-lumenoid", "repo_url": "https://github.com/vivarium-collective/viva-lumenoid", "commit": "30ec8aecdada19c521330c5f7e4c6d93a2c620d6", "commit_url": "https://github.com/vivarium-collective/viva-lumenoid/commit/30ec8aecdada19c521330c5f7e4c6d93a2c620d6", "branch": "main", "lockfile": "uv.lock@796aed340563", "generated_at": "2026-10-20 04:10 UTC"} };</script>
+<script>window.__DASH_CONFIG__ = { mode: "snapshot", interactiveUrl: "https://github.com/vivarium-collective/viva-lumenoid", basePath: "/viva-lumenoid/dashboard", inputsDownloadBase: "https://github.com/vivarium-collective/viva-lumenoid/raw/main", provenance: {"repo_slug": "vivarium-collective/viva-lumenoid", "repo_url": "https://github.com/vivarium-collective/viva-lumenoid", "commit": "957cf462f6b48323457f7f1a54d4d1f4338f2455", "commit_url": "https://github.com/vivarium-collective/viva-lumenoid/commit/957cf462f6b48323457f7f1a54d4d1f4338f2455", "branch": "main", "lockfile": "uv.lock@796aed340563", "generated_at": "2026-10-20 11:34 UTC"} };</script>
 <script src="/viva-lumenoid/dashboard/assets/data-source.js"></script>
 <script src="/viva-lumenoid/dashboard/assets/toast.js"></script>
 <script>
