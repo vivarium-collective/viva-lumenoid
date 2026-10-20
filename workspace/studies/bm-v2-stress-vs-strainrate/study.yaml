@@ -9,7 +9,7 @@ claim: >
   Imposing an equibiaxial in-plane strain rate ε̇ on the growing collagen IV
   network and reading the steady-state stress σ(ε̇) gives the effective viscosity
   η = σ/ε̇ (viscous at slow rates) and the rate at which the response turns elastic
-  — the σ(ε̇) relation the vertex model needs.
+  — the σ(ε̇) relation a vertex model needs.
 
 experiment: >
   Assemble a crosslinked network, then stretch it equibiaxially at a fixed ε̇
@@ -18,16 +18,13 @@ experiment: >
   η = σ/ε̇ per rate and locate any viscous→elastic crossover.
 
 result: >
-  COUPLING DELIVERABLE (2026-10-02) — with the faithful, density-calibrated model
-  (angles active during assembly, authors' density 3.0 rods/σ², 12σ slab) the two
-  numbers the AICS vertex model needs are now tabulated vs growth rate ε̇ over a
-  seed ensemble: the effective elastic modulus E(ε̇) rises from ≈7 Pa at ε̇=5e-4 to
-  ≈11 Pa at ε̇=8e-3 (the network stiffens as growth outpaces remodelling), while
-  the remodelling time τ(ε̇) ≈ 36–51 τ stays roughly constant (set by crosslink
-  kinetics, not rate). This is the offline coupling the spec asks for — E and τ as
-  functions of growth rate, ready to hand to the vertex model. (The earlier
-  angle-off σ(ε̇) sweep, which read elastic-dominated at ~0.3 kT/σ³, is superseded
-  by this faithful run.)
+  With the faithful, density-calibrated model (angles active during assembly, areal
+  density 3.0 rods/σ², a 12σ slab), the two numbers a vertex model needs are
+  tabulated against growth rate ε̇ over a seed ensemble. The effective elastic
+  modulus E(ε̇) rises from ≈7 Pa at ε̇=5e-4 to ≈11 Pa at ε̇=8e-3 — the network
+  stiffens as growth outpaces remodelling — while the remodelling time τ(ε̇) ≈ 36-51
+  τ stays roughly constant, set by crosslink kinetics rather than rate. These give E
+  and τ as functions of growth rate, ready to hand to a vertex model offline.
 
 question: What is σ(ε̇), and where does the network cross from viscous to elastic?
 
