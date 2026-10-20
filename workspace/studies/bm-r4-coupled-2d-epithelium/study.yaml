@@ -310,6 +310,7 @@ visualizations:
       evidence_status: observed
       tier: main
       caption: >
+        How to read: In panel A the gap between the dashed preferred-area line and the solid realized-area curves is the confinement; a stiffer BM widens the gap and, in B, makes the cell taller — panels C and D show the BM reaction stress and the resulting spatial cell-height gradient across a stiffness row.
         MAIN (evidence: observed) — the agreed 2D coupled-growth experiment (2026-10-20
         review). A PREFERRED (target) basal area A0(t) grows (proliferation OFF — growth,
         not cell division); the REALIZED mean area A(t) emerges from the mechanical balance

@@ -416,6 +416,7 @@ visualizations:
     config:
       title: "Three supply modes -- network expansion vs collagen insertion (Fig 2B-C)"
       caption: >
+        How to read: Compare the three supply modes by how well each keeps the growing network crosslinked (crosslink density / rod count); remodeling-with-insertion sits highest, remodeling-without-insertion in the middle, and no-remodeling lowest and most diluted — that top-to-bottom ordering is the reproduced Fig 2B–C result.
         The three Barrientos Fig 2B-C supply modes under growth: remodeling-with-insertion sustains and grows the crosslinked network (rods 60->96, density 0.65), remodeling-without-insertion remodels on fixed material (density 0.48), and no-remodeling is static and dilutes most (density 0.25). Ordering robust across 3 seeds.
 
 report:

@@ -286,6 +286,7 @@ visualizations:
       evidence_status: observed
       tier: main
       caption: >
+        How to read: In panel A the realized volume (solid) grows but stays below the preferred-volume target (dashed), so the confinement is emergent rather than imposed; in B a stiff/slow BM holds basal area below the free case, and in C that squeezed area reappears as greater cell height (the free-vs-stiff gap), with D showing the per-cell height spread.
         MAIN (evidence: observed) — the 3D geometric upgrade after the 2D causal result
         (2026-10-20 review). Preferred cell VOLUME + basal area are ramped (division OFF) on
         the real Tyssue MonolayerGeometry; a reduced-order viscoelastic BM reaction resists

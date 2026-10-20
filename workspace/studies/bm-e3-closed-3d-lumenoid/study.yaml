@@ -260,6 +260,10 @@ visualizations:
       evidence_status: engineered-diagnostic
       tier: main
       caption: >
+        How to read: compare the full 3D shell with the equatorial section cut beside it at the same
+        scale — the section reveals a single enclosed lumen ringed by the 78 cells, with the exposed
+        basal BM-coupling surface labelled on the outside; the result is that the closed shell is
+        geometrically well-posed (finite per-cell volumes, one lumen), not that it grows.
         GEOMETRY VERIFICATION (illustration, not a growing-lumenoid result), real tyssue build, reduced units.
         A 78-cell closed Tyssue shell on the merged LumenoidGeometry, shown as the 3D shell plus an equatorial
         section cut (z approx median) at the same scale with a 1-length-unit scale bar; the enclosed lumen and

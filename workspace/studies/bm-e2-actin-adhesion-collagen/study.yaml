@@ -324,6 +324,10 @@ visualizations:
       evidence_status: engineered-diagnostic
       tier: main
       caption: >
+        How to read: follow the occupancy, traction and strain-rate traces as the prescribed cortex
+        tension steps up from 1.0 to 3.0 — occupancy climbs 0.5 -> 0.83 and traction and strain rate
+        rise in step with it, while the zero-linker control stays flat at zero; the gated-transfer
+        result is that all three outputs move only when linkers are present.
         COUPLING UNIT TEST (deterministic mapping, NOT a biological result), real run of the pure
         BasalAdhesion process, reduced units. A prescribed cortex-tension step series (1.0 then 3.0) drives
         reversible linker occupancy (rising 0.5 -> 0.83 under k_on=0.5/k_off=0.1); the transmitted traction =

@@ -14,10 +14,9 @@ import os
 
 from viva_lumenoid import run_stage1, CollagenParams
 from viva_lumenoid.stage2 import run_stage2, run_coupling_sweep
-from viva_lumenoid.rigidity import run_connectivity_sweep
 from viva_lumenoid.bending import run_bending_sweep, run_faithful_comparison
 from viva_lumenoid.stage5 import run_porosity_bundling
-from viva_lumenoid.viz import (stage1_figure, stage2_figure, rigidity_figure,
+from viva_lumenoid.viz import (stage1_figure, stage2_figure,
                                bending_figure, porosity_bundling_figure,
                                evidence_map_figure, network_movie_figure,
                                network_movie_3d_figure, cross_check_figure,
@@ -107,15 +106,10 @@ def main():
               "Vertex-model coupling — E(ε̇) and τ(ε̇)")
     print(f"  coupling: E(ε̇) {cpl[0]['E_Pa']:.1f}→{cpl[-1]['E_Pa']:.1f} Pa, τ≈{cpl[-1]['tau']:.0f}")
 
-    # Stage 3 (follow-up): rigidity-percolation sweep
-    s3 = os.path.join(STUDIES, "bm-v3-junction-bending-rigidity", "viz")
-    os.makedirs(s3, exist_ok=True)
-    print("Running rigidity sweep …")
-    r3 = run_connectivity_sweep(base=CollagenParams(n_rods=300, box_xy=13.0,
-                                                    assemble_steps=20000, hold_steps=8000))
-    save_html(rigidity_figure(r3), os.path.join(s3, "rigidity_diagnostic.html"),
-              "Rigidity sweep — modulus vs z")
-    print(f"  z 1.24→{max(p.z_mean for p in r3.points):.2f}; reached_rigid={r3.reached_rigid}")
+    # Stage 3 (follow-up): rigidity-percolation sweep — the SUPERSEDED
+    # rigidity_diagnostic figure was removed (its central-force framing does not
+    # describe the released model; bm-v3's main is v3_centralforce_control). The
+    # rigidity movies below are rendered independently.
 
     # Stage 4 (FP1): junction-bending sweep (athermal modulus)
     s4 = os.path.join(STUDIES, "bm-v4-junction-bending", "viz")

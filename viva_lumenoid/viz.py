@@ -297,63 +297,6 @@ def stage2_figure(result: Any) -> "object":
 
 
 # --------------------------------------------------------------------------- #
-# Rigidity-percolation sweep (follow-up)
-# --------------------------------------------------------------------------- #
-def rigidity_figure(result: Any) -> "object":
-    """Elastic modulus vs mean coordination z, against the 2D rigidity threshold."""
-    import plotly.graph_objects as go
-
-    pts = result.points
-    z = np.asarray([p.z_mean for p in pts])
-    mod = np.asarray([p.modulus_mean for p in pts])
-    ci = np.asarray([p.modulus_ci95 for p in pts])
-    zc = result.rigidity_threshold
-
-    fig = go.Figure()
-    # shade the floppy region z < zc
-    fig.add_vrect(x0=min(0.9, float(z.min()) - 0.2), x1=zc, fillcolor="rgba(76,120,168,0.06)",
-                  line_width=0, annotation_text="floppy (z < 4)",
-                  annotation_position="top left", annotation_font_size=11)
-    fig.add_vline(x=zc, line=dict(color=RED, width=2, dash="dash"),
-                  annotation_text="rigidity threshold z = 4 (Maxwell, 2D)",
-                  annotation_position="top right")
-    # where the released NC1×1 + 7S×3 topology tops out: z ≤ 3, sub-isostatic
-    fig.add_vline(x=C.Z_NC1_7S_MAX, line=dict(color=ORANGE, width=1.5, dash="dot"),
-                  annotation_text="NC1×1 + 7S×3 → z ≤ 3", annotation_position="bottom right",
-                  annotation_font_size=10)
-    fig.add_hline(y=0.0, line=dict(color=_MUTED, width=1, dash="dot"))
-    fig.add_trace(go.Scatter(
-        x=z, y=mod, error_y=dict(type="data", array=ci, color=_MUTED, thickness=1.2),
-        mode="lines+markers", line=dict(color=GREEN, width=2),
-        marker=dict(size=11, color=GREEN, line=dict(width=1.2, color="white")),
-        name="modulus", showlegend=False,
-        customdata=np.stack([[p.nc1_max for p in pts], [p.svns_max for p in pts]], axis=-1),
-        hovertemplate=("z=%{x:.2f}<br>E=%{y:.3f} kT/a³"
-                       "<br>NC1×%{customdata[0]} 7S×%{customdata[1]}<extra></extra>")))
-    fig.update_xaxes(title_text="mean coordination z", range=[min(0.9, float(z.min()) - 0.2),
-                                                              max(zc + 0.5, float(z.max()) + 0.3)])
-    fig.update_yaxes(title_text="elastic modulus E (kT/a³)")
-    fig.update_xaxes(title_text="mean coordination z")
-    fig.update_yaxes(title_text="elastic modulus E (kT/σ³)")
-    # SUPERSEDED banner — this central-force framing does not describe the released model
-    fig.add_annotation(xref="paper", yref="paper", x=0.5, y=0.5, showarrow=False,
-                       text="SUPERSEDED", font=dict(size=46, color="rgba(228,87,86,0.14)"),
-                       textangle=-18)
-    fig.add_annotation(xref="paper", yref="paper", x=0.98, y=0.04, xanchor="right",
-                       showarrow=False, align="right", font=dict(size=10, color=RED),
-                       text=("cross-check 2026-10-01: the released model has junction<br>"
-                             "angles (not central-force) — this angles-off sweep does<br>"
-                             "not describe the published model"))
-    _layout(fig, height=460)
-    fig.update_layout(title=dict(
-        text=(f"<b>Rigidity sweep — angles-off network (superseded explanation)</b>   "
-              f"<span style='font-size:12px;color:{_MUTED}'>"
-              f"with angles off the network is sub-isostatic &amp; soft; the released "
-              f"model has angles and is soft anyway</span>"),
-        x=0.01, xanchor="left"))
-    return fig
-
-
 # --------------------------------------------------------------------------- #
 # Junction-bending sweep (FP1 resolution)
 # --------------------------------------------------------------------------- #
@@ -1065,10 +1008,132 @@ def coupling_figure(points) -> "object":
 
 
 # --------------------------------------------------------------------------- #
+# Layout polish: a single save-time pass so NO figure in the repo clips its
+# title or overlaps a horizontal legend with make_subplots subplot titles.
+# Idempotent and conservative — it only wraps/shrinks over-long text and nudges
+# a top legend to the bottom for multi-panel figures.
+import re as _re
+
+
+def _wrap_segment(text: str, width: int) -> str:
+    """Wrap a plain-text segment at word boundaries (HTML tags don't count)."""
+    if not text:
+        return text
+    words, lines, cur = text.split(" "), [], ""
+    for w in words:
+        if cur and len(_re.sub("<[^>]+>", "", cur + " " + w)) > width:
+            lines.append(cur); cur = w
+        else:
+            cur = (cur + " " + w).strip()
+    if cur:
+        lines.append(cur)
+    return "<br>".join(lines)
+
+
+def _wrap_title(text: str, width: int = 80) -> str:
+    if not text or "<br>" in text:
+        return text
+    if "<span" in text:
+        # rich title "<b>bold</b>  <span>subtitle</span>": bold on its own line,
+        # subtitle wrapped beneath — so the gray subtitle never clips.
+        m = _re.search(r"(.*?)(<span.*?>)(.*?)(</span>)(.*)", text, _re.S)
+        if m:
+            head, sopen, inner, sclose, tail = m.groups()
+            head = head.rstrip()
+            inner = _wrap_segment(inner.strip(), width)
+            sep = "" if (head.endswith("<br>") or not head) else "<br>"
+            return f"{head}{sep}{sopen}{inner}{sclose}{tail}"
+        return text
+    return _wrap_segment(text, width)
+
+
+def _ncols(fig) -> int:
+    gr = getattr(fig, "_grid_ref", None)
+    return len(gr[0]) if (gr and gr[0]) else 1
+
+
+def _is_subtitle(ann) -> bool:
+    return (str(getattr(ann, "xref", "")) == "paper"
+            and str(getattr(ann, "yref", "")) == "paper"
+            and (ann.showarrow in (False, None))
+            and ann.y is not None and ann.y > 0.15 and bool(ann.text))
+
+
+def _polish(fig):
+    """Normalize a figure's layout so text never clips or overlaps."""
+    lay = fig.layout
+    gr = getattr(fig, "_grid_ref", None)
+    ncols = _ncols(fig)
+    has_subplots = bool(gr) and (ncols > 1 or len(gr) > 1)
+    n_lines = 1
+    if lay.title and lay.title.text:
+        rich = "<span" in lay.title.text
+        txt = _wrap_title(lay.title.text, 86 if rich else 80)
+        n_lines = txt.count("<br>") + 1
+        if rich:
+            fig.update_layout(title=dict(text=txt, font=dict(size=13)))
+        else:
+            fig.update_layout(title=dict(text=txt, x=0.5, xanchor="center",
+                                         xref="paper", font=dict(size=14)))
+    sub_w = {1: 80, 2: 44, 3: 30}.get(ncols, 40)
+    for ann in list(lay.annotations or []):
+        if _is_subtitle(ann):
+            ann.text = _wrap_segment(ann.text, sub_w)
+            ann.font = dict(size=11, color=(ann.font.color if ann.font else None))
+    # Legend placement. A top horizontal legend on a multi-panel figure collides
+    # with the subplot titles, so move it to the bottom; a legend already at the
+    # bottom is normalized to the same band. Then push any caption annotations
+    # clear of the legend (which may wrap to two rows).
+    leg = lay.legend
+    h_leg = bool(leg and leg.orientation == "h")
+    leg_top = h_leg and (leg.y is None or leg.y >= 1.0)
+    leg_bottom = h_leg and (leg.y is not None and leg.y < 0)
+    leg_y = None
+    if leg_top and has_subplots:
+        # a top legend collides with subplot titles -> move it below the panels
+        leg_y = -0.14
+        lf = (leg.font.size if leg.font and leg.font.size else 10)
+        fig.update_layout(legend=dict(orientation="h", yanchor="top", y=leg_y,
+                                      x=0.5, xanchor="center", font=dict(size=lf)))
+    elif leg_bottom:
+        # already a bottom legend: leave its position (it was placed deliberately)
+        leg_y = leg.y
+    if leg_y is not None:
+        # keep caption annotations below the legend's lower extent (~2 rows)
+        cap_ceiling = leg_y - 0.13
+        caps = [a for a in (lay.annotations or []) if a.y is not None and a.y < 0]
+        above = [a for a in caps if a.y > cap_ceiling]
+        if above:
+            delta = max(a.y for a in above) - cap_ceiling
+            for a in caps:
+                a.y = a.y - delta
+    # Wrap long bottom caption annotations (gray explanatory text) so they don't
+    # run off either edge; count the extra lines for the bottom margin.
+    extra_cap_lines = 0
+    for ann in list(lay.annotations or []):
+        if (str(getattr(ann, "xref", "")) == "paper" and ann.y is not None and ann.y < 0
+                and ann.text and "<br>" not in ann.text
+                and len(_re.sub("<[^>]+>", "", ann.text)) > 110):
+            ann.text = _wrap_segment(ann.text, 112)
+            ann.yanchor = "top"
+            extra_cap_lines += ann.text.count("<br>")
+    low = min([a.y for a in (lay.annotations or []) if a.y is not None and a.y < 0]
+              + ([leg_y] if leg_y is not None else []) + [0.0])
+    m = lay.margin
+    fig.update_layout(margin=dict(
+        t=max(m.t or 80, 44 + 26 * n_lines),
+        b=max(m.b or 56, 56 + int(abs(min(low, 0.0)) * (lay.height or 600)) + 14
+              + 16 * extra_cap_lines),
+        l=m.l or 64, r=m.r or 44))
+    return fig
+
+
 def figure_to_html(fig, title: str = "viva-lumenoid") -> str:
     import plotly.io as pio
+    _polish(fig)
     return pio.to_html(fig, full_html=True, include_plotlyjs="cdn",
-                       config={"displaylogo": False}, default_height="100%")
+                       config={"displaylogo": False, "responsive": True},
+                       default_height="100%")
 
 
 def save_html(fig, path: str, title: str = "viva-lumenoid") -> str:

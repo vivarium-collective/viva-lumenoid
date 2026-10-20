@@ -348,6 +348,7 @@ visualizations:
       evidence_status: reproduced
       tier: main
       caption: >
+        How to read: Read predicted cell height (y-axis) across the perlecan conditions — knockdown gives the tallest cells, control intermediate, overexpression the shortest (the ordering that reproduces Fig 7) — and note that moving to faster growth (the right-hand side) flattens every condition.
         Predicted cell height per perlecan and growth-rate condition (inferred BM relaxation annotated), reproducing the paper's Figure 7 after correcting the perlecan direction. Perlecan knockdown lengthens the collagen IV lifetime (~500 h) → slower BM relaxation → the tallest cells; overexpression shortens it (~1 h) → faster relaxation → the shortest; control intermediate — matching Barrientos et al. (perlecan promotes collagen bond breakage). Faster growth (right) spreads the cell flat regardless of perlecan. Reduced units; the perlecan factors encode the paper's measured lifetime ratios.
 
 report:

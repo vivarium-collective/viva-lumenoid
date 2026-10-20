@@ -2124,8 +2124,8 @@ def e4_growth_feedback_figure():
     fig.update_layout(
         title="E4 — growth-driven two-way feedback: realized basal growth lags the preferred target "
               "(observed; reduced BM)",
-        template="plotly_white", height=520,
-        legend=dict(orientation="h", y=-0.22, x=0, font=dict(size=10)),
+        template="plotly_white", height=660,
+        legend=dict(orientation="h", y=-0.3, x=0.5, xanchor="center", font=dict(size=10)),
         annotations=list(fig.layout.annotations) + [dict(
             x=0.5, y=-0.4, xref="paper", yref="paper", showarrow=False,
             text="Basal displacement is now GROWTH-driven (preferred cell volume + basal area ramped; division "
