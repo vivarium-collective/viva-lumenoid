@@ -33,6 +33,21 @@ class LammpsTyssueCoupling(Process):
         "strain_gain": {"_type": "float", "_default": 20.0},     # basal strain-rate -> BM strain-rate
         "tension_gain": {"_type": "float", "_default": 0.02},    # BM stress -> added basal contractility
         "base_contractility": {"_type": "float", "_default": 0.05},
+        # BM realization (P3 interchangeable alternatives, never additive):
+        #   "explicit" = the LAMMPS collagen network; "reduced" = an effective
+        #   viscoelastic BM (E_eff + relaxation), no LAMMPS. Controls fall out of
+        #   the gains: strain_gain=0 -> uncoupled; tension_gain=0 -> one-way.
+        "bm_mode": {"_type": "string", "_default": "explicit"},
+        "bm_modulus": {"_type": "float", "_default": 50.0},      # reduced BM elastic modulus
+        "bm_relaxation": {"_type": "float", "_default": 10.0},   # reduced BM stress-relaxation time
+        # P3 coupling controls (an explicit enum, because bigraph config drops
+        # 0.0-valued gains): "two-way" (full), "one-way" (BM driven, no reaction
+        # fed back), "uncoupled" (BM inert — the epithelium doesn't drive it).
+        "coupling_mode": {"_type": "string", "_default": "two-way"},
+        # Subcycle the BM this many steps per epithelial macro-step (plan section 6:
+        # subcycled BM equilibration). Advances BM stability without shrinking the
+        # exchange interval.
+        "bm_substeps": {"_type": "integer", "_default": 1},
     }
 
     def __init__(self, config=None, core=None):
@@ -41,6 +56,8 @@ class LammpsTyssueCoupling(Process):
         self._A_prev = None
         self._es = None
         self._bm = None
+        self._bm_strain = 0.0   # reduced-BM accumulated strain
+        self._bm_rest = 0.0     # reduced-BM relaxing rest strain (Maxwell element)
 
     # --- lazy build of both engines (heavy; done on first use) ---
     def _build(self):
@@ -69,12 +86,14 @@ class LammpsTyssueCoupling(Process):
             output_columns={}, maps={}, backend="python", substeps=1),
             core=tcore)
         self._basal_mask = (self._es.eptm.face_df["segment"] == "basal")
-        self._bm = CollagenNetworkProcess(
-            config={"params": CollagenParams(n_rods=int(c["bm_rods"]), box_xy=10.0,
-                                             slab_thickness=2.0, assemble_steps=600,
-                                             hold_steps=300).to_dict()},
-            core=allocate_core())
-        self._bm.initial_state()
+        # Explicit (LAMMPS) BM only; the reduced BM is a cheap analytic element.
+        if c["bm_mode"] == "explicit":
+            self._bm = CollagenNetworkProcess(
+                config={"params": CollagenParams(n_rods=int(c["bm_rods"]), box_xy=10.0,
+                                                 slab_thickness=2.0, assemble_steps=600,
+                                                 hold_steps=300).to_dict()},
+                core=allocate_core())
+            self._bm.initial_state()
 
     def inputs(self):
         return {}
@@ -100,13 +119,27 @@ class LammpsTyssueCoupling(Process):
                 if self._A_prev else 0.0)
         self._A_prev = A
 
-        # 2. the basal strain drives the collagen BM (LAMMPS); read its stress.
-        bm_out = self._bm.update({"strain_rate": c["strain_gain"] * rate,
-                                  "make_on": 1.0, "break_on": 1.0}, interval)
-        sigma = float(bm_out.get("sigma_inplane", 0.0))
+        # 2. the basal strain drives the BM; read its stress (explicit or reduced).
+        #    "uncoupled" control: the epithelium does NOT drive the BM.
+        strain_rate_bm = 0.0 if c["coupling_mode"] == "uncoupled" else c["strain_gain"] * rate
+        nsub = max(1, int(c["bm_substeps"]))
+        sub_dt = interval / nsub
+        if c["bm_mode"] == "reduced":
+            # Maxwell viscoelastic effective BM, subcycled.
+            for _ in range(nsub):
+                self._bm_strain += strain_rate_bm * sub_dt
+                self._bm_rest += (self._bm_strain - self._bm_rest) / max(c["bm_relaxation"], 1e-9) * sub_dt
+            sigma = c["bm_modulus"] * (self._bm_strain - self._bm_rest)
+        else:
+            sigma = 0.0
+            for _ in range(nsub):
+                bm_out = self._bm.update({"strain_rate": strain_rate_bm,
+                                          "make_on": 1.0, "break_on": 1.0}, sub_dt)
+                sigma = float(bm_out.get("sigma_inplane", 0.0))
 
         # 3. feed the BM reaction back as an added basal contractility (tension).
-        tension = c["tension_gain"] * sigma
+        #    "one-way" control: no reaction fed back to the epithelium.
+        tension = 0.0 if c["coupling_mode"] == "one-way" else c["tension_gain"] * sigma
         self._es.eptm.face_df.loc[self._basal_mask, "contractility"] = (
             c["base_contractility"] + tension)
 

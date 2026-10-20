@@ -142,3 +142,28 @@ uv pip install --no-deps -e ../vivarium-tyssue   # the engine itself (dev siblin
 automatically when a Tyssue composite builds (tyssue's 2D area gradient uses the
 2D cross product numpy 2.x removed). The LAMMPS composites (collagen, actomyosin)
 need the `lammps` binding + the `viva-lammps` engine (the `engines` extra).
+
+---
+
+## P3 coupling rigor — controls + convergence (LammpsTyssueCoupling)
+
+The `coupled_lumenoid` (E4) coupling exposes the P3 gate's controls + convergence
+knobs on `LammpsTyssueCoupling`:
+
+- **`coupling_mode`**: `two-way` (full), `one-way` (BM driven, reaction NOT fed
+  back), `uncoupled` (BM inert). (An explicit enum because bigraph config drops
+  `0.0`-valued gains.) Verified: one-way → zero basal tension; uncoupled → zero BM
+  stress; two-way → nonzero both.
+- **`bm_mode`**: `explicit` (the LAMMPS collagen network) ↔ `reduced` (an effective
+  Maxwell viscoelastic BM, no LAMMPS) — the plan's *interchangeable* alternatives.
+  Both develop BM stress + feed back basal tension; a **quantitative** reduced↔explicit
+  match needs calibrating the reduced `bm_modulus`/`bm_relaxation` to the explicit
+  network's E(ε̇)/τ (open).
+- **`bm_substeps`**: subcycle the BM per epithelial macro-step (plan §6). Verified
+  convergent: the successive-refinement error in BM stress halves per doubling of
+  substeps (first-order).
+
+Open P3 item: the tyssue macro-step itself is dt-sensitive (its `max_displacement`
+clamp is per-step, not per-unit-time), so full exchange-interval convergence needs
+a dt-scaled clamp on the epithelial side; the BM-subcycling convergence above holds
+at a fixed macro-step.
