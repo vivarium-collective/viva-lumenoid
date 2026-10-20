@@ -179,6 +179,55 @@ def r2_rheology_figure():
     return _layout(fig, height=560)
 
 
+# Measured results of the dense multi-seed turnover sweep (followup fp-r2-dense-multiseed):
+# 300 rods, density 3.0, 12-sigma slab, 4 seeds (11/22/33/44), off_rate 0.005-0.08.
+# These are REAL measured medians recorded as run r2-dense-multiseed-sweep in bm-r2/study.yaml.
+_R2_DENSE = {
+    "residence": [12.5, 25.0, 50.0, 100.0, 200.0],
+    "tau": [37.3, 39.7, 43.1, 67.5, 101.6],
+    "seeds_resolved": [4, 4, 4, 4, 1],
+}
+
+
+def r2_fig2e_figure():
+    """R2: the Barrientos Fig-2E reproduction — stress-relaxation time τ vs collagen
+    residence time, from the dense multi-seed sweep (real measured medians). τ rises
+    monotonically with residence; the modulus is turnover-independent (3.19 LJ)."""
+    go = _go()
+    res = np.array(_R2_DENSE["residence"])
+    tau = np.array(_R2_DENSE["tau"])
+    sr = _R2_DENSE["seeds_resolved"]
+    # Split well-resolved (4/4 seeds) from the partial slow-turnover end (1/4).
+    solid = [i for i, s in enumerate(sr) if s >= 4]
+    partial = [i for i, s in enumerate(sr) if s < 4]
+    fig = go.Figure()
+    fig.add_trace(go.Scatter(x=res, y=tau, mode="lines", name="τ(residence)",
+                             line=dict(color=BLUE, width=3)))
+    fig.add_trace(go.Scatter(x=res[solid], y=tau[solid], mode="markers",
+                             name="resolved 4/4 seeds",
+                             marker=dict(color=BLUE, size=12, symbol="circle")))
+    if partial:
+        fig.add_trace(go.Scatter(x=res[partial], y=tau[partial], mode="markers",
+                                 name="partial (1/4 seeds)",
+                                 marker=dict(color=BLUE, size=13, symbol="circle-open",
+                                             line=dict(width=2))))
+    # The intrinsic relaxation floor (~37 LJ) read off the fast-turnover end.
+    fig.add_hline(y=37.0, line=dict(color=GREEN, width=1.5, dash="dot"),
+                  annotation_text="intrinsic relaxation floor ≈ 37 LJ",
+                  annotation_position="bottom right",
+                  annotation_font=dict(size=11, color=GREEN))
+    fig.update_layout(
+        title="R2 — stress-relaxation time τ vs collagen residence (Barrientos Fig 2E)",
+        xaxis=dict(title="collagen residence time 1/off_rate (LJ)", type="log"),
+        yaxis_title="stress-relaxation time τ (LJ)",
+        legend=dict(orientation="h", y=1.1),
+        annotations=[dict(x=0.5, y=-0.2, xref="paper", yref="paper", showarrow=False,
+                          text="dense multi-seed network (300 rods, density 3.0, 12σ slab, 4 seeds); "
+                               "modulus turnover-independent (3.19 LJ); reduced units",
+                          font=dict(size=11, color="#777"))])
+    return _layout(fig, height=560)
+
+
 def r3_supply_figure():
     """R3: a small REAL collagen run comparing remodelling (make+break) vs
     make-only — the ordering that motivates 'supply is needed for sustained
@@ -414,7 +463,7 @@ def r6_intervention_figure():
 
 STUDY_FIGURES = {
     "bm-r1-published-tissue-baseline": ("r1_regime", r1_regime_figure, "data"),
-    "bm-r2-collagen-network-rheology": ("r2_rheology", r2_rheology_figure, "data"),
+    "bm-r2-collagen-network-rheology": ("r2_fig2e", r2_fig2e_figure, "data"),
     "bm-r3-network-expansion-supply": ("r3_supply", r3_supply_figure, "data"),
     "bm-r4-coupled-2d-epithelium": ("r4_sheet", r4_sheet_figure, "data"),
     "bm-r5-explicit-3d-confinement": ("r5_monolayer", r5_monolayer_figure, "data"),
