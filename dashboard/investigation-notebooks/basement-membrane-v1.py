@@ -962,17 +962,16 @@ else:
 #
 # Each composite is a process-bigraph *document* — named processes wired by `inputs`/`outputs` ports over shared stores. Below, each composite shows what it does, then a **parameter cell** with its tunable knobs (the current default and what each one means). Edit any value, then re-run the **Run** section to rebuild and re-simulate with your changes.
 
-# **Composite `viva_lumenoid.composites.tyssue_2d_sheet`** — `spec_viva_lumenoid_composites_tyssue_2d_sheet` (materialized from its `@composite_generator`)
+# **The model — `viva_lumenoid.composites.tyssue_2d_sheet`**
+#
+# R4 — coupled 2D epithelium on the vivarium-tyssue engine: a polygonal sheet relaxed with the merged CrossSectionGeometry (explicit per-cell height DOF for the prism/height relation). The homogeneous reference for the confinement response (vs R1).
 
-spec_viva_lumenoid_composites_tyssue_2d_sheet = materialize_composite('viva_lumenoid.composites.tyssue_2d_sheet')
-describe_spec(spec_viva_lumenoid_composites_tyssue_2d_sheet)
-
-# === Edit parameters for this composite, then run the Run cell ===
-# ov_viva_lumenoid_composites_tyssue_2d_sheet maps each tunable parameter to its current value (the generator's
-# defaults). Edit any entry; the Run cell rebuilds the composite with it.
-ov_viva_lumenoid_composites_tyssue_2d_sheet = dict(spec_viva_lumenoid_composites_tyssue_2d_sheet['_overrides'])
-import json as _json; print(_json.dumps(ov_viva_lumenoid_composites_tyssue_2d_sheet, indent=2, default=str))
-# e.g.:  ov_viva_lumenoid_composites_tyssue_2d_sheet['<parameter>'] = <value>
+# === Parameters — edit any value, then re-run from the Run cell below ===
+# Each entry is the composite's current default; the comment explains it.
+ov_viva_lumenoid_composites_tyssue_2d_sheet = {
+    'line_tension' : 0.1,   # Junction line tension of the 2D sheet.
+    'prefered_area': 1.0,   # Target cell area.
+}
 
 # ### Run
 #
@@ -1022,17 +1021,16 @@ else:
 #
 # Each composite is a process-bigraph *document* — named processes wired by `inputs`/`outputs` ports over shared stores. Below, each composite shows what it does, then a **parameter cell** with its tunable knobs (the current default and what each one means). Edit any value, then re-run the **Run** section to rebuild and re-simulate with your changes.
 
-# **Composite `viva_lumenoid.composites.tyssue_3d_monolayer`** — `spec_viva_lumenoid_composites_tyssue_3d_monolayer` (materialized from its `@composite_generator`)
+# **The model — `viva_lumenoid.composites.tyssue_3d_monolayer`**
+#
+# R5 — explicit 3D cell confinement: a Tyssue 3D monolayer (MonolayerGeometry) with apical/basal/lateral surfaces and cell-volume targets, so cell height + basal area emerge explicitly (no prism approximation).
 
-spec_viva_lumenoid_composites_tyssue_3d_monolayer = materialize_composite('viva_lumenoid.composites.tyssue_3d_monolayer')
-describe_spec(spec_viva_lumenoid_composites_tyssue_3d_monolayer)
-
-# === Edit parameters for this composite, then run the Run cell ===
-# ov_viva_lumenoid_composites_tyssue_3d_monolayer maps each tunable parameter to its current value (the generator's
-# defaults). Edit any entry; the Run cell rebuilds the composite with it.
-ov_viva_lumenoid_composites_tyssue_3d_monolayer = dict(spec_viva_lumenoid_composites_tyssue_3d_monolayer['_overrides'])
-import json as _json; print(_json.dumps(ov_viva_lumenoid_composites_tyssue_3d_monolayer, indent=2, default=str))
-# e.g.:  ov_viva_lumenoid_composites_tyssue_3d_monolayer['<parameter>'] = <value>
+# === Parameters — edit any value, then re-run from the Run cell below ===
+# Each entry is the composite's current default; the comment explains it.
+ov_viva_lumenoid_composites_tyssue_3d_monolayer = {
+    'contractility' : 0.05,   # Apical/basal face contractility.
+    'vol_elasticity': 1.0,   # Cell volume elasticity (resists height change).
+}
 
 # ### Run
 #
