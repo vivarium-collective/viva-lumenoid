@@ -1,63 +1,232 @@
-schema_version: 3
+schema_version: 4
 name: bm-e3-closed-3d-lumenoid
-status: in-progress
 title: "Closed 3D lumenoid morphogenesis"
-kind: extension
-phase: Build
+created: "2026-09-30"
+status: in-progress
+phase: Evaluate
+simulation_status: ran
+implementation_status: complete
+evaluation_status: evaluated
+gate_status: passed
+design_status: drafted
 confidence: Investigating
+
 claim: >
-  A closed lumenoid with a lumen pressure and a basal membrane surface runs the vertex model; attaching an explicit membrane and reading curvature-dependent shape is next.
+  A closed 3D lumenoid runs over the Tyssue engine: 78 cells enclose a single lumen, per-cell
+  volumes emerge finite and positive (0.50-3.43), and a basal surface (78 faces, area 202.5) is
+  exposed as the basement-membrane coupling shell with a readable enclosed lumen volume (261.7).
+  The lumen-pressure trajectory and the explicit BM attachment / curvature-dependent shape are
+  the next readouts, not yet dynamic results.
+
+experiment: >
+  Build the closed_lumenoid composite (a closed curved Monolayer shell over the vivarium-tyssue
+  engine, its outer basal surface the BM-coupling patch, with a lumen volume/pressure
+  constraint) and step the EulerSolver. Reconstruct the mesh counts (cells, faces, vertices),
+  read every per-cell area and volume off cell_df, read the shell extent off the vertices,
+  and read the lumen volume, lumen pressure and basal BM surface off the engine settings.
+  Confirm the geometry stays finite and positive across several Euler steps (dt 0.01). This is
+  a qualitative morphogenesis check -- that a closed, lumen-enclosing shell resolves with
+  well-posed per-cell geometry and an exposed BM surface -- not yet a lumen-growth trajectory.
+
+result: >
+  The closed lumenoid resolves and relaxes deterministically. The shell carries 78 cells, 606
+  faces and 298 vertices, closed in 3D (vertices span roughly +/-4.7 in x and y and -4.90 to
+  +4.74 in z -- a closed shell centred near the origin, measured extent wider than the +/-4.3
+  of the earlier reconstruction). Per-cell basal area ranges 3.90-15.65 and per-cell volume
+  0.50-3.43, all finite and positive. The lumen is readable off the engine: enclosed lumen
+  volume 261.69 (at its preferred volume, so lumen pressure is 0.0 at rest), and the basal
+  BM-coupling surface is 78 faces with total area 202.47. Stepping the EulerSolver five times
+  (dt 0.01) keeps per-cell area and volume finite and positive -- no NaN or blow-up. Because the
+  lumen starts at its preferred volume, the pressure trajectory (pressure departing from zero as
+  the lumen fills or drains) and the explicit BM attachment / curvature-dependent cell-shape
+  predictions are the next readouts, flagged as followups.
+
+pipeline_gate:
+  prerequisites:
+    - {study: bm-r5-explicit-3d-confinement, condition: tests-passed}
+    - {study: bm-e2-actin-adhesion-collagen, condition: tests-passed}
+  enables: []
+  proceed_condition: >
+    A closed lumen-enclosing shell resolves over the tyssue engine with finite per-cell volumes
+    and an exposed basal BM surface, so the full morphogenesis target is instantiated. Advancing
+    to the curvature-dependent lumen-growth claim additionally requires the lumen-pressure
+    trajectory and the explicit BM attachment, which are flagged as followups.
+
 question: >
   How do lumen pressure/volume and a basement-membrane shell set cell shape and curvature-
   dependent growth in a closed 3D lumenoid?
 
-hypothesis: >
-  A closed curved Tyssue epithelium with a lumen volume/pressure constraint and a BM shell
-  predicts lumen growth and curvature-dependent cell shapes that depend on BM relaxation,
-  first with a validated reduced-order BM law and then with resolved LAMMPS patches or a
-  curved-network realization.
+purpose:
+  question: >
+    How do lumen pressure/volume and a basement-membrane shell set cell shape and curvature-
+    dependent growth in a closed 3D lumenoid?
+  mechanism: >
+    A closed curved Tyssue epithelium encloses a lumen with a volume/pressure constraint
+    (pressure = elasticity x (volume - preferred volume)) and exposes its outer basal surface as
+    the shell the basement membrane attaches to. A slowly-relaxing BM and a growing lumen are
+    intended to drive curvature-dependent cell shapes -- the new morphogenesis prediction beyond
+    the flat-substrate paper.
+  expected_outcome: >
+    A closed shell resolves with finite per-cell volumes and a readable enclosed lumen and basal
+    BM surface, establishing the morphogenesis substrate; lumen growth and curvature-dependent
+    cell shape should later depend on BM relaxation once the pressure trajectory and explicit BM
+    attachment are wired.
 
-objective: >
-  Introduce a 3D closed-shell Tyssue geometry with lumen pressure/volume and a BM shell; first
-  use the validated reduced-order BM law, then test resolved LAMMPS patches or a curved-
-  network realization; predict lumen growth, cell shape and curvature effects.
-
-description: |
-  The closed lumenoid extension (plan section 5, 3D lumenoid level). A closed curved
-  epithelium with lumen volume/pressure and a BM shell is the full morphogenesis target. The
-  reduced-order BM law (validated in R4-R5) is used first; resolved LAMMPS patches or a
-  curved-network BM are tested second. Curvature-dependent effects on lumen growth and cell
-  shape are the new predictions beyond the flat-substrate paper.
+key_assumptions:
+  - "The epithelium is a closed curved shell: 78 cells enclose a single lumen, and the outer basal surface is the basement-membrane coupling patch."
+  - "The lumen carries a volume/pressure constraint: lumen_pressure = lumen_elasticity x (lumen_vol - lumen_prefered_vol); at initialization the lumen sits at its preferred volume, so pressure is 0.0 at rest."
+  - "The BM is treated first as an effective basal surface (78 faces, area 202.47); a collagen patch resolved at the molecular scale (LAMMPS) comes later and is not wired here."
+  - "The lumen-pressure trajectory (pressure departing from zero as the lumen fills/drains) is a dynamic readout not yet exercised -- the shell is reported at its rest configuration."
+  - "Reduced units throughout; qualitative scope -- this study establishes that a closed lumen-enclosing shell runs with well-posed geometry, not the curvature-dependent growth prediction."
 
 parent_studies:
-  - {study: bm-r5-explicit-3d-confinement, relation: leads-to, condition: tests-passed}
-  - {study: bm-e2-actin-adhesion-collagen, relation: supports, condition: tests-passed}
+  - {study: bm-r5-explicit-3d-confinement, condition: tests-passed}
+  - {study: bm-e2-actin-adhesion-collagen, condition: tests-passed}
 
 cites: [barrientos2026cellshape]
-
-expected_behavior:
-  - name: lumenoid-shape-depends-on-bm
-    observable: lumen radius / cell shape / curvature
-    condition: reduced-order BM shell vs resolved LAMMPS patch
-    rationale: >
-      Consistency between reduced-order and resolved BM in their overlap, plus a curvature-
-      dependent cell-shape prediction, gates the lumenoid extension (P4).
 
 baseline:
   - name: bm-e3-closed-3d-lumenoid
     composite: viva_lumenoid.composites.closed_lumenoid
-    composite_status: implemented
     params: {}
     note: >
       A closed epithelial shell of 78 cells enclosing a lumen, with the basement
-      membrane as its outer basal surface. The model carries a lumen pressure that
-      grows as the lumen fills, and it exposes that basal surface as the membrane
-      the collagen network attaches to. The membrane is treated first as an
-      effective material; a collagen patch resolved at the molecular scale comes
-      later.
-variants: []
-interventions: []
-runs: []
+      membrane as its outer basal surface. The model carries a lumen volume and
+      pressure, and it exposes that basal surface as the membrane the collagen
+      network attaches to. The membrane is treated first as an effective material;
+      a collagen patch resolved at the molecular scale comes later. The
+      lumen-pressure trajectory and the explicit BM attachment are the next
+      readouts.
+
+conditions:
+  baseline:
+    composite: viva_lumenoid.composites.closed_lumenoid
+    params: {}
+  model_settings: []
+
+robustness:
+  parameter_sweep: false
+  n_replicates: 1
+  note: >
+    Deterministic single configuration (one composite, no stochasticity, no parameter variation):
+    the closed-shell geometry is fixed, so a single relaxation run at the lumen's rest volume is
+    the whole evidence. Replication across lumen-pressure / BM-relaxation settings is a gap -- the
+    lumen-growth trajectory is a documented followup.
+
+falsifiability: >
+  The claim would be overturned if the closed lumenoid failed to resolve over the tyssue engine,
+  if the cell or face count were zero (an open, non-enclosing mesh), if any per-cell volume were
+  non-finite or non-positive after relaxation, or if stepping the EulerSolver produced a NaN or
+  blow-up. Any of these would show the closed lumen-enclosing shell does not yield well-posed
+  geometry. The contracts in tests/test_tyssue_composites.py (test_closed_lumenoid_runs) would
+  fail in that case.
+
+simulation_set:
+  - name: e3-closed-lumenoid-relaxation
+    status: completed
+    base_model: viva_lumenoid.composites.closed_lumenoid
+    fixed: {dt: 0.01, steps: 5}
+    metrics:
+      n_cells: 78
+      n_faces: 606
+      n_vertices: 298
+      cell_area_min: 3.9018
+      cell_area_max: 15.6489
+      cell_vol_min: 0.4961
+      cell_vol_max: 3.4257
+      shell_extent_z: [-4.9012, 4.7354]
+      lumen_volume: 261.6882
+      lumen_pressure_at_rest: 0.0
+      bm_surface_area: 202.4725
+      bm_face_count: 78
+      all_cell_vols_finite_positive: true
+      geometry_finite_after_5_steps: true
+    pass_fail_tests:
+      - "lumenoid-is-closed-with-cells: pass"
+      - "lumenoid-steps-stably: pass"
+
+runs:
+  - name: e3-closed-lumenoid-relaxation
+    base_model: viva_lumenoid.composites.closed_lumenoid
+    status: completed
+    outcomes:
+      lumenoid-is-closed-with-cells:
+        result: PASS
+        observed: "78 cells, 606 faces enclosing one lumen (vol 261.69); per-cell volume 0.4961-3.4257, all finite and > 0; basal BM surface 78 faces, area 202.47"
+      lumenoid-steps-stably:
+        result: PASS
+        observed: "5 Euler steps (dt 0.01) keep per-cell area and volume finite and positive -- no NaN, no blow-up"
+
+readouts:
+  - name: cell_volume
+    description: Per-cell volume read off cell_df; the enclosed-cell geometry that emerges on the closed shell.
+    store_path: "cell_df.vol"
+    units: reduced volume
+    status: primary
+  - name: cell_area
+    description: Per-cell area read off cell_df (3.90-15.65); the per-cell shape readout on the curved shell.
+    store_path: "cell_df.area"
+    units: reduced area
+    status: measured
+  - name: lumen_volume
+    description: Enclosed lumen volume read off the engine settings (261.69 at rest = preferred volume); the morphogenesis state variable.
+    store_path: "eptm.settings.lumen_vol"
+    units: reduced volume
+    status: measured
+  - name: lumen_pressure
+    description: Lumen pressure = elasticity x (volume - preferred volume); 0.0 at rest. The trajectory as the lumen fills/drains is the next dynamic readout.
+    store_path: "eptm.settings.lumen_pressure"
+    units: reduced pressure
+    status: derived-needed
+  - name: bm_surface
+    description: Basal BM-coupling surface (78 faces, total area 202.47); the shell the collagen network attaches to.
+    store_path: "eptm.settings.bm_surface_area"
+    units: reduced area
+    status: measured
+
+behavior_tests:
+  - name: lumenoid-is-closed-with-cells
+    classification: primary
+    description: >
+      The lumenoid is a closed shell with a positive cell and face count, and every per-cell
+      volume is finite and positive -- a closed, lumen-enclosing geometry.
+    measure: {kind: reduce, field: cell_volume, reduce: all_finite_and_positive}
+    pass_if: {op: all_finite_positive, note: "Nc > 0 and Nf > 0 and all 78 cell volumes finite and > 0 (0.50-3.43)"}
+    units: reduced volume
+    requires_simulation: e3-closed-lumenoid-relaxation
+    cites: [barrientos2026cellshape]
+    calibration_anchor:
+      observed_value: "0.4961-3.4257"
+      literature_target: "a closed lumen-enclosing shell with finite per-cell volumes and an exposed basal BM surface (qualitative; no micron calibration)"
+      resolution: concept
+      cites: [barrientos2026cellshape]
+  - name: lumenoid-steps-stably
+    classification: primary
+    description: >
+      Stepping the EulerSolver several steps keeps per-cell areas and volumes finite (no NaN, no
+      blow-up).
+    measure: {kind: reduce, field: cell_volume, reduce: finite_over_steps}
+    pass_if: {op: finite_no_blowup, note: "per-cell area and volume finite and positive after 5 Euler steps (dt 0.01)"}
+    units: reduced volume
+    requires_simulation: e3-closed-lumenoid-relaxation
+
+conclusion_logic:
+  if_primary_tests_pass:
+    implementation_status: "The closed lumenoid resolves over the tyssue engine: 78 cells enclose a readable lumen with finite per-cell volumes and an exposed basal BM surface."
+    biological_validation: "Qualitative only: a closed lumen-enclosing shell with well-posed geometry exists; the lumen-growth / curvature-dependent shape prediction is not yet evaluated."
+    pipeline_unblocks: []
+  if_primary_tests_fail:
+    diagnose:
+      - "Shell fails to close -- check the LumenoidGeometry merge and the vendored lumenoid mesh load."
+      - "Per-cell volume non-finite -- check the lumen volume/pressure constraint and the volume-target energy."
+    block_downstream: "The lumenoid is the morphogenesis endpoint; a failure here blocks the curvature-dependent growth predictions."
+
+limitations:
+  - "Qualitative morphogenesis check only: the study confirms a closed lumen-enclosing shell resolves with finite per-cell volumes and an exposed BM surface, not that lumen growth or curvature set cell shape."
+  - "The lumen starts at its preferred volume, so lumen pressure is 0.0 at rest; the pressure trajectory (pressure departing from zero as the lumen fills/drains) is NOT exercised -- it is the next dynamic readout."
+  - "The BM is an effective basal surface only (78 faces, area 202.47); the explicit collagen/LAMMPS attachment and the reduced-order-vs-resolved BM consistency check are not wired."
+  - "The measured shell extent (roughly +/-4.7 in x/y, -4.90 to +4.74 in z) is wider than the +/-4.3 of the earlier reconstruction -- reported here from the live run."
+  - "Single deterministic configuration (no parameter sweep, n_replicates = 1); reduced units, no micron calibration."
 
 visualizations:
   - name: e3_lumenoid
@@ -66,3 +235,132 @@ visualizations:
       title: "Closed lumenoid shell (real tyssue run)"
       caption: >
         The actual closed lumenoid shell on the merged LumenoidGeometry, exposing the basal BM-coupling surface (real tyssue run).
+
+report:
+  title: "E3 -- closed 3D lumenoid (shell runs, lumen readable)"
+  verdict: >
+    A closed 3D lumenoid resolves over the vivarium-tyssue engine: 78 cells enclose a single
+    lumen (readable volume 261.69, pressure 0.0 at its preferred volume), per-cell volumes emerge
+    finite and positive (0.50-3.43), and a basal surface of 78 faces (area 202.47) is exposed as
+    the basement-membrane coupling shell. The shell is closed in 3D and numerically stable across
+    5 Euler steps. This instantiates the full morphogenesis target. It is a qualitative rest-state
+    check: the lumen-pressure trajectory and the explicit BM attachment / curvature-dependent
+    cell shape are the next readouts, not yet dynamic results.
+  confidence: medium
+  evidence_quality: regression-only
+  main_insight: >
+    A closed, lumen-enclosing epithelial shell with a readable lumen volume/pressure and an
+    exposed basal BM surface runs over the tyssue engine with well-posed per-cell geometry -- the
+    morphogenesis substrate (cells + lumen + BM shell) exists and is numerically stable.
+  caveat: >
+    The lumen sits at its preferred volume (pressure 0.0), and the BM is an effective surface with
+    no explicit attachment, so lumen growth and curvature-dependent shape are not yet tested --
+    this is a shell-runs result, not a morphogenesis trajectory.
+
+findings:
+  - id: F1-closed-shell-with-lumen
+    kind: computational
+    status: confirms
+    tier: observation
+    mechanism_origin: engineered
+    statement: >
+      The closed lumenoid resolves over the tyssue engine: 78 cells, 606 faces and 298 vertices
+      form a closed 3D shell (extent roughly +/-4.7 in x/y, -4.90 to +4.74 in z) enclosing a
+      single lumen of volume 261.69; per-cell volumes (0.4961-3.4257) and areas (3.9018-15.6489)
+      emerge finite and positive, and a basal surface of 78 faces (area 202.47) is exposed as the
+      BM-coupling shell.
+    evidence:
+      from_run: e3-closed-lumenoid-relaxation
+      from_test: lumenoid-is-closed-with-cells
+      observed: "Nc=78, Nf=606, Nv=298; cell vol 0.50-3.43; lumen vol 261.69, pressure 0.0 at rest; BM surface 78 faces / area 202.47"
+    explanation: >
+      The merged LumenoidGeometry loads a closed curved mesh; each cell carries a volume target
+      and the lumen a volume/pressure constraint, so the vertex model relaxes to a well-posed
+      closed shell with per-cell volumes and an exposed basal surface.
+    next_action: "drive the lumen off its preferred volume and record the pressure trajectory and curvature-dependent cell shape"
+    next_action_type: refine_representation
+    provenance:
+      run_ids: [e3-closed-lumenoid-relaxation]
+  - id: F2-steps-stably
+    kind: computational
+    status: confirms
+    tier: observation
+    mechanism_origin: engineered
+    statement: >
+      Stepping the EulerSolver five times (dt 0.01) keeps per-cell area and volume finite and
+      positive, with no NaN or blow-up -- the closed lumenoid shell is numerically stable over
+      short integration.
+    evidence:
+      from_run: e3-closed-lumenoid-relaxation
+      from_test: lumenoid-steps-stably
+      observed: "per-cell area and volume finite and > 0 after 5 Euler steps"
+    provenance:
+      run_ids: [e3-closed-lumenoid-relaxation]
+  - id: F3-lumen-pressure-and-bm-attachment-next
+    kind: methodological
+    status: partial
+    tier: observation
+    statement: >
+      The lumen sits at its preferred volume (pressure 0.0 at rest) and the BM is an effective
+      basal surface with no explicit attachment, so the lumen-growth / pressure trajectory and the
+      curvature-dependent cell-shape prediction -- the new morphogenesis claims -- are not yet
+      tested. Only the closed rest-state geometry and the readable lumen/BM quantities are
+      established.
+    evidence:
+      from_run: e3-closed-lumenoid-relaxation
+      from_test: lumenoid-is-closed-with-cells
+      observed: "lumen_vol == lumen_prefered_vol (261.69) -> pressure 0.0; BM surface exposed but not attached"
+    next_action: "wire the lumen-volume forcing + explicit BM attachment, then read pressure and curvature-dependent shape over time"
+    next_action_type: refine_representation
+    provenance:
+      run_ids: [e3-closed-lumenoid-relaxation]
+
+followup_proposals:
+  - id: fp-e3-lumen-pressure-and-bm-attachment
+    title: "Drive the lumen and read the pressure/volume trajectory + explicit BM attachment"
+    motivation: >
+      The shell resolves at the lumen's rest volume (pressure 0.0) with an effective (unattached)
+      BM surface, so curvature-dependent lumen growth and cell shape cannot yet be tested. Force
+      the lumen volume (or add influx), record the lumen-pressure/volume trajectory, attach the
+      explicit BM shell, and measure curvature-dependent cell shape against BM relaxation.
+    hypothesized_mechanism: "A growing lumen raising pressure against a slowly-relaxing BM shell should produce curvature-dependent cell shapes -- the morphogenesis prediction beyond the flat-substrate paper."
+    status: proposed
+
+discovery_implications:
+  resolved_uncertainties:
+    - "A closed lumen-enclosing epithelial shell (78 cells + lumen + basal BM surface) resolves over the tyssue engine with finite per-cell volumes."
+    - "The lumen volume (261.69), pressure (0.0 at rest) and basal BM surface (78 faces, 202.47) are readable off the engine."
+    - "The closed shell is numerically stable over short EulerSolver integration."
+  remaining_uncertainties:
+    - "The lumen-pressure/volume trajectory as the lumen grows."
+    - "Curvature-dependent cell shape and its dependence on BM relaxation."
+    - "The explicit (attached) BM shell vs the effective surface used here."
+  followup_study_proposals:
+    - {id: fp-e3-lumen-pressure-and-bm-attachment, title: "Lumen-pressure trajectory + explicit BM attachment"}
+
+conclusion_verdicts:
+  regression_compatibility:
+    result: PASS
+    basis: "The closed_lumenoid composite is registered and steps cleanly over the vivarium-tyssue engine; the behavior-test contracts (test_closed_lumenoid_runs) pass."
+  biological_validation:
+    result: PENDING
+    basis: >
+      A closed lumen-enclosing shell with finite per-cell volumes and a readable lumen/BM exists,
+      but the lumen-growth trajectory and curvature-dependent cell-shape prediction are not yet
+      exercised, so no morphogenesis claim is validated or refuted here.
+  explanatory_gain:
+    result: POSITIVE
+    basis: >
+      Instantiating a closed 3D epithelial shell that encloses a readable lumen and exposes a
+      basal BM-coupling surface is a genuine step beyond the flat-substrate models (R1/R4/R5),
+      even before the lumen-growth and curvature predictions are wired.
+
+expert_review_status: requested
+expert_questions:
+  - "The lumen starts at its preferred volume (pressure 0.0). Should the canonical E3 run instead drive the lumen off rest (influx or a volume ramp) so the pressure/volume trajectory is part of the evidence?"
+  - "Is the effective basal BM surface (78 faces, area 202.47) a sufficient coupling shell for the morphogenesis claim, or must the explicit collagen/LAMMPS attachment be wired first?"
+
+bibliography:
+  sources:
+    - key: barrientos2026cellshape
+      note: "Barrientos et al. cell-shape paper; the closed 3D lumenoid extends the flat-substrate confinement model to a closed curved epithelium with a lumen and a BM shell."
