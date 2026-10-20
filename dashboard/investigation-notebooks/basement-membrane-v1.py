@@ -1638,7 +1638,7 @@ _save_viz('bm-e3-closed-3d-lumenoid', 'e3_lumen_dynamics', _render_one('html:e3_
 #
 # **Purpose.** The epithelium and its collagen basement membrane are coupled both ways. The growing basal surface stretches the membrane (forward half); the membrane's stress pushes back on the cells as a basal tension (reaction half). Closing this loop lets lumen pressure and cell shape respond to how fast the membrane remodels. Matched controls -- driving the membrane without feedback (one-way) or leaving it inert (uncoupled) -- separate the coupling's effect from the rest of the model.
 #
-# **Claim.** The epithelium and its collagen basement membrane are coupled both ways: the growing basal surface stretches the membrane and the membrane's stress pushes back on the cells as a basal tension. On the reduced-order (effective) BM path the bidirectional loop runs end-to-end, the three coupling controls (two-way / one-way / uncoupled) behave exactly as the mechanism demands, and subcycling the BM relaxation converges.
+# **Claim.** The epithelium and its collagen basement membrane are coupled both ways: the growing basal surface stretches the membrane and the membrane's stress pushes back on the cells as a basal tension. On the reduced-order (effective) BM path the bidirectional loop runs end-to-end, the three coupling controls (two-way / one-way / uncoupled) behave exactly as the mechanism demands, and subcycling the BM relaxation converges. The EXPLICIT-LAMMPS-collagen-BM path now also runs the real bidirectional loop with correct feedback directionality (two-way feeds a non-zero basal tension back, one-way does not), closing E4's main gap. It reveals two honest departures from the effective-BM path: the explicit collagen carries intrinsic bond-virial stress (so the reduced "uncoupled bm_sigma==0" inert control does not transfer), and its subcycling DIVERGES rather than converges -- so the explicit loop is stable only in a bounded regime (~40 rods, coarse subcycling), and a stable explicit-BM subcycling integrator + gain calibration are the open items.
 
 # ### Parameters
 #
@@ -1729,6 +1729,11 @@ _save_viz('bm-e4-feedback-predictions', 'e4_subcycle_convergence', _render_one('
 # | one-way-has-no-reaction _(primary)_ | kind=threshold field=basal_tension case=one-way | op eq value 0.0 note one-way basal_tension == 0 |
 # | uncoupled-bm-inert _(primary)_ | kind=threshold field=bm_sigma case=uncoupled | op eq value 0.0 note uncoupled bm_sigma == 0 |
 # | bm-subcycling-converges _(primary)_ | kind=convergence field=bm_sigma versus=bm_substeps over=[1, 2, 4, 8] | op lt note |s8-s4| 0.017 < |s2-s1| 0.066 (refinement error shrinks) |
+# | explicit-loop-runs-bounded _(primary)_ | kind=trajectory field=bm_sigma case=two-way-explicit | op bounded note bm_sigma stays O(1-40), no blow-up at 40 rods/16 steps (120 rods/24 steps diverges) |
+# | explicit-two-way-feeds-back-reaction _(primary)_ | kind=threshold field=basal_tension case=two-way-explicit | op ne value 0.0 note two-way basal_tension != 0 (e.g. +0.106) |
+# | explicit-one-way-has-no-reaction _(primary)_ | kind=threshold field=basal_tension case=one-way-explicit | op eq value 0.0 note one-way basal_tension == 0 |
+# | explicit-bm-carries-intrinsic-stress _(secondary)_ | kind=threshold field=bm_sigma case=uncoupled-explicit | op ne value 0.0 note uncoupled bm_sigma != 0 (intrinsic collagen stress, observed +1.63) |
+# | explicit-subcycling-converges _(primary)_ | kind=convergence field=bm_sigma versus=bm_substeps over=[1, 2, 4, 8] | op lt note expected |s8-s4| < |s2-s1|; OBSERVED divergence (1799.6 >> 3.1) -> FAIL |
 
 # ## Open decisions
 # - Perlecan direction (R6): RESOLVED — verified against the paper (perlecan promotes collagen IV bond breakage; overexpression ~1 h, control ~20 h, knockdown ~500 h lifetime) and the perlecan_factor mapping was inverted so R6 reproduces Fig 7. Left here as a sanity-check item for the expert to confirm the reading.

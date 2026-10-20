@@ -531,7 +531,7 @@
 
     <div class="ctr-block">
       <h2 class="overview-label ctr-h">Claim</h2>
-      <p class="ctr-text">The epithelium and its collagen basement membrane are coupled both ways: the growing basal surface stretches the membrane and the membrane&#39;s stress pushes back on the cells as a basal tension. On the reduced-order (effective) BM path the bidirectional loop runs end-to-end, the three coupling controls (two-way / one-way / uncoupled) behave exactly as the mechanism demands, and subcycling the BM relaxation converges.
+      <p class="ctr-text">The epithelium and its collagen basement membrane are coupled both ways: the growing basal surface stretches the membrane and the membrane&#39;s stress pushes back on the cells as a basal tension. On the reduced-order (effective) BM path the bidirectional loop runs end-to-end, the three coupling controls (two-way / one-way / uncoupled) behave exactly as the mechanism demands, and subcycling the BM relaxation converges. The EXPLICIT-LAMMPS-collagen-BM path now also runs the real bidirectional loop with correct feedback directionality (two-way feeds a non-zero basal tension back, one-way does not), closing E4&#39;s main gap. It reveals two honest departures from the effective-BM path: the explicit collagen carries intrinsic bond-virial stress (so the reduced &#34;uncoupled bm_sigma==0&#34; inert control does not transfer), and its subcycling DIVERGES rather than converges -- so the explicit loop is stable only in a bounded regime (~40 rods, coarse subcycling), and a stable explicit-BM subcycling integrator + gain calibration are the open items.
 </p>
       
     </div>
@@ -555,7 +555,7 @@
       <div class="ctr-meta">
         <div class="ctr-meta-row"><span class="ctr-meta-k">Model</span> <code>bm-e4-feedback-predictions</code><a class="ov-tablink" href="#" onclick="_setStudyTab('compose');return false;">model →</a></div>
         
-        <div class="ctr-meta-row"><span class="ctr-meta-k">Measures</span> <span class="ctr-meta-item">4 behavior tests</span><a class="ov-tablink" href="#" onclick="_setStudyTab('audit');return false;">see Tests →</a></div>
+        <div class="ctr-meta-row"><span class="ctr-meta-k">Measures</span> <span class="ctr-meta-item">9 behavior tests</span><a class="ov-tablink" href="#" onclick="_setStudyTab('audit');return false;">see Tests →</a></div>
         
       </div>
     </div>
@@ -582,15 +582,15 @@
 
     <div class="ctr-block">
       <h2 class="overview-label ctr-h">Result</h2>
-      <p class="ctr-text">The bidirectional coupling runs end-to-end on the reduced-order BM path and the three coupling controls behave exactly as the mechanism requires. In two-way mode the membrane reaction is fed back as a non-zero basal tension (basal_tension -0.2995, bm_sigma -14.976, basal_area 195.93, lumen_pressure 45.19). The one-way control feeds no reaction back (basal_tension exactly 0.0) and the uncoupled control leaves the membrane inert (bm_sigma exactly 0.0), isolating the feedback half of the contract from the forward half and from the null. Subcycling the BM relaxation converges: bm_sigma over bm_substeps {1,2,4,8} = -14.976 / -15.042 / -15.075 / -15.092, with the successive-refinement error shrinking monotonically (|s2-s1| 0.066 -&gt; |s4-s2| 0.033 -&gt; |s8-s4| 0.017), so |s8-s4| 0.017 &lt; |s2-s1| 0.066. This is a v0 single-patch demonstration on the effective-BM path; the explicit-LAMMPS-BM realization and convergence of the full exchange interval are open.
+      <p class="ctr-text">The bidirectional coupling runs end-to-end on the reduced-order BM path and the three coupling controls behave exactly as the mechanism requires. In two-way mode the membrane reaction is fed back as a non-zero basal tension (basal_tension -0.2995, bm_sigma -14.976, basal_area 195.93, lumen_pressure 45.19). The one-way control feeds no reaction back (basal_tension exactly 0.0) and the uncoupled control leaves the membrane inert (bm_sigma exactly 0.0), isolating the feedback half of the contract from the forward half and from the null. Subcycling the BM relaxation converges: bm_sigma over bm_substeps {1,2,4,8} = -14.976 / -15.042 / -15.075 / -15.092, with the successive-refinement error shrinking monotonically (|s2-s1| 0.066 -&gt; |s4-s2| 0.033 -&gt; |s8-s4| 0.017), so |s8-s4| 0.017 &lt; |s2-s1| 0.066. The EXPLICIT-LAMMPS-collagen-BM path now also runs the real bidirectional loop (bm_mode=explicit, 40 rods): the force round-trip is bounded (basal_area 199.0 -&gt; 160.1, lumen_pressure 6.7 -&gt; 78.1) and the feedback directionality holds (two-way basal_tension != 0, one-way == 0 exactly), closing E4&#39;s main gap. But the explicit path is numerically delicate -- the explicit collagen carries intrinsic stress (uncoupled bm_sigma +1.6, NOT 0) and its subcycling DIVERGES (bm_sigma -11.4 / -14.5 / +28.6 / +1828 over substeps 1/2/4/8), stable only at coarse subcycling and ~40 rods (120 rods / 24 steps blows up, bm_sigma ~4.5e4). So the explicit demonstration is scoped to the bounded stable regime; a stable explicit-BM subcycling integrator + gain calibration + the full-exchange-interval convergence remain open. Single deterministic runs, reduced units.
 </p>
       
       
       <div class="ov-metrics">
         
-        <div class="ov-metric ov-metric-pass">
-          <div class="ov-metric-v">bm_sigma substeps 1/2/4/8 = -14.976/-15.042/-15.075/-15.092; |s8-s4| 0.017 &lt; |s2-s1| 0.066</div>
-          <div class="ov-metric-k">bm-subcycling-converges</div>
+        <div class="ov-metric ov-metric-fail">
+          <div class="ov-metric-v">DIVERGES, opposite the reduced-order path: bm_sigma substeps 1/2/4/8 = -11.4/-14.5/+28.6/+1828; successive |delta| GROWS (3.1 -&gt; 43.1 -&gt; 1799.6). The explicit BM is stable only at coarse subcycling (substeps 1-2) + a bounded network (~40 rods)/duration; a stable explicit-BM subcycling integrator is an open item.</div>
+          <div class="ov-metric-k">explicit-subcycling-converges</div>
         </div>
         
       </div>
@@ -731,7 +731,7 @@
         <details class="finding-details">
           <summary class="finding-row">
             <span class="finding-status-glyph">◐</span>
-            <span class="finding-claim finding-statement">The controls and convergence are demonstrated on the reduced-order (effective) BM path (bm_mode=reduced), a v0 single patch; the explicit LAMMPS collagen network and the spatially resolved feedback predictions are not yet exercised.
+            <span class="finding-claim finding-statement">The reduced-order (effective) BM path (bm_mode=reduced) is the clean, fully-converged realization; the explicit-LAMMPS-BM path is now also exercised (see F4/F5) but is numerically delicate. The spatially resolved E4 feedback predictions (turnover/heterogeneity/confinement/adhesion/failure) remain a v0 single patch, not yet simulated.
 </span>
             
             <span class="finding-chip">via <code>uncoupled-bm-inert</code></span>
@@ -746,7 +746,7 @@
             
             
             <div class="finding-evidence">
-              <strong>observed:</strong> all runs use bm_mode=reduced; the LAMMPS explicit-BM path is not on this evidence pass · 
+              <strong>observed:</strong> reduced path: clean controls + convergence; explicit path: demonstrated but delicate (F4/F5); spatial predictions not yet run · 
               
               via test <a href="#bt-uncoupled-bm-inert" onclick="_gotoStudyTab('audit','bt-uncoupled-bm-inert');return false;"><code>uncoupled-bm-inert</code></a> · 
               in run <a href="#run-e4-coupling-controls"><code>e4-coupling-controls</code></a>
@@ -769,7 +769,126 @@
             
             
             
-            <div class="finding-next"><strong>→ Next:</strong> stand up the explicit-LAMMPS-BM realization and the spatial E4 feedback predictions</div>
+            <div class="finding-next"><strong>→ Next:</strong> stand up the spatially resolved E4 feedback predictions; stabilize + calibrate the explicit-BM path (F5)</div>
+          </div>
+        </details>
+      </div>
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      <div class="finding-card finding-kind-computational finding-status-confirms">
+        <details class="finding-details">
+          <summary class="finding-row">
+            <span class="finding-status-glyph">✓</span>
+            <span class="finding-claim finding-statement">The EXPLICIT-LAMMPS-collagen-BM path now runs the real bidirectional loop end-to-end: the epithelial basal shell stretches a real LAMMPS collagen IV patch and its bond-virial stress is fed back as a basal tension. Over 16 steps at 40 rods the round-trip is bounded (basal area 199.0 -&gt; 160.1, lumen pressure 6.7 -&gt; 78.1), and the feedback DIRECTIONALITY control holds: two-way basal_tension != 0 (e.g. +0.106), one-way basal_tension == 0 exactly. This closes E4&#39;s main open gap (the recorded controls were previously reduced-order only).
+</span>
+            
+            <span class="finding-chip">via <code>explicit-two-way-feeds-back-reaction</code></span>
+            
+          </summary>
+          <div class="finding-drawer">
+            <div class="finding-header">
+              <span class="finding-id">F4-explicit-bm-loop-demonstrated</span>
+              <span class="finding-kind">computational</span>
+              <span class="finding-status-text">confirms literature</span>
+            </div>
+            
+            
+            <div class="finding-evidence">
+              <strong>observed:</strong> explicit two-way basal_tension != 0; one-way == 0; loop bounded at 40 rods/16 steps · 
+              
+              via test <a href="#bt-explicit-two-way-feeds-back-reaction" onclick="_gotoStudyTab('audit','bt-explicit-two-way-feeds-back-reaction');return false;"><code>explicit-two-way-feeds-back-reaction</code></a> · 
+              in run <a href="#run-e4-explicit-coupling-controls"><code>e4-explicit-coupling-controls</code></a>
+              
+              
+            </div>
+            
+            
+            <div class="finding-traceability" style="font-size:0.84em;color:#475569;padding:4px 10px;margin:4px 0">
+              
+              
+              runs: <a href="#run-e4-explicit-coupling-controls"><code>e4-explicit-coupling-controls</code></a>
+            </div>
+            
+            
+            
+            <div class="pass_if-band muted small" style="font-size:0.82em;padding:2px 10px">judged against <code>pass_if: ne 0.0</code></div>
+            
+            
+            
+            <div class="finding-expected">
+              <strong>expected:</strong> a real collagen BM in the loop pushes back on the epithelium (bidirectional feedback), as on the effective-BM path · 
+              
+              cites: <a class="ov-cite" href="#sref-barrientos2026cellshape" title="Basement membrane turnover controls cell shape">Barrientos 2026</a>
+            </div>
+            
+            
+            <div class="finding-explanation"><em>Why:</em> With bm_mode=explicit the coupling drives a persistent CollagenNetworkProcess instead of an analytic relaxation; coupling_mode still gates the reaction half, so one-way zeroes the fed- back tension while two-way carries the real network stress.
+</div>
+            
+            <div class="finding-next"><strong>→ Next:</strong> stabilize the explicit subcycling + calibrate the explicit-path gains (F5)</div>
+          </div>
+        </details>
+      </div>
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      <div class="finding-card finding-kind-computational finding-status-partial">
+        <details class="finding-details">
+          <summary class="finding-row">
+            <span class="finding-status-glyph">◐</span>
+            <span class="finding-claim finding-statement">The explicit path does NOT inherit two reduced-path behaviors. (1) Subcycle convergence FAILS/inverts: bm_sigma over bm_substeps {1,2,4,8} = -11.4/-14.5/+28.6/+1828, the successive-refinement error GROWS (3.1 -&gt; 43.1 -&gt; 1799.6) -- more subcycling destabilizes the explicit BM rather than converging it. (2) The &#34;uncoupled bm_sigma==0&#34; inert control does not transfer: the explicit collagen patch carries intrinsic bond-virial stress (uncoupled bm_sigma +1.6 at 40 rods). The explicit loop is stable only at coarse subcycling (substeps 1-2) and a bounded network (~40 rods)/duration; 120 rods/24 steps diverges (bm_sigma ~4.5e4). A stable explicit-BM subcycling integrator + explicit-path gain calibration are the open items.
+</span>
+            
+            <span class="finding-chip">via <code>explicit-subcycling-converges</code></span>
+            
+          </summary>
+          <div class="finding-drawer">
+            <div class="finding-header">
+              <span class="finding-id">F5-explicit-path-numerically-delicate</span>
+              <span class="finding-kind">computational</span>
+              <span class="finding-status-text">partial literature</span>
+            </div>
+            
+            
+            <div class="finding-evidence">
+              <strong>observed:</strong> explicit subcycle sweep DIVERGES (1799.6 &gt;&gt; 3.1); uncoupled bm_sigma +1.6 != 0; 120 rods blows up · 
+              
+              via test <a href="#bt-explicit-subcycling-converges" onclick="_gotoStudyTab('audit','bt-explicit-subcycling-converges');return false;"><code>explicit-subcycling-converges</code></a> · 
+              in run <a href="#run-e4-explicit-bm-subcycling-sweep"><code>e4-explicit-bm-subcycling-sweep</code></a>
+              
+              
+            </div>
+            
+            
+            <div class="finding-traceability" style="font-size:0.84em;color:#475569;padding:4px 10px;margin:4px 0">
+              
+              
+              runs: <a href="#run-e4-explicit-bm-subcycling-sweep"><code>e4-explicit-bm-subcycling-sweep</code></a>, <a href="#run-e4-explicit-coupling-controls"><code>e4-explicit-coupling-controls</code></a>
+            </div>
+            
+            
+            
+            <div class="pass_if-band muted small" style="font-size:0.82em;padding:2px 10px">judged against <code>pass_if: op: lt · note: expected |s8-s4| &lt; |s2-s1|; OBSERVED divergence (1799.6 &gt;&gt; 3.1) -&gt; FAIL</code></div>
+            
+            
+            
+            <div class="finding-explanation"><em>Why:</em> The explicit collagen BM is a stochastic LAMMPS relaxation with its own intrinsic stress and dynamics, not a smooth first-order ODE like the reduced BM, so re-running it more finely per coupling step amplifies rather than refines, and its undriven state is not stress-free.
+</div>
+            
+            <div class="finding-next"><strong>→ Next:</strong> design a stable explicit-BM subcycling scheme (or an implicit exchange) and recalibrate strain_gain/tension_gain for the explicit stress scale; route a denser multiseed sweep to the mini once stable</div>
           </div>
         </details>
       </div>
@@ -784,7 +903,7 @@
         
         <div class="ctr-meta-row"><span class="ctr-meta-k">Confidence</span>
           <span class="ctr-badge ctr-badge-accepted">Accepted</span>
-          <span class="ctr-vch">biology&nbsp;PASS</span>
+          <span class="ctr-vch">biology&nbsp;MIXED</span>
           <span class="ctr-vch">insight&nbsp;POSITIVE</span>
         </div>
         
@@ -1557,6 +1676,206 @@ pass_if: {"note": "|s8-s4| 0.017 \u003c |s2-s1| 0.066 (refinement error shrinks)
       
     </li>
     
+    
+    
+    
+    
+    
+    
+    
+    <li class="expected-behavior-item" id="bt-explicit-loop-runs-bounded"
+        data-test-kind="behavioral"
+        
+        data-pytest-node="explicit-loop-runs-bounded"
+        data-classification="primary"
+        data-result="pending"
+        style="margin: 0 0 10px 0; padding: 10px 12px; border-left: 4px solid #10b981; background: #f8fafc; border-radius: 4px;">
+      
+        
+      <div style="display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;">
+        <span class="bt-result" style="font-size: 0.75em; font-family: monospace; padding: 2px 8px; border-radius: 9999px; background: #f1f5f9; color: #475569">⏳ pending</span>
+        <span class="classification-pill classification-primary">primary</span>
+        <strong style="font-size: 0.9em;">explicit-loop-runs-bounded</strong>
+        
+        <span class="muted" style="font-size:0.78em">requires: <code>e4-explicit-coupling-controls</code></span>
+        
+      </div>
+      <div style="margin-top: 6px; font-size: 0.95em;">With bm_mode=explicit a REAL LAMMPS collagen IV patch sits in the bidirectional loop: the epithelial basal shell stretches the collagen patch and its bond-virial stress is read back. The force round-trip runs end-to-end and stays bounded in the stable regime (40 rods, 16 steps, coarse subcycling).
+</div>
+      
+      
+      <details style="margin-top: 6px; font-size: 0.82em;">
+        <summary class="muted" style="cursor: pointer;">Assertion</summary>
+        
+        <pre style="background:#fff; padding:8px; margin:4px 0 0 0; border:1px solid #e2e8f0; border-radius:3px; overflow-x:auto;">measure: {"case": "two-way-explicit", "field": "bm_sigma", "kind": "trajectory"}
+pass_if: {"note": "bm_sigma stays O(1-40), no blow-up at 40 rods/16 steps (120 rods/24 steps diverges)", "op": "bounded"}</pre>
+      </details>
+      
+      
+      
+      
+    </li>
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="expected-behavior-item" id="bt-explicit-two-way-feeds-back-reaction"
+        data-test-kind="behavioral"
+        
+        data-pytest-node="explicit-two-way-feeds-back-reaction"
+        data-classification="primary"
+        data-result="pending"
+        style="margin: 0 0 10px 0; padding: 10px 12px; border-left: 4px solid #10b981; background: #f8fafc; border-radius: 4px;">
+      
+        
+      <div style="display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;">
+        <span class="bt-result" style="font-size: 0.75em; font-family: monospace; padding: 2px 8px; border-radius: 9999px; background: #f1f5f9; color: #475569">⏳ pending</span>
+        <span class="classification-pill classification-primary">primary</span>
+        <strong style="font-size: 0.9em;">explicit-two-way-feeds-back-reaction</strong>
+        
+        <span class="muted" style="font-size:0.78em">requires: <code>e4-explicit-coupling-controls</code></span>
+        
+      </div>
+      <div style="margin-top: 6px; font-size: 0.95em;">On the explicit path the BM reaction is fed back as a non-zero basal tension in two-way mode -- the real collagen stress drives the epithelium.
+</div>
+      
+      
+      <details style="margin-top: 6px; font-size: 0.82em;">
+        <summary class="muted" style="cursor: pointer;">Assertion</summary>
+        
+        <pre style="background:#fff; padding:8px; margin:4px 0 0 0; border:1px solid #e2e8f0; border-radius:3px; overflow-x:auto;">measure: {"case": "two-way-explicit", "field": "basal_tension", "kind": "threshold"}
+pass_if: {"note": "two-way basal_tension != 0 (e.g. +0.106)", "op": "ne", "value": 0.0}</pre>
+      </details>
+      
+      
+      
+      
+    </li>
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="expected-behavior-item" id="bt-explicit-one-way-has-no-reaction"
+        data-test-kind="behavioral"
+        
+        data-pytest-node="explicit-one-way-has-no-reaction"
+        data-classification="primary"
+        data-result="pending"
+        style="margin: 0 0 10px 0; padding: 10px 12px; border-left: 4px solid #10b981; background: #f8fafc; border-radius: 4px;">
+      
+        
+      <div style="display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;">
+        <span class="bt-result" style="font-size: 0.75em; font-family: monospace; padding: 2px 8px; border-radius: 9999px; background: #f1f5f9; color: #475569">⏳ pending</span>
+        <span class="classification-pill classification-primary">primary</span>
+        <strong style="font-size: 0.9em;">explicit-one-way-has-no-reaction</strong>
+        
+        <span class="muted" style="font-size:0.78em">requires: <code>e4-explicit-coupling-controls</code></span>
+        
+      </div>
+      <div style="margin-top: 6px; font-size: 0.95em;">One-way mode on the explicit path feeds no reaction back -- basal tension exactly zero, isolating the forward drive (same structural control as the reduced path).
+</div>
+      
+      
+      <details style="margin-top: 6px; font-size: 0.82em;">
+        <summary class="muted" style="cursor: pointer;">Assertion</summary>
+        
+        <pre style="background:#fff; padding:8px; margin:4px 0 0 0; border:1px solid #e2e8f0; border-radius:3px; overflow-x:auto;">measure: {"case": "one-way-explicit", "field": "basal_tension", "kind": "threshold"}
+pass_if: {"note": "one-way basal_tension == 0", "op": "eq", "value": 0.0}</pre>
+      </details>
+      
+      
+      
+      
+    </li>
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="expected-behavior-item" id="bt-explicit-bm-carries-intrinsic-stress"
+        data-test-kind="behavioral"
+        
+        data-pytest-node="explicit-bm-carries-intrinsic-stress"
+        data-classification="secondary"
+        data-result="pending"
+        style="margin: 0 0 10px 0; padding: 10px 12px; border-left: 4px solid #cbd5e1; background: #f8fafc; border-radius: 4px;">
+      
+        
+      <div style="display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;">
+        <span class="bt-result" style="font-size: 0.75em; font-family: monospace; padding: 2px 8px; border-radius: 9999px; background: #f1f5f9; color: #475569">⏳ pending</span>
+        <span class="classification-pill classification-secondary">secondary</span>
+        <strong style="font-size: 0.9em;">explicit-bm-carries-intrinsic-stress</strong>
+        
+        <span class="muted" style="font-size:0.78em">requires: <code>e4-explicit-coupling-controls</code></span>
+        
+      </div>
+      <div style="margin-top: 6px; font-size: 0.95em;">HONEST DEPARTURE from the reduced path: the explicit collagen BM carries its own intrinsic (thermal / assembly) bond-virial stress, so the uncoupled BM is NOT at exactly zero stress -- the reduced-path &#34;uncoupled bm_sigma == 0&#34; inert control does not transfer. This is a true property of the explicit BM, not a loop failure.
+</div>
+      
+      
+      <details style="margin-top: 6px; font-size: 0.82em;">
+        <summary class="muted" style="cursor: pointer;">Assertion</summary>
+        
+        <pre style="background:#fff; padding:8px; margin:4px 0 0 0; border:1px solid #e2e8f0; border-radius:3px; overflow-x:auto;">measure: {"case": "uncoupled-explicit", "field": "bm_sigma", "kind": "threshold"}
+pass_if: {"note": "uncoupled bm_sigma != 0 (intrinsic collagen stress, observed +1.63)", "op": "ne", "value": 0.0}</pre>
+      </details>
+      
+      
+      
+      
+    </li>
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="expected-behavior-item" id="bt-explicit-subcycling-converges"
+        data-test-kind="behavioral"
+        
+        data-pytest-node="explicit-subcycling-converges"
+        data-classification="primary"
+        data-result="pending"
+        style="margin: 0 0 10px 0; padding: 10px 12px; border-left: 4px solid #10b981; background: #f8fafc; border-radius: 4px;">
+      
+        
+      <div style="display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;">
+        <span class="bt-result" style="font-size: 0.75em; font-family: monospace; padding: 2px 8px; border-radius: 9999px; background: #f1f5f9; color: #475569">⏳ pending</span>
+        <span class="classification-pill classification-primary">primary</span>
+        <strong style="font-size: 0.9em;">explicit-subcycling-converges</strong>
+        
+        <span class="muted" style="font-size:0.78em">requires: <code>e4-explicit-bm-subcycling-sweep</code></span>
+        
+      </div>
+      <div style="margin-top: 6px; font-size: 0.95em;">CONVERGENCE CHECK on the explicit path -- and it FAILS: unlike the reduced-order BM, subcycling the explicit LAMMPS BM more finely destabilizes it (the successive-refinement error GROWS instead of shrinking). Recorded as a flagged departure, not a pass.
+</div>
+      
+      
+      <details style="margin-top: 6px; font-size: 0.82em;">
+        <summary class="muted" style="cursor: pointer;">Assertion</summary>
+        
+        <pre style="background:#fff; padding:8px; margin:4px 0 0 0; border:1px solid #e2e8f0; border-radius:3px; overflow-x:auto;">measure: {"field": "bm_sigma", "kind": "convergence", "over": [1, 2, 4, 8], "versus": "bm_substeps"}
+pass_if: {"note": "expected |s8-s4| \u003c |s2-s1|; OBSERVED divergence (1799.6 \u003e\u003e 3.1) -\u003e FAIL", "op": "lt"}</pre>
+      </details>
+      
+      
+      
+      
+    </li>
+    
   </ul>
   
   </div>
@@ -1683,21 +2002,21 @@ pass_if: {"note": "|s8-s4| 0.017 \u003c |s2-s1| 0.066 (refinement error shrinks)
           <span class="narrative-label">Regression basis</span>
           <textarea class="narrative-input narrative-textarea" rows="2"
                     data-narrative-path="conclusion_verdicts.regression_compatibility.basis"
-                    placeholder="e.g. Builds cleanly; tests pass; pyproject deps unchanged.">The coupled_lumenoid composite is registered and the bidirectional coupling runs cleanly on the reduced-order BM; the behavior-test contracts in tests/test_p3_coupling_controls.py pass deterministically.
+                    placeholder="e.g. Builds cleanly; tests pass; pyproject deps unchanged.">The coupled_lumenoid composite is registered and the bidirectional coupling runs cleanly on BOTH the reduced-order BM and (now) the explicit LAMMPS collagen BM; the reduced-path behavior-test contracts in tests/test_p3_coupling_controls.py pass deterministically, and the explicit path runs bounded in its stable regime (40 rods).
 </textarea>
         </label>
         <label class="narrative-row">
           <span class="narrative-label">Empirical validation</span>
           <span class="narrative-input verdict-badge-computed" data-verdict-track="biological_validation"
                 title="Computed from the gate evaluator (read-only)"
-                style="display:inline-block;padding:2px 12px;border-radius:9999px;font-weight:700;font-size:0.85em;background:#f1f5f9;color:#475569">PASS</span>
+                style="display:inline-block;padding:2px 12px;border-radius:9999px;font-weight:700;font-size:0.85em;background:#f1f5f9;color:#475569">MIXED</span>
           <span class="muted small" style="margin-left:6px">computed from gate evaluator</span>
         </label>
         <label class="narrative-row narrative-row-wide">
           <span class="narrative-label">Empirical basis</span>
           <textarea class="narrative-input narrative-textarea" rows="2"
                     data-narrative-path="conclusion_verdicts.biological_validation.basis"
-                    placeholder="e.g. atp_fraction = 0.997, outside Boesen 2024 band [0.2, 0.5].">The bidirectional coupling runs and the three coupling controls behave correctly -- the growing epithelium&#39;s membrane pushes back as a non-zero basal tension under two-way coupling, absent under one-way/uncoupled -- and the reduced-order BM subcycling converges.
+                    placeholder="e.g. atp_fraction = 0.997, outside Boesen 2024 band [0.2, 0.5].">Reduced-order path: PASS -- the three coupling controls behave correctly and the BM subcycling converges. Explicit-LAMMPS-BM path: the real bidirectional loop runs with correct feedback DIRECTIONALITY (two-way basal_tension != 0, one-way == 0), closing E4&#39;s main gap, BUT two reduced-path behaviors do not transfer -- the explicit collagen carries intrinsic stress (uncoupled bm_sigma != 0) and its subcycling DIVERGES (stable only at coarse subcycling / ~40 rods). The explicit demonstration is therefore scoped to the bounded stable regime; stability + gain calibration are open.
 </textarea>
         </label>
         <label class="narrative-row">
@@ -1711,7 +2030,7 @@ pass_if: {"note": "|s8-s4| 0.017 \u003c |s2-s1| 0.066 (refinement error shrinks)
           <span class="narrative-label">Explanatory basis</span>
           <textarea class="narrative-input narrative-textarea" rows="2"
                     data-narrative-path="conclusion_verdicts.explanatory_gain.basis"
-                    placeholder="e.g. Three findings worth keeping; design_pivot_required closed.">Establishes the epithelium&lt;-&gt;BM coupling as a well-posed, control-separable bidirectional mechanical contract with a convergent reduced-order BM integrator -- the scaffold the E4 feedback predictions are read against -- and scopes the explicit-LAMMPS-BM realization and full-exchange-interval convergence as the open items.
+                    placeholder="e.g. Three findings worth keeping; design_pivot_required closed.">Establishes the epithelium&lt;-&gt;BM coupling as a control-separable bidirectional contract and now puts the REAL explicit LAMMPS collagen BM in the loop -- and, importantly, shows the explicit path is numerically delicate in ways the reduced path hides (intrinsic BM stress; divergent subcycling), pinpointing a stable explicit-BM integrator + gain calibration as the concrete next step rather than assuming the reduced-path result carries over.
 </textarea>
         </label>
       </div>
@@ -1728,7 +2047,7 @@ pass_if: {"note": "|s8-s4| 0.017 \u003c |s2-s1| 0.066 (refinement error shrinks)
       <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
         <span class="gate-status-passed" style="padding:2px 12px;border-radius:9999px;font-weight:700;font-size:0.85em">passed</span>
         <span class="muted small">evaluated by code</span>
-        <span class="muted small">3/4 passed</span>
+        <span class="muted small">3/9 passed</span>
       </div>
       
     </div>
@@ -1815,7 +2134,7 @@ pass_if: {"note": "|s8-s4| 0.017 \u003c |s2-s1| 0.066 (refinement error shrinks)
       <h3 class="overview-label">Limitations</h3>
       <p class="muted" style="margin:0 0 6px 0;font-size:0.85em">What this study explicitly does NOT validate (prevents overclaim).</p>
       <ul style="margin:0 0 0 18px;padding:0;font-size:0.93em">
-        <li style="margin:2px 0">Reduced-order (effective) BM only: the explicit LAMMPS collagen network is NOT exercised on this path (bm_mode=reduced); the controls and convergence are demonstrated on the effective-BM realization.</li><li style="margin:2px 0">v0 single patch: one closed epithelial patch, not a spatially resolved lumenoid; the feedback predictions (turnover/heterogeneity/confinement/adhesion/failure) are framed here but not yet simulated.</li><li style="margin:2px 0">Convergence is of the reduced-order BM subcycling only; convergence of the FULL epithelium&lt;-&gt;BM exchange interval (the explicit coupling cadence) is an open item.</li><li style="margin:2px 0">Reduced units throughout; no calibration to microns/pascals/hours. The controls are exact-zero / inequality contracts, not calibrated literature bands.</li><li style="margin:2px 0">basal_tension and bm_sigma are negative (compressive sign) in two-way; the contract checks non-zero / exact-zero and convergence, not the sign or absolute magnitude against the paper.</li>
+        <li style="margin:2px 0">Reduced-order (effective) BM only: the explicit LAMMPS collagen network is NOT exercised on this path (bm_mode=reduced); the controls and convergence are demonstrated on the effective-BM realization.</li><li style="margin:2px 0">v0 single patch: one closed epithelial patch, not a spatially resolved lumenoid; the feedback predictions (turnover/heterogeneity/confinement/adhesion/failure) are framed here but not yet simulated.</li><li style="margin:2px 0">Convergence is of the reduced-order BM subcycling only; convergence of the FULL epithelium&lt;-&gt;BM exchange interval (the explicit coupling cadence) is an open item.</li><li style="margin:2px 0">Reduced units throughout; no calibration to microns/pascals/hours. The controls are exact-zero / inequality contracts, not calibrated literature bands.</li><li style="margin:2px 0">basal_tension and bm_sigma are negative (compressive sign) in two-way; the contract checks non-zero / exact-zero and convergence, not the sign or absolute magnitude against the paper.</li><li style="margin:2px 0">EXPLICIT path is numerically delicate: the real LAMMPS collagen BM loop is stable only at coarse subcycling (bm_substeps 1-2) and a bounded network (~40 rods) / duration; 120 rods over 24 steps DIVERGES (bm_sigma ~4.5e4). The reduced-path coupling gains (strain_gain 20, tension_gain 0.02) sit near the explicit path&#39;s stability edge -- gain calibration for the explicit BM is an open item.</li><li style="margin:2px 0">EXPLICIT subcycle convergence FAILS (diverges), unlike the reduced-order BM: a stable explicit-BM subcycling integrator is the key open item before the explicit path can be subcycled for accuracy.</li><li style="margin:2px 0">EXPLICIT uncoupled control: the explicit collagen patch carries intrinsic (thermal/assembly) bond-virial stress (~+1.6 at 40 rods), so the reduced-path &#39;uncoupled bm_sigma==0&#39; inert control does not transfer; at this small network the explicit bm_sigma is also noisy (O(1)). The robust explicit controls are the feedback DIRECTIONALITY (two-way != 0, one-way == 0).</li><li style="margin:2px 0">EXPLICIT run was done LOCALLY, not on the mini: the coupled loop is light (&lt;1 s/run) and a denser run diverges, so the mini&#39;s heavy-compute capability is not useful here (and the mini has no viva_lumenoid venv yet). Numbers are single deterministic runs (fixed internal collagen seed; no seed exposed on the composite).</li><li style="margin:2px 0">Exchange-cadence convergence (the epithelium&lt;-&gt;BM macro-step interval) is STILL not wired on either path -- only the within-step BM subcycling was probed.</li>
       </ul>
     </div>
     
@@ -1964,7 +2283,7 @@ pass_if: {"note": "|s8-s4| 0.017 \u003c |s2-s1| 0.066 (refinement error shrinks)
 </section>
 
 </main>
-<script>window.__DASH_CONFIG__ = { mode: "snapshot", interactiveUrl: "https://github.com/vivarium-collective/viva-lumenoid", basePath: "/viva-lumenoid/dashboard", inputsDownloadBase: "https://github.com/vivarium-collective/viva-lumenoid/raw/main", provenance: {"repo_slug": "vivarium-collective/viva-lumenoid", "repo_url": "https://github.com/vivarium-collective/viva-lumenoid", "commit": "155091d564cc31a3bd5649302955bba3bab64687", "commit_url": "https://github.com/vivarium-collective/viva-lumenoid/commit/155091d564cc31a3bd5649302955bba3bab64687", "branch": "main", "lockfile": "uv.lock@23a8fcc2b0be", "generated_at": "2026-10-20 14:17 UTC"} };</script>
+<script>window.__DASH_CONFIG__ = { mode: "snapshot", interactiveUrl: "https://github.com/vivarium-collective/viva-lumenoid", basePath: "/viva-lumenoid/dashboard", inputsDownloadBase: "https://github.com/vivarium-collective/viva-lumenoid/raw/main", provenance: {"repo_slug": "vivarium-collective/viva-lumenoid", "repo_url": "https://github.com/vivarium-collective/viva-lumenoid", "commit": "999511575d4d5df2a8956aa2c8792e27c67ebf8e", "commit_url": "https://github.com/vivarium-collective/viva-lumenoid/commit/999511575d4d5df2a8956aa2c8792e27c67ebf8e", "branch": "main", "lockfile": "uv.lock@23a8fcc2b0be", "generated_at": "2026-10-20 14:21 UTC"} };</script>
 <script src="/viva-lumenoid/dashboard/assets/data-source.js"></script>
 <script src="/viva-lumenoid/dashboard/assets/toast.js"></script>
 <script>
