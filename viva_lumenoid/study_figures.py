@@ -316,13 +316,109 @@ def e4_feedback_schematic():
 
 
 # study slug -> figure function (single source for the generator + tests)
+def driving_schema_figure():
+    """The investigation's DRIVING SCHEMA — reproduces the Barrientos et al. (Cell
+    2026) three-model framework and maps each box to the studies that realize it:
+    Collagen IV turnover (timer) -> BM relaxation (network) -> cell shape (tissue
+    mechanics), closed by the measured anchors. A conceptual framework diagram."""
+    go = _go()
+    fig = go.Figure()
+    fig.update_layout(
+        title="Driving schema — collagen IV turnover → BM relaxation → cell shape "
+              "(Barrientos et al., Cell 2026)",
+        template="plotly_white", height=700,
+        xaxis=dict(range=(0, 10), visible=False), yaxis=dict(range=(0, 10), visible=False),
+        margin=dict(l=20, r=20, t=90, b=40), showlegend=False)
+    # left column: the three models (mapped to our studies)
+    _box(fig, 0.3, 7.0, 3.7, 9.5, "<b>Tissue Mechanics Model</b><br>cells on a basement membrane"
+         "<br><i>our: R1 prism · R4/R5 tyssue</i>", BLUE)
+    _box(fig, 0.3, 3.75, 3.7, 6.25, "<b>Collagen IV Network Model</b><br>two-bead rods + NC1/7S bonds"
+         "<br><i>our: R2/R3 collagen network</i>", ORANGE)
+    _box(fig, 0.3, 0.5, 3.7, 3.0, "<b>Collagen IV Timer Model</b><br>molecular age / turnover"
+         "<br><i>our: R6 turnover pipeline</i>", GREEN)
+    # right column: the relationships
+    _box(fig, 5.3, 7.0, 9.6, 9.5, "Cell Shape  ~  BM Relaxation", BLUE)
+    _box(fig, 5.3, 3.75, 9.6, 6.25, "BM Relaxation  ∝  Collagen IV Turnover", ORANGE)
+    _box(fig, 5.3, 0.5, 9.6, 3.0, "Collagen IV Turnover", GREEN)
+    # model -> relationship
+    for y in (8.25, 5.0, 1.75):
+        _arrow(fig, 3.7, y, 5.3, y)
+    # chain up the right: turnover -> relaxation -> cell shape
+    _arrow(fig, 7.45, 3.0, 7.45, 3.75)
+    _arrow(fig, 7.45, 6.25, 7.45, 7.0)
+    # experimental anchors (as in the paper)
+    fig.add_annotation(x=7.45, y=9.85, text="<i>Experimentally measured: Cell Shape</i>",
+                       showarrow=False, font=dict(size=11, color=BLUE))
+    fig.add_annotation(x=7.45, y=0.15, text="<i>Measured in vivo: Collagen IV Fluorescent Timer</i>",
+                       showarrow=False, font=dict(size=11, color=GREEN))
+    return fig
+
+
+def r1_regime_figure():
+    """R1 — Fig 1G reproduction (REAL): final cell height over BM stiffness x
+    relaxation/doubling, from the reduced-order prism model. The confinement regime
+    topology emerges — tall (confined) in the stiff, slowly-relaxing corner."""
+    go = _go()
+    from viva_lumenoid.tissue_prism import TissuePrismProcess
+    from bigraph_schema import allocate_core
+    stiff = np.geomspace(0.1, 10.0, 12)
+    relax = np.geomspace(0.5, 50.0, 12)   # doubling fixed at 5 -> y is relaxation/doubling
+    H = np.zeros((len(relax), len(stiff)))
+    for i, tau in enumerate(relax):
+        for j, k in enumerate(stiff):
+            p = TissuePrismProcess(config={"bm_stiffness": float(k), "bm_relaxation": float(tau),
+                                           "doubling_time": 5.0}, core=allocate_core())
+            o = {}
+            for _ in range(40):
+                o = p.update({}, 0.2)
+            H[i, j] = o["cell_height"]
+    fig = go.Figure(data=go.Heatmap(z=H, x=stiff, y=relax / 5.0, colorscale="Viridis",
+                                    colorbar=dict(title="cell<br>height")))
+    fig.update_layout(
+        title="R1 — confinement regimes: cell height vs BM stiffness × relaxation/doubling "
+              "(Fig 1G reproduction)",
+        template="plotly_white", height=560,
+        xaxis=dict(title="BM stiffness", type="log"),
+        yaxis=dict(title="BM relaxation / doubling time", type="log"))
+    return fig
+
+
+def r6_intervention_figure():
+    """R6 — Fig 7 reproduction (REAL): predicted cell height per perlecan/growth
+    intervention from the turnover->shape pipeline (inferred relaxation annotated).
+    Reproduces the intervention rank-order: perlecan gain -> taller > control > loss."""
+    go = _go()
+    from viva_lumenoid.turnover_shape import TurnoverShapeProcess
+    from bigraph_schema import allocate_core
+    conds = [("perlecan loss", 0.3, 5.0), ("control", 1.0, 5.0),
+             ("perlecan gain", 2.0, 5.0), ("fast growth", 1.0, 2.5)]
+    names, heights, relax = [], [], []
+    for nm, perl, dbl in conds:
+        p = TurnoverShapeProcess(config={"collagen_lifetime": 5.0, "perlecan_factor": perl,
+                                         "doubling_time": dbl}, core=allocate_core())
+        o = {}
+        for _ in range(40):
+            o = p.update({}, 0.2)
+        names.append(nm); heights.append(o["cell_height"]); relax.append(o["inferred_relaxation"])
+    fig = go.Figure()
+    fig.add_bar(x=names, y=heights, marker_color=[GREEN, BLUE, RED, GOLD])
+    for i, r in enumerate(relax):
+        fig.add_annotation(x=names[i], y=heights[i], text=f"τ={r:.1f}", showarrow=False,
+                           yshift=12, font=dict(size=10, color="#444"))
+    fig.update_layout(
+        title="R6 — intervention ordering: predicted cell height by condition "
+              "(Fig 7 reproduction; τ = inferred BM relaxation)",
+        template="plotly_white", height=520, yaxis=dict(title="predicted cell height"))
+    return fig
+
+
 STUDY_FIGURES = {
-    "bm-r1-published-tissue-baseline": ("r1_regime", r1_regime_schematic, "schematic"),
+    "bm-r1-published-tissue-baseline": ("r1_regime", r1_regime_figure, "data"),
     "bm-r2-collagen-network-rheology": ("r2_rheology", r2_rheology_figure, "data"),
     "bm-r3-network-expansion-supply": ("r3_supply", r3_supply_figure, "data"),
     "bm-r4-coupled-2d-epithelium": ("r4_sheet", r4_sheet_figure, "data"),
     "bm-r5-explicit-3d-confinement": ("r5_monolayer", r5_monolayer_figure, "data"),
-    "bm-r6-perlecan-growth-perturbations": ("r6_perturbation", r6_perturbation_schematic, "schematic"),
+    "bm-r6-perlecan-growth-perturbations": ("r6_intervention", r6_intervention_figure, "data"),
     "bm-e1-actomyosin-cortex": ("e1_cortical_tension", e1_cortical_tension_figure, "data"),
     "bm-e2-actin-adhesion-collagen": ("e2_force_transfer", e2_force_transfer_schematic, "schematic"),
     "bm-e3-closed-3d-lumenoid": ("e3_lumenoid", e3_lumenoid_figure, "data"),

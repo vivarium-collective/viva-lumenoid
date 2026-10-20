@@ -1,7 +1,7 @@
 schema_version: 3
 name: bm-e2-actin-adhesion-collagen
 status: planned
-title: "E2 — Actin-adhesion-collagen force transfer"
+title: "Actin–adhesion–collagen force transfer"
 kind: extension
 phase: Design
 confidence: Planned

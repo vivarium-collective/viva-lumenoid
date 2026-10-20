@@ -1,5 +1,6 @@
 schema_version: 4
 name: bm-v5-porosity-bundling
+title: "Network porosity & strand bundling"
 created: "2026-09-30"
 status: in-progress
 phase: Evaluate

@@ -1,5 +1,6 @@
 schema_version: 4
 name: bm-v4-junction-bending
+title: "Native junction-bending modulus"
 created: "2026-09-30"
 status: in-progress
 phase: Evaluate

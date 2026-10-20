@@ -105,6 +105,24 @@ description: |
   imported into the workspace as an optional dev sibling engine (R4–R6, E3–E4 build
   on it). The collagen/actin LAMMPS processes run on `viva-lammps`.
 
+  **Driving schema.** The campaign is framed by the Barrientos et al. three-model
+  chain — collagen IV turnover (timer) → BM relaxation (network) → cell shape
+  (tissue mechanics) — reproduced as `viz/driving_schema.html` and mapped to our
+  studies: R6 realizes the timer/turnover model, R2/R3 the collagen network, and
+  R1/R4/R5 the tissue mechanics.
+
+# Investigation-level driving figure (the three-model framework).
+visualizations:
+  - name: driving_schema
+    address: "html:viz/driving_schema.html"
+    config:
+      title: "Driving schema — collagen IV turnover → BM relaxation → cell shape"
+      caption: >
+        The Barrientos et al. (Cell 2026) three-model framework, reproduced and
+        mapped to this campaign's studies: Collagen IV Timer (R6) sets turnover,
+        the Collagen IV Network (R2/R3) makes BM relaxation ∝ turnover, and the
+        Tissue Mechanics model (R1/R4/R5) makes cell shape ~ BM relaxation.
+
 studies:
   - bm-v1-stage1-modulus-remodelling
   - bm-v2-stress-vs-strainrate

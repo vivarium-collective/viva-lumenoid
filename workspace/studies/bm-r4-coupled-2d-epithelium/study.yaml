@@ -1,7 +1,7 @@
 schema_version: 3
 name: bm-r4-coupled-2d-epithelium
 status: planned
-title: "R4 — Coupled 2D epithelium"
+title: "Coupled 2D epithelial sheet"
 kind: reproduction
 phase: Design
 confidence: Planned
