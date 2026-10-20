@@ -564,7 +564,7 @@
 
     <div class="ctr-block">
       <h2 class="overview-label ctr-h">Result</h2>
-      <p class="ctr-text">With the faithful, density-calibrated model (angles active during assembly, areal density 3.0 rods/σ², a 12σ slab), the two numbers a vertex model needs are tabulated against growth rate ε̇ over a seed ensemble. The effective elastic modulus E(ε̇) rises from ≈7 Pa at ε̇=5e-4 to ≈11 Pa at ε̇=8e-3 — the network stiffens as growth outpaces remodelling — while the remodelling time τ(ε̇) ≈ 36-51 τ stays roughly constant, set by crosslink kinetics rather than rate. These give E and τ as functions of growth rate, ready to hand to a vertex model offline.
+      <p class="ctr-text">FIGURE-REVIEW RECONCILIATION (2026-10-20): the earlier definitive claim — a &#34;faithful, density-calibrated, seed-ensemble&#34; E(ε̇) rising ≈7→11 Pa (stiffening) with τ(ε̇)≈36-51 τ — was drawn from a SINGLE seed [12345] at UN-matched total strain and is not supported. Re-running the sweep at a MATCHED total strain (ε=0.12) over 3 independent seeds (real bounded LAMMPS, 60-rod NC1-angle- stabilized network) shows σ(ε̇) nearly flat/overlapping across rates (1.24±0.29 → 1.01±0.20 → 0.99±0.37 LJ for ε̇ = 2e-3 / 6e-3 / 1.8e-2) WHILE the crosslink density falls with rate (2.00 → 1.31 → 1.04 crosslinks/rod), because a slower stretch leaves more wall-clock time for crosslink assembly. The apparent mechanical resistance is therefore CONFOUNDED by rate-dependent density, not a clean rate-stiffening signal; η_eff = σ/ε̇ falls 621 → 55 LJ·time. τ(ε̇) is not cleanly resolved at this bounded scale, so De = τ·ε̇ is not reported. A density-matched dense multi-seed sweep (Mac-mini candidate) is required to separate true rate-stiffening from the density confound and to resolve τ(ε̇).
 </p>
       
       
@@ -991,7 +991,7 @@
         <span class="classification-pill classification-primary">primary</span>
         <strong style="font-size: 0.9em;">sweep-runs</strong>
         
-        <span class="muted" style="font-size:0.78em">requires: <code>true</code></span>
+        <span class="muted" style="font-size:0.78em">requires: <code>stage2-strainrate-sweep</code></span>
         
       </div>
       <div style="margin-top: 6px; font-size: 0.95em;">The ε̇ sweep runs and returns a σ and η for every rate.</div>
@@ -1037,7 +1037,7 @@ pass_if: {"field": "n_rates", "op": "gt", "value": 0}</pre>
         <span class="classification-pill classification-primary">primary</span>
         <strong style="font-size: 0.9em;">viscosity-defined</strong>
         
-        <span class="muted" style="font-size:0.78em">requires: <code>true</code></span>
+        <span class="muted" style="font-size:0.78em">requires: <code>stage2-strainrate-sweep</code></span>
         
       </div>
       <div style="margin-top: 6px; font-size: 0.95em;">A low-rate effective viscosity is computed.</div>
@@ -1083,7 +1083,7 @@ pass_if: {"field": "eta_lowrate", "op": "finite"}</pre>
         <span class="classification-pill classification-secondary">secondary</span>
         <strong style="font-size: 0.9em;">viscous-plateau-vs-elastic</strong>
         
-        <span class="muted" style="font-size:0.78em">requires: <code>true</code></span>
+        <span class="muted" style="font-size:0.78em">requires: <code>stage2-strainrate-sweep</code></span>
         
       </div>
       <div style="margin-top: 6px; font-size: 0.95em;">σ(ε̇) shows a viscous plateau (η ~ const) at slow rates before stiffening.</div>
@@ -1418,7 +1418,7 @@ pass_if: {"note": "\u03b7 ~ const at slow \u03b5\u0307", "op": "plateau"}</pre>
 </section>
 
 </main>
-<script>window.__DASH_CONFIG__ = { mode: "snapshot", interactiveUrl: "https://github.com/vivarium-collective/viva-lumenoid", basePath: "/viva-lumenoid/dashboard", inputsDownloadBase: "https://github.com/vivarium-collective/viva-lumenoid/raw/main", provenance: {"repo_slug": "vivarium-collective/viva-lumenoid", "repo_url": "https://github.com/vivarium-collective/viva-lumenoid", "commit": "2ded15ad524738398138ad17ff922ffedc04f775", "commit_url": "https://github.com/vivarium-collective/viva-lumenoid/commit/2ded15ad524738398138ad17ff922ffedc04f775", "branch": "main", "lockfile": "uv.lock@23a8fcc2b0be", "generated_at": "2026-10-20 12:28 UTC"} };</script>
+<script>window.__DASH_CONFIG__ = { mode: "snapshot", interactiveUrl: "https://github.com/vivarium-collective/viva-lumenoid", basePath: "/viva-lumenoid/dashboard", inputsDownloadBase: "https://github.com/vivarium-collective/viva-lumenoid/raw/main", provenance: {"repo_slug": "vivarium-collective/viva-lumenoid", "repo_url": "https://github.com/vivarium-collective/viva-lumenoid", "commit": "6f88d340f922bae448403a05143500e38f719796", "commit_url": "https://github.com/vivarium-collective/viva-lumenoid/commit/6f88d340f922bae448403a05143500e38f719796", "branch": "main", "lockfile": "uv.lock@23a8fcc2b0be", "generated_at": "2026-10-20 12:55 UTC"} };</script>
 <script src="/viva-lumenoid/dashboard/assets/data-source.js"></script>
 <script src="/viva-lumenoid/dashboard/assets/toast.js"></script>
 <script>

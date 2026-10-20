@@ -23,7 +23,7 @@ if _os.environ.get("PYTHONUTF8") != "1":
 #
 # **Question.** How does collagen IV molecular turnover set basement-membrane (BM) stress relaxation, and how do BM mechanics, epithelial growth and actomyosin mechanics jointly determine epithelial cell height and lumenoid morphology? (The original v1 sub-question — the effective modulus E(ε̇) and remodelling time τ(ε̇) a growing boundary produces, the two numbers the AICS vertex model couples to — is the P0/P1 reproduction core this campaign now builds on.)
 #
-# A coarse-grained model of the collagen IV basement membrane, built in Vivarium from the AICS lumenoid specification, grown into a reproduction and extension of Barrientos et al. (Cell 2026). The reproduction studies target the paper's Figures 1 (tissue-mechanics regimes), 2 (collagen rheology + supply) and 7 (perlecan/growth perturbations); the extension studies add spatial 2D/3D Tyssue epithelia, bidirectional LAMMPS–Tyssue coupling, an actomyosin cortex and a closed lumenoid. All studies now RUN end-to-end against their real composites and carry recorded evidence — but each is scoped honestly by evidence status (observed / reproduced / engineered-diagnostic / hypothesis / contradicted, per docs/figure-conventions.md), not scored as paper reproduction on a smoke test or a geometry screenshot. The membrane-build (v1–v5) and the Fig-1/Fig-2 direction (R1, R2, R3) are the strongest results; the spatial and extension studies are preliminary; and R6's perlecan prediction CONTRADICTS the paper (see verdict).
+# A coarse-grained model of the collagen IV basement membrane, built in Vivarium from the AICS lumenoid specification, grown into a reproduction and extension of Barrientos et al. (Cell 2026). The reproduction studies target the paper's Figures 1 (tissue-mechanics regimes), 2 (collagen rheology + supply) and 7 (perlecan/growth perturbations); the extension studies add spatial 2D/3D Tyssue epithelia, bidirectional LAMMPS–Tyssue coupling, an actomyosin cortex and a closed lumenoid. All studies now RUN end-to-end against their real composites and carry recorded evidence — but each is scoped honestly by evidence status (observed / reproduced / engineered-diagnostic / hypothesis / contradicted, per docs/figure-conventions.md), not scored as paper reproduction on a smoke test or a geometry screenshot. The membrane-build (v1–v5) and the paper reproductions (R1 Fig 1 regime topology, R2 Fig 2E direction, R3 Fig 2B/C supply ordering, R6 Fig 7 perlecan ordering) are the strongest results; the spatial and extension studies are preliminary. R6 reproduces Fig 7 only after a review-caught fix: its perlecan direction had been inverted and was corrected against the paper.
 #
 # ---
 #
@@ -317,7 +317,7 @@ else:
 #
 # _Results are shown by the figures below, produced by the run above._
 
-# **cross-check**
+# **v1-stage1-main**
 
 def _save_viz(study, slug, html):
     d = REPO / 'reports/notebooks/figures' / study
@@ -327,38 +327,43 @@ def _save_viz(study, slug, html):
     print('  wrote', out)
 
 
-# cross-check
-_save_viz('bm-v1-stage1-modulus-remodelling', 'cross-check', _render_one('html:cross_check.html', {'title': 'Cross-check — clean-room vs the released code (headline)'}, RUNS_DB, STUDY_YAML))
-
-# **modulus-vs-fraction**
-
-# modulus-vs-fraction
-_save_viz('bm-v1-stage1-modulus-remodelling', 'modulus-vs-fraction', _render_one('html:modulus_vs_fraction.html', {'title': 'The faithful model reproduces the published modulus (vs crosslink fraction)'}, RUNS_DB, STUDY_YAML))
-
-# **modulus-ladder**
-
-# modulus-ladder
-_save_viz('bm-v1-stage1-modulus-remodelling', 'modulus-ladder', _render_one('html:modulus_ladder.html', {'title': 'Modulus ladder — v1 in the published very-soft regime'}, RUNS_DB, STUDY_YAML))
-
-# **stage1-movie**
-
-# stage1-movie
-_save_viz('bm-v1-stage1-modulus-remodelling', 'stage1-movie', _render_one('html:stage1_movie.html', {'title': 'Simulation movie — the staged protocol unfolding'}, RUNS_DB, STUDY_YAML))
-
-# **stage1-movie-3d**
-
-# stage1-movie-3d
-_save_viz('bm-v1-stage1-modulus-remodelling', 'stage1-movie-3d', _render_one('html:stage1_movie_3d.html', {'title': '3D view — the quasi-2D slab, rotatable'}, RUNS_DB, STUDY_YAML))
+# v1-stage1-main
+_save_viz('bm-v1-stage1-modulus-remodelling', 'v1-stage1-main', _render_one('html:v1_stage1_main.html', {'title': 'Stage 1 — NC1-angle-stabilized modulus AND remodelling, separated', 'evidence_status': 'observed', 'tier': 'main', 'caption': 'An NC1-angle-stabilized collagen IV network develops tensile stress during imposed biaxial stretching and relaxes when bond remodeling resumes. Shaded phases (stretch / frozen-hold / chemistry-on-hold) define the protocol; (B) plots the network BOND-VIRIAL in-plane stress vs strain (reduced LJ units, not total/hydrostatic) with the tangent elastic modulus E = 4.98 ± 2.15 LJ (≈ 11 ± 5 Pa at kT/σ³≈2.2 Pa — energy scale unresolved) fit over strain ∈ [0.01, 0.08]; (C) tracks crosslinks vs the largest connected component; (D) shows one labeled as-formed network (seed 11). Independently repeated runs (3 seeds, real bounded LAMMPS on a 60-rod dense slab) give E with the spread shown. HONEST SCOPE: this is NC1-angle- stabilized only — the released 7S junction angles (k=1.0 @155° and @60°) and the 7S-specific break cutoff (0.95 vs the NC1 1.35 used for both) are NOT implemented, so it is not a full reproduction of the released angle set. The relaxation time τ ≈ 4 ± 4 LJ is NOT cleanly resolved at this bounded scale; a dense multi-seed sweep (Mac-mini candidate) is needed to report τ.\n'}, RUNS_DB, STUDY_YAML))
 
 # **stage1-faithful**
 
 # stage1-faithful
-_save_viz('bm-v1-stage1-modulus-remodelling', 'stage1-faithful', _render_one('html:stage1_faithful.html', {'title': 'Stage 1 (faithful angles) — modulus AND remodelling separated'}, RUNS_DB, STUDY_YAML))
+_save_viz('bm-v1-stage1-modulus-remodelling', 'stage1-faithful', _render_one('html:stage1_faithful.html', {'title': 'Stage 1 (faithful angles, un-simplified) — modulus AND remodelling', 'evidence_status': 'observed', 'tier': 'supplement', 'caption': 'The earlier un-simplified four-panel faithful-angle run; superseded as the primary by v1-stage1-main (same NC1-angle-stabilized network, simplified panels). Retained as supplement. NC1 angles only; 7S angles not implemented.\n'}, RUNS_DB, STUDY_YAML))
 
 # **stage1-diagnostic**
 
 # stage1-diagnostic
-_save_viz('bm-v1-stage1-modulus-remodelling', 'stage1-diagnostic', _render_one('html:stage1_diagnostic.html', {'title': 'Stage 1 (angle-off) — modulus & remodelling diagnostic'}, RUNS_DB, STUDY_YAML))
+_save_viz('bm-v1-stage1-modulus-remodelling', 'stage1-diagnostic', _render_one('html:stage1_diagnostic.html', {'title': 'Stage 1 (angle-off) — modulus & remodelling diagnostic', 'evidence_status': 'engineered-diagnostic', 'tier': 'supplement', 'caption': 'Near-duplicate diagnostic of the angle-OFF (central-force) transcription; a smoke/diagnostic view, not biological evidence. Supplement.\n'}, RUNS_DB, STUDY_YAML))
+
+# **cross-check**
+
+# cross-check
+_save_viz('bm-v1-stage1-modulus-remodelling', 'cross-check', _render_one('html:cross_check.html', {'title': 'Cross-check — clean-room vs the released code', 'evidence_status': 'engineered-diagnostic', 'tier': 'supplement', 'caption': 'Provenance cross-check of the clean-room parameters against the released LAMMPS input scripts — a verification panel, not an independent finding. Supplement.\n'}, RUNS_DB, STUDY_YAML))
+
+# **modulus-vs-fraction**
+
+# modulus-vs-fraction
+_save_viz('bm-v1-stage1-modulus-remodelling', 'modulus-vs-fraction', _render_one('html:modulus_vs_fraction.html', {'title': 'Modulus vs crosslink fraction (corroborating)', 'evidence_status': 'engineered-diagnostic', 'tier': 'supplement', 'caption': 'Corroborating modulus-vs-crosslink-fraction trend. Demoted to supplement: the energy→Pa conversion (kT/σ³≈2.2 Pa) carries the unresolved-energy-scale caveat and the trend is not shown with per-seed points/range here; read as provenance/corroboration, not an independent reproduction.\n'}, RUNS_DB, STUDY_YAML))
+
+# **modulus-ladder**
+
+# modulus-ladder
+_save_viz('bm-v1-stage1-modulus-remodelling', 'modulus-ladder', _render_one('html:modulus_ladder.html', {'title': 'Modulus ladder — v1 in the published very-soft regime', 'evidence_status': 'engineered-diagnostic', 'tier': 'supplement', 'caption': 'Parameter ladder placing v1 in the published very-soft regime — a parameter/heterogeneous-comparator panel, not an independent finding. Supplement.\n'}, RUNS_DB, STUDY_YAML))
+
+# **stage1-movie**
+
+# stage1-movie
+_save_viz('bm-v1-stage1-modulus-remodelling', 'stage1-movie', _render_one('html:stage1_movie.html', {'title': 'Simulation movie — the staged protocol unfolding', 'evidence_status': 'engineered-diagnostic', 'tier': 'supplement', 'caption': 'Optional animation of the staged protocol; retained as the single optional movie, removed from the linear narrative. Supplement.\n'}, RUNS_DB, STUDY_YAML))
+
+# **stage1-movie-3d**
+
+# stage1-movie-3d
+_save_viz('bm-v1-stage1-modulus-remodelling', 'stage1-movie-3d', _render_one('html:stage1_movie_3d.html', {'title': '3D view — the quasi-2D slab, rotatable', 'evidence_status': 'engineered-diagnostic', 'tier': 'supplement', 'caption': '3D rotatable view of the same clip; supplement (removed from the linear narrative).\n'}, RUNS_DB, STUDY_YAML))
 
 # ### Acceptance criteria
 #
@@ -438,25 +443,30 @@ else:
 #
 # _Results are shown by the figures below, produced by the run above._
 
+# **v2-rheology-main**
+
+# v2-rheology-main
+_save_viz('bm-v2-stress-vs-strainrate', 'v2-rheology-main', _render_one('html:v2_rheology_main.html', {'title': 'Growth rate vs apparent mechanical resistance (+ paired connectivity)', 'evidence_status': 'observed', 'tier': 'main', 'caption': "Imposed growth rate ε̇ changes the network's apparent mechanical resistance; the paired crosslink-density readout assesses whether the response reflects turnover competition or a rate-dependent change in structure. (A) σ(ε̇) is the network BOND-VIRIAL in-plane stress (reduced LJ units) read at a MATCHED total strain ε=0.12 (σ averaged over strain ∈ [0.096, 0.12]); (B) effective viscosity η_eff = σ/ε̇; (C) crosslinks-per-rod at each rate. Error bars are 3 independent networks (seeds 11/22/33; 60-rod NC1-angle-stabilized network, chemistry ON during stretch; real bounded LAMMPS). HONEST CONCLUSION: at this bounded scale σ(ε̇) is nearly flat/overlapping across rates (1.24→1.01→0.99 LJ) WHILE crosslinks/rod falls with rate (2.00→1.31→1.04) — the apparent resistance is CONFOUNDED by rate-dependent assembly time, not a clean rate-stiffening signal. η_eff falls 621→55 LJ·time. De = τ·ε̇ is not reported because τ is not resolved at this scale. A density-matched dense multi-seed sweep (Mac-mini candidate) is required to separate true rate-stiffening from the density confound.\n"}, RUNS_DB, STUDY_YAML))
+
 # **coupling**
 
 # coupling
-_save_viz('bm-v2-stress-vs-strainrate', 'coupling', _render_one('html:coupling.html', {'title': 'Vertex-model coupling — E(ε̇) and τ(ε̇) (the deliverable)'}, RUNS_DB, STUDY_YAML))
-
-# **stage2-movie**
-
-# stage2-movie
-_save_viz('bm-v2-stress-vs-strainrate', 'stage2-movie', _render_one('html:stage2_movie.html', {'title': 'Simulation movie — the growing substrate stretches', 'caption': 'The box outline grows with the imposed equibiaxial strain (the strain reads off the box), synced to the σ(t) trace. Frames are made coherent — each bead is drawn at its nearest periodic image of the network centroid — so boundary crossings no longer teleport a box width across timepoints.\n'}, RUNS_DB, STUDY_YAML))
-
-# **stage2-movie-3d**
-
-# stage2-movie-3d
-_save_viz('bm-v2-stress-vs-strainrate', 'stage2-movie-3d', _render_one('html:stage2_movie_3d.html', {'title': '3D view — the slab stretching, rotatable', 'caption': 'Same coherent, box-deforming clip in 3D. The Simularium trajectory (Analysis tab) additionally embeds the stress-vs-strain and time-series plots and the per-frame deforming box.\n'}, RUNS_DB, STUDY_YAML))
+_save_viz('bm-v2-stress-vs-strainrate', 'coupling', _render_one('html:coupling.html', {'title': 'Vertex-model coupling — E(ε̇) and τ(ε̇) (stress-derived)', 'evidence_status': 'engineered-diagnostic', 'tier': 'supplement', 'caption': 'The earlier single-seed E(ε̇)/τ(ε̇) coupling table. Demoted: these are stress-derived quantities presented from a single seed [12345] and are not independently validated; they belong AFTER the primary rheology summary, not as a headline deliverable. Supplement.\n'}, RUNS_DB, STUDY_YAML))
 
 # **stage2-diagnostic**
 
 # stage2-diagnostic
-_save_viz('bm-v2-stress-vs-strainrate', 'stage2-diagnostic', _render_one('html:stage2_diagnostic.html', {'title': 'Stage 2 — σ(ε̇) diagnostic'}, RUNS_DB, STUDY_YAML))
+_save_viz('bm-v2-stress-vs-strainrate', 'stage2-diagnostic', _render_one('html:stage2_diagnostic.html', {'title': 'Stage 2 — σ(ε̇) diagnostic', 'evidence_status': 'engineered-diagnostic', 'tier': 'supplement', 'caption': 'Near-duplicate σ(ε̇) diagnostic; a smoke/diagnostic view, not an independent finding. Supplement.\n'}, RUNS_DB, STUDY_YAML))
+
+# **stage2-movie**
+
+# stage2-movie
+_save_viz('bm-v2-stress-vs-strainrate', 'stage2-movie', _render_one('html:stage2_movie.html', {'title': 'Simulation movie — the growing substrate stretches', 'evidence_status': 'engineered-diagnostic', 'tier': 'supplement', 'caption': 'Optional animation of the growing substrate (box outline grows with the imposed equibiaxial strain, synced to σ(t); frames are periodic-image coherent). Retained as the single optional movie, removed from the linear narrative. Supplement.\n'}, RUNS_DB, STUDY_YAML))
+
+# **stage2-movie-3d**
+
+# stage2-movie-3d
+_save_viz('bm-v2-stress-vs-strainrate', 'stage2-movie-3d', _render_one('html:stage2_movie_3d.html', {'title': '3D view — the slab stretching, rotatable', 'evidence_status': 'engineered-diagnostic', 'tier': 'supplement', 'caption': '3D rotatable view of the same deforming clip; supplement (removed from the linear narrative).\n'}, RUNS_DB, STUDY_YAML))
 
 # ### Acceptance criteria
 #
@@ -542,20 +552,25 @@ else:
 #
 # _Results are shown by the figures below, produced by the run above._
 
-# **rigidity-movie**
+# **v3-centralforce-control**
 
-# rigidity-movie
-_save_viz('bm-v3-junction-bending-rigidity', 'rigidity-movie', _render_one('html:rigidity_movie.html', {'title': 'Simulation movie — high-connectivity network (NC1×5 + 7S×8)'}, RUNS_DB, STUDY_YAML))
-
-# **rigidity-movie-3d**
-
-# rigidity-movie-3d
-_save_viz('bm-v3-junction-bending-rigidity', 'rigidity-movie-3d', _render_one('html:rigidity_movie_3d.html', {'title': '3D view — the connected network, rotatable'}, RUNS_DB, STUDY_YAML))
+# v3-centralforce-control
+_save_viz('bm-v3-junction-bending-rigidity', 'v3-centralforce-control', _render_one('html:v3_centralforce_control.html', {'title': 'Central-force control does not reproduce the released network', 'evidence_status': 'engineered-diagnostic', 'tier': 'main', 'caption': "With angular potentials intentionally removed (bending_k=0), changing the allowable end-link valency does not produce a reproducibly positive modulus across sampled connectivities. This artificial control must NOT be interpreted as the mechanism of softness in the published model. Measured coordination z = 1 + crosslinks/rod is on the x-axis; each seed's athermal (energy-minimization) modulus is a point with a zero reference and the ensemble mean ± SD (released-code LAMMPS, reduced LJ units; 60-rod network, 3 seeds 11/22/33). z rises 1.17 → 1.61 across the swept crosslink caps and never approaches 4; the modulus is scattered about zero with seed-spread exceeding the mean at every rung (every CI spans 0) — not reproducibly positive, by design. The z=4 Maxwell line is drawn ONLY as the idealized 2D central-force heuristic — it is NOT a threshold for the released, angle-stabilized, finite-thickness network, which carries junction angles and is soft for other reasons (missing components, thin-sheet geometry, no pre-stress).\n"}, RUNS_DB, STUDY_YAML))
 
 # **rigidity-diagnostic**
 
 # rigidity-diagnostic
-_save_viz('bm-v3-junction-bending-rigidity', 'rigidity-diagnostic', _render_one('html:rigidity_diagnostic.html', {'title': 'Rigidity sweep — modulus vs coordination z'}, RUNS_DB, STUDY_YAML))
+_save_viz('bm-v3-junction-bending-rigidity', 'rigidity-diagnostic', _render_one('html:rigidity_diagnostic.html', {'title': 'Rigidity sweep — modulus vs coordination z (superseded)', 'evidence_status': 'engineered-diagnostic', 'tier': 'supplement', 'caption': 'The earlier modulus-vs-z sweep; superseded as the primary by v3-centralforce-control (which frames it explicitly as a negative control with the zero reference and the Maxwell-line caveat). Supplement.\n'}, RUNS_DB, STUDY_YAML))
+
+# **rigidity-movie**
+
+# rigidity-movie
+_save_viz('bm-v3-junction-bending-rigidity', 'rigidity-movie', _render_one('html:rigidity_movie.html', {'title': 'Simulation movie — high-connectivity network (NC1×5 + 7S×8)', 'evidence_status': 'engineered-diagnostic', 'tier': 'supplement', 'caption': 'Optional animation of the high-connectivity angle-off network; removed from the main narrative (a control, not a result). Supplement.\n'}, RUNS_DB, STUDY_YAML))
+
+# **rigidity-movie-3d**
+
+# rigidity-movie-3d
+_save_viz('bm-v3-junction-bending-rigidity', 'rigidity-movie-3d', _render_one('html:rigidity_movie_3d.html', {'title': '3D view — the connected network, rotatable', 'evidence_status': 'engineered-diagnostic', 'tier': 'supplement', 'caption': '3D rotatable view of the same angle-off network; supplement (removed from the main narrative).\n'}, RUNS_DB, STUDY_YAML))
 
 # ### Acceptance criteria
 #
@@ -1097,10 +1112,20 @@ else:
 #
 # _Results are shown by the figures below, produced by the run above._
 
+# **r4_confinement**
+
+# r4_confinement
+_save_viz('bm-r4-coupled-2d-epithelium', 'r4_confinement', _render_one('html:r4_confinement.html', {'title': '2D sheet static substrate vs R1 confinement benchmark', 'evidence_status': 'observed', 'tier': 'main', 'caption': 'MAIN (evidence: observed) — NOT a reproduction. Left: the real tyssue_2d_sheet readout over the vivarium-tyssue EulerSolver (dt 0.01) — mean per-cell basal area (fold-change vs step 0) and the stored CrossSection prism-height degree of freedom. Both are flat: all 12 cells relax to the identical basal area (5.0 reduced) and prism-height DOF (1.9319 reduced), and the max vertex displacement over the run is ~0, so the sheet is a pre-equilibrated static mesh with no spatial heterogeneity. Right: the R1 reduced-order prism benchmark (real TissuePrismProcess runs) — the confinement h/h0 trajectory for three BM regimes (soft/fast 0.998->0.38, intermediate 0.998->0.43, stiff/slow 0.998->0.70) — the confinement response the sheet does NOT reproduce. Axes dimensionless (reduced units); single deterministic run (no stochasticity). GAP (named): tyssue_2d_sheet exposes only line_tension + prefered_area — NO BM stiffness / relaxation / traction coupling — so the BM-dependent confinement regimes of Barrientos Fig 1 cannot be produced here; the right panel is the R1 benchmark, not the tyssue sheet.\n'}, RUNS_DB, STUDY_YAML))
+
 # **r4_sheet**
 
 # r4_sheet
-_save_viz('bm-r4-coupled-2d-epithelium', 'r4_sheet', _render_one('html:r4_sheet.html', {'title': 'Relaxed 2D epithelial sheet (real tyssue run)', 'caption': 'The actual 2D epithelial sheet after relaxation on the merged CrossSectionGeometry (real tyssue EulerSolver run).\n'}, RUNS_DB, STUDY_YAML))
+_save_viz('bm-r4-coupled-2d-epithelium', 'r4_sheet', _render_one('html:r4_sheet.html', {'title': '12-cell planar Tyssue mesh thumbnail (z=0)', 'evidence_status': 'engineered-diagnostic', 'tier': 'supplement', 'caption': 'SUPPLEMENT (evidence: engineered-diagnostic) — a 12-cell planar Tyssue geometry resolves and relaxes on the merged CrossSectionGeometry; this verifies mesh construction but NOT BM-dependent epithelial confinement. The geometry is planar (z=0) and does NOT compute a real 3D cell height: the per-face height column is a stored CrossSection prism degree of freedom, not a resolved apical-basal distance. Reduced units; architecture/methods thumbnail only.\n'}, RUNS_DB, STUDY_YAML))
+
+# **r4_bm_hypothesis**
+
+# r4_bm_hypothesis
+_save_viz('bm-r4-coupled-2d-epithelium', 'r4_bm_hypothesis', _render_one('html:r4_bm_hypothesis.html', {'title': 'BM-stiffness-dependent confinement (hypothesis)', 'evidence_status': 'hypothesis', 'tier': 'supplement', 'caption': 'SUPPLEMENT (evidence: hypothesis) — the BM-stiffness-dependent confinement test the figure review asked for (matched low/high-BM-relaxation cell-sheet snapshots and a basal-area-vs-time panel stratified by BM stiffness, with the R1 benchmark overlaid). NOT producible from tyssue_2d_sheet: its parameters are line_tension + prefered_area, and BM stiffness / relaxation / traction coupling is not wired into the composite. Marked hypothesis until that coupling exists.\n'}, RUNS_DB, STUDY_YAML))
 
 # ### Acceptance criteria
 #
@@ -1177,7 +1202,17 @@ else:
 # **r5_monolayer**
 
 # r5_monolayer
-_save_viz('bm-r5-explicit-3d-confinement', 'r5_monolayer', _render_one('html:r5_monolayer.html', {'title': 'Explicit 3D confinement (real tyssue run)', 'caption': 'The stepped 3D monolayer (MonolayerGeometry) and its real cell-volume distribution (real tyssue run).\n'}, RUNS_DB, STUDY_YAML))
+_save_viz('bm-r5-explicit-3d-confinement', 'r5_monolayer', _render_one('html:r5_monolayer.html', {'title': 'Closed 3D monolayer render + per-cell area distribution', 'evidence_status': 'engineered-diagnostic', 'tier': 'main', 'caption': 'MAIN (evidence: engineered-diagnostic) — a model illustration, not a biological result. The closed 3D Tyssue monolayer (MonolayerGeometry, 206 cells) over the vivarium-tyssue EulerSolver (dt 0.01): the vertex wireframe is coloured by z (apical vs basal surface) and the cell centroids by per-cell area (common colour limits), with the real per-cell area distribution alongside (cell_df.area 4.51-6.38 reduced, median 6.34). A closed 3D monolayer has finite cell volumes and identifiable basal surfaces, but no BM-dependent height response is established by this geometric verification alone: per-cell HEIGHT (vertex z-extent) is uniform (= 1.00) in this single run, and total cell volume is conserved to <0.01% over 5 Euler steps. Single deterministic run; reduced units. GAP (named): the free-BM / stiff-frozen-BM / stiff-fast-relaxing-BM matched controls the morphology ordering needs are NOT in tyssue_3d_monolayer (params: contractility + vol_elasticity, no BM shell coupling).\n'}, RUNS_DB, STUDY_YAML))
+
+# **r5_volume_hist**
+
+# r5_volume_hist
+_save_viz('bm-r5-explicit-3d-confinement', 'r5_volume_hist', _render_one('html:r5_volume_hist.html', {'title': 'Cell-volume distribution appendix', 'evidence_status': 'engineered-diagnostic', 'tier': 'supplement', 'caption': 'SUPPLEMENT (evidence: engineered-diagnostic) — geometry-validation appendix. The standalone per-cell volume distribution (cell_df.vol 0.58-1.16 reduced, median 1.16, target 1.0) with the volume-conservation residual stated (total cell volume conserved to <0.01% over 5 Euler steps at dt 0.01). Finite volumes do NOT by themselves establish BM-dependent confinement; reduced units, single run.\n'}, RUNS_DB, STUDY_YAML))
+
+# **r5_bm_hypothesis**
+
+# r5_bm_hypothesis
+_save_viz('bm-r5-explicit-3d-confinement', 'r5_bm_hypothesis', _render_one('html:r5_bm_hypothesis.html', {'title': 'Matched BM controls (hypothesis)', 'evidence_status': 'hypothesis', 'tier': 'supplement', 'caption': 'SUPPLEMENT (evidence: hypothesis) — the matched free-BM / stiff-frozen-BM / stiff-fast-relaxing-BM conditions the morphology ordering needs (before/after 3D cell images coloured by cell height, a height distribution by condition, height-vs-doubling-time traces, basal/apical area, and a volume-conservation residual + explicit energy/traction terms). NOT producible from tyssue_3d_monolayer: its parameters are contractility + vol_elasticity and there is no BM-shell coupling. Marked hypothesis until that coupling exists.\n'}, RUNS_DB, STUDY_YAML))
 
 # ### Acceptance criteria
 #
@@ -1198,7 +1233,7 @@ _save_viz('bm-r5-explicit-3d-confinement', 'r5_monolayer', _render_one('html:r5_
 #
 # **Purpose.** Perlecan stabilizes collagen IV, lengthening its inferred molecular lifetime; a longer lifetime is a slower BM relaxation time, which the reduced-order prism mechanics (R1) turns into a taller (more confined) cell. The turnover-inferred relaxation and the mechanics-predicted shape are two distinct outputs of the pipeline.
 #
-# **Claim.** CONTRADICTION FLAGGED (figure review 2026-10-20). The pipeline self-consistently maps an inferred collagen lifetime through BM relaxation to cell shape, but the perlecan direction it encodes (perlecan STABILIZES collagen -> longer lifetime -> slower relaxation -> taller cell) produces an ordering OPPOSITE to the paper's reported perlecan morphology (overexpression -> faster relaxation -> shorter/wider; knockdown -> taller). This study therefore does NOT reproduce Figure 7 and must not be scored as a pass until the perlecan -> turnover direction is audited against the paper. The growth-rate axis (faster growth -> flatter) is unaffected.
+# **Claim.** Carrying an inferred collagen IV lifetime through BM relaxation to cell shape reproduces the paper's Figure 7 perlecan intervention ordering: perlecan knockdown (loss) gives the TALLEST cells, control intermediate, and perlecan overexpression (gain) the SHORTEST -- with the inferred relaxation time (turnover) kept distinct from the predicted cell height (mechanics). This followed a correction: the figure review caught that the model's perlecan direction was inverted; an audit against the paper (perlecan OVEREXPRESSION shortens the collagen IV lifetime ~1 h vs ~20 h control, knockdown lengthens it ~500 h; "perlecan promotes bond breakage") fixed the perlecan_factor -> lifetime mapping, after which the ordering matches.
 
 # ### Parameters
 #
@@ -1208,8 +1243,8 @@ _save_viz('bm-r5-explicit-3d-confinement', 'r5_monolayer', _render_one('html:r5_
 #
 # Declared parameter sets (`study.yaml` variants):
 #
-# - **perlecan-gain** — `perlecan_factor=2.0`
-# - **perlecan-loss** — `perlecan_factor=0.3`
+# - **perlecan-gain** — `perlecan_factor=0.05`
+# - **perlecan-loss** — `perlecan_factor=25.0`
 # - **fast-growth** — `doubling_time=2.5`
 
 # ### The model & its parameters
@@ -1265,7 +1300,7 @@ else:
 # **r6_intervention**
 
 # r6_intervention
-_save_viz('bm-r6-perlecan-growth-perturbations', 'r6_intervention', _render_one('html:r6_intervention.html', {'title': 'Perlecan/growth intervention on predicted cell height — CONTRADICTS paper (evidence: contradicted)', 'evidence_status': 'contradicted', 'caption': "Predicted cell height per perlecan and growth-rate condition (inferred BM relaxation annotated). The model's perlecan ordering — gain taller than control taller than loss — is self-consistent but OPPOSITE the paper's reported morphology (perlecan overexpression → shorter/wider cells). This figure is shown as a flagged contradiction, NOT a Figure 7 reproduction, pending an audit of the perlecan → collagen-turnover direction. The growth-rate result (faster growth → much flatter) is unaffected.\n"}, RUNS_DB, STUDY_YAML))
+_save_viz('bm-r6-perlecan-growth-perturbations', 'r6_intervention', _render_one('html:r6_intervention.html', {'title': 'Perlecan/growth intervention on predicted cell height (Barrientos Fig 7 reproduction)', 'evidence_status': 'reproduced', 'tier': 'main', 'caption': "Predicted cell height per perlecan and growth-rate condition (inferred BM relaxation annotated), reproducing the paper's Figure 7 after correcting the perlecan direction. Perlecan knockdown lengthens the collagen IV lifetime (~500 h) → slower BM relaxation → the tallest cells; overexpression shortens it (~1 h) → faster relaxation → the shortest; control intermediate — matching Barrientos et al. (perlecan promotes collagen bond breakage). Faster growth (right) spreads the cell flat regardless of perlecan. Reduced units; the perlecan factors encode the paper's measured lifetime ratios.\n"}, RUNS_DB, STUDY_YAML))
 
 # ### Acceptance criteria
 #
@@ -1273,7 +1308,7 @@ _save_viz('bm-r6-perlecan-growth-perturbations', 'r6_intervention', _render_one(
 #
 # | test | measures | passes if |
 # | --- | --- | --- |
-# | perlecan-intervention-ordering _(primary)_ | kind=order field=cell_height cases=['perlecan_gain', 'control', 'perlecan_loss'] | op strictly_decreasing note height(gain) > height(control) > height(loss) -- model-internal, NOT the paper's direction |
+# | perlecan-intervention-ordering _(primary)_ | kind=order field=cell_height cases=['perlecan_loss', 'control', 'perlecan_gain'] | op strictly_decreasing note height(loss) > height(control) > height(gain) -- the paper's direction |
 # | inferred-relaxation-scales-with-perlecan _(primary)_ | kind=monotonicity field=inferred_relaxation versus=perlecan_factor | op increasing note inferred_relaxation = 5.0 x perlecan_factor; strictly increasing in perlecan |
 # | inferred-and-predicted-distinct _(secondary)_ | kind=structure fields=['inferred_relaxation', 'cell_height'] | op both_emitted note both are emitted independently; perlecan drives height only through the relaxation time |
 # | faster-growth-spreads _(secondary)_ | kind=compare field=cell_height cases=['fast_growth', 'control'] | op lt note height(fast_growth) < height(control) |
@@ -1626,7 +1661,7 @@ _save_viz('bm-e4-feedback-predictions', 'e4_feedback', _render_one('html:e4_feed
 # | bm-subcycling-converges _(primary)_ | kind=convergence field=bm_sigma versus=bm_substeps over=[1, 2, 4, 8] | op lt note |s8-s4| 0.017 < |s2-s1| 0.066 (refinement error shrinks) |
 
 # ## Open decisions
-# - PERLECAN DIRECTION (R6 red flag, decisive): the figure review reports the paper has perlecan overexpression → faster BM relaxation → shorter/wider cells; our model assumes the opposite (perlecan stabilizes collagen → gain taller). Confirm the paper's perlecan → collagen-turnover direction; if it is faster-turnover-under-overexpression, invert the perlecan_factor → lifetime mapping in turnover_shape.py so R6 reproduces Fig 7 (otherwise keep it as a genuine mechanistic disagreement).
+# - Perlecan direction (R6): RESOLVED — verified against the paper (perlecan promotes collagen IV bond breakage; overexpression ~1 h, control ~20 h, knockdown ~500 h lifetime) and the perlecan_factor mapping was inverted so R6 reproduces Fig 7. Left here as a sanity-check item for the expert to confirm the reading.
 # - Reproduction conventions: the article alone does not fix every convention needed to reproduce it. Acquire the supplemental tissue-model equations and the precise Figure 1 parameter values.
 # - Released turnover kinetics: pin down the grand-canonical monomer exchange, the distance-gated breaking, the 7S-specific mechanics, and the original stress-to-energy conversion before freezing the collagen reference.
 # - Collagen supply law: a fixed concentration (for reproducing the paper) or a secretion flux (for the lumenoid hypothesis). Decide per study.

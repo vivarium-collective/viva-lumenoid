@@ -801,7 +801,7 @@ Two changes make both readouts come out cleanly. Creating the released NC1 angle
         <div class="ctr-meta-row"><span class="ctr-meta-k">Confidence</span>
           
           <span class="ctr-vch">biology&nbsp;PASS</span>
-          <span class="ctr-vch">insight&nbsp;positive</span>
+          <span class="ctr-vch">insight&nbsp;POSITIVE</span>
         </div>
         
         
@@ -1275,7 +1275,7 @@ Two changes make both readouts come out cleanly. Creating the released NC1 angle
         <span class="classification-pill classification-primary">primary</span>
         <strong style="font-size: 0.9em;">network-assembles</strong>
         
-        <span class="muted" style="font-size:0.78em">requires: <code>true</code></span>
+        <span class="muted" style="font-size:0.78em">requires: <code>stage1-seed-ensemble</code></span>
         
       </div>
       <div style="margin-top: 6px; font-size: 0.95em;">The assemble phase forms a crosslinked network from bare rods.</div>
@@ -1321,7 +1321,7 @@ pass_if: {"field": "n_crosslinks", "op": "gt", "value": 0}</pre>
         <span class="classification-pill classification-primary">primary</span>
         <strong style="font-size: 0.9em;">elastic-modulus-consistent-with-floppy</strong>
         
-        <span class="muted" style="font-size:0.78em">requires: <code>true</code></span>
+        <span class="muted" style="font-size:0.78em">requires: <code>stage1-seed-ensemble</code></span>
         
       </div>
       <div style="margin-top: 6px; font-size: 0.95em;">The stress-strain slope over a seed ensemble is consistent with a floppy (near-zero-modulus) network, matching the published ≈0.03 Pa.
@@ -1381,7 +1381,7 @@ cites:   ["meadowcroft2025nonequilibrium"]</pre>
         <span class="classification-pill classification-primary">primary</span>
         <strong style="font-size: 0.9em;">relaxation-decays-not-densifies</strong>
         
-        <span class="muted" style="font-size:0.78em">requires: <code>true</code></span>
+        <span class="muted" style="font-size:0.78em">requires: <code>stage1-seed-ensemble</code></span>
         
       </div>
       <div style="margin-top: 6px; font-size: 0.95em;">Under breakage-only, the held stress DECAYS as crosslinks break (not densifies) — the corrected remodelling mechanism.
@@ -1428,7 +1428,7 @@ pass_if: {"note": "crosslinks decay 46\u21923; stress drops in the correct direc
         <span class="classification-pill classification-secondary">secondary</span>
         <strong style="font-size: 0.9em;">remodelling-time-calibratable</strong>
         
-        <span class="muted" style="font-size:0.78em">requires: <code>true</code></span>
+        <span class="muted" style="font-size:0.78em">requires: <code>stage1-seed-ensemble</code></span>
         
       </div>
       <div style="margin-top: 6px; font-size: 0.95em;">The relaxation time can be calibrated to the collagen IV lifetime.</div>
@@ -1605,7 +1605,7 @@ cites:   ["barrientos2026basement"]</pre>
           <span class="narrative-label">Explanatory gain</span>
           <span class="narrative-input verdict-badge-computed" data-verdict-track="explanatory_gain"
                 title="Computed from interpretation-tier findings (read-only)"
-                style="display:inline-block;padding:2px 12px;border-radius:9999px;font-weight:700;font-size:0.85em;background:#f1f5f9;color:#475569">positive</span>
+                style="display:inline-block;padding:2px 12px;border-radius:9999px;font-weight:700;font-size:0.85em;background:#f1f5f9;color:#475569">POSITIVE</span>
           <span class="muted small" style="margin-left:6px">computed from interpretation-tier findings</span>
         </label>
         <label class="narrative-row narrative-row-wide">
@@ -1942,7 +1942,7 @@ cites:   ["barrientos2026basement"]</pre>
 </section>
 
 </main>
-<script>window.__DASH_CONFIG__ = { mode: "snapshot", interactiveUrl: "https://github.com/vivarium-collective/viva-lumenoid", basePath: "/viva-lumenoid/dashboard", inputsDownloadBase: "https://github.com/vivarium-collective/viva-lumenoid/raw/main", provenance: {"repo_slug": "vivarium-collective/viva-lumenoid", "repo_url": "https://github.com/vivarium-collective/viva-lumenoid", "commit": "2ded15ad524738398138ad17ff922ffedc04f775", "commit_url": "https://github.com/vivarium-collective/viva-lumenoid/commit/2ded15ad524738398138ad17ff922ffedc04f775", "branch": "main", "lockfile": "uv.lock@23a8fcc2b0be", "generated_at": "2026-10-20 12:28 UTC"} };</script>
+<script>window.__DASH_CONFIG__ = { mode: "snapshot", interactiveUrl: "https://github.com/vivarium-collective/viva-lumenoid", basePath: "/viva-lumenoid/dashboard", inputsDownloadBase: "https://github.com/vivarium-collective/viva-lumenoid/raw/main", provenance: {"repo_slug": "vivarium-collective/viva-lumenoid", "repo_url": "https://github.com/vivarium-collective/viva-lumenoid", "commit": "6f88d340f922bae448403a05143500e38f719796", "commit_url": "https://github.com/vivarium-collective/viva-lumenoid/commit/6f88d340f922bae448403a05143500e38f719796", "branch": "main", "lockfile": "uv.lock@23a8fcc2b0be", "generated_at": "2026-10-20 12:55 UTC"} };</script>
 <script src="/viva-lumenoid/dashboard/assets/data-source.js"></script>
 <script src="/viva-lumenoid/dashboard/assets/toast.js"></script>
 <script>
