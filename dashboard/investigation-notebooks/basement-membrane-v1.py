@@ -776,17 +776,17 @@ _save_viz('bm-v5-porosity-bundling', 'evidence-map', _render_one('html:evidence_
 #
 # Each composite is a process-bigraph *document* — named processes wired by `inputs`/`outputs` ports over shared stores. Below, each composite shows what it does, then a **parameter cell** with its tunable knobs (the current default and what each one means). Edit any value, then re-run the **Run** section to rebuild and re-simulate with your changes.
 
-# **Composite `viva_lumenoid.composites.tissue_prism_baseline`** — `spec_viva_lumenoid_composites_tissue_prism_baseline` (materialized from its `@composite_generator`)
+# **The model — `viva_lumenoid.composites.tissue_prism_baseline`**
+#
+# R1 — reduced-order homogeneous tissue mechanics: a fixed-volume prism cell whose basal area is set by proliferation against a viscoelastic BM (stiffness + relaxation). Cell height = volume/area; the paper's Fig 1 confinement regimes emerge from BM stiffness vs the relaxation/doubling ratio. The effective-BM reference for R4/R5.
 
-spec_viva_lumenoid_composites_tissue_prism_baseline = materialize_composite('viva_lumenoid.composites.tissue_prism_baseline')
-describe_spec(spec_viva_lumenoid_composites_tissue_prism_baseline)
-
-# === Edit parameters for this composite, then run the Run cell ===
-# ov_viva_lumenoid_composites_tissue_prism_baseline maps each tunable parameter to its current value (the generator's
-# defaults). Edit any entry; the Run cell rebuilds the composite with it.
-ov_viva_lumenoid_composites_tissue_prism_baseline = dict(spec_viva_lumenoid_composites_tissue_prism_baseline['_overrides'])
-import json as _json; print(_json.dumps(ov_viva_lumenoid_composites_tissue_prism_baseline, indent=2, default=str))
-# e.g.:  ov_viva_lumenoid_composites_tissue_prism_baseline['<parameter>'] = <value>
+# === Parameters — edit any value, then re-run from the Run cell below ===
+# Each entry is the composite's current default; the comment explains it.
+ov_viva_lumenoid_composites_tissue_prism_baseline = {
+    'bm_stiffness' : 1.0,   # BM area elasticity (stiffness).
+    'bm_relaxation': 5.0,   # BM relaxation time tau_bm.
+    'doubling_time': 5.0,   # Proliferation timescale (cell doubling).
+}
 
 # ### Run
 #
@@ -1403,17 +1403,17 @@ _save_viz('bm-e3-closed-3d-lumenoid', 'e3_lumenoid', _render_one('html:e3_lumeno
 #
 # Each composite is a process-bigraph *document* — named processes wired by `inputs`/`outputs` ports over shared stores. Below, each composite shows what it does, then a **parameter cell** with its tunable knobs (the current default and what each one means). Edit any value, then re-run the **Run** section to rebuild and re-simulate with your changes.
 
-# **Composite `viva_lumenoid.composites.coupled_lumenoid`** — `spec_viva_lumenoid_composites_coupled_lumenoid` (materialized from its `@composite_generator`)
+# **The model — `viva_lumenoid.composites.coupled_lumenoid`**
+#
+# E4 / P3 capstone — bidirectional LAMMPS collagen-BM <-> Tyssue epithelium coupling: the lumenoid's basal BM-shell surface stretches an explicit LAMMPS collagen IV BM patch, whose stress feeds back as a basal tension on the epithelium. The force round-trip the multiscale campaign is built toward (explicit-BM realization).
 
-spec_viva_lumenoid_composites_coupled_lumenoid = materialize_composite('viva_lumenoid.composites.coupled_lumenoid')
-describe_spec(spec_viva_lumenoid_composites_coupled_lumenoid)
-
-# === Edit parameters for this composite, then run the Run cell ===
-# ov_viva_lumenoid_composites_coupled_lumenoid maps each tunable parameter to its current value (the generator's
-# defaults). Edit any entry; the Run cell rebuilds the composite with it.
-ov_viva_lumenoid_composites_coupled_lumenoid = dict(spec_viva_lumenoid_composites_coupled_lumenoid['_overrides'])
-import json as _json; print(_json.dumps(ov_viva_lumenoid_composites_coupled_lumenoid, indent=2, default=str))
-# e.g.:  ov_viva_lumenoid_composites_coupled_lumenoid['<parameter>'] = <value>
+# === Parameters — edit any value, then re-run from the Run cell below ===
+# Each entry is the composite's current default; the comment explains it.
+ov_viva_lumenoid_composites_coupled_lumenoid = {
+    'bm_rods'     : 40,   # Collagen rods in the explicit LAMMPS BM patch.
+    'strain_gain' : 20.0,   # Epithelial basal strain-rate -> BM strain-rate.
+    'tension_gain': 0.02,   # BM stress -> added basal contractility (reaction force).
+}
 
 # ### Run
 #
