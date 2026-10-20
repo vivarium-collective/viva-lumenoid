@@ -765,6 +765,8 @@ _save_viz('bm-v5-porosity-bundling', 'evidence-map', _render_one('html:evidence_
 # **Objective.** Reimplement the paper's fixed-volume prism/surface-tension tissue model and viscoelastic BM; sweep relative stiffness and the relaxation/doubling-time ratio; compare qualitatively and quantitatively to Barrientos et al. Figure 1G-J.
 #
 # **Hypothesis.** Reimplementing the paper's fixed-volume prism / surface-tension tissue model with a viscoelastic BM reproduces Figure 1G's four stiffness-relaxation regimes and the 1H-J confinement trajectories, with the regime boundary set by the ratio of BM relaxation time to doubling time.
+#
+# **Claim.** The homogeneous prism model recovers the four confinement regimes: cells grow tall under a stiff, slowly-relaxing membrane and spread under a soft, fast-relaxing one.
 
 # ### Parameters
 #
@@ -834,6 +836,8 @@ _save_viz('bm-r1-published-tissue-baseline', 'r1_regime', _render_one('html:r1_r
 # **Objective.** Run the LAMMPS NC1/7S network under paper-matched staged loading and chemistry switches across several turnover rates; independently track molecule residence time and stress relaxation; reproduce Fig 2D stress traces and the 2E slope with error bars.
 #
 # **Hypothesis.** In the LAMMPS NC1/7S network under paper-matched staged loading, the measured stress- relaxation time scales linearly with the collagen molecular residence time set by the turnover rate, reproducing Figure 2D traces and the 2E slope within run-to-run variance.
+#
+# **Claim.** The faithful collagen IV network runs under staged loading; the quantitative match to the paper's stress traces and relaxation-vs-turnover slope is still in progress.
 
 # ### Parameters
 #
@@ -906,6 +910,8 @@ _save_viz('bm-r2-collagen-network-rheology', 'r2_rheology', _render_one('html:r2
 # **Objective.** From identical initial states, compare no remodeling, remodeling without insertion, and remodeling with insertion under matched forcing; measure area expansion, collagen density and largest-connected-network size; match the direction and ordering of Fig 2B-C.
 #
 # **Hypothesis.** From identical initial states, no-remodeling, remodeling-without-insertion and remodeling- with-insertion diverge in network area, collagen concentration and integrity in the direction and ordering of Figure 2B-C: only remodeling with supply sustains growth without loss of the largest connected network.
+#
+# **Claim.** The three supply conditions run from a shared initial state; matching the paper's ordering in network area, concentration and connectivity is in progress.
 
 # ### Parameters
 #
@@ -978,6 +984,8 @@ _save_viz('bm-r3-network-expansion-supply', 'r3_supply', _render_one('html:r3_su
 # **Objective.** Build a Tyssue 2D sheet with a BM response calibrated from R2 (traction/area law, height via an explicit volume/prism relation); include a reference homogeneous case, cell division and varying cortical tensions; compare the confinement response to R1 and quantify topology sensitivity.
 #
 # **Hypothesis.** A Tyssue 2D polygonal sheet with a BM traction/area law calibrated from R2 reproduces R1's confinement response in the homogeneous limit, and explicit topology, cell division and varying cortical tensions introduce spatial force/area heterogeneity without destroying the regime structure.
+#
+# **Claim.** A 2D epithelial sheet with an explicit cell-height degree of freedom relaxes under the vertex model; wiring the membrane traction and comparing confinement to the homogeneous baseline is in progress.
 
 # ### Parameters
 #
@@ -1046,6 +1054,8 @@ _save_viz('bm-r4-coupled-2d-epithelium', 'r4_sheet', _render_one('html:r4_sheet.
 # **Objective.** Build a Tyssue 3D monolayer with apical/lateral/basal energies and cell-volume targets; run no-BM, elastic-BM and relaxing-BM controls; measure height, basal/apical area, their distributions and growth trajectories against the paper's morphology ordering.
 #
 # **Hypothesis.** In a Tyssue 3D monolayer with apical/lateral/basal energies and cell-volume targets, cells confined by a slowly-relaxing BM grow taller (smaller basal area, larger height) than under elastic or absent BM, reproducing the core morphology ordering of the paper.
+#
+# **Claim.** A 3D monolayer with volume and surface energies runs and yields per-cell heights; the no-membrane, elastic-membrane and relaxing-membrane controls are the next step.
 
 # ### Parameters
 #
@@ -1114,6 +1124,8 @@ _save_viz('bm-r5-explicit-3d-confinement', 'r5_monolayer', _render_one('html:r5_
 # **Objective.** Use inferred collagen lifetime distributions for control, perlecan gain/loss and growth-rate conditions; propagate parameter uncertainty through relaxation and shape; compare relative cell morphology and uncertainty to Fig 7 while keeping inferred vs predicted outcomes distinct.
 #
 # **Hypothesis.** Propagating inferred collagen lifetime distributions for control, perlecan gain/loss and growth-rate changes through the relaxation->shape chain reproduces the relative cell- morphology ordering and uncertainty of Figure 7, keeping inferred and independently predicted outcomes distinct.
+#
+# **Claim.** Carrying an inferred collagen lifetime through membrane relaxation to cell shape reproduces the intervention ordering: perlecan gain gives taller cells than control, and loss gives flatter ones.
 
 # ### Parameters
 #
@@ -1183,6 +1195,8 @@ _save_viz('bm-r6-perlecan-growth-perturbations', 'r6_intervention', _render_one(
 # **Objective.** Build a coarse filament/crosslink/motor LAMMPS model on a 2D cell-sized patch; measure tension, strain response and relaxation; map these onto Tyssue cortical-energy parameters. NEW extension - the paper does not explicitly simulate actin.
 #
 # **Hypothesis.** A 2D cell-sized coarse filament/crosslink/motor LAMMPS patch produces a tunable active tension and a strain response/relaxation that map onto Tyssue cortical-energy parameters, so the effective cortical term can be replaced by explicit actin without changing the measured confinement in the overlap regime.
+#
+# **Claim.** A coarse actomyosin cortex carries a cortical tension that rises with contractility, giving a tension that can be mapped onto the vertex model's cortical energy.
 
 # ### Parameters
 #
@@ -1253,6 +1267,8 @@ _save_viz('bm-e1-actomyosin-cortex', 'e1_cortical_tension', _render_one('html:e1
 # **Objective.** Couple active cortical contractility (E1) to reversible basal linkers and a collagen IV BM patch; measure traction, linker occupation, network deformation and relative relaxation; begin with a single-cell patch before multicellular coupling.
 #
 # **Hypothesis.** Coupling an active cortex to reversible basal linkers and a collagen-IV BM patch produces a traction, linker occupancy and network deformation whose relative relaxation is set jointly by linker off-rate and crosslink turnover, measurable on a single-cell patch before multicellular coupling.
+#
+# **Claim.** An active cortex transmits force through reversible basal linkers to a collagen membrane patch; the transmitted traction scales with linker occupancy and cortical tension.
 
 # ### Parameters
 #
@@ -1324,6 +1340,8 @@ _save_viz('bm-e2-actin-adhesion-collagen', 'e2_force_transfer', _render_one('htm
 # **Objective.** Introduce a 3D closed-shell Tyssue geometry with lumen pressure/volume and a BM shell; first use the validated reduced-order BM law, then test resolved LAMMPS patches or a curved- network realization; predict lumen growth, cell shape and curvature effects.
 #
 # **Hypothesis.** A closed curved Tyssue epithelium with a lumen volume/pressure constraint and a BM shell predicts lumen growth and curvature-dependent cell shapes that depend on BM relaxation, first with a validated reduced-order BM law and then with resolved LAMMPS patches or a curved-network realization.
+#
+# **Claim.** A closed lumenoid with a lumen pressure and a basal membrane surface runs the vertex model; attaching an explicit membrane and reading curvature-dependent shape is next.
 
 # ### Parameters
 #
@@ -1392,6 +1410,8 @@ _save_viz('bm-e3-closed-3d-lumenoid', 'e3_lumenoid', _render_one('html:e3_lumeno
 # **Objective.** Test growth-driven turnover, spatial BM heterogeneity, contractility-dependent confinement, partial adhesion and network failure, each against one-way, uncoupled and uniform-material controls, and report where the bidirectionally coupled predictions depart from the paper.
 #
 # **Hypothesis.** With one-way, uncoupled and uniform-material controls, the fully coupled system predicts regimes - growth-driven turnover, spatial BM heterogeneity, contractility-dependent confinement, partial adhesion/network failure - in which cell height and lumenoid growth depart measurably from the paper's homogeneous, one-way predictions.
+#
+# **Claim.** The epithelium and its collagen membrane are coupled both ways: the growing basal surface stretches the membrane and the membrane's stress pushes back as a basal tension, with controls and convergence in place.
 
 # ### Parameters
 #
