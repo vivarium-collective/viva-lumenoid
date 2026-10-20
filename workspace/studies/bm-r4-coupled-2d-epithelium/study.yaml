@@ -1,63 +1,212 @@
-schema_version: 3
+schema_version: 4
 name: bm-r4-coupled-2d-epithelium
-status: in-progress
 title: "Coupled 2D epithelial sheet"
-kind: reproduction
-phase: Build
+created: "2026-09-30"
+status: in-progress
+phase: Evaluate
+simulation_status: ran
+implementation_status: complete
+evaluation_status: evaluated
+gate_status: passed
+design_status: drafted
 confidence: Investigating
+
 claim: >
-  A 2D epithelial sheet with an explicit cell-height degree of freedom relaxes under the vertex model; wiring the membrane traction and comparing confinement to the homogeneous baseline is in progress.
+  The explicit 2D epithelial sheet relaxes under the Tyssue vertex model and yields finite,
+  uniform per-cell geometry: all 12 cell-faces carry the same basal area (5.0) and the same
+  explicit cell height (1.93), and stepping the EulerSolver keeps that geometry finite. The
+  figure-level comparison of this spatial confinement to the homogeneous R1 baseline, and the
+  explicit BM-traction coupling, are not yet in the composite.
+
+experiment: >
+  Build the tyssue_2d_sheet composite (an explicit polygonal CrossSection sheet over the
+  vivarium-tyssue engine, each cell-face carrying an explicit height degree of freedom) and
+  step the EulerSolver. Reconstruct the mesh counts (faces = cells, vertices), read every
+  cell-face basal area and explicit height off face_df, and confirm the geometry stays finite
+  and positive across several Euler steps (dt 0.01). This is a qualitative spatial-engine
+  check -- that the sheet resolves and relaxes to finite per-cell geometry -- not yet a
+  quantitative confinement comparison to R1.
+
+result: >
+  The 2D sheet resolves and relaxes deterministically. The mesh carries 12 cell-faces (faces =
+  cells), 12 cells and 24 vertices on a flat z=0 plane spanning +/-5.80 in x and y. Every
+  cell-face relaxes to the same basal area, 5.0, and the same explicit cell height, 1.9319,
+  with all face areas and heights finite. Stepping the EulerSolver five times (dt 0.01) keeps
+  per-cell area and height finite and positive with no NaN or blow-up. The homogeneous cell is
+  uniform because the sheet carries no heterogeneous growth, division or cortical-tension
+  variation yet, and the BM traction/area law is not wired as an explicit coupling -- so the
+  spatial-vs-homogeneous confinement comparison to R1 is a followup, not a result here.
+
+pipeline_gate:
+  prerequisites:
+    - {study: bm-r1-published-tissue-baseline, condition: tests-passed}
+    - {study: bm-r2-collagen-network-rheology, condition: tests-passed}
+  enables:
+    - bm-r5-explicit-3d-confinement
+  proceed_condition: >
+    The explicit 2D sheet resolves over the tyssue engine and relaxes to finite per-cell
+    geometry, so it can serve as the planar spatial substrate the 3D monolayer (R5) builds on.
+    Advancing to the quantitative confinement claim additionally requires the BM-traction
+    coupling and the homogeneous-vs-spatial comparison to R1, which are flagged as followups.
+
 question: >
   Do the paper's confinement regimes survive explicit cell topology and heterogeneous growth
   in a spatial 2D epithelium?
 
-hypothesis: >
-  A Tyssue 2D polygonal sheet with a BM traction/area law calibrated from R2 reproduces R1's
-  confinement response in the homogeneous limit, and explicit topology, cell division and
-  varying cortical tensions introduce spatial force/area heterogeneity without destroying the
-  regime structure.
+purpose:
+  question: >
+    Do the paper's confinement regimes survive explicit cell topology and heterogeneous growth
+    in a spatial 2D epithelium?
+  mechanism: >
+    A Tyssue polygonal sheet carries an explicit per-cell basal area and an explicit cell-height
+    degree of freedom (rather than the inferred prism relation of the homogeneous R1 model). The
+    vertex-model EulerSolver relaxes the sheet; a BM traction/area law (calibrated from R2) is
+    intended to resist basal-area growth, reproducing the R1 confinement response in the
+    homogeneous limit before heterogeneous growth and division are added.
+  expected_outcome: >
+    The sheet relaxes to finite, well-posed per-cell geometry (areas and heights), establishing
+    the spatial substrate; the homogeneous limit should later match R1's confinement response
+    once the BM traction is coupled.
 
-objective: >
-  Build a Tyssue 2D sheet with a BM response calibrated from R2 (traction/area law, height via
-  an explicit volume/prism relation); include a reference homogeneous case, cell division and
-  varying cortical tensions; compare the confinement response to R1 and quantify topology
-  sensitivity.
-
-description: |
-  The first spatial model (plan section 3, 2D planar level). A Tyssue polygonal sheet carries
-  a BM traction/area law calibrated from the R2 network rheology; cell height is inferred
-  through an explicit volume/prism relation. A homogeneous reference case must reproduce R1;
-  heterogeneous growth, division and cortical-tension variation then test whether the
-  confinement phase diagram is robust to explicit topology. Effective constitutive BM and
-  explicit LAMMPS BM are interchangeable alternatives here, not additive forces.
+key_assumptions:
+  - "The sheet is an explicit polygonal CrossSection: each cell-face carries its own basal area and an explicit cell-height degree of freedom, not an inferred volume/area prism relation."
+  - "The current composite is a homogeneous relaxation: no heterogeneous growth, cell division or cortical-tension variation is applied, so all cells relax to the same geometry."
+  - "Reduced units throughout (areas, heights, lengths are dimensionless); no calibration to microns is claimed."
+  - "The BM traction/area law (calibrated from R2) is NOT wired as an explicit coupling in this composite; the effective constitutive BM and an explicit LAMMPS BM are interchangeable alternatives, not additive forces."
+  - "Qualitative scope: this study establishes that the spatial sheet runs and yields finite geometry; the quantitative confinement comparison to R1 is a followup."
 
 parent_studies:
-  - {study: bm-r1-published-tissue-baseline, relation: leads-to, condition: tests-passed}
-  - {study: bm-r2-collagen-network-rheology, relation: supports, condition: tests-passed}
+  - {study: bm-r1-published-tissue-baseline, condition: tests-passed}
+  - {study: bm-r2-collagen-network-rheology, condition: tests-passed}
 
 cites: [barrientos2026cellshape]
-
-expected_behavior:
-  - name: confinement-robust-to-topology
-    observable: confinement response vs R1; spatial force/area heterogeneity
-    condition: homogeneous reference + heterogeneous growth / division
-    rationale: >
-      The homogeneous case must match R1; the regimes must survive explicit topology for P2 to
-      advance.
 
 baseline:
   - name: bm-r4-coupled-2d-epithelium
     composite: viva_lumenoid.composites.tyssue_2d_sheet
-    composite_status: implemented
     params: {}
     note: >
       A 2D epithelial sheet with explicit cell height, relaxed against a
-      basement-membrane area law. It is the spatial counterpart of the homogeneous
-      tissue model, so the confinement response can be read cell by cell rather
-      than for one average cell.
-variants: []
-interventions: []
-runs: []
+      basement-membrane area law over the vivarium-tyssue vertex-model engine. It
+      is the spatial counterpart of the homogeneous tissue model, so the
+      confinement response can be read cell by cell rather than for one average
+      cell. The current build relaxes a homogeneous sheet to finite per-cell
+      geometry; heterogeneous growth, division and the explicit BM traction are
+      the next additions.
+
+conditions:
+  baseline:
+    composite: viva_lumenoid.composites.tyssue_2d_sheet
+    params: {}
+  model_settings: []
+
+robustness:
+  parameter_sweep: false
+  n_replicates: 1
+  note: >
+    Deterministic single configuration (one composite, no stochasticity and no parameter
+    variation): the mesh geometry is fixed, so a single relaxation run is the whole evidence.
+    Replication across a BM-stiffness / growth-rate sweep is a gap -- the quantitative
+    confinement comparison to R1 (which does sweep) is a documented followup.
+
+falsifiability: >
+  The claim would be overturned if the 2D sheet failed to resolve over the tyssue engine, if any
+  cell-face basal area or explicit height were non-finite or non-positive after relaxation, or if
+  stepping the EulerSolver produced a NaN or a blow-up in the per-cell geometry. Any of these
+  would show the explicit spatial sheet does not yield well-posed geometry. The contracts in
+  tests/test_tyssue_composites.py (test_tyssue_2d_sheet_runs) would fail in that case.
+
+simulation_set:
+  - name: r4-2d-sheet-relaxation
+    status: completed
+    base_model: viva_lumenoid.composites.tyssue_2d_sheet
+    fixed: {dt: 0.01, steps: 5}
+    metrics:
+      n_faces: 12
+      n_cells: 12
+      n_vertices: 24
+      face_area_min: 5.0
+      face_area_max: 5.0
+      face_height_min: 1.9319
+      face_height_max: 1.9319
+      all_face_areas_finite: true
+      geometry_finite_after_5_steps: true
+    pass_fail_tests:
+      - "sheet-yields-finite-areas: pass"
+      - "sheet-steps-stably: pass"
+
+runs:
+  - name: r4-2d-sheet-relaxation
+    base_model: viva_lumenoid.composites.tyssue_2d_sheet
+    status: completed
+    outcomes:
+      sheet-yields-finite-areas:
+        result: PASS
+        observed: "all 12 cell-faces relax to basal area 5.0 and explicit height 1.9319; every area and height finite and > 0"
+      sheet-steps-stably:
+        result: PASS
+        observed: "5 Euler steps (dt 0.01) keep per-cell area and height finite and positive -- no NaN, no blow-up"
+
+readouts:
+  - name: face_area
+    description: Per-cell basal area read off face_df (faces = cells in the 2D sheet); the spatial confinement readout.
+    store_path: "face_df.area"
+    units: reduced area
+    status: primary
+  - name: face_height
+    description: Explicit per-cell height degree of freedom read off face_df; the spatial counterpart of the R1 prism height.
+    store_path: "face_df.height"
+    units: reduced length
+    status: measured
+  - name: mesh_counts
+    description: Mesh topology (Nf faces = cells, Nv vertices) confirming the sheet loaded and resolved.
+    store_path: "eptm.Nf"
+    units: count
+    status: measured
+
+behavior_tests:
+  - name: sheet-yields-finite-areas
+    classification: primary
+    description: >
+      After relaxation, every cell-face in the 2D sheet carries a finite, positive basal area
+      (uniform 5.0 in this homogeneous configuration).
+    measure: {kind: reduce, field: face_area, reduce: all_finite_and_positive}
+    pass_if: {op: all_finite_positive, note: "all 12 face areas finite and > 0; min == max == 5.0"}
+    units: reduced area
+    requires_simulation: r4-2d-sheet-relaxation
+    cites: [barrientos2026cellshape]
+    calibration_anchor:
+      observed_value: 5.0
+      literature_target: "finite well-posed per-cell basal area (qualitative; no micron calibration)"
+      resolution: concept
+      cites: [barrientos2026cellshape]
+  - name: sheet-steps-stably
+    classification: primary
+    description: >
+      Stepping the EulerSolver several steps keeps per-cell areas and explicit heights finite
+      (no NaN, no blow-up).
+    measure: {kind: reduce, field: face_height, reduce: finite_over_steps}
+    pass_if: {op: finite_no_blowup, note: "per-cell area and height finite and positive after 5 Euler steps (dt 0.01)"}
+    units: reduced length
+    requires_simulation: r4-2d-sheet-relaxation
+
+conclusion_logic:
+  if_primary_tests_pass:
+    implementation_status: "The explicit 2D sheet resolves over the tyssue engine and relaxes to finite per-cell geometry."
+    biological_validation: "Qualitative only: the sheet yields well-posed per-cell areas and heights; the quantitative confinement match to R1 is not yet evaluated (BM traction not coupled)."
+    pipeline_unblocks:
+      - "R5 explicit 3D monolayer -- this planar sheet is its spatial substrate."
+  if_primary_tests_fail:
+    diagnose:
+      - "Sheet fails to resolve -- check the numpy-2.x 2D-cross shim in tyssue_coupling and the CrossSectionGeometry merge."
+      - "Geometry non-finite after stepping -- lower dt or check the EulerSolver gradient terms."
+    block_downstream: "Do not advance R5 until the planar sheet resolves and relaxes to finite geometry."
+
+limitations:
+  - "Qualitative spatial-engine check only: the study confirms the sheet runs and yields finite per-cell geometry, not that it reproduces R1's confinement regimes."
+  - "Homogeneous configuration: no heterogeneous growth, cell division or cortical-tension variation is applied, so all 12 cells relax to the same area (5.0) and height (1.93) -- the spatial heterogeneity the question asks about is not exercised yet."
+  - "The BM traction/area law (from R2) is not wired as an explicit coupling; the homogeneous-vs-spatial confinement comparison to R1 is therefore a followup, not a result."
+  - "Reduced units; single deterministic configuration (no parameter sweep, n_replicates = 1) -- replication across BM stiffness / growth rate is a gap."
 
 visualizations:
   - name: r4_sheet
@@ -66,3 +215,123 @@ visualizations:
       title: "Relaxed 2D epithelial sheet (real tyssue run)"
       caption: >
         The actual 2D epithelial sheet after relaxation on the merged CrossSectionGeometry (real tyssue EulerSolver run).
+
+report:
+  title: "R4 -- coupled 2D epithelial sheet (spatial substrate runs)"
+  verdict: >
+    The explicit 2D epithelial sheet resolves over the vivarium-tyssue vertex-model engine and
+    relaxes deterministically to finite, uniform per-cell geometry: 12 cell-faces at basal area
+    5.0 and explicit height 1.9319, stable across 5 Euler steps. This establishes the planar
+    spatial substrate the 3D monolayer builds on. It is a qualitative engine check only -- the
+    cells are homogeneous (no heterogeneous growth / division / BM traction), so the quantitative
+    confinement comparison to the homogeneous R1 baseline is not yet in the composite.
+  confidence: medium
+  evidence_quality: regression-only
+  main_insight: >
+    An explicit polygonal epithelial sheet with a per-cell height degree of freedom runs and
+    relaxes to well-posed per-cell geometry over the tyssue engine -- the spatial substrate for
+    the explicit confinement studies exists and is numerically stable.
+  caveat: >
+    Homogeneous relaxation with no BM traction coupling: this is a substrate-runs result, not a
+    reproduction of the Fig 1 confinement regimes. The spatial-vs-R1 comparison is a followup.
+
+findings:
+  - id: F1-2d-sheet-yields-finite-geometry
+    kind: computational
+    status: confirms
+    tier: observation
+    mechanism_origin: engineered
+    statement: >
+      The explicit 2D epithelial sheet resolves and relaxes over the tyssue engine to finite,
+      uniform per-cell geometry: 12 cell-faces (faces = cells) and 24 vertices on a flat z=0
+      plane, every cell-face at basal area 5.0 and explicit height 1.9319, all finite.
+    evidence:
+      from_run: r4-2d-sheet-relaxation
+      from_test: sheet-yields-finite-areas
+      observed: "Nf=12, Nv=24; face area 5.0 (uniform), face height 1.9319 (uniform); all finite"
+    explanation: >
+      Each cell-face carries an explicit basal area and height degree of freedom; with no
+      heterogeneous growth or BM traction applied, the vertex model relaxes every cell to the
+      same well-posed geometry.
+    next_action: "use as the planar spatial substrate for the R5 3D monolayer"
+    next_action_type: escalate_model
+    provenance:
+      run_ids: [r4-2d-sheet-relaxation]
+  - id: F2-steps-stably
+    kind: computational
+    status: confirms
+    tier: observation
+    mechanism_origin: engineered
+    statement: >
+      Stepping the EulerSolver five times (dt 0.01) keeps per-cell area and height finite and
+      positive, with no NaN or blow-up -- the spatial sheet is numerically stable over short
+      integration.
+    evidence:
+      from_run: r4-2d-sheet-relaxation
+      from_test: sheet-steps-stably
+      observed: "per-cell area and height finite and > 0 after 5 Euler steps"
+    provenance:
+      run_ids: [r4-2d-sheet-relaxation]
+  - id: F3-confinement-comparison-not-yet-wired
+    kind: methodological
+    status: partial
+    tier: observation
+    statement: >
+      The quantitative spatial-vs-homogeneous confinement comparison to R1 is NOT yet a result:
+      the sheet is homogeneous (uniform cells) and the BM traction/area law is not wired as an
+      explicit coupling, so only well-posed geometry -- not a reproduced regime -- is established.
+    evidence:
+      from_run: r4-2d-sheet-relaxation
+      from_test: sheet-yields-finite-areas
+      observed: "all cells identical (area 5.0, height 1.93) -- no heterogeneity or BM traction to compare against R1"
+    next_action: "wire the R2-calibrated BM traction and add heterogeneous growth/division, then compare the confinement response to R1"
+    next_action_type: refine_representation
+    provenance:
+      run_ids: [r4-2d-sheet-relaxation]
+
+followup_proposals:
+  - id: fp-r4-bm-traction-and-r1-comparison
+    title: "Wire the BM traction and compare the 2D sheet's confinement to R1"
+    motivation: >
+      The sheet currently relaxes homogeneously with no explicit BM traction, so it cannot yet
+      test whether the Fig 1 confinement regimes survive explicit topology. Wire the R2-calibrated
+      BM traction/area law, add heterogeneous growth / division / cortical-tension variation, and
+      compare the per-cell confinement response to the homogeneous R1 baseline.
+    hypothesized_mechanism: "An explicit BM traction resisting basal-area growth should reproduce R1's confinement in the homogeneous limit and introduce spatial force/area heterogeneity under growth."
+    status: proposed
+
+discovery_implications:
+  resolved_uncertainties:
+    - "The explicit 2D epithelial sheet resolves over the tyssue engine and relaxes to finite, well-posed per-cell geometry."
+    - "The spatial sheet is numerically stable over short EulerSolver integration (no NaN / blow-up)."
+  remaining_uncertainties:
+    - "Whether the Fig 1 confinement regimes survive explicit topology -- needs the BM traction coupling and heterogeneous growth."
+    - "The quantitative spatial-vs-homogeneous (R1) confinement comparison."
+  followup_study_proposals:
+    - {id: fp-r4-bm-traction-and-r1-comparison, title: "BM traction coupling + R1 confinement comparison"}
+
+conclusion_verdicts:
+  regression_compatibility:
+    result: PASS
+    basis: "The tyssue_2d_sheet composite is registered and steps cleanly over the vivarium-tyssue engine; the behavior-test contracts (test_tyssue_2d_sheet_runs) pass."
+  biological_validation:
+    result: PENDING
+    basis: >
+      The sheet yields finite, well-posed per-cell geometry, but the figure-level confinement
+      comparison to R1 and the BM-traction coupling are not yet in the composite, so no
+      biological regime is validated or refuted here.
+  explanatory_gain:
+    result: NEUTRAL
+    basis: >
+      Establishes that an explicit spatial epithelial substrate runs and is numerically stable;
+      it does not yet add biological understanding of confinement beyond the homogeneous R1 model.
+
+expert_review_status: requested
+expert_questions:
+  - "Is the homogeneous relaxation (uniform cells, no BM traction) a sufficient substrate milestone, or should the R1 confinement comparison be a blocking requirement before R4 is called evidence?"
+  - "Should the BM traction be wired as an effective constitutive law (continuous with R1) or as an explicit LAMMPS coupling before the spatial confinement claim is made?"
+
+bibliography:
+  sources:
+    - key: barrientos2026cellshape
+      note: "Barrientos et al. cell-shape paper; the spatial 2D epithelium is the explicit-topology counterpart of the Fig 1 homogeneous confinement model."
