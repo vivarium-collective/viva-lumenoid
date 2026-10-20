@@ -46,10 +46,17 @@ expected_behavior:
 baseline:
   - name: bm-e2-actin-adhesion-collagen
     composite: viva_lumenoid.composites.actin_adhesion_bm
-    composite_status: planned
+    composite_status: implemented
     params: {}
     note: >
-      PLANNED composite — design target, not yet implemented (expected unresolved-composite lint gap)
+      Implemented as a three-process coupling: the actomyosin cortex (LAMMPS
+      model seam) -> reversible basal linkers (BasalAdhesion, occupancy-gated) ->
+      a collagen IV BM patch (CollagenNetworkProcess). Resolves ready and RUNS:
+      cortex tension is transmitted as traction = occupancy x tension, driving a
+      BM strain rate so the BM deforms + remodels under the load (verified). v0
+      single-cell patch; multicellular coupling + the E2 force-transfer readouts
+      (traction / linker occupancy / deformation) build on this. The force-transfer
+      schematic (this study's figure) is the mechanism diagram for this wiring.
 variants: []
 interventions: []
 runs: []
