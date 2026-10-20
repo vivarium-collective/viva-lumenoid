@@ -834,7 +834,7 @@ else:
 # **r1_regime**
 
 # r1_regime
-_save_viz('bm-r1-published-tissue-baseline', 'r1_regime', _render_one('html:r1_regime.html', {'title': 'Confinement regimes -- cell height vs BM stiffness x relaxation (Fig 1G reproduction)', 'caption': "Cell height across basement-membrane stiffness and relaxation time (relative to the doubling time), reproducing the paper's Figure 1G. The confinement regimes appear: cells are tall where the membrane is stiff and slow to relax, and flat where it is soft or fast.\n"}, RUNS_DB, STUDY_YAML))
+_save_viz('bm-r1-published-tissue-baseline', 'r1_regime', _render_one('html:r1_regime.html', {'title': 'Confinement across BM stiffness × relaxation/doubling, with regime boundary + trajectories (cf. Fig 1)', 'evidence_status': 'observed', 'tier': 'main', 'caption': 'Reduced-order epithelial model predicts cell confinement across the two dimensionless axes the paper uses — BM stiffness relative to the cell and BM relaxation time / proliferation (doubling) time. Panel A maps confinement (h/h₀) with the confinement=1 boundary drawn and the three sampled regimes marked; panels B–D show representative basal-area growth trajectories for the soft/fast, intermediate and stiff/slow corners. This is our analytic reimplementation of the Barrientos Fig 1 model (not a simulation and not a digitized overlay of the published boundaries): the regime topology is consistent with Fig 1 — tall/confined in the stiff, slowly-relaxing corner — and a quantitative boundary overlay vs digitized Fig 1G is the open follow-up.\n'}, RUNS_DB, STUDY_YAML))
 
 # ### Acceptance criteria
 #
@@ -923,12 +923,12 @@ else:
 # **r2_fig2e**
 
 # r2_fig2e
-_save_viz('bm-r2-collagen-network-rheology', 'r2_fig2e', _render_one('html:r2_fig2e.html', {'title': 'Stress-relaxation time τ vs collagen residence (Barrientos Fig 2E)', 'caption': 'REAL measured data (dense multi-seed sweep: 300 rods, density 3.0, 12σ slab, 4 seeds): the stress-relaxation time τ rises monotonically with collagen residence time (37→102 LJ over residence 12.5→200), reproducing the Fig 2E direction. τ carries an intrinsic relaxation floor (~37 LJ) at fast turnover and is residence-dominated above residence ~50; the modulus is turnover-independent (3.19 LJ). The open marker (residence 200) resolved at only 1/4 seeds.\n'}, RUNS_DB, STUDY_YAML))
+_save_viz('bm-r2-collagen-network-rheology', 'r2_fig2e', _render_one('html:r2_fig2e.html', {'title': 'Stress-relaxation time τ vs collagen residence (Barrientos Fig 2E)', 'evidence_status': 'observed', 'tier': 'main', 'caption': 'REAL measured data (dense multi-seed sweep: 300 rods, density 3.0, 12σ slab, 4 seeds): the stress-relaxation time τ rises monotonically with collagen residence time (37→102 LJ over residence 12.5→200), reproducing the Fig 2E direction. τ carries an intrinsic relaxation floor (~37 LJ) at fast turnover and is residence-dominated above residence ~50; the modulus is turnover-independent (3.19 LJ). The open marker (residence 200) resolved at only 1/4 seeds.\n'}, RUNS_DB, STUDY_YAML))
 
 # **r2_rheology**
 
 # r2_rheology
-_save_viz('bm-r2-collagen-network-rheology', 'r2_rheology', _render_one('html:r2_rheology.html', {'title': 'Collagen network assembly + stress (small real run)', 'caption': 'A small REAL collagen IV run: the NC1/7S network assembles and carries in-plane stress — the mechanism at reduced scale behind the Fig 2E curve above.\n'}, RUNS_DB, STUDY_YAML))
+_save_viz('bm-r2-collagen-network-rheology', 'r2_rheology', _render_one('html:r2_rheology.html', {'title': 'Collagen network assembly + stress — 40-rod smoke test (methods)', 'evidence_status': 'engineered-diagnostic', 'tier': 'supplement', 'caption': 'A small 40-rod LAMMPS smoke test confirms that bonds form and the simulated network reports finite in-plane stress (network bond-virial, reduced LJ units); it does not establish the lifetime–relaxation law — that is the primary figure above. Methods/verification only.\n'}, RUNS_DB, STUDY_YAML))
 
 # ### Acceptance criteria
 #
