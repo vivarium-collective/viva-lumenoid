@@ -47,7 +47,7 @@ description: |
   (rigid rods, junction flexibility); Smoldyn is held for stage 3 (flexible
   fibers + surface binders) per spec decision #2.
 
-  **Staged build (spec "v1 build").**
+  **Staged build.**
     - Stage 1 — reproduce the paper; separate elastic from viscous. Stretch,
       hold, then switch the crosslink chemistry on. Reports an elastic modulus
       and a stress-relaxation time.  ← this investigation's first study.
@@ -58,7 +58,7 @@ description: |
       off-rate). Smoldyn's surface binders land here.
     - Stage 4 — curvature (only if stages 2–3 depend on R beyond ε̇ = Ṙ/R).
 
-  **Coupling route (spec decision).** Offline first: tabulate the BM's modulus
+  **Coupling route.** Offline first: tabulate the BM's modulus
   and remodelling time against growth rate and hand them to the vertex model.
   Then direct: vertex-mesh surface velocities drive the BM substrate, BM stress
   feeds back, exchanged every N vertex steps.
@@ -173,7 +173,7 @@ at_a_glance:
       is still soft. A faithful run needs angles active during assembly.
   - study: bm-v5-porosity-bundling
     role: >
-      Geometric readouts (spec "has: geometrical structure"). Reads porosity +
+      Geometric readouts. Reads porosity +
       bundling off the real network against measured BM. Pore diameter reaches the
       corneal-EM band (72 ± 40 nm) at realistic density; the NC1/7S-only topology
       under-bundles (mean ~1 protomer/strand, below the measured 5–7), because the
@@ -325,7 +325,7 @@ glossary:
   - term: protomer
     definition: One collagen IV triple-helical molecule (~376 nm end-to-end); modelled as one two-bead rod.
   - term: NC1 / 7S
-    definition: The two crosslinking ends of a protomer. NC1 binds 1 partner (hexamer), 7S binds 3 (tetramer/spider).
+    definition: The two crosslinking ends of a protomer. NC1 binds one partner, 7S binds three.
   - term: remodelling time
     definition: The viscous stress-relaxation time set by crosslink make/break kinetics; calibrated to the ≈20 h collagen IV lifetime.
   - term: ε̇ (epsilon-dot)
@@ -362,12 +362,12 @@ guidelines:
     - "Mechanistic controls: no BM, purely elastic BM, remodeling BM, no supply, no crosslink turnover, inactive actin, fixed basal linkers, one-way vs two-way coupling."
     - "Numerical verification: unit tests, angle/topology checks, network connectivity, force + energy balance, coupling convergence, timestep sensitivity, ≥ several random seeds."
   validation_distinction:
-    - "Reproduce source panels with the ORIGINAL parameter conventions; treat unrelated BM material measurements as analog comparators, not direct biological validation."
-    - "Keep INFERRED quantities (from the fluorescent-timer observation model) distinct from INDEPENDENTLY PREDICTED quantities (from the mechanical model). Do not claim to simulate the timer experiment biologically unless its observation model is included."
+    - "Reproduce source panels with the original parameter conventions; treat unrelated BM material measurements as analog comparators, not direct biological validation."
+    - "Keep inferred quantities (from the fluorescent-timer observation model) distinct from independently predicted quantities (from the mechanical model). Do not claim to simulate the timer experiment biologically unless its observation model is included."
   readouts:
     - "height/basal-area distributions, area expansion, cell division, force maps, BM connectivity, mass/area, molecule ages, stress relaxation, lumen radius."
   evidence_format:
     - "Every study records: question, model version, parameters, protocols, controls, outcome figures, uncertainty, and a conclusion tagged reproduction | verification | prediction."
   modularity:
-    - "Reuse existing processes across composites (one general CollagenNetworkProcess + StagedStretchController, config-driven); composites are thin wirings that select processes + params, never duplicated logic. Tyssue/actin processes are new modular units with the same discipline."
+    - "Reuse a small set of general, configurable processes across composites. A composite selects and parameterises processes rather than duplicating logic, and new engine pieces follow the same discipline."
 

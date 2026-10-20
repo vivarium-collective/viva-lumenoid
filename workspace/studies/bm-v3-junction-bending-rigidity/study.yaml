@@ -2,7 +2,7 @@ schema_version: 4
 name: bm-v3-junction-bending-rigidity
 title: "Rigidity percolation (central-force control)"
 created: "2026-09-30"
-kind: adversarial   # counterfactual (central-force) control: it should NOT reproduce the released angle-stabilized model; retained per upgrade-plan §2
+kind: adversarial   # counterfactual (central-force) control: it should not reproduce the released angle-stabilized model; retained per upgrade-plan §2
 status: in-progress
 phase: Evaluate
 simulation_status: ran
@@ -214,7 +214,7 @@ conclusion_logic:
       - "Junction-bending implementation (auto-angles at crosslink junctions)."
   if_primary_tests_fail:
     diagnose:
-      - "If z reaches 4 and modulus turns on, connectivity DOES rigidify — revise the finding."
+      - "If z reaches 4 and modulus turns on, connectivity does rigidify — revise the finding."
     block_downstream: "Nothing downstream is blocked — this is a diagnostic follow-up, not a pipeline gate."
 
 visualizations:
@@ -232,7 +232,7 @@ visualizations:
       title: "Rigidity sweep — modulus vs coordination z"
 
 limitations:
-  - "Cross-check (2026-10-01): the released model is NOT central-force — it sets NC1/7S junction angles (bending). The rigidity-percolation premise here is general physics but does not describe the published model, which is angle-stabilized. See references/cross-check-vs-released-code.md."
+  - "Cross-check: the released model is not central-force — it sets NC1/7S junction angles (bending). The rigidity-percolation premise here is general physics but does not describe the published model, which is angle-stabilized."
   - "Clean-room parameters transcribed from the spec; the authors' LAMMPS input scripts are now public (Zenodo 10.5281/zenodo.20719515) and not yet cross-checked against this build."
   - "Bundling is modelled only as raised crosslink caps, not explicit lateral-association bonds."
   - "Junction bending is not yet implemented — this study motivates it, does not test it."
