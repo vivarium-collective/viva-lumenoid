@@ -173,14 +173,14 @@ behavior_tests:
     measure: {kind: value, field: modulus_vs_bending_k, at: "bending_k=0"}
     pass_if: {op: near_zero, tol: 0.1}
     units: kT/a^3
-    requires_simulation: "true"
+    requires_simulation: bending-athermal-sweep
   - name: bending-changes-mechanics
     classification: primary
     description: Bending produces a large mechanical response (|E| >> floppy).
     measure: {kind: magnitude, field: modulus_vs_bending_k, at: "bending_k>0"}
     pass_if: {op: gt, value: 1.0, note: "|E| jumps orders of magnitude above floppy"}
     units: kT/a^3
-    requires_simulation: "true"
+    requires_simulation: bending-athermal-sweep
   - name: reproducible-modulus
     classification: primary
     description: >
@@ -192,7 +192,7 @@ behavior_tests:
     measure: {kind: iqr_over_median, field: modulus_vs_bending_k, at: "bending_k>0"}
     pass_if: {op: lt, value: 0.5, note: "IQR < 0.5·|median| — met by the real-angle path"}
     units: dimensionless
-    requires_simulation: "true"
+    requires_simulation: bending-athermal-sweep
 
 findings:
   - id: F1-bending-implemented
@@ -294,29 +294,77 @@ discovery_implications:
     - {id: fp3-absolute-modulus-via-density-match, title: "Absolute bending modulus by matching the released make+break density (GCE)"}
 
 visualizations:
+  # MAIN (single essential figure, 2026-10-20 review): the restructured
+  # faithful-angles figure — per-seed three-way modulus + modulus-vs-connectivity
+  # + the real-LAMMPS angle topology.
   - name: faithful-angles
-    address: "html:faithful_angles.html"
+    address: "html:bm_v4_faithful_angles.html"
     config:
-      title: "Faithful angles — the modulus becomes reproducible (headline)"
-  - name: bending-movie
-    address: "html:bending_movie.html"
-    config:
-      title: "Simulation movie — rods pinned at crosslink angles"
-  - name: bending-movie-3d
-    address: "html:bending_movie_3d.html"
-    config:
-      title: "3D view — the bending-pinned network, rotatable"
+      title: "Junction angles formed during assembly stabilise the modulus"
+      evidence_status: observed
+      tier: main
+      caption: >
+        Per-seed equibiaxial-stretch tangent modulus (reduced LJ units, kT/σ³;
+        ×2.2 → Pa, carrying the unresolved-energy-scale caveat) at matched box
+        (13σ), density and loading protocol for three controls — central force
+        (angles off, k=0), post-hoc as-formed harmonic restraints (k=4), and real
+        NC1 harmonic angles created DURING assembly (k=4, 180°). Real LAMMPS
+        (run_faithful_comparison; 3 seeds 11/22/33, one deterministic run each).
+        Forming the angles during assembly gives positive, reproducible per-seed
+        moduli (36.7/27.6/37.5 kT/σ³ ≈ 81/61/83 Pa) where the central-force control
+        is consistent with zero (−0.54/−1.32/−1.14) and the post-hoc restraint
+        sign-flips (0.9/−2.53/−0.47); connectivity is an important covariate
+        (panel B: modulus rises monotonically with crosslinks/rod). The paper
+        already has angle terms — this is matching the released angle set applied
+        the released way (angles active during assembly), NOT a novel physical
+        correction. FIDELITY GAP (named): only the NC1 junction angle (k=4 @180°,
+        create_bonds single/angle type 1) is implemented; the two released 7S
+        angles (k≈1 @155° and @60°) are NOT. The absolute Pa value additionally
+        depends on matching the released make+break crosslink density — the
+        dense-config, multi-seed reproducible value is a Mac-mini candidate.
+  # SUPPLEMENT — the bending_k ladder (the paper already has angle terms, so this
+  # is a diagnostic ladder, not a novel physical result).
   - name: bending-diagnostic
     address: "html:bending_diagnostic.html"
     config:
-      title: "FP1 — junction bending response"
+      title: "Junction-bending stiffness ladder (diagnostic)"
+      evidence_status: engineered-diagnostic
+      tier: supplement
+      caption: >
+        Athermal elastic modulus vs the junction-bending stiffness bending_k
+        (reduced LJ, kT/σ³), swept around the released NC1 value k=4.0. A
+        parameter ladder / conditioning diagnostic: the paper already sets these
+        angle terms, so sweeping bending_k is a sensitivity check, not a novel
+        physical correction. Superseded for the headline claim by the
+        angle-during-assembly figure above.
+  # SUPPLEMENT — one optional movie retained (review: remove movies from main).
+  - name: bending-movie
+    address: "html:bending_movie.html"
+    config:
+      title: "Simulation movie — bending-pinned network (supplement)"
+      evidence_status: engineered-diagnostic
+      tier: supplement
+      caption: >
+        Optional animation of the junction-bending network assembling at the
+        released NC1 stiffness (k=4.0). Illustrative spatial context; not a
+        quantitative result. 2D top-down projection of the quasi-2D slab.
+  - name: bending-movie-3d
+    address: "html:bending_movie_3d.html"
+    config:
+      title: "3D view — the bending-pinned network (supplement)"
+      evidence_status: engineered-diagnostic
+      tier: supplement
+      caption: >
+        Rotatable 3D view of the same bending-network clip (z exaggerated for
+        visibility). Illustrative; not a quantitative result.
 
 limitations:
   - "Cross-check: junction bending is not a new ingredient — the released code already sets KangNC1=4.0 (@180°) plus two 7S angles. Re-scope as 'match the released angle set', not 'add bending'."
   - "Clean-room parameters transcribed from the spec; the authors' LAMMPS input scripts are now public (Zenodo 10.5281/zenodo.20719515) and not yet cross-checked against this build."
-  - "The bending modulus is ill-conditioned at 200 rods (pre-stress + finite-size); not calibratable yet."
-  - "Bending targets are pinned from a thermally-noisy as-formed geometry (a pre-stress source)."
-  - "Only equibiaxial stress-strain slope is used; a shear or energy-curvature modulus may be better conditioned."
+  - "Angle-set fidelity: only the NC1 junction angle (k=4 @180°) is created in the real-angle path; the two released 7S angles (k≈1 @155°, @60°) are NOT yet implemented — a named fidelity gap, not a reproduction."
+  - "RESOLVED (supersedes the earlier 'ill-conditioned, not calibratable' limitation): the sign-flipping/ill-conditioning was an artifact of the post-hoc as-formed-restraint path; creating the angles during assembly gives a positive, reproducible per-seed modulus (36.7/27.6/37.5 LJ). Only the as-formed-restraint CONTROL remains ill-conditioned (it pins targets to a thermally-noisy as-formed geometry)."
+  - "Absolute Pa still open: the real-angle path assembles make-only and over-crosslinks; matching the released make+break crosslink density (per-angle deletion / GCE) for an absolute modulus is a Mac-mini candidate (the recorded 3-seed run took ~200 s)."
+  - "Only the equibiaxial stress-strain tangent (and the athermal-minimised modulus for the diagnostic ladder) are used; a shear or energy-curvature modulus may be better conditioned."
 
 report:
   title: "Stage v4 — junction bending: the angle-during-assembly fix"

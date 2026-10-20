@@ -8,7 +8,8 @@ sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent.parent))
 
 from viva_lumenoid.viz import save_html
 from viva_lumenoid.study_figures import (
-    STUDY_FIGURES, EXTRA_STUDY_FIGURES, COMPANION_FIGURES, driving_schema_figure,
+    STUDY_FIGURES, EXTRA_STUDY_FIGURES, COMPANION_FIGURES, V5_EXTRA_FIGURES,
+    driving_schema_figure,
 )
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
@@ -34,6 +35,9 @@ TITLES = {
     "e3_lumen_dynamics": "E3 (supplement) — lumen/BM state static at rest (gap: no filling drive)",
     "e4_feedback": "E4 — coupling-control time courses: two-way / one-way / uncoupled (engineered-diagnostic)",
     "e4_subcycle_convergence": "E4 (supplement) — BM subcycling convergence",
+    "bm_v4_faithful_angles": "Junction angles formed during assembly stabilise the modulus (real LAMMPS)",
+    "bm_v5_porosity": "Simulated pore size reaches the corneal-EM reference at density (real geometry)",
+    "bm_v5_bundling": "The NC1/7S-only network under-bundles — no lateral-association bond (real geometry)",
 }
 
 
@@ -50,6 +54,8 @@ def main():
     all_figs = [(slug, name, fn, kind) for slug, (name, fn, kind) in STUDY_FIGURES.items()]
     all_figs += list(EXTRA_STUDY_FIGURES)
     all_figs += [(slug, name, fn, kind) for slug, (name, fn, kind) in COMPANION_FIGURES.items()]
+    all_figs += [(slug, name, fn, "data") for slug, items in V5_EXTRA_FIGURES.items()
+                 for name, fn in items]
     for slug, name, fn, kind in all_figs:
         vdir = STUD / slug / "viz"
         vdir.mkdir(parents=True, exist_ok=True)
@@ -59,6 +65,16 @@ def main():
             results.append((slug, name, kind, "ok"))
         except Exception as e:
             results.append((slug, name, kind, f"FAIL {type(e).__name__}: {e}"))
+    # Extra MAIN figures for a study that has more than one (v5: the split story).
+    for slug, extras in V5_EXTRA_FIGURES.items():
+        vdir = STUD / slug / "viz"
+        vdir.mkdir(parents=True, exist_ok=True)
+        for name, fn in extras:
+            try:
+                save_html(fn(), str(vdir / f"{name}.html"), TITLES[name])
+                results.append((slug, name, "data", "ok"))
+            except Exception as e:
+                results.append((slug, name, "data", f"FAIL {type(e).__name__}: {e}"))
     for slug, name, kind, status in results:
         print(f"  [{kind:9s}] {slug:38s} {name}.html  -> {status}")
     return results
