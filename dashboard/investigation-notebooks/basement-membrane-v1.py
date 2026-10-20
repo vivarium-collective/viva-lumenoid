@@ -1190,7 +1190,7 @@ _save_viz('bm-r5-explicit-3d-confinement', 'r5_monolayer', _render_one('html:r5_
 #
 # **Purpose.** Perlecan stabilizes collagen IV, lengthening its inferred molecular lifetime; a longer lifetime is a slower BM relaxation time, which the reduced-order prism mechanics (R1) turns into a taller (more confined) cell. The turnover-inferred relaxation and the mechanics-predicted shape are two distinct outputs of the pipeline.
 #
-# **Claim.** Carrying an inferred collagen lifetime through BM relaxation to cell shape reproduces the paper's intervention ordering: perlecan gain gives taller cells than control, and loss gives flatter ones, with the inferred relaxation time (turnover) kept distinct from the predicted cell height (mechanics).
+# **Claim.** CONTRADICTION FLAGGED (figure review 2026-10-20). The pipeline self-consistently maps an inferred collagen lifetime through BM relaxation to cell shape, but the perlecan direction it encodes (perlecan STABILIZES collagen -> longer lifetime -> slower relaxation -> taller cell) produces an ordering OPPOSITE to the paper's reported perlecan morphology (overexpression -> faster relaxation -> shorter/wider; knockdown -> taller). This study therefore does NOT reproduce Figure 7 and must not be scored as a pass until the perlecan -> turnover direction is audited against the paper. The growth-rate axis (faster growth -> flatter) is unaffected.
 
 # ### Parameters
 #
@@ -1257,7 +1257,7 @@ else:
 # **r6_intervention**
 
 # r6_intervention
-_save_viz('bm-r6-perlecan-growth-perturbations', 'r6_intervention', _render_one('html:r6_intervention.html', {'title': 'Intervention ordering on cell height (Fig 7 reproduction)', 'caption': "Predicted cell height for each perlecan and growth-rate condition, with the inferred membrane relaxation time marked on each bar, reproducing the paper's Figure 7. Perlecan gain gives the tallest cells, then the control, then perlecan loss.\n"}, RUNS_DB, STUDY_YAML))
+_save_viz('bm-r6-perlecan-growth-perturbations', 'r6_intervention', _render_one('html:r6_intervention.html', {'title': 'Perlecan/growth intervention on predicted cell height — CONTRADICTS paper (evidence: contradicted)', 'evidence_status': 'contradicted', 'caption': "Predicted cell height per perlecan and growth-rate condition (inferred BM relaxation annotated). The model's perlecan ordering — gain taller than control taller than loss — is self-consistent but OPPOSITE the paper's reported morphology (perlecan overexpression → shorter/wider cells). This figure is shown as a flagged contradiction, NOT a Figure 7 reproduction, pending an audit of the perlecan → collagen-turnover direction. The growth-rate result (faster growth → much flatter) is unaffected.\n"}, RUNS_DB, STUDY_YAML))
 
 # ### Acceptance criteria
 #
@@ -1265,7 +1265,7 @@ _save_viz('bm-r6-perlecan-growth-perturbations', 'r6_intervention', _render_one(
 #
 # | test | measures | passes if |
 # | --- | --- | --- |
-# | perlecan-intervention-ordering _(primary)_ | kind=order field=cell_height cases=['perlecan_gain', 'control', 'perlecan_loss'] | op strictly_decreasing note height(gain) > height(control) > height(loss) |
+# | perlecan-intervention-ordering _(primary)_ | kind=order field=cell_height cases=['perlecan_gain', 'control', 'perlecan_loss'] | op strictly_decreasing note height(gain) > height(control) > height(loss) -- model-internal, NOT the paper's direction |
 # | inferred-relaxation-scales-with-perlecan _(primary)_ | kind=monotonicity field=inferred_relaxation versus=perlecan_factor | op increasing note inferred_relaxation = 5.0 x perlecan_factor; strictly increasing in perlecan |
 # | inferred-and-predicted-distinct _(secondary)_ | kind=structure fields=['inferred_relaxation', 'cell_height'] | op both_emitted note both are emitted independently; perlecan drives height only through the relaxation time |
 # | faster-growth-spreads _(secondary)_ | kind=compare field=cell_height cases=['fast_growth', 'control'] | op lt note height(fast_growth) < height(control) |

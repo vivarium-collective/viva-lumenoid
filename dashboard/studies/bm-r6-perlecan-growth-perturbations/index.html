@@ -531,7 +531,7 @@
 
     <div class="ctr-block">
       <h2 class="overview-label ctr-h">Claim</h2>
-      <p class="ctr-text">Carrying an inferred collagen lifetime through BM relaxation to cell shape reproduces the paper&#39;s intervention ordering: perlecan gain gives taller cells than control, and loss gives flatter ones, with the inferred relaxation time (turnover) kept distinct from the predicted cell height (mechanics).
+      <p class="ctr-text">CONTRADICTION FLAGGED (figure review 2026-10-20). The pipeline self-consistently maps an inferred collagen lifetime through BM relaxation to cell shape, but the perlecan direction it encodes (perlecan STABILIZES collagen -&gt; longer lifetime -&gt; slower relaxation -&gt; taller cell) produces an ordering OPPOSITE to the paper&#39;s reported perlecan morphology (overexpression -&gt; faster relaxation -&gt; shorter/wider; knockdown -&gt; taller). This study therefore does NOT reproduce Figure 7 and must not be scored as a pass until the perlecan -&gt; turnover direction is audited against the paper. The growth-rate axis (faster growth -&gt; flatter) is unaffected.
 </p>
       
     </div>
@@ -582,14 +582,14 @@
 
     <div class="ctr-block">
       <h2 class="overview-label ctr-h">Result</h2>
-      <p class="ctr-text">The intervention ordering reproduces exactly. Predicted cell height is tallest under perlecan gain (0.4386), then control (0.4287), then perlecan loss (0.4043) -- a strict gain &gt; control &gt; loss ordering, matching Figure 7. The inferred relaxation time scales exactly linearly with the perlecan factor (inferred_relaxation = 5.0 x perlecan_factor: 1.5 at loss, 5.0 at control, 10.0 at gain, 15.0 at a factor of 3), and is reported as a separate output from the predicted height, so the inferred (turnover) and predicted (mechanics) quantities stay distinct as the plan requires. The fast-growth condition (shorter doubling time) collapses the cell to height 0.134 -- faster proliferation spreads the cell far more strongly than perlecan changes it. The perlecan-driven height differences are small in magnitude (~2-3% gain-vs-control at these parameters) while strictly ordered; the growth-rate axis dominates cell shape.
+      <p class="ctr-text">The pipeline runs and produces a strict, self-consistent ordering -- perlecan gain 0.4386 &gt; control 0.4287 &gt; loss 0.4043 -- but that ordering CONTRADICTS the paper. Barrientos Figure 7 (per the figure review) reports perlecan overexpression -&gt; FASTER BM relaxation -&gt; SHORTER/wider cells and knockdown -&gt; taller; our model assumes perlecan STABILIZES collagen (gain -&gt; longer lifetime -&gt; slower relaxation -&gt; taller), so it predicts the opposite morphology. The mechanics sign (longer relaxation -&gt; taller) is internally correct and matches R1; the disagreement is entirely in the perlecan -&gt; collagen-turnover direction, which is an unaudited modelling assumption, not a reproduced result. Reproduction is WITHHELD pending that audit.
 </p>
       
       
       <div class="ov-metrics">
         
-        <div class="ov-metric ov-metric-pass">
-          <div class="ov-metric-v">cell height 0.4386 (gain) &gt; 0.4287 (control) &gt; 0.4043 (loss) -- strict Fig 7 ordering</div>
+        <div class="ov-metric ov-metric-warn">
+          <div class="ov-metric-v">cell height 0.4386 (gain) &gt; 0.4287 (control) &gt; 0.4043 (loss) -- strict and model-self-consistent, but OPPOSITE the paper&#39;s perlecan morphology (overexpression -&gt; shorter). Not a Fig 7 reproduction.</div>
           <div class="ov-metric-k">perlecan-intervention-ordering</div>
         </div>
         
@@ -623,11 +623,11 @@
       
       
       
-      <div class="finding-card finding-kind-biological finding-status-confirms">
+      <div class="finding-card finding-kind-biological finding-status-refutes">
         <details class="finding-details">
           <summary class="finding-row">
-            <span class="finding-status-glyph">✓</span>
-            <span class="finding-claim finding-statement">The pipeline reproduces Figure 7&#39;s intervention ordering: predicted cell height is tallest under perlecan gain (0.4386), then control (0.4287), then perlecan loss (0.4043) -- a strict gain &gt; control &gt; loss ordering.
+            <span class="finding-status-glyph">◆</span>
+            <span class="finding-claim finding-statement">The model&#39;s perlecan ordering CONTRADICTS the paper. It predicts a strict, self-consistent gain (0.4386) &gt; control (0.4287) &gt; loss (0.4043) height ordering, but the paper reports perlecan overexpression -&gt; faster BM relaxation -&gt; SHORTER/wider cells (the opposite). The disagreement is the perlecan -&gt; collagen-turnover direction: our model assumes perlecan stabilizes collagen (gain -&gt; longer lifetime), which is an unaudited assumption. Figure 7 is NOT reproduced.
 </span>
             
             <span class="finding-chip">via <code>perlecan-intervention-ordering</code></span>
@@ -635,14 +635,14 @@
           </summary>
           <div class="finding-drawer">
             <div class="finding-header">
-              <span class="finding-id">F1-fig7-ordering-reproduced</span>
+              <span class="finding-id">F1-perlecan-ordering-contradicts-paper</span>
               <span class="finding-kind">biological</span>
-              <span class="finding-status-text">confirms literature</span>
+              <span class="finding-status-text">refutes literature</span>
             </div>
             
             
             <div class="finding-evidence">
-              <strong>observed:</strong> 0.4386 &gt; 0.4287 &gt; 0.4043 (perlecan gain / control / loss) · 
+              <strong>observed:</strong> model 0.4386 &gt; 0.4287 &gt; 0.4043 (gain/control/loss); paper direction is OPPOSITE · 
               
               via test <a href="#bt-perlecan-intervention-ordering" onclick="_gotoStudyTab('audit','bt-perlecan-intervention-ordering');return false;"><code>perlecan-intervention-ordering</code></a> · 
               in run <a href="#run-r6-perlecan-growth-conditions"><code>r6-perlecan-growth-conditions</code></a>
@@ -659,21 +659,21 @@
             
             
             
-            <div class="pass_if-band muted small" style="font-size:0.82em;padding:2px 10px">judged against <code>pass_if: op: strictly_decreasing · note: height(gain) &gt; height(control) &gt; height(loss)</code></div>
+            <div class="pass_if-band muted small" style="font-size:0.82em;padding:2px 10px">judged against <code>pass_if: op: strictly_decreasing · note: height(gain) &gt; height(control) &gt; height(loss) -- model-internal, NOT the paper&#39;s direction</code></div>
             
             
             
             <div class="finding-expected">
-              <strong>expected:</strong> perlecan gain taller, loss flatter (Fig 7) · 
+              <strong>expected:</strong> paper: perlecan overexpression -&gt; shorter cells; knockdown -&gt; taller · 
               
               cites: <a class="ov-cite" href="#sref-barrientos2026cellshape" title="Basement membrane turnover controls cell shape">Barrientos 2026</a>
             </div>
             
             
-            <div class="finding-explanation"><em>Why:</em> Perlecan gain lengthens the inferred collagen lifetime, slowing BM relaxation, so the R1 mechanics keep the cell taller; perlecan loss does the reverse.
+            <div class="finding-explanation"><em>Why:</em> Our pipeline lengthens the inferred collagen lifetime under perlecan gain (slower relaxation -&gt; taller). If, as the figure review states, the paper has perlecan overexpression speeding collagen turnover, the perlecan_factor -&gt; lifetime mapping must be inverted; the mechanics (relaxation -&gt; height) are already correct.
 </div>
             
-            <div class="finding-next"><strong>→ Next:</strong> feed the closed reproduction campaign into the E4 predictive-feedback study</div>
+            <div class="finding-next"><strong>→ Next:</strong> audit the perlecan -&gt; collagen-turnover direction against the paper; invert the mapping in turnover_shape.py only if the paper confirms faster turnover under overexpression</div>
           </div>
         </details>
       </div>
@@ -797,13 +797,13 @@
       <div class="ctr-meta ctr-assess">
         
         <div class="ctr-meta-row"><span class="ctr-meta-k">Confidence</span>
-          <span class="ctr-badge ctr-badge-accepted">Accepted</span>
-          <span class="ctr-vch">biology&nbsp;PASS</span>
+          <span class="ctr-badge ctr-badge-investigating">Investigating</span>
+          <span class="ctr-vch">biology&nbsp;FAIL</span>
           <span class="ctr-vch">insight&nbsp;POSITIVE</span>
         </div>
         
         
-        <div class="ctr-meta-row"><span class="ctr-meta-k">Caveat</span> <span class="ctr-meta-item">Reduced units; the claim is the RELATIVE morphology ordering, not absolute cell height.</span></div>
+        <div class="ctr-meta-row"><span class="ctr-meta-k">Caveat</span> <span class="ctr-meta-item">RED FLAG (figure review): the perlecan ordering CONTRADICTS the paper. Our model assumes perlecan stabilizes collagen (gain -&gt; longer lifetime -&gt; slower relaxation -&gt; taller); the paper reports perlecan overexpression -&gt; faster relaxation -&gt; shorter/wider cells. Reproduction is withheld until the perlecan -&gt; turnover direction is audited against the paper (one-line sign inversion in turnover_shape.py if the paper confirms faster turnover under overexpression).</span></div>
         
       </div>
       
@@ -1288,25 +1288,25 @@
         
         data-pytest-node="perlecan-intervention-ordering"
         data-classification="primary"
-        data-result="PASS"
+        data-result="CONTRADICTS"
         style="margin: 0 0 10px 0; padding: 10px 12px; border-left: 4px solid #10b981; background: #f8fafc; border-radius: 4px;">
       
         
       <div style="display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;">
-        <span class="bt-result" style="font-size: 0.75em; font-family: monospace; padding: 2px 8px; border-radius: 9999px; background: #d1fae5; color: #065f46">✓ PASS</span>
+        <span class="bt-result" style="font-size: 0.75em; font-family: monospace; padding: 2px 8px; border-radius: 9999px; background: #f1f5f9; color: #475569">⏳ pending</span>
         <span class="classification-pill classification-primary">primary</span>
         <strong style="font-size: 0.9em;">perlecan-intervention-ordering</strong>
         
         <span class="muted" style="font-size:0.78em">requires: <code>r6-perlecan-growth-conditions</code></span>
         
       </div>
-      <div style="margin-top: 6px; font-size: 0.95em;">Predicted cell height follows the Fig 7 intervention ordering: perlecan gain &gt; control &gt; perlecan loss.
+      <div style="margin-top: 6px; font-size: 0.95em;">MODEL-INTERNAL self-consistency only: given the perlecan-STABILIZES assumption, predicted height is strictly gain &gt; control &gt; loss. This passes as an internal check but CONTRADICTS the paper&#39;s reported perlecan morphology (overexpression -&gt; shorter), so it does NOT establish Fig 7 reproduction.
 </div>
       
       <div style="margin-top:6px;font-size:0.85em;padding:6px 10px;background:#fff;border:1px solid #e2e8f0;border-radius:3px">
         <strong>Latest result:</strong>
         
-          <code style="font-family:ui-monospace,monospace;color:#475569;margin-right:8px">observed: cell height 0.4386 (gain) &gt; 0.4287 (control) &gt; 0.4043 (loss) -- strict Fig 7 ordering</code>
+          <code style="font-family:ui-monospace,monospace;color:#475569;margin-right:8px">observed: cell height 0.4386 (gain) &gt; 0.4287 (control) &gt; 0.4043 (loss) -- strict and model-self-consistent, but OPPOSITE the paper&#39;s perlecan morphology (overexpression -&gt; shorter). Not a Fig 7 reproduction.</code>
         
       </div>
       
@@ -1315,7 +1315,7 @@
         <summary class="muted" style="cursor: pointer;">Assertion</summary>
         
         <pre style="background:#fff; padding:8px; margin:4px 0 0 0; border:1px solid #e2e8f0; border-radius:3px; overflow-x:auto;">measure: {"cases": ["perlecan_gain", "control", "perlecan_loss"], "field": "cell_height", "kind": "order"}
-pass_if: {"note": "height(gain) \u003e height(control) \u003e height(loss)", "op": "strictly_decreasing"}
+pass_if: {"note": "height(gain) \u003e height(control) \u003e height(loss) -- model-internal, NOT the paper\u0027s direction", "op": "strictly_decreasing"}
 cites:   ["barrientos2026cellshape"]</pre>
       </details>
       
@@ -1326,9 +1326,9 @@ cites:   ["barrientos2026cellshape"]</pre>
   "cites": [
     "barrientos2026cellshape"
   ],
-  "literature_target": "perlecan gain taller, loss flatter (Fig 7 ordering)",
-  "observed_value": "0.4386 \u003e 0.4287 \u003e 0.4043",
-  "resolution": "concept"
+  "literature_target": "paper: perlecan overexpression -\u003e SHORTER cells (our model gives taller) -- CONTRADICTS",
+  "observed_value": "0.4386 \u003e 0.4287 \u003e 0.4043 (model); paper reports the OPPOSITE perlecan ordering",
+  "resolution": "contradicts"
 }</pre>
       </details>
       
@@ -1544,9 +1544,9 @@ pass_if: {"note": "height(fast_growth) \u003c height(control)", "op": "lt"}</pre
         
       </span>
       
-      <span class="status-step set gate-status-passed">
+      <span class="status-step  gate-status-blocked">
         <span class="dot"></span>5 · Decision
-        <span class="step-val">passed</span>
+        <span class="step-val">failed</span>
         
       </span>
       
@@ -1609,14 +1609,14 @@ pass_if: {"note": "height(fast_growth) \u003c height(control)", "op": "lt"}</pre
           <span class="narrative-label">Empirical validation</span>
           <span class="narrative-input verdict-badge-computed" data-verdict-track="biological_validation"
                 title="Computed from the gate evaluator (read-only)"
-                style="display:inline-block;padding:2px 12px;border-radius:9999px;font-weight:700;font-size:0.85em;background:#f1f5f9;color:#475569">PASS</span>
+                style="display:inline-block;padding:2px 12px;border-radius:9999px;font-weight:700;font-size:0.85em;background:#f1f5f9;color:#475569">FAIL</span>
           <span class="muted small" style="margin-left:6px">computed from gate evaluator</span>
         </label>
         <label class="narrative-row narrative-row-wide">
           <span class="narrative-label">Empirical basis</span>
           <textarea class="narrative-input narrative-textarea" rows="2"
                     data-narrative-path="conclusion_verdicts.biological_validation.basis"
-                    placeholder="e.g. atp_fraction = 0.997, outside Boesen 2024 band [0.2, 0.5].">Reproduces Fig 7&#39;s intervention ordering (perlecan gain &gt; control &gt; loss) with the inferred relaxation kept distinct from the predicted shape. Magnitude of the perlecan effect is modest (noted as a limitation), but the ordering and the inferred/predicted split are robust.
+                    placeholder="e.g. atp_fraction = 0.997, outside Boesen 2024 band [0.2, 0.5].">CONTRADICTS the paper: the model&#39;s perlecan ordering (gain -&gt; taller) is opposite the paper&#39;s reported morphology (overexpression -&gt; shorter/wider). Fig 7 reproduction is WITHHELD pending an audit of the perlecan -&gt; collagen-turnover direction. The inferred/predicted split and the growth-rate axis are sound, but they do not rescue the perlecan reproduction claim.
 </textarea>
         </label>
         <label class="narrative-row">
@@ -1647,7 +1647,7 @@ pass_if: {"note": "height(fast_growth) \u003c height(control)", "op": "lt"}</pre
       <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
         <span class="gate-status-passed" style="padding:2px 12px;border-radius:9999px;font-weight:700;font-size:0.85em">passed</span>
         <span class="muted small">evaluated by code</span>
-        <span class="muted small">4/4 passed</span>
+        <span class="muted small">3/4 passed</span>
       </div>
       
     </div>
@@ -1663,30 +1663,18 @@ pass_if: {"note": "height(fast_growth) \u003c height(control)", "op": "lt"}</pre
       <div style="padding:10px 14px;background:#f0fdf4;border-left:4px solid #10b981;border-radius:4px;margin-bottom:8px">
         <strong>✓ If primary tests pass:</strong>
         
-        <div style="margin-top:4px"><em>Implementation:</em> The turnover-&gt;shape pipeline runs end-to-end and reproduces the Fig 7 ordering.</div>
+        <div style="margin-top:4px"><em>Implementation:</em> The turnover-&gt;shape pipeline runs end-to-end and keeps inferred vs predicted distinct.</div>
         
         
-        <div style="margin-top:4px"><em>Empirical validation:</em> Perlecan gain &gt; control &gt; loss reproduced; inferred relaxation scales with perlecan; inferred vs predicted kept distinct.</div>
+        <div style="margin-top:4px"><em>Empirical validation:</em> WITHHELD: the model&#39;s perlecan ordering (gain -&gt; taller) contradicts the paper (overexpression -&gt; shorter); Fig 7 is NOT reproduced until the perlecan -&gt; turnover direction is audited.</div>
         
         
         <div style="margin-top:4px"><em>Pipeline unblocks:</em>
-          <ul style="margin:4px 0 0 18px"><li>E4 predictive-feedback study -- this closes the reproduction campaign it builds on.</li></ul>
+          <ul style="margin:4px 0 0 18px"><li>E4 predictive-feedback study depends only on the mechanics endpoint (R1), not on the perlecan direction, so it is not blocked by this contradiction.</li></ul>
         </div>
         
       </div>
       
-      
-      <div style="padding:10px 14px;background:#fef2f2;border-left:4px solid #dc2626;border-radius:4px">
-        <strong>✗ If primary tests fail:</strong>
-        
-        <div style="margin-top:4px"><em>Diagnose:</em>
-          <ul style="margin:4px 0 0 18px"><li>Ordering inverted -- check the sign of the perlecan modulation (&gt;1 must lengthen the lifetime).</li><li>Inferred and predicted collapsed into one -- the pipeline must emit inferred_relaxation separately from cell_height.</li></ul>
-        </div>
-        
-        
-        <div style="margin-top:4px"><em>Block downstream:</em> Do not advance to the predictive-feedback study until the ordering + the inferred/predicted split hold.</div>
-        
-      </div>
       
     </div>
     
@@ -1734,7 +1722,7 @@ pass_if: {"note": "height(fast_growth) \u003c height(control)", "op": "lt"}</pre
       <h3 class="overview-label">Limitations</h3>
       <p class="muted" style="margin:0 0 6px 0;font-size:0.85em">What this study explicitly does NOT validate (prevents overclaim).</p>
       <ul style="margin:0 0 0 18px;padding:0;font-size:0.93em">
-        <li style="margin:2px 0">Reduced units; the claim is the RELATIVE morphology ordering, not absolute cell height.</li><li style="margin:2px 0">Perlecan-driven height differences are small in magnitude (~2-3% gain vs control at these parameters); the ordering is strict but the sensitivity is modest, while the growth-rate axis dominates shape.</li><li style="margin:2px 0">Point estimates only: the Fig 7 result propagates an inferred-lifetime DISTRIBUTION with uncertainty bands; this study records the point-estimate ordering and leaves the uncertainty propagation as a documented follow-up.</li><li style="margin:2px 0">The inferred collagen lifetime is an input parameter here, not re-inferred from a turnover observation model (Fig 3-6); the inference step is upstream (R3-era) and assumed.</li><li style="margin:2px 0">Homogeneous single cell via the R1 endpoint; no spatial epithelium.</li>
+        <li style="margin:2px 0">RED FLAG (figure review): the perlecan ordering CONTRADICTS the paper. Our model assumes perlecan stabilizes collagen (gain -&gt; longer lifetime -&gt; slower relaxation -&gt; taller); the paper reports perlecan overexpression -&gt; faster relaxation -&gt; shorter/wider cells. Reproduction is withheld until the perlecan -&gt; turnover direction is audited against the paper (one-line sign inversion in turnover_shape.py if the paper confirms faster turnover under overexpression).</li><li style="margin:2px 0">Reduced units; the claim is the RELATIVE morphology ordering, not absolute cell height.</li><li style="margin:2px 0">Perlecan-driven height differences are small in magnitude (~2-3% gain vs control at these parameters); the ordering is strict but the sensitivity is modest, while the growth-rate axis dominates shape.</li><li style="margin:2px 0">Point estimates only: the Fig 7 result propagates an inferred-lifetime DISTRIBUTION with uncertainty bands; this study records the point-estimate ordering and leaves the uncertainty propagation as a documented follow-up.</li><li style="margin:2px 0">The inferred collagen lifetime is an input parameter here, not re-inferred from a turnover observation model (Fig 3-6); the inference step is upstream (R3-era) and assumed.</li><li style="margin:2px 0">Homogeneous single cell via the R1 endpoint; no spatial epithelium.</li>
       </ul>
     </div>
     
@@ -1762,7 +1750,7 @@ pass_if: {"note": "height(fast_growth) \u003c height(control)", "op": "lt"}</pre
       
       <p class="muted" style="margin:0;font-size:0.9em">
         <strong>4</strong> test outcomes
-        — <span style="color:#065f46;font-weight:600">4 PASS</span> ·
+        — <span style="color:#065f46;font-weight:600">3 PASS</span> ·
         <span style="color:#991b1b;font-weight:600">0 FAIL</span>.
         Per-test outcomes (measured value · evaluator · band) are canonical on the
         <a onclick="_setStudyTab('audit')" style="cursor:pointer;color:#3b82f6;text-decoration:underline">Tests (in Audit) →</a>.
@@ -1792,13 +1780,13 @@ pass_if: {"note": "height(fast_growth) \u003c height(control)", "op": "lt"}</pre
         
         <div class="di-unc di-unc-resolved">
           <h4>✓ Resolved uncertainties</h4>
-          <ul><li>The turnover-&gt;shape pipeline reproduces the Fig 7 perlecan intervention ordering.</li><li>Inferred (turnover) and predicted (mechanics) quantities are kept distinct, as the plan requires.</li></ul>
+          <ul><li>The turnover-&gt;shape pipeline runs end-to-end and keeps inferred (turnover) and predicted (mechanics) quantities distinct, as the plan requires.</li><li>The growth-rate axis dominates cell shape (fast growth -&gt; much flatter), correctly.</li></ul>
         </div>
         
         
         <div class="di-unc di-unc-remaining">
           <h4>● Remaining uncertainties</h4>
-          <ul><li>Whether the perlecan ordering survives uncertainty-band propagation given the modest ~2-3% effect.</li><li>Absolute cell shape in physical units.</li></ul>
+          <ul><li>RED FLAG: the perlecan -&gt; collagen-turnover DIRECTION. Our model (perlecan stabilizes -&gt; gain taller) contradicts the paper (overexpression -&gt; shorter). Fig 7 reproduction is withheld until this is audited.</li><li>Whether, after the direction is fixed, the perlecan ordering survives uncertainty-band propagation given the modest ~2-3% effect.</li><li>Absolute cell shape in physical units.</li></ul>
         </div>
         
       </div>
@@ -1814,9 +1802,26 @@ pass_if: {"note": "height(fast_growth) \u003c height(control)", "op": "lt"}</pre
       <div class="di-group">
         <h3>Follow-up study proposals
           <span class="muted" style="font-weight:normal;font-size:0.82em">(discovered)</span>
-          <span class="muted" style="font-weight:normal;font-size:0.85em">(1)</span></h3>
+          <span class="muted" style="font-weight:normal;font-size:0.85em">(2)</span></h3>
         <p class="muted" style="margin:0 0 8px 0;font-size:0.85em">Click <strong>➕ Add to investigation</strong> to spawn a new study node in the investigation graph.</p>
         <div class="followup-list">
+          
+          
+          <div class="di-card di-fup-card">
+            <div class="followup-header">
+              <strong class="followup-title">Audit the perlecan -&gt; collagen-turnover direction vs the paper (and invert the mapping if confirmed)</strong>
+              
+              
+              
+              
+            </div>
+            
+            
+            <div class="followup-actions" style="margin-top:8px">
+              <button class="btn-seed-followup"
+                      onclick="_seedFollowupProposal('bm-r6-perlecan-growth-perturbations', "fp-r6-perlecan-direction-audit")">➕ Add to investigation</button>
+            </div>
+          </div>
           
           
           <div class="di-card di-fup-card">
@@ -1854,7 +1859,7 @@ pass_if: {"note": "height(fast_growth) \u003c height(control)", "op": "lt"}</pre
 </section>
 
 </main>
-<script>window.__DASH_CONFIG__ = { mode: "snapshot", interactiveUrl: "https://github.com/vivarium-collective/viva-lumenoid", basePath: "/viva-lumenoid/dashboard", inputsDownloadBase: "https://github.com/vivarium-collective/viva-lumenoid/raw/main", provenance: {"repo_slug": "vivarium-collective/viva-lumenoid", "repo_url": "https://github.com/vivarium-collective/viva-lumenoid", "commit": "63fd02fd2f6669ffa956e0ec52ad9f7815161c75", "commit_url": "https://github.com/vivarium-collective/viva-lumenoid/commit/63fd02fd2f6669ffa956e0ec52ad9f7815161c75", "branch": "main", "lockfile": "uv.lock@23a8fcc2b0be", "generated_at": "2026-10-20 11:54 UTC"} };</script>
+<script>window.__DASH_CONFIG__ = { mode: "snapshot", interactiveUrl: "https://github.com/vivarium-collective/viva-lumenoid", basePath: "/viva-lumenoid/dashboard", inputsDownloadBase: "https://github.com/vivarium-collective/viva-lumenoid/raw/main", provenance: {"repo_slug": "vivarium-collective/viva-lumenoid", "repo_url": "https://github.com/vivarium-collective/viva-lumenoid", "commit": "bcd420f614d294ba4e9b1615767a8513b2be0394", "commit_url": "https://github.com/vivarium-collective/viva-lumenoid/commit/bcd420f614d294ba4e9b1615767a8513b2be0394", "branch": "main", "lockfile": "uv.lock@23a8fcc2b0be", "generated_at": "2026-10-20 12:07 UTC"} };</script>
 <script src="/viva-lumenoid/dashboard/assets/data-source.js"></script>
 <script src="/viva-lumenoid/dashboard/assets/toast.js"></script>
 <script>
