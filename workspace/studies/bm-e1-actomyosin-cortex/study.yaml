@@ -262,9 +262,30 @@ visualizations:
   - name: e1_cortical_tension
     address: "html:e1_cortical_tension.html"
     config:
-      title: "Cortical tension vs contractility (real LAMMPS)"
+      title: "LJ-patch effective tension: tunability + seed/size sensitivity (engineered-diagnostic)"
+      evidence_status: engineered-diagnostic
+      tier: supplement
       caption: >
-        REAL LAMMPS result: cortical tension rises with the myosin-contractility proxy, run over the viva-lammps model-plugin seam.
+        ENGINEERING VERIFICATION (not biological evidence), real LAMMPS, reduced LJ units. Panel A: the
+        patch's effective in-plane tension tau = -(pxx+pyy)/2 vs the LJ well-depth proxy epsilon
+        (attraction strength, NOT calibrated biological myosin activity), as a seed ensemble (3 seeds, 30
+        steps, n=6) — the seed-mean rises (approx -0.19, 0.45, 1.82, 2.79, 2.91 at epsilon 0.5/1.0/2.0/3.0/4.0)
+        with a wide per-seed min/max band, and the smallest proxy is weakly expansive (tau<0). Panel B:
+        patch-size sensitivity (n = 5..8 bead lattice at epsilon=2.0). This verifies tunability but does NOT
+        reproduce filament-based active contractility or calibrated cortical tension: the patch has no
+        explicit actin filaments, motors or crosslinkers, and the model exposes no strain input, so
+        force-strain and step-strain relaxation curves are NOT producible here (named gap).
+  - name: e1_tension_components
+    address: "html:e1_tension_components.html"
+    config:
+      title: "Pressure components of the LJ-patch tension (engineered-diagnostic)"
+      evidence_status: engineered-diagnostic
+      tier: supplement
+      caption: >
+        Diagnostic decomposition (reduced LJ units): the seed-mean pxx, pyy and tau = -(pxx+pyy)/2 vs the LJ
+        well-depth proxy. At small epsilon the repulsive/thermal pressure outweighs the LJ attraction, so the
+        net in-plane stress is expansive (tau<0); this explains the negative tension at the smallest proxy. A
+        mechanism diagnostic, not a biological measurement.
 
 report:
   title: "E1 -- explicit actomyosin cortex tension (contractility response)"

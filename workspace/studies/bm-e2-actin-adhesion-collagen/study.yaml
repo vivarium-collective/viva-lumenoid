@@ -298,9 +298,31 @@ visualizations:
   - name: e2_force_transfer
     address: "html:e2_force_transfer.html"
     config:
-      title: "Force transfer (schematic)"
+      title: "Force-transfer coupling unit test: occupancy-gated traction (engineered-diagnostic)"
+      evidence_status: engineered-diagnostic
+      tier: main
       caption: >
-        Schematic of the cortex -> reversible basal linkers -> collagen BM force transfer E2 will measure. NOT simulated.
+        COUPLING UNIT TEST (deterministic mapping, NOT a biological result), real run of the pure
+        BasalAdhesion process, reduced units. A prescribed cortex-tension step series (1.0 then 3.0) drives
+        reversible linker occupancy (rising 0.5 -> 0.83 under k_on=0.5/k_off=0.1); the transmitted traction =
+        occupancy x tension and the BM strain rate = coupling_gain x traction, exactly by construction. The
+        zero-linker control (k_on=0, forced exactly past process-bigraph's 0.0-config drop) pins occupancy,
+        traction and strain rate to zero. This verifies that deterministic occupancy gating correctly scales a
+        PRESCRIBED cortical traction; it does NOT establish microscopic integrin mechanics or a
+        force-conserving multiscale coupling (named gap).
+  - name: e2_bm_response
+    address: "html:e2_bm_response.html"
+    config:
+      title: "Actin -> adhesion -> collagen BM bounded smoke: the BM responds (engineered-diagnostic)"
+      evidence_status: engineered-diagnostic
+      tier: supplement
+      caption: >
+        End-to-end wiring smoke (real, bounded; reduced units): the LAMMPS actomyosin cortex pulls through
+        the reversible basal linkers on a 20-rod collagen IV BM patch over 6 coupling steps. Occupancy rises
+        0.5 -> 0.83, the transmitted traction tracks the (noisy) cortex tension, and the collagen BM carries a
+        finite in-plane stress and accumulates strain (strain approx 7e-5 -> 7e-4), confirming the composite
+        is wired end-to-end. The BM reaction is real but a force-CONSERVING coupling and microscopic integrin
+        mechanics are NOT established (named gap).
 
 report:
   title: "E2 -- actin-adhesion-collagen occupancy-gated force transfer"

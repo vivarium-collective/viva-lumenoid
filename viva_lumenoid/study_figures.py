@@ -111,32 +111,124 @@ def _mesh_traces(eptm, three_d: bool, color_by: str | None = None):
 # ---------------------------------------------------------------------------
 # DATA-DRIVEN figures
 # ---------------------------------------------------------------------------
-def e1_cortical_tension_figure(contractilities=(0.5, 1.0, 2.0, 3.0, 4.0), n=6, steps=5):
-    """E1: real cortical-tension vs myosin contractility, from the actomyosin
-    LAMMPS plugin over the LammpsModelProcess seam."""
-    go = _go()
+def _e1_patch_tension(n, eps, seed, steps):
+    """One actomyosin LJ-patch run; return the final effective in-plane tension
+    τ = −(pxx+pyy)/2 (reduced LJ stress). E1-named helper (does not touch the
+    shared LAMMPS helpers)."""
     from bigraph_schema import allocate_core
     from pbg_lammps.model import LammpsModelProcess
     import viva_lumenoid.actomyosin  # noqa: F401
-    xs, ys = [], []
-    for eps in contractilities:
-        p = LammpsModelProcess(config={"model": "actomyosin-cortex",
-                                        "params": {"n": n, "contractility": float(eps)}},
-                               core=allocate_core())
-        p.initial_state()
-        out = {}
-        for _ in range(steps):
-            out = p.update({}, 1.0)
-        p.close()
-        xs.append(float(eps)); ys.append(float(out["cortical_tension"]))
-    fig = go.Figure()
-    fig.add_trace(go.Scatter(x=xs, y=ys, mode="lines+markers",
+    p = LammpsModelProcess(config={"model": "actomyosin-cortex",
+                                   "params": {"n": int(n), "contractility": float(eps),
+                                              "seed": int(seed)}},
+                           core=allocate_core())
+    p.initial_state()
+    out = {}
+    for _ in range(steps):
+        out = p.update({}, 1.0)
+    p.close()
+    return float(out["cortical_tension"]), float(out["pressure_xx"]), float(out["pressure_yy"])
+
+
+def e1_cortical_tension_figure(proxies=(0.5, 1.0, 2.0, 3.0, 4.0),
+                               sizes=(5, 6, 7, 8), seeds=(11, 22, 33),
+                               n=6, steps=30):
+    """E1 MAIN (engineered-diagnostic, supplement-grade verification): seed-ensemble
+    effective in-plane tension of the LJ bead patch vs the LJ well-depth proxy, plus
+    patch-size sensitivity.
+
+    This is engineering verification that the measured effective tension is a
+    tunable, monotone function of the LJ attraction proxy — NOT calibrated cortical
+    tension and NOT filament-based active contractility. The patch has no explicit
+    actin filaments, motors or crosslinkers, and the model exposes no strain/deform
+    input, so force–strain and relaxation-after-step-strain curves are NOT producible
+    here (named gap)."""
+    go = _go()
+    from plotly.subplots import make_subplots
+    # Panel A: tension vs LJ well-depth proxy, mean + min/max band over seeds.
+    meanA, loA, hiA = [], [], []
+    for eps in proxies:
+        vals = [_e1_patch_tension(n, eps, s, steps)[0] for s in seeds]
+        meanA.append(float(np.mean(vals))); loA.append(float(min(vals))); hiA.append(float(max(vals)))
+    # Panel B: tension vs patch size n at fixed proxy, mean + min/max band over seeds.
+    eps_fixed = proxies[len(proxies) // 2]
+    meanB, loB, hiB, atoms = [], [], [], []
+    for nn in sizes:
+        vals = [_e1_patch_tension(nn, eps_fixed, s, steps)[0] for s in seeds]
+        meanB.append(float(np.mean(vals))); loB.append(float(min(vals))); hiB.append(float(max(vals)))
+        atoms.append(nn * nn)
+
+    fig = make_subplots(rows=1, cols=2, column_widths=[0.56, 0.44],
+                        subplot_titles=(f"A — tension vs LJ well-depth proxy ({len(seeds)} seeds, n={n})",
+                                        f"B — patch-size sensitivity (proxy ε={eps_fixed})"))
+    # A band + mean
+    fig.add_trace(go.Scatter(x=list(proxies) + list(proxies)[::-1], y=hiA + loA[::-1],
+                             fill="toself", fillcolor="rgba(228,87,86,0.15)",
+                             line=dict(width=0), hoverinfo="skip", showlegend=False), row=1, col=1)
+    fig.add_trace(go.Scatter(x=list(proxies), y=meanA, mode="lines+markers",
                              line=dict(color=RED, width=3), marker=dict(size=9),
-                             name="cortical tension"))
-    fig.update_layout(title="E1 — cortical tension rises with myosin contractility (real LAMMPS)",
-                      xaxis_title="contractility (LJ well depth ε — myosin-activity proxy)",
-                      yaxis_title="cortical tension τ = −(pxx+pyy)/2")
-    return _layout(fig, height=560)
+                             name="mean τ (± seed min/max)"), row=1, col=1)
+    fig.add_hline(y=0.0, line=dict(color="#888", width=1, dash="dot"), row=1, col=1)
+    if meanA[0] < 0:
+        fig.add_annotation(x=proxies[0], y=meanA[0], text="expansive<br>(τ < 0)", showarrow=True,
+                           arrowhead=2, ax=30, ay=-28, font=dict(size=10, color=RED), row=1, col=1)
+    # B band + mean
+    fig.add_trace(go.Scatter(x=list(sizes) + list(sizes)[::-1], y=hiB + loB[::-1],
+                             fill="toself", fillcolor="rgba(76,120,168,0.15)",
+                             line=dict(width=0), hoverinfo="skip", showlegend=False), row=1, col=2)
+    fig.add_trace(go.Scatter(x=list(sizes), y=meanB, mode="lines+markers",
+                             line=dict(color=BLUE, width=3), marker=dict(size=9),
+                             name="mean τ vs patch size", text=[f"{a} beads" for a in atoms]),
+                  row=1, col=2)
+    fig.update_xaxes(title_text="LJ well-depth proxy ε (reduced; attraction strength, NOT biological myosin activity)",
+                     row=1, col=1)
+    fig.update_yaxes(title_text="effective in-plane tension τ = −(pₓₓ+p_yy)/2 (reduced LJ stress)", row=1, col=1)
+    fig.update_xaxes(title_text="patch size n (n×n bead lattice)", row=1, col=2)
+    fig.update_yaxes(title_text="τ (reduced LJ stress)", row=1, col=2)
+    fig.update_layout(
+        title=f"E1 — LJ-patch effective tension: tunability + seed/size sensitivity "
+              f"(engineered-diagnostic; {steps} steps, reduced units)",
+        template="plotly_white", height=560, margin=dict(t=92, b=70),
+        legend=dict(orientation="h", y=1.12, x=0),
+        annotations=list(fig.layout.annotations) + [dict(
+            x=0.5, y=-0.22, xref="paper", yref="paper", showarrow=False,
+            text="Engineering verification of tunability, NOT filament-based active contractility or calibrated cortical "
+                 "tension. No explicit filaments/motors/crosslinkers; the model exposes no strain input, so force–strain "
+                 "and step-strain relaxation are NOT producible here (named gap).",
+            font=dict(size=10.5, color="#777"))])
+    return fig
+
+
+def e1_tension_components_figure(proxies=(0.5, 1.0, 2.0, 3.0, 4.0), seeds=(11, 22, 33),
+                                 n=6, steps=30):
+    """E1 SUPPLEMENT (engineered-diagnostic): the pxx/pyy pressure components behind
+    the tension, showing WHY the smallest proxy is expansive (repulsive pressure
+    outweighs attraction → τ<0). Same bounded LJ-patch runs; reduced units."""
+    go = _go()
+    mt, mpxx, mpyy = [], [], []
+    for eps in proxies:
+        rows = [_e1_patch_tension(n, eps, s, steps) for s in seeds]
+        mt.append(float(np.mean([r[0] for r in rows])))
+        mpxx.append(float(np.mean([r[1] for r in rows])))
+        mpyy.append(float(np.mean([r[2] for r in rows])))
+    fig = go.Figure()
+    fig.add_trace(go.Scatter(x=list(proxies), y=mpxx, mode="lines+markers",
+                             line=dict(color=ORANGE, width=2), name="mean pₓₓ"))
+    fig.add_trace(go.Scatter(x=list(proxies), y=mpyy, mode="lines+markers",
+                             line=dict(color=GOLD, width=2), name="mean p_yy"))
+    fig.add_trace(go.Scatter(x=list(proxies), y=mt, mode="lines+markers",
+                             line=dict(color=RED, width=3), name="τ = −(pₓₓ+p_yy)/2"))
+    fig.add_hline(y=0.0, line=dict(color="#888", width=1, dash="dot"))
+    fig.update_layout(
+        title="E1 (supplement) — pressure components of the LJ-patch tension (engineered-diagnostic)",
+        xaxis_title="LJ well-depth proxy ε (reduced units)",
+        yaxis_title="reduced LJ stress",
+        legend=dict(orientation="h", y=1.1),
+        annotations=[dict(x=0.5, y=-0.2, xref="paper", yref="paper", showarrow=False,
+                          text="At small ε the repulsive/thermal pressure outweighs the LJ attraction, so the net in-plane "
+                               "stress is expansive (τ<0); a diagnostic decomposition, not a biological measurement.",
+                          font=dict(size=10.5, color="#777"))])
+    return _layout(fig, height=520)
 
 
 def _collagen_micro(make_on: float, break_on: float, n_rods=30, box_xy=9.0, nstep=60, dt_s=8.0):
@@ -530,19 +622,375 @@ def r5_bm_controls_hypothesis():
     return fig
 
 
+def _e3_section_traces(eptm, go):
+    """A thin equatorial (z≈median) section cut of the lumenoid, as x–y vertex
+    scatter + sampled edges. E3-named helper (does not touch _mesh_traces)."""
+    v = eptm.vert_df
+    zc = float(v["z"].median())
+    half = 0.08 * (float(v["z"].max()) - float(v["z"].min()) + 1e-9)
+    band = v[(v["z"] >= zc - half) & (v["z"] <= zc + half)]
+    traces = [go.Scatter(x=band["x"], y=band["y"], mode="markers",
+                         marker=dict(size=4, color=BLUE), hoverinfo="skip", showlegend=False)]
+    return traces, band
+
+
 def e3_lumenoid_figure():
-    """E3: the actual closed lumenoid shell (LumenoidGeometry) + cell volumes."""
+    """E3 MAIN (engineered-diagnostic, illustration): the closed 3D lumenoid shell
+    (LumenoidGeometry) with the basal BM-coupling surface and the enclosed lumen
+    labelled, alongside a thin equatorial section cut at the same scale and a scale
+    reference. The counts (cells, lumen volume) are GEOMETRY metrics from a real
+    tyssue build, not growing-lumenoid results; lumen filling and BM-regulated
+    morphogenesis remain untested (see the supplement)."""
     eptm = _tyssue_build_step("closed_lumenoid")
     go = _go()
-    fig = go.Figure(data=_mesh_traces(eptm, three_d=True, color_by="z"))
+    from plotly.subplots import make_subplots
+    fig = make_subplots(rows=1, cols=2, column_widths=[0.6, 0.4],
+                        specs=[[{"type": "scene"}, {"type": "xy"}]],
+                        subplot_titles=(f"3D closed shell ({eptm.Nc} cells)", "equatorial section cut (z ≈ median)"))
+    for tr in _mesh_traces(eptm, three_d=True, color_by="z"):
+        fig.add_trace(tr, row=1, col=1)
+    sect, band = _e3_section_traces(eptm, go)
+    for tr in sect:
+        fig.add_trace(tr, row=1, col=2)
     vtot = float(eptm.cell_df["vol"].sum())
+    lv = float(eptm.settings.get("lumen_vol", 0.0))
+    # Section-cut labels + a scale reference bar (1 model length unit).
+    cx, cy = float(band["x"].mean()), float(band["y"].mean())
+    rmax = float(((band["x"] - cx) ** 2 + (band["y"] - cy) ** 2).pow(0.5).max())
+    fig.add_annotation(x=cx, y=cy, text="lumen", showarrow=False,
+                       font=dict(size=12, color="#444"), row=1, col=2)
+    fig.add_annotation(x=cx, y=cy + rmax * 0.98, text="basal BM-coupling surface", showarrow=True,
+                       arrowhead=2, ax=0, ay=-26, font=dict(size=10, color=BLUE), row=1, col=2)
+    x0 = cx - rmax; y0 = cy - rmax * 1.12
+    fig.add_shape(type="line", x0=x0, y0=y0, x1=x0 + 1.0, y1=y0, line=dict(color="#333", width=3),
+                  row=1, col=2)
+    fig.add_annotation(x=x0 + 0.5, y=y0, text="1 length unit", showarrow=False, yshift=-10,
+                       font=dict(size=10, color="#333"), row=1, col=2)
+    fig.update_xaxes(scaleanchor="y2", title_text="x", row=1, col=2)
+    fig.update_yaxes(title_text="y", row=1, col=2)
     fig.update_layout(
-        title=f"E3 — closed 3D lumenoid shell ({eptm.Nc} cells, real tyssue run)",
-        scene=dict(aspectmode="data"),
-        annotations=[dict(x=0.5, y=-0.02, xref="paper", yref="paper", showarrow=False,
-                          text=f"total cell volume {vtot:.1f} · basal surface = the BM coupling shell",
-                          font=dict(size=11, color="#777"))])
-    return _layout(fig, height=640)
+        title=f"E3 — closed 3D lumenoid shell: geometry verification ({eptm.Nc} cells, engineered-diagnostic)",
+        template="plotly_white", height=640, scene=dict(aspectmode="data"), margin=dict(t=92, b=60),
+        annotations=list(fig.layout.annotations) + [dict(
+            x=0.5, y=-0.04, xref="paper", yref="paper", showarrow=False,
+            text=f"GEOMETRY metrics (reduced units): {eptm.Nc} cells · lumen volume {lv:.1f} · total cell volume {vtot:.1f}. "
+                 f"The basal surface is the BM coupling shell. Verifies geometry only; lumen filling and BM-regulated "
+                 f"morphogenesis remain untested.",
+            font=dict(size=10.5, color="#777"))])
+    return fig
+
+
+def _e3_lumen_trace(steps=12, dt=0.01):
+    """Step the closed_lumenoid composite and record the lumen/BM settings each
+    step. E3-named helper (mirrors the tyssue build but records per-step settings)."""
+    import viva_lumenoid.composites  # noqa: F401
+    from process_bigraph.composite_generator import _REGISTRY, apply_core_extensions, build_generator
+    from bigraph_schema import allocate_core
+    from process_bigraph import Composite
+    entry = _REGISTRY["viva_lumenoid.composites.closed_lumenoid"]
+    core = apply_core_extensions(entry, allocate_core())
+    doc = build_generator(entry, None, core=core)
+    state = doc["state"] if isinstance(doc, dict) and "state" in doc else doc
+    comp = Composite({"state": state}, core=core)
+    eptm = comp.state["Tyssue"]["instance"].eptm
+    t, lvol, lpress, barea = [], [], [], []
+    for i in range(steps):
+        comp.update({}, dt)
+        s = eptm.settings
+        t.append(i * dt)
+        lvol.append(float(s.get("lumen_vol", 0.0)))
+        lpress.append(float(s.get("lumen_pressure", 0.0)))
+        barea.append(float(s.get("bm_surface_area", 0.0)))
+    return np.array(t), np.array(lvol), np.array(lpress), np.array(barea)
+
+
+def e3_lumen_dynamics_figure():
+    """E3 SUPPLEMENT (hypothesis / gap-named): the lumen volume, lumen pressure and
+    basal BM-shell surface across a real multi-step EulerSolver run of the closed
+    lumenoid. They are FLAT: the shell sits at rest equilibrium with lumen
+    pressure = 0, and NO lumen-filling drive is wired (no LumenElasticity effector in
+    the force balance, no lumen-volume target ramp). A dynamic lumen-filling /
+    BM-regulated morphogenesis panel is therefore NOT producible from this composite —
+    shown honestly as flat, with the gap named."""
+    go = _go()
+    from plotly.subplots import make_subplots
+    t, lvol, lpress, barea = _e3_lumen_trace()
+    fig = make_subplots(rows=1, cols=3, subplot_titles=(
+        "lumen volume", "lumen pressure (P=0 at rest)", "basal BM-shell surface area"))
+    fig.add_trace(go.Scatter(x=t, y=lvol, mode="lines+markers", line=dict(color=BLUE, width=3),
+                             showlegend=False), row=1, col=1)
+    fig.add_trace(go.Scatter(x=t, y=lpress, mode="lines+markers", line=dict(color=RED, width=3),
+                             showlegend=False), row=1, col=2)
+    fig.add_trace(go.Scatter(x=t, y=barea, mode="lines+markers", line=dict(color=TEAL, width=3),
+                             showlegend=False), row=1, col=3)
+    fig.update_yaxes(title_text="lumen volume (reduced)", row=1, col=1)
+    fig.update_yaxes(title_text="lumen pressure (reduced)", row=1, col=2)
+    fig.update_yaxes(title_text="basal area (reduced)", row=1, col=3)
+    for c in (1, 2, 3):
+        fig.update_xaxes(title_text="time (reduced)", row=1, col=c)
+    fig.update_layout(
+        title=f"E3 (supplement) — lumen/BM state is static at rest (GAP: no lumen-filling drive wired; hypothesis)",
+        template="plotly_white", height=460, margin=dict(t=92, b=70),
+        annotations=list(fig.layout.annotations) + [dict(
+            x=0.5, y=-0.26, xref="paper", yref="paper", showarrow=False,
+            text=f"Real {len(t)}-step run: lumen volume {lvol[0]:.1f}→{lvol[-1]:.1f}, pressure {lpress[0]:.2g}→{lpress[-1]:.2g}, "
+                 f"basal area {barea[0]:.1f}→{barea[-1]:.1f} — flat. The lumen is a geometry diagnostic, not a driven DOF; "
+                 f"lumen filling and BM-regulated morphogenesis are NOT yet producible (named gap).",
+            font=dict(size=10.5, color="#777"))])
+    return fig
+
+
+# ---------------------------------------------------------------------------
+# E2 — force-transfer coupling unit test (real, bounded)
+# ---------------------------------------------------------------------------
+def _e2_adhesion_steps(cortex_tensions, k_on, k_off=0.1, coupling_gain=1.0e-4, dt=1.0):
+    """Run the pure deterministic BasalAdhesion over a prescribed cortex-tension
+    step series; return per-step (occupancy, traction, bm_strain_rate). E2-named
+    helper. ``k_on=0`` is forced through a post-construction config override because
+    process-bigraph drops 0.0-valued config (so the zero-linker control is exact)."""
+    from bigraph_schema import allocate_core
+    from viva_lumenoid.adhesion import BasalAdhesion
+    cfg = {"k_off": k_off, "coupling_gain": coupling_gain}
+    if k_on != 0.0:
+        cfg["k_on"] = k_on
+    p = BasalAdhesion(config=cfg, core=allocate_core())
+    p.config["k_on"] = float(k_on)   # exact, even for 0.0 (bigraph drops 0.0 config)
+    p._occ = 0.0
+    occ, trac, sr = [], [], []
+    for tension in cortex_tensions:
+        o = p.update({"cortex_tension": float(tension)}, dt)
+        occ.append(float(o["linker_occupancy"]))
+        trac.append(float(o["traction"]))
+        sr.append(float(o["bm_strain_rate"]))
+    return occ, trac, sr
+
+
+def e2_force_transfer_figure(hold=8):
+    """E2 MAIN (engineered-diagnostic, DETERMINISTIC MAPPING): the BasalAdhesion
+    coupling unit test. A prescribed cortex-tension step series drives reversible
+    linker occupancy; the transmitted traction = occupancy × tension and the BM
+    strain rate = coupling_gain × traction, with a zero-linker (k_on=0) control that
+    disables transfer. This verifies that deterministic occupancy gating correctly
+    scales a PRESCRIBED cortical traction — it does NOT establish microscopic
+    integrin mechanics or force-conserving multiscale coupling (named gap)."""
+    go = _go()
+    from plotly.subplots import make_subplots
+    tensions = [1.0] * hold + [3.0] * hold
+    t = list(range(len(tensions)))
+    occ, trac, sr = _e2_adhesion_steps(tensions, k_on=0.5)
+    occ0, trac0, sr0 = _e2_adhesion_steps(tensions, k_on=0.0)  # zero-linker control
+    fig = make_subplots(rows=3, cols=1, shared_xaxes=True, vertical_spacing=0.07,
+                        subplot_titles=("imposed cortex tension + linker occupancy",
+                                        "transmitted traction = occupancy × tension",
+                                        "BM strain rate = coupling_gain × traction"))
+    fig.add_trace(go.Scatter(x=t, y=tensions, mode="lines", line=dict(color="#888", width=2, dash="dot"),
+                             name="imposed cortex tension"), row=1, col=1)
+    fig.add_trace(go.Scatter(x=t, y=occ, mode="lines+markers", line=dict(color=GOLD, width=3),
+                             name="linker occupancy (k_on=0.5)"), row=1, col=1)
+    fig.add_trace(go.Scatter(x=t, y=occ0, mode="lines", line=dict(color=RED, width=2, dash="dash"),
+                             name="occupancy (zero-linker k_on=0)"), row=1, col=1)
+    fig.add_trace(go.Scatter(x=t, y=trac, mode="lines+markers", line=dict(color=BLUE, width=3),
+                             showlegend=False), row=2, col=1)
+    fig.add_trace(go.Scatter(x=t, y=trac0, mode="lines", line=dict(color=RED, width=2, dash="dash"),
+                             showlegend=False), row=2, col=1)
+    fig.add_trace(go.Scatter(x=t, y=sr, mode="lines+markers", line=dict(color=GREEN, width=3),
+                             showlegend=False), row=3, col=1)
+    fig.add_trace(go.Scatter(x=t, y=sr0, mode="lines", line=dict(color=RED, width=2, dash="dash"),
+                             showlegend=False), row=3, col=1)
+    fig.update_yaxes(title_text="tension / occupancy", row=1, col=1)
+    fig.update_yaxes(title_text="traction (reduced)", row=2, col=1)
+    fig.update_yaxes(title_text="strain rate (reduced)", row=3, col=1)
+    fig.update_xaxes(title_text="coupling step", row=3, col=1)
+    fig.update_layout(
+        title="E2 — force-transfer coupling unit test: occupancy-gated traction (engineered-diagnostic; "
+              "deterministic mapping)",
+        template="plotly_white", height=640, margin=dict(t=92, b=78),
+        legend=dict(orientation="h", y=1.1, x=0),
+        annotations=list(fig.layout.annotations) + [dict(
+            x=0.5, y=-0.14, xref="paper", yref="paper", showarrow=False,
+            text="Deterministic occupancy gating scales a PRESCRIBED cortical traction; the zero-linker control (k_on=0) "
+                 "disables transfer exactly. This does NOT establish microscopic integrin mechanics or a force-conserving "
+                 "multiscale coupling (named gap).",
+            font=dict(size=10.5, color="#777"))])
+    return fig
+
+
+def _e2_bm_response(steps=6, n_rods=20):
+    """Manually wire cortex (LAMMPS) → BasalAdhesion → collagen BM over a few steps;
+    return per-step (cortex_tension, occupancy, traction, bm_sigma, bm_strain).
+    E2-named helper; a bounded smoke of the actin_adhesion_bm composite's path."""
+    from bigraph_schema import allocate_core
+    from pbg_lammps.model import LammpsModelProcess
+    import viva_lumenoid.actomyosin  # noqa: F401
+    from viva_lumenoid.adhesion import BasalAdhesion
+    from viva_lumenoid.collagen import CollagenNetworkProcess
+    from viva_lumenoid.params import CollagenParams
+    cortex = LammpsModelProcess(config={"model": "actomyosin-cortex",
+                                        "params": {"n": 6, "contractility": 1.5}},
+                                core=allocate_core())
+    cortex.initial_state()
+    adh = BasalAdhesion(config={"k_on": 0.5, "k_off": 0.1, "coupling_gain": 1.0e-4},
+                        core=allocate_core())
+    bm = CollagenNetworkProcess(config={"params": CollagenParams(
+        n_rods=n_rods, box_xy=10.0, slab_thickness=2.0,
+        assemble_steps=200, hold_steps=100).to_dict()}, core=allocate_core())
+    bm.initial_state()
+    rows = []
+    for _ in range(steps):
+        ct = float(cortex.update({}, 1.0)["cortical_tension"])
+        ao = adh.update({"cortex_tension": ct}, 1.0)
+        bo = bm.update({"strain_rate": ao["bm_strain_rate"], "make_on": 1.0, "break_on": 1.0}, 1.0)
+        rows.append((ct, float(ao["linker_occupancy"]), float(ao["traction"]),
+                     float(bo.get("sigma_inplane", 0.0)), float(bo.get("strain", 0.0))))
+    cortex.close(); bm.close()
+    return rows
+
+
+def e2_bm_response_figure():
+    """E2 SUPPLEMENT (engineered-diagnostic): a bounded smoke of the full
+    actin_adhesion_bm path — the LAMMPS actomyosin cortex pulls through the basal
+    linkers on the collagen IV BM patch, and the BM responds (in-plane stress +
+    accumulated strain). Confirms the engines are wired end-to-end; the BM reaction
+    stress is real but a force-CONSERVING coupling + integrin mechanics are NOT
+    established (named gap)."""
+    go = _go()
+    from plotly.subplots import make_subplots
+    rows = _e2_bm_response()
+    t = list(range(len(rows)))
+    ct = [r[0] for r in rows]; occ = [r[1] for r in rows]; trac = [r[2] for r in rows]
+    sig = [r[3] for r in rows]; strn = [r[4] for r in rows]
+    fig = make_subplots(rows=1, cols=2, column_widths=[0.5, 0.5],
+                        subplot_titles=("cortex tension → traction (through linkers)",
+                                        "collagen BM response (stress + strain)"))
+    fig.add_trace(go.Scatter(x=t, y=ct, mode="lines+markers", line=dict(color=RED, width=2),
+                             name="cortex tension (LAMMPS)"), row=1, col=1)
+    fig.add_trace(go.Scatter(x=t, y=trac, mode="lines+markers", line=dict(color=BLUE, width=3),
+                             name="transmitted traction"), row=1, col=1)
+    fig.add_trace(go.Scatter(x=t, y=sig, mode="lines+markers", line=dict(color=ORANGE, width=3),
+                             name="BM in-plane stress σ", yaxis="y3"), row=1, col=2)
+    fig.add_trace(go.Scatter(x=t, y=strn, mode="lines+markers", line=dict(color=TEAL, width=2, dash="dot"),
+                             name="BM accumulated strain"), row=1, col=2)
+    fig.update_yaxes(title_text="tension / traction (reduced)", row=1, col=1)
+    fig.update_yaxes(title_text="BM σ / strain (reduced)", row=1, col=2)
+    fig.update_xaxes(title_text="coupling step", row=1, col=1)
+    fig.update_xaxes(title_text="coupling step", row=1, col=2)
+    fig.update_layout(
+        title="E2 (supplement) — actin→adhesion→collagen BM bounded smoke: the BM responds "
+              "(engineered-diagnostic)",
+        template="plotly_white", height=500, margin=dict(t=92, b=70),
+        legend=dict(orientation="h", y=1.12, x=0),
+        annotations=list(fig.layout.annotations) + [dict(
+            x=0.5, y=-0.22, xref="paper", yref="paper", showarrow=False,
+            text="End-to-end wiring smoke (20-rod BM): cortex tension is transmitted through reversible linkers and the "
+                 "collagen BM carries a finite stress and accumulates strain. Reduced units; a force-CONSERVING multiscale "
+                 "coupling and microscopic integrin mechanics are NOT established (named gap).",
+            font=dict(size=10.5, color="#777"))])
+    return fig
+
+
+# ---------------------------------------------------------------------------
+# E4 — coupling-control time courses (real, bounded; reduced-order BM)
+# ---------------------------------------------------------------------------
+def _e4_run_mode(mode, substeps=1, n=15, dt=0.02):
+    """Run the reduced-order LammpsTyssueCoupling in one coupling mode; return the
+    per-step time courses. E4-named helper (reduced BM → no LAMMPS; real tyssue)."""
+    from bigraph_schema import allocate_core
+    from viva_lumenoid.multiscale_coupling import LammpsTyssueCoupling
+    p = LammpsTyssueCoupling(config={
+        "bm_mode": "reduced", "coupling_mode": mode, "bm_substeps": int(substeps),
+        "strain_gain": 20.0, "tension_gain": 0.02,
+        "bm_modulus": 50.0, "bm_relaxation": 10.0}, core=allocate_core())
+    keys = ("basal_area", "basal_strain_rate", "bm_sigma", "basal_tension", "lumen_pressure")
+    traj = {k: [] for k in keys}
+    traj["t"] = []
+    for i in range(n):
+        o = p.update({}, dt)
+        traj["t"].append(i * dt)
+        for k in keys:
+            traj[k].append(float(o[k]))
+    p.close()
+    return traj
+
+
+def e4_feedback_figure():
+    """E4 MAIN (engineered-diagnostic, COUPLING CONTROL): aligned time courses of the
+    reduced-order LAMMPS↔Tyssue coupling in three modes — two-way, one-way and
+    uncoupled — in identical conditions. The two-way path returns a nonzero BM
+    reaction (basal tension) that damps the epithelial contraction; one-way drives
+    the BM but feeds back nothing; uncoupled leaves the BM inert. This demonstrates
+    CORRECT SOFTWARE WIRING of the coupling controls, NOT a mechanistic prediction:
+    the explicit-LAMMPS collagen BM is NOT in this loop and there is no morphogenetic
+    growth trajectory (named gaps)."""
+    go = _go()
+    from plotly.subplots import make_subplots
+    modes = [("two-way", BLUE), ("one-way", ORANGE), ("uncoupled", "#999")]
+    data = {m: _e4_run_mode(m) for m, _ in modes}
+    panels = [("basal_area", "basal BM-shell area (reduced)"),
+              ("bm_sigma", "BM stress σ (reduced)"),
+              ("basal_tension", "basal tension fed back (reduced)"),
+              ("basal_strain_rate", "basal strain rate (reduced)")]
+    fig = make_subplots(rows=2, cols=2, vertical_spacing=0.13, horizontal_spacing=0.1,
+                        subplot_titles=[p[1] for p in panels])
+    for idx, (key, _) in enumerate(panels):
+        r = idx // 2 + 1; c = idx % 2 + 1
+        for m, col in modes:
+            fig.add_trace(go.Scatter(x=data[m]["t"], y=data[m][key], mode="lines",
+                                     line=dict(color=col, width=3), name=m,
+                                     showlegend=(idx == 0)), row=r, col=c)
+    for idx in range(4):
+        fig.update_xaxes(title_text="time (reduced)", row=idx // 2 + 1, col=idx % 2 + 1)
+    tw = data["two-way"]; ow = data["one-way"]
+    fig.update_layout(
+        title="E4 — coupling-control time courses: two-way vs one-way vs uncoupled "
+              "(engineered-diagnostic; correct wiring, not a prediction)",
+        template="plotly_white", height=680, margin=dict(t=96, b=74),
+        legend=dict(orientation="h", y=1.08, x=0),
+        annotations=list(fig.layout.annotations) + [dict(
+            x=0.5, y=-0.1, xref="paper", yref="paper", showarrow=False,
+            text=f"Real 15-step reduced-order runs (dt 0.02). Two-way returns a nonzero basal tension "
+                 f"({tw['basal_tension'][-1]:+.3f}) that damps the contraction (basal area {tw['basal_area'][0]:.1f}→"
+                 f"{tw['basal_area'][-1]:.1f} vs one-way {ow['basal_area'][0]:.1f}→{ow['basal_area'][-1]:.1f}); one-way "
+                 f"and uncoupled feed back zero as designed. Explicit-LAMMPS collagen BM is NOT in this loop and there is "
+                 f"no morphogenetic growth trajectory (named gaps).",
+            font=dict(size=10.5, color="#777"))])
+    return fig
+
+
+def e4_subcycle_convergence_figure():
+    """E4 SUPPLEMENT (engineered-diagnostic): BM subcycling convergence — the two-way
+    BM stress at the final step vs the number of BM subcycles per epithelial
+    macro-step (bm_substeps). Successive-refinement differences shrink, so the
+    subcycled BM converges. This is the convergence that IS wired; exchange-cadence
+    convergence beyond BM subcycling (shrinking the epithelium↔BM exchange interval)
+    is NOT wired (named gap)."""
+    go = _go()
+    from plotly.subplots import make_subplots
+    subs = [1, 2, 4, 8]
+    sig = [_e4_run_mode("two-way", substeps=s)["bm_sigma"][-1] for s in subs]
+    diffs = [abs(sig[i + 1] - sig[i]) for i in range(len(sig) - 1)]
+    fig = make_subplots(rows=1, cols=2, column_widths=[0.55, 0.45],
+                        subplot_titles=("final BM stress vs BM subcycles",
+                                        "successive-refinement |Δσ| (convergence)"))
+    fig.add_trace(go.Scatter(x=subs, y=sig, mode="lines+markers", line=dict(color=BLUE, width=3),
+                             marker=dict(size=10), showlegend=False), row=1, col=1)
+    fig.add_trace(go.Scatter(x=[f"{subs[i]}→{subs[i+1]}" for i in range(len(diffs))], y=diffs,
+                             mode="lines+markers", line=dict(color=RED, width=3),
+                             marker=dict(size=10), showlegend=False), row=1, col=2)
+    fig.update_xaxes(title_text="BM subcycles per macro-step", type="log", row=1, col=1)
+    fig.update_yaxes(title_text="final BM stress σ (reduced)", row=1, col=1)
+    fig.update_xaxes(title_text="refinement", row=1, col=2)
+    fig.update_yaxes(title_text="|Δσ| between refinements", row=1, col=2)
+    fig.update_layout(
+        title="E4 (supplement) — BM subcycling convergence (engineered-diagnostic)",
+        template="plotly_white", height=460, margin=dict(t=92, b=74),
+        annotations=list(fig.layout.annotations) + [dict(
+            x=0.5, y=-0.26, xref="paper", yref="paper", showarrow=False,
+            text=f"Real two-way reduced-order runs: final σ = {', '.join(f'{v:.3f}' for v in sig)} at subcycles "
+                 f"{subs}; |Δσ| = {', '.join(f'{d:.3f}' for d in diffs)} shrinks → converged. This is BM subcycling "
+                 f"convergence only; exchange-cadence convergence (shrinking the epithelium↔BM exchange interval) is NOT "
+                 f"wired (named gap).",
+            font=dict(size=10.5, color="#777"))])
+    return fig
 
 
 # ---------------------------------------------------------------------------
@@ -1206,9 +1654,19 @@ STUDY_FIGURES = {
     "bm-r5-explicit-3d-confinement": ("r5_monolayer", r5_monolayer_figure, "data"),
     "bm-r6-perlecan-growth-perturbations": ("r6_intervention", r6_intervention_figure, "data"),
     "bm-e1-actomyosin-cortex": ("e1_cortical_tension", e1_cortical_tension_figure, "data"),
-    "bm-e2-actin-adhesion-collagen": ("e2_force_transfer", e2_force_transfer_schematic, "schematic"),
+    "bm-e2-actin-adhesion-collagen": ("e2_force_transfer", e2_force_transfer_figure, "light"),
     "bm-e3-closed-3d-lumenoid": ("e3_lumenoid", e3_lumenoid_figure, "data"),
-    "bm-e4-feedback-predictions": ("e4_feedback", e4_feedback_schematic, "schematic"),
+    "bm-e4-feedback-predictions": ("e4_feedback", e4_feedback_figure, "data"),
+}
+
+# Companion (supplement-tier) figures for the E1-E4 extension studies: a second
+# honest figure per study. Same (name, fn, kind) shape; rendered + tested alongside
+# the primaries. kind "light" = pure Python (always builds); "data" = needs engines.
+COMPANION_FIGURES = {
+    "bm-e1-actomyosin-cortex": ("e1_tension_components", e1_tension_components_figure, "data"),
+    "bm-e2-actin-adhesion-collagen": ("e2_bm_response", e2_bm_response_figure, "data"),
+    "bm-e3-closed-3d-lumenoid": ("e3_lumen_dynamics", e3_lumen_dynamics_figure, "data"),
+    "bm-e4-feedback-predictions": ("e4_subcycle_convergence", e4_subcycle_convergence_figure, "data"),
 }
 
 # Companion (supplement / hypothesis) figures from the 2026-10-20 figure review of
