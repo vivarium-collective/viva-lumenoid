@@ -1729,7 +1729,7 @@ _save_viz('bm-e4-feedback-predictions', 'e4_coupling_overlay_movie', _render_one
 # **e4_coupling_overlay_image**
 
 # e4_coupling_overlay_image
-_save_viz('bm-e4-feedback-predictions', 'e4_coupling_overlay_image', _render_one('image:bm-e4-coupling-overlay.png', {'title': 'E4 — epithelium + collagen BM overlaid at the basal surface (still)', 'evidence_status': 'observed', 'tier': 'main', 'caption': 'A representative frame of the overlay: the epithelial cross-section (green, lumen inside) with the collagen IV BM on its basal surface (grey rods, red NC1/7S crosslinks). Basal area, collagen stress σ, and the fed-back basal tension are annotated. Same representational co-location + real explicit-BM run as the movie.\n'}, RUNS_DB, STUDY_YAML))
+_save_viz('bm-e4-feedback-predictions', 'e4_coupling_overlay_image', _render_one('gif:bm-e4-coupling-overlay-still.gif', {'title': 'E4 — epithelium + collagen BM overlaid at the basal surface (still)', 'evidence_status': 'observed', 'tier': 'main', 'caption': 'A representative frame of the overlay: the epithelial cross-section (green, lumen inside) with the collagen IV BM on its basal surface (grey rods, red NC1/7S crosslinks). Basal area, collagen stress σ, and the fed-back basal tension are annotated. Same representational co-location + real explicit-BM run as the movie.\n'}, RUNS_DB, STUDY_YAML))
 
 # **e4_coupling_loop_movie**
 
