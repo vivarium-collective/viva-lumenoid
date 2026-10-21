@@ -634,7 +634,7 @@ visualizations:
       caption: >
         The coupling in ONE space: the lumenoid cross-section (epithelium — green cells, lumen inside) with the real LAMMPS collagen IV BM (grey rods + red crosslinks) wrapped as the membrane on its basal (outer) surface. As the epithelium's basal area changes the collagen membrane stretches and its stress σ feeds back as basal tension — you see WHERE they connect (the basal surface), and HOW they move together (both breathe). The deformation is the real explicit-BM two-way run; the collagen's placement on the basal ring is a representational co-location (the model couples through basal-area↔stress signals, not a per-vertex map). Reduced units.
   - name: e4_coupling_overlay_image
-    address: "image:bm-e4-coupling-overlay.png"
+    address: "gif:bm-e4-coupling-overlay-still.gif"
     config:
       title: "E4 — epithelium + collagen BM overlaid at the basal surface (still)"
       evidence_status: observed
