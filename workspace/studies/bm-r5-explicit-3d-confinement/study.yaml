@@ -271,6 +271,14 @@ limitations:
   - "Reduced units; no calibration to microns."
 
 visualizations:
+  - name: r5_area_distribution
+    address: "html:r5_area_distribution.html"
+    config:
+      title: "R5 — per-cell basal-area distribution"
+      evidence_status: observed
+      tier: supplement
+      caption: >
+        The per-cell basal-area distribution from the single real monolayer run (split out of the 3D figure so neither layout collapses). Reduced units.
   - name: explicit_3d_confinement_movie
     address: "gif:bm-r5-explicit-3d-confinement.gif"
     config:
