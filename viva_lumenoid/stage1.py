@@ -133,6 +133,10 @@ def run_stage1(params: CollagenParams | None = None,
                     'n_crosslinks': int(last['n_crosslinks']), 'phase': phase,
                     'positions': np.asarray(last['positions'], dtype=float).round(3),
                     'atom_types': np.asarray(last['atom_types']),
+                    # real bond topology + atom ids so the movie draws TRUE bonds
+                    # (rods + crosslinks) at minimum image — not index-paired guesses.
+                    'atom_ids': np.asarray(last['atom_ids'], dtype=int),
+                    'bonds': [list(map(int, b)) for b in last['bonds']],
                     'box': list(last['box_dimensions']),
                 })
             _ctr['i'] += 1
@@ -154,6 +158,8 @@ def run_stage1(params: CollagenParams | None = None,
     snapshot = {
         'positions': viscous_last['positions'],
         'atom_types': viscous_last['atom_types'],
+        'atom_ids': viscous_last['atom_ids'],
+        'bonds': viscous_last['bonds'],
         'box': viscous_last['box_dimensions'],
         'n_rods': p.n_rods,
     }

@@ -545,26 +545,18 @@ def r5_monolayer_figure():
     this single run, and no BM-relaxation axis is present. Total cell volume is
     conserved to <0.01% over 5 Euler steps (dt 0.01)."""
     go = _go()
-    from plotly.subplots import make_subplots
     eptm, total_vol, heights = _r5_monolayer_run()
     area = eptm.cell_df["area"].values
     resid = abs(total_vol[-1] - total_vol[0]) / (total_vol[0] or 1.0) * 100.0
-    fig = make_subplots(rows=1, cols=2, column_widths=[0.62, 0.38],
-                        specs=[[{"type": "scene"}, {"type": "xy"}]],
-                        subplot_titles=(f"3D monolayer ({eptm.Nc} cells) — centroids by per-cell area",
-                                        "per-cell area distribution (cell_df.area)"))
-    for tr in _mesh_traces(eptm, three_d=True, color_by="z"):
-        fig.add_trace(tr, row=1, col=1)
-    fig.add_trace(_r5_cell_centroid_markers(eptm, color_by="area"), row=1, col=1)
-    fig.add_trace(go.Histogram(x=area, nbinsx=24, marker_color=TEAL, showlegend=False,
-                               name=f"median {np.nanmedian(area):.2f}"), row=1, col=2)
-    fig.update_xaxes(title_text="per-cell area (cell_df.area, reduced)", row=1, col=2)
-    fig.update_yaxes(title_text="cell count", row=1, col=2)
+    # SINGLE 3D scene (a mixed 3D-scene + 2D-subplot figure collapses to a strip) —
+    # the per-cell area distribution is its own figure (r5_area_distribution).
+    fig = go.Figure(data=list(_mesh_traces(eptm, three_d=True, color_by="z"))
+                    + [_r5_cell_centroid_markers(eptm, color_by="area")])
     fig.update_layout(
-        title="R5 (main · engineered-diagnostic) — closed 3D monolayer: finite cell volumes + "
-              "identifiable basal surfaces",
-        template="plotly_white", height=620, scene=dict(aspectmode="data"),
-        annotations=list(fig.layout.annotations) + [dict(
+        title=f"R5 (main · engineered-diagnostic) — closed 3D monolayer ({eptm.Nc} cells), centroids by per-cell area",
+        template="plotly_white", height=640, autosize=False, margin=dict(t=64, b=64, l=8, r=8),
+        scene=dict(aspectmode="data", xaxis_title="x", yaxis_title="y", zaxis_title="z"),
+        annotations=[dict(
             x=0.5, y=-0.02, xref="paper", yref="paper", showarrow=False,
             text=f"A closed 3D Tyssue monolayer has finite cell volumes and identifiable basal surfaces; "
                  f"no BM-dependent height response is established by this geometric verification alone. "
@@ -572,10 +564,23 @@ def r5_monolayer_figure():
                  f"per-cell height (vertex z-extent) uniform = {np.median(heights):.2f}; "
                  f"total cell volume conserved to {resid:.3f}% over 5 Euler steps (dt 0.01). Reduced units.<br>"
                  f"GAP (named): the free-BM / stiff-frozen-BM / stiff-fast-relaxing-BM controls the morphology "
-                 f"ordering needs are NOT in tyssue_3d_monolayer (params: contractility + vol_elasticity, no BM "
-                 f"shell) — see the hypothesis supplement.",
+                 f"ordering needs are NOT in tyssue_3d_monolayer (contractility + vol_elasticity, no BM shell).",
             font=dict(size=10.5, color="#777"))])
     return fig
+
+
+def r5_area_distribution_figure():
+    """R5 companion (2D): the per-cell basal-area distribution from the single real
+    monolayer run — split out of the 3D figure so neither layout collapses."""
+    go = _go()
+    eptm, _tv, _h = _r5_monolayer_run()
+    area = eptm.cell_df["area"].values
+    fig = go.Figure(go.Histogram(x=area, nbinsx=24, marker_color=TEAL, showlegend=False))
+    fig.update_layout(
+        title=f"R5 — per-cell basal-area distribution (median {np.nanmedian(area):.2f}, reduced units)",
+        template="plotly_white", height=420, margin=dict(t=56, b=48),
+        xaxis_title="per-cell area (cell_df.area, reduced)", yaxis_title="cell count")
+    return _layout(fig, height=420)
 
 
 def r5_volume_hist_figure():
@@ -643,39 +648,22 @@ def e3_lumenoid_figure():
     morphogenesis remain untested (see the supplement)."""
     eptm = _tyssue_build_step("closed_lumenoid")
     go = _go()
-    from plotly.subplots import make_subplots
-    fig = make_subplots(rows=1, cols=2, column_widths=[0.6, 0.4],
-                        specs=[[{"type": "scene"}, {"type": "xy"}]],
-                        subplot_titles=(f"3D closed shell ({eptm.Nc} cells)", "equatorial section cut (z ≈ median)"))
-    for tr in _mesh_traces(eptm, three_d=True, color_by="z"):
-        fig.add_trace(tr, row=1, col=1)
-    sect, band = _e3_section_traces(eptm, go)
-    for tr in sect:
-        fig.add_trace(tr, row=1, col=2)
+    # A SINGLE 3D scene (the closed shell). A mixed 3D-scene + 2D-subplot figure
+    # collapses to a thin strip when embedded/standalone (fragile plotly combo), so
+    # the shell stands alone; the basal surface + geometry go in the caption.
+    fig = go.Figure(data=_mesh_traces(eptm, three_d=True, color_by="z"))
     vtot = float(eptm.cell_df["vol"].sum())
     lv = float(eptm.settings.get("lumen_vol", 0.0))
-    # Section-cut labels + a scale reference bar (1 model length unit).
-    cx, cy = float(band["x"].mean()), float(band["y"].mean())
-    rmax = float(((band["x"] - cx) ** 2 + (band["y"] - cy) ** 2).pow(0.5).max())
-    fig.add_annotation(x=cx, y=cy, text="lumen", showarrow=False,
-                       font=dict(size=12, color="#444"), row=1, col=2)
-    fig.add_annotation(x=cx, y=cy + rmax * 0.98, text="basal BM-coupling surface", showarrow=True,
-                       arrowhead=2, ax=0, ay=-26, font=dict(size=10, color=BLUE), row=1, col=2)
-    x0 = cx - rmax; y0 = cy - rmax * 1.12
-    fig.add_shape(type="line", x0=x0, y0=y0, x1=x0 + 1.0, y1=y0, line=dict(color="#333", width=3),
-                  row=1, col=2)
-    fig.add_annotation(x=x0 + 0.5, y=y0, text="1 length unit", showarrow=False, yshift=-10,
-                       font=dict(size=10, color="#333"), row=1, col=2)
-    fig.update_xaxes(scaleanchor="y2", title_text="x", row=1, col=2)
-    fig.update_yaxes(title_text="y", row=1, col=2)
     fig.update_layout(
         title=f"E3 — closed 3D lumenoid shell: geometry verification ({eptm.Nc} cells, engineered-diagnostic)",
-        template="plotly_white", height=640, scene=dict(aspectmode="data"), margin=dict(t=92, b=60),
-        annotations=list(fig.layout.annotations) + [dict(
-            x=0.5, y=-0.04, xref="paper", yref="paper", showarrow=False,
+        template="plotly_white", height=640, autosize=False,
+        margin=dict(t=64, b=56, l=8, r=8),
+        scene=dict(aspectmode="data", xaxis_title="x", yaxis_title="y", zaxis_title="z"),
+        annotations=[dict(
+            x=0.5, y=-0.02, xref="paper", yref="paper", showarrow=False,
             text=f"GEOMETRY metrics (reduced units): {eptm.Nc} cells · lumen volume {lv:.1f} · total cell volume {vtot:.1f}. "
-                 f"The basal surface is the BM coupling shell. Verifies geometry only; lumen filling and BM-regulated "
-                 f"morphogenesis remain untested.",
+                 f"The OUTER surface is the basal BM-coupling shell; the enclosed cavity is the lumen. Verifies geometry "
+                 f"only; lumen filling and BM-regulated morphogenesis remain untested.",
             font=dict(size=10.5, color="#777"))])
     return fig
 
@@ -1437,8 +1425,13 @@ def v1_stage1_main_figure():
     fig.add_trace(go.Scatter(x=pos[~is_nc1, 0], y=pos[~is_nc1, 1], mode="markers",
                              marker=dict(color=ORANGE, size=4), name="7S bead",
                              hoverinfo="skip"), row=2, col=2)
-    fig.update_xaxes(title_text="x (σ)", row=2, col=2, scaleanchor="y2")
-    fig.update_yaxes(title_text="y (σ)", row=2, col=2)
+    # Equal aspect via EXPLICIT equal ranges, not scaleanchor (a cross-subplot
+    # "y2" reference inflates the range and collapses the panel — the E3 bug).
+    _c = max(float(pos[:, 0].max() - pos[:, 0].min()), float(pos[:, 1].max() - pos[:, 1].min())) * 1.08
+    _mx = float(pos[:, 0].min() + pos[:, 0].max()) / 2
+    _my = float(pos[:, 1].min() + pos[:, 1].max()) / 2
+    fig.update_xaxes(title_text="x (σ)", range=[_mx - _c / 2, _mx + _c / 2], constrain="domain", row=2, col=2)
+    fig.update_yaxes(title_text="y (σ)", range=[_my - _c / 2, _my + _c / 2], constrain="domain", row=2, col=2)
 
     fig.update_layout(
         template="plotly_white", height=820, margin=dict(t=96, b=96),
@@ -2185,3 +2178,64 @@ EXTRA_STUDY_FIGURES = [
     ("bm-r5-explicit-3d-confinement", "r5_monolayer", r5_monolayer_figure, "data"),
     ("bm-e4-feedback-predictions", "e4_feedback", e4_feedback_figure, "data"),
 ]
+
+
+def _capture_coupling_signals(mode, steps=16, dt=0.02, bm_rods=40):
+    """Run the explicit-BM coupling in one mode; return the round-trip signal traces."""
+    from bigraph_schema import allocate_core
+    from viva_lumenoid.multiscale_coupling import LammpsTyssueCoupling
+    p = LammpsTyssueCoupling(config={"bm_mode": "explicit", "coupling_mode": mode,
+                                     "bm_rods": bm_rods, "strain_gain": 20.0,
+                                     "tension_gain": 0.02}, core=allocate_core())
+    t, rate, sigma, tension, area = [], [], [], [], []
+    for i in range(steps):
+        o = p.update({}, dt)
+        t.append(i * dt)
+        rate.append(float(o.get("basal_strain_rate", 0.0)))
+        sigma.append(float(o.get("bm_sigma", 0.0)))
+        tension.append(float(o.get("basal_tension", 0.0)))
+        area.append(float(o.get("basal_area", 0.0)))
+    p.close()
+    return {"t": t, "rate": rate, "sigma": sigma, "tension": tension, "area": area}
+
+
+def e4_coupling_roundtrip_figure():
+    """E4 — the explicit LAMMPS<->Tyssue coupling made EXPLICIT: the bidirectional
+    force round-trip as three co-evolving signals, contrasted across the two-way /
+    one-way / uncoupled controls. The epithelium's basal strain stretches the
+    collagen BM (forward); the collagen stress feeds back as basal tension
+    (feedback) — and that feedback closes ONLY in two-way mode (one-way pins the
+    tension at 0; uncoupled leaves the BM unstressed). Real explicit-BM run."""
+    go = _go()
+    from plotly.subplots import make_subplots
+    modes = {"two-way": BLUE, "one-way": ORANGE, "uncoupled": "#999"}
+    data = {m: _capture_coupling_signals(m) for m in modes}
+    fig = make_subplots(
+        rows=3, cols=1, shared_xaxes=True, vertical_spacing=0.09,
+        subplot_titles=(
+            "forward: epithelial basal strain rate ε̇ (stretches the collagen BM)",
+            "collagen BM stress σ (LAMMPS) — responds to the strain",
+            "feedback: basal tension (collagen σ fed back onto the epithelium)"))
+    for m, col in modes.items():
+        d = data[m]
+        w = 3 if m == "two-way" else 2
+        dash = None if m == "two-way" else "dot"
+        fig.add_trace(go.Scatter(x=d["t"], y=d["rate"], name=m, legendgroup=m,
+                                 line=dict(color=col, width=w, dash=dash)), row=1, col=1)
+        fig.add_trace(go.Scatter(x=d["t"], y=d["sigma"], name=m, legendgroup=m, showlegend=False,
+                                 line=dict(color=col, width=w, dash=dash)), row=2, col=1)
+        fig.add_trace(go.Scatter(x=d["t"], y=d["tension"], name=m, legendgroup=m, showlegend=False,
+                                 line=dict(color=col, width=w, dash=dash)), row=3, col=1)
+    fig.add_hline(y=0.0, line=dict(color="#ccc", width=1), row=3, col=1)
+    # annotate the causal loop down the panels
+    fig.add_annotation(x=0.5, y=0.5, xref="paper", yref="paper", showarrow=False, text="")
+    fig.update_yaxes(title_text="ε̇ (1/LJ)", row=1, col=1)
+    fig.update_yaxes(title_text="σ (LJ)", row=2, col=1)
+    fig.update_yaxes(title_text="basal tension", row=3, col=1)
+    fig.update_xaxes(title_text="time (LJ)", row=3, col=1)
+    fig.update_layout(
+        title="E4 — the LAMMPS↔Tyssue coupling loop: forward strain → collagen stress → "
+              "feedback tension (closes only two-way)",
+        template="plotly_white", height=640, legend=dict(orientation="h", y=1.08),
+        margin=dict(t=90))
+    return fig

@@ -91,20 +91,36 @@ def _layout(fig, height=760):
 # Stage 1
 # --------------------------------------------------------------------------- #
 def _network_segments(snapshot: dict):
-    """Rod segments (x, y with None breaks), skipping periodic-wrap artifacts."""
+    """Network bond segments (x, y with None breaks) at minimum image — TRUE
+    topology (rods + crosslinks) when the snapshot carries ``bonds``/``atom_ids``,
+    else the rod-pair heuristic (positions are local-index order, not rod order)."""
     pos = np.asarray(snapshot["positions"], dtype=float)
     box = snapshot["box"]
     lx, ly = box[0], box[1]
     xs, ys, ex, ey, etypes = [], [], [], [], []
     types = snapshot.get("atom_types")
-    n = len(pos) // 2 * 2
-    for i in range(0, n, 2):
-        a, b = pos[i], pos[i + 1]
-        # rods are ~1 bead-spacing long; anything longer is a periodic-wrap streak
-        if (a[0] - b[0]) ** 2 + (a[1] - b[1]) ** 2 > 9.0:
-            continue
-        xs += [a[0], b[0], None]
-        ys += [a[1], b[1], None]
+    bonds, ids = snapshot.get("bonds"), snapshot.get("atom_ids")
+    if bonds and ids is not None:
+        id2idx = {int(a): k for k, a in enumerate(np.asarray(ids))}
+        for bt, a1, a2 in bonds:
+            if a1 not in id2idx or a2 not in id2idx:
+                continue
+            p, q = pos[id2idx[a1]], pos[id2idx[a2]]
+            dx, dy = q[0] - p[0], q[1] - p[1]
+            if lx:
+                dx -= lx * round(dx / lx)
+            if ly:
+                dy -= ly * round(dy / ly)
+            xs += [p[0], p[0] + dx, None]
+            ys += [p[1], p[1] + dy, None]
+    else:
+        n = len(pos) // 2 * 2
+        for i in range(0, n, 2):
+            a, b = pos[i], pos[i + 1]
+            if (a[0] - b[0]) ** 2 + (a[1] - b[1]) ** 2 > 9.0:
+                continue
+            xs += [a[0], b[0], None]
+            ys += [a[1], b[1], None]
     if types is not None:
         types = np.asarray(types)
         ex = pos[:, 0]
@@ -347,26 +363,55 @@ def bending_figure(result: Any) -> "object":
 # --------------------------------------------------------------------------- #
 # Simulation movie — the spatial network state unfolding, synced to a metric
 # --------------------------------------------------------------------------- #
+def _bond_segments_2d(frame):
+    """TRUE bond segments from captured topology: (rod_xs, rod_ys, xlink_xs,
+    xlink_ys), every bond drawn at its minimum-image length (periodic bonds are
+    short across the edge, not lines spanning the box). Falls back to the old
+    index-pair heuristic only when a frame carries no ``bonds``/``atom_ids``
+    (positions come back in LOCAL-index order, so index pairing is NOT rod order —
+    that was the "random bonds jumping between nodes" artifact)."""
+    pos = np.asarray(frame["positions"], dtype=float)
+    lx, ly = float(frame["box"][0]), float(frame["box"][1])
+    rx, ry, xx, xy = [], [], [], []
+    bonds, ids = frame.get("bonds"), frame.get("atom_ids")
+    if bonds and ids is not None:
+        id2idx = {int(a): k for k, a in enumerate(np.asarray(ids))}
+        for bt, a1, a2 in bonds:
+            if a1 not in id2idx or a2 not in id2idx:
+                continue
+            p, q = pos[id2idx[a1]], pos[id2idx[a2]]
+            dx, dy = q[0] - p[0], q[1] - p[1]
+            if lx:
+                dx -= lx * round(dx / lx)
+            if ly:
+                dy -= ly * round(dy / ly)
+            if bt == 1:
+                rx += [p[0], p[0] + dx, None]; ry += [p[1], p[1] + dy, None]
+            elif bt in (2, 3):
+                xx += [p[0], p[0] + dx, None]; xy += [p[1], p[1] + dy, None]
+    else:
+        n = (len(pos) // 2) * 2
+        for i in range(0, n, 2):
+            a, b = pos[i], pos[i + 1]
+            if (a[0] - b[0]) ** 2 + (a[1] - b[1]) ** 2 > 9.0:
+                continue
+            rx += [a[0], b[0], None]; ry += [a[1], b[1], None]
+    return rx, ry, xx, xy
+
+
 def _frame_mesh(frame):
-    """(rod_xs, rod_ys, nc1_xy, s7_xy, box_xy) for one captured frame."""
+    """(rod_xs, rod_ys, xlink_xs, xlink_ys, nc1_xy, s7_xy, box_xy) for one frame."""
     pos = np.asarray(frame["positions"], dtype=float)
     lx, ly = float(frame["box"][0]), float(frame["box"][1])
     types = np.asarray(frame.get("atom_types")) if frame.get("atom_types") is not None else None
-    n = (len(pos) // 2) * 2
-    xs, ys = [], []
-    for i in range(0, n, 2):
-        a, b = pos[i], pos[i + 1]
-        if (a[0] - b[0]) ** 2 + (a[1] - b[1]) ** 2 > 9.0:   # periodic-wrap streak
-            continue
-        xs += [a[0], b[0], None]
-        ys += [a[1], b[1], None]
+    rx, ry, xx, xy = _bond_segments_2d(frame)
     nc1 = s7 = (np.array([]), np.array([]))
     if types is not None:
         m = types[:len(pos)] == 1
         nc1 = (pos[:len(types)][m][:, 0], pos[:len(types)][m][:, 1])
         s7 = (pos[:len(types)][~m][:, 0], pos[:len(types)][~m][:, 1])
     box_xy = ([0, lx, lx, 0, 0], [0, 0, ly, ly, 0])
-    return xs, ys, nc1, s7, box_xy
+    return rx, ry, xx, xy, nc1, s7, box_xy
 
 
 def network_movie_figure(result: Any, title: str = "collagen IV network") -> "object":
@@ -406,34 +451,38 @@ def network_movie_figure(result: Any, title: str = "collagen IV network") -> "ob
         horizontal_spacing=0.09)
 
     f0 = frames[0]
-    xs, ys, nc1, s7, box_xy = _frame_mesh(f0)
+    rx, ry, xx, xy, nc1, s7, box_xy = _frame_mesh(f0)
     # --- base data (indices matter for frame .traces mapping) ---
-    fig.add_trace(go.Scatter(x=xs, y=ys, mode="lines",
-                  line=dict(color="rgba(80,90,105,0.55)", width=1.2),
-                  name="rods", showlegend=False, hoverinfo="skip"), row=1, col=1)      # 0
+    fig.add_trace(go.Scatter(x=rx, y=ry, mode="lines",
+                  line=dict(color="rgba(120,130,145,0.55)", width=1.1),
+                  name="rods", showlegend=True, hoverinfo="skip"), row=1, col=1)        # 0
+    fig.add_trace(go.Scatter(x=xx, y=xy, mode="lines",
+                  line=dict(color="rgba(192,57,43,0.85)", width=1.3),
+                  name="crosslinks", showlegend=True, hoverinfo="skip"), row=1, col=1)  # 1
     fig.add_trace(go.Scatter(x=nc1[0], y=nc1[1], mode="markers", name="NC1 end",
-                  marker=dict(size=4, color=BLUE), hoverinfo="skip"), row=1, col=1)     # 1
+                  marker=dict(size=4, color=BLUE), hoverinfo="skip"), row=1, col=1)     # 2
     fig.add_trace(go.Scatter(x=s7[0], y=s7[1], mode="markers", name="7S end",
-                  marker=dict(size=4, color=ORANGE), hoverinfo="skip"), row=1, col=1)   # 2
+                  marker=dict(size=4, color=ORANGE), hoverinfo="skip"), row=1, col=1)   # 3
     fig.add_trace(go.Scatter(x=box_xy[0], y=box_xy[1], mode="lines",
                   line=dict(color=phase_color(f0["phase"]), width=2.5),
-                  name="box", showlegend=False, hoverinfo="skip"), row=1, col=1)        # 3
+                  name="box", showlegend=False, hoverinfo="skip"), row=1, col=1)        # 4
     # static stress backdrop + phase-coloured markers
     fig.add_trace(go.Scatter(x=tt, y=sg, mode="lines",
                   line=dict(color="rgba(120,130,145,0.45)", width=1.2),
-                  name="σ(t)", showlegend=False, hoverinfo="skip"), row=1, col=2)       # 4
+                  name="σ(t)", showlegend=False, hoverinfo="skip"), row=1, col=2)       # 5
     fig.add_trace(go.Scatter(x=[f0["t"]], y=[f0["sigma"]], mode="markers",
                   marker=dict(size=13, color=phase_color(f0["phase"]),
                               line=dict(width=1.5, color="white")),
                   name="now", showlegend=False,
-                  hovertemplate="t=%{x:.0f}<br>σ=%{y:.3f}<extra></extra>"), row=1, col=2)  # 5
+                  hovertemplate="t=%{x:.0f}<br>σ=%{y:.3f}<extra></extra>"), row=1, col=2)  # 6
 
     go_frames = []
     for i, f in enumerate(frames):
-        xs, ys, nc1, s7, box_xy = _frame_mesh(f)
+        rx, ry, xx, xy, nc1, s7, box_xy = _frame_mesh(f)
         c = phase_color(f["phase"])
-        go_frames.append(go.Frame(name=str(i), traces=[0, 1, 2, 3, 5], data=[
-            go.Scatter(x=xs, y=ys),
+        go_frames.append(go.Frame(name=str(i), traces=[0, 1, 2, 3, 4, 6], data=[
+            go.Scatter(x=rx, y=ry),
+            go.Scatter(x=xx, y=xy),
             go.Scatter(x=nc1[0], y=nc1[1]),
             go.Scatter(x=s7[0], y=s7[1]),
             go.Scatter(x=box_xy[0], y=box_xy[1], line=dict(color=c, width=2.5)),
@@ -484,13 +533,29 @@ def _frame_mesh_3d(frame):
     """(rod x/y/z with None breaks, nc1 xyz, s7 xyz) for one frame, in 3D."""
     pos = np.asarray(frame["positions"], dtype=float)
     types = np.asarray(frame.get("atom_types")) if frame.get("atom_types") is not None else None
-    n = (len(pos) // 2) * 2
+    lx, ly = float(frame["box"][0]), float(frame["box"][1])
     xs, ys, zs = [], [], []
-    for i in range(0, n, 2):
-        a, b = pos[i], pos[i + 1]
-        if (a[0] - b[0]) ** 2 + (a[1] - b[1]) ** 2 > 9.0:   # periodic-wrap streak
-            continue
-        xs += [a[0], b[0], None]; ys += [a[1], b[1], None]; zs += [a[2], b[2], None]
+    bonds, ids = frame.get("bonds"), frame.get("atom_ids")
+    if bonds and ids is not None:
+        # TRUE bonds (rods + crosslinks) at minimum image in x,y (quasi-2D slab)
+        id2idx = {int(a): k for k, a in enumerate(np.asarray(ids))}
+        for bt, a1, a2 in bonds:
+            if a1 not in id2idx or a2 not in id2idx:
+                continue
+            p, q = pos[id2idx[a1]], pos[id2idx[a2]]
+            dx, dy = q[0] - p[0], q[1] - p[1]
+            if lx:
+                dx -= lx * round(dx / lx)
+            if ly:
+                dy -= ly * round(dy / ly)
+            xs += [p[0], p[0] + dx, None]; ys += [p[1], p[1] + dy, None]; zs += [p[2], q[2], None]
+    else:
+        n = (len(pos) // 2) * 2
+        for i in range(0, n, 2):
+            a, b = pos[i], pos[i + 1]
+            if (a[0] - b[0]) ** 2 + (a[1] - b[1]) ** 2 > 9.0:
+                continue
+            xs += [a[0], b[0], None]; ys += [a[1], b[1], None]; zs += [a[2], b[2], None]
     nc1 = s7 = (np.array([]), np.array([]), np.array([]))
     if types is not None:
         m = types[:len(pos)] == 1
@@ -1131,9 +1196,17 @@ def _polish(fig):
 def figure_to_html(fig, title: str = "viva-lumenoid") -> str:
     import plotly.io as pio
     _polish(fig)
-    return pio.to_html(fig, full_html=True, include_plotlyjs="cdn",
+    # The study Visualizations tab embeds each figure in a container that sizes to
+    # its content, so a height:100% plot div collapses against an auto-height body —
+    # 3D `scene` subplots especially (they render as a squashed strip). Pin the plot
+    # to the figure's OWN pixel height so the container grows to fit it. Width stays
+    # responsive.
+    h = int(getattr(fig.layout, "height", None) or 600)
+    html = pio.to_html(fig, full_html=True, include_plotlyjs="cdn",
                        config={"displaylogo": False, "responsive": True},
-                       default_height="100%")
+                       default_height=f"{h}px")
+    html = html.replace("height:100%; width:100%;", f"height:{h}px; width:100%;")
+    return html
 
 
 def save_html(fig, path: str, title: str = "viva-lumenoid") -> str:
