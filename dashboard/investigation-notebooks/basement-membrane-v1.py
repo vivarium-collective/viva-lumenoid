@@ -1228,6 +1228,11 @@ else:
 #
 # _Results are shown by the figures below, produced by the run above._
 
+# **r5_area_distribution**
+
+# r5_area_distribution
+_save_viz('bm-r5-explicit-3d-confinement', 'r5_area_distribution', _render_one('html:r5_area_distribution.html', {'title': 'R5 — per-cell basal-area distribution', 'evidence_status': 'observed', 'tier': 'supplement', 'caption': 'The per-cell basal-area distribution from the single real monolayer run (split out of the 3D figure so neither layout collapses). Reduced units.\n'}, RUNS_DB, STUDY_YAML))
+
 # **explicit_3d_confinement_movie**
 
 # explicit_3d_confinement_movie
@@ -1715,6 +1720,26 @@ else:
 # ### Visualizations
 #
 # _Results are shown by the figures below, produced by the run above._
+
+# **e4_coupling_overlay_movie**
+
+# e4_coupling_overlay_movie
+_save_viz('bm-e4-feedback-predictions', 'e4_coupling_overlay_movie', _render_one('gif:bm-e4-coupling-overlay.gif', {'title': 'E4 — epithelium + collagen BM OVERLAID at the basal surface (movie)', 'evidence_status': 'observed', 'tier': 'main', 'caption': "The coupling in ONE space: the lumenoid cross-section (epithelium — green cells, lumen inside) with the real LAMMPS collagen IV BM (grey rods + red crosslinks) wrapped as the membrane on its basal (outer) surface. As the epithelium's basal area changes the collagen membrane stretches and its stress σ feeds back as basal tension — you see WHERE they connect (the basal surface), and HOW they move together (both breathe). The deformation is the real explicit-BM two-way run; the collagen's placement on the basal ring is a representational co-location (the model couples through basal-area↔stress signals, not a per-vertex map). Reduced units.\n"}, RUNS_DB, STUDY_YAML))
+
+# **e4_coupling_overlay_image**
+
+# e4_coupling_overlay_image
+_save_viz('bm-e4-feedback-predictions', 'e4_coupling_overlay_image', _render_one('image:bm-e4-coupling-overlay.png', {'title': 'E4 — epithelium + collagen BM overlaid at the basal surface (still)', 'evidence_status': 'observed', 'tier': 'main', 'caption': 'A representative frame of the overlay: the epithelial cross-section (green, lumen inside) with the collagen IV BM on its basal surface (grey rods, red NC1/7S crosslinks). Basal area, collagen stress σ, and the fed-back basal tension are annotated. Same representational co-location + real explicit-BM run as the movie.\n'}, RUNS_DB, STUDY_YAML))
+
+# **e4_coupling_loop_movie**
+
+# e4_coupling_loop_movie
+_save_viz('bm-e4-feedback-predictions', 'e4_coupling_loop_movie', _render_one('gif:bm-e4-coupling-loop.gif', {'title': 'E4 — the LAMMPS↔Tyssue coupling loop, animated (explicit BM)', 'evidence_status': 'observed', 'tier': 'main', 'caption': 'The coupling made explicit: the Tyssue epithelium (left) and the explicit LAMMPS collagen IV BM (right) joined by two arrows that PULSE with the live signals — the epithelial basal strain stretching the collagen (red, downward) and the collagen stress fed back as basal tension (blue, upward) — over a co-evolution trace strip with a moving time cursor. You watch the bidirectional force round-trip close in real time. Two-way mode, explicit LAMMPS BM, reduced units.\n'}, RUNS_DB, STUDY_YAML))
+
+# **e4_coupling_roundtrip**
+
+# e4_coupling_roundtrip
+_save_viz('bm-e4-feedback-predictions', 'e4_coupling_roundtrip', _render_one('html:e4_coupling_roundtrip.html', {'title': 'E4 — coupling round-trip: forward strain → collagen stress → feedback tension', 'evidence_status': 'observed', 'tier': 'main', 'caption': 'The bidirectional loop as three co-evolving signals: the epithelial basal strain rate ε̇ (top) stretches the explicit LAMMPS collagen BM, whose stress σ (middle) responds, and that stress is fed back as basal tension (bottom). The three-mode contrast IS the coupling — the feedback closes ONLY in two-way (blue); one-way (orange) pins the tension at 0, and uncoupled (grey) leaves the collagen barely stressed. Real explicit-BM run, reduced units.\n'}, RUNS_DB, STUDY_YAML))
 
 # **e4_growth_feedback**
 
