@@ -14,7 +14,7 @@
 <!-- END:dashboard -->
 
 <!-- BEGIN dashboard -->
-> ## 📊 [**Live dashboard →**](https://vivarium-collective.github.io/viva-lumenoid/dashboard/)
+> ## 📊 [**Live read-only workbench →**](https://vivarium-collective.github.io/viva-lumenoid/workbench/)
 > Browse every investigation & study interactively, or read the [published investigation reports](https://vivarium-collective.github.io/viva-lumenoid/). Auto-published from `main` on every merge.
 <!-- END dashboard -->
 
