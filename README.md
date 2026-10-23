@@ -13,11 +13,6 @@
 **[Open the read-only workbench](https://vivarium-collective.github.io/viva-lumenoid/workbench/)** to browse every composite, study, and result in your browser — or run it locally (below).
 <!-- END:dashboard -->
 
-<!-- BEGIN dashboard -->
-> ## 📊 [**Live read-only workbench →**](https://vivarium-collective.github.io/viva-lumenoid/workbench/)
-> Browse every investigation & study interactively, or read the [published investigation reports](https://vivarium-collective.github.io/viva-lumenoid/). Auto-published from `main` on every merge.
-<!-- END dashboard -->
-
 Clean-room [process-bigraph](https://github.com/vivarium-collective/process-bigraph)
 build of the AICS-Lumenoids **"Basement membrane — v1 model specification"**: a
 standalone collagen IV network, coarse-grained at the fiber scale, run on a
