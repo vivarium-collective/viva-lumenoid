@@ -2,17 +2,18 @@
 # publishes its dashboard/reports with a plain `uv sync --extra dev`. The
 # provenance stamp is removed so check-workflow-freshness.py skips it.
 
-name: Publish read-only dashboard
+name: Publish read-only workbench
 
 # Build the workspace into a self-contained static SPA snapshot and publish it
-# to the gh-pages branch at dashboard/ (served at
-# <user>.github.io/<repo>/dashboard/). The READ-ONLY mirror of every
+# to the gh-pages branch at workbench/ (served at
+# <user>.github.io/<repo>/workbench/). The READ-ONLY mirror of every
 # investigation + study on main — browsable with no server.
+# (A legacy /dashboard/ path is kept as a redirect to /workbench/.)
 #
 # One-time setup: Settings → Pages → Source = "Deploy from a branch" → gh-pages.
 #
 # DEPLOY job (post-merge to main), NOT a PR gate — a failure here never blocks a
-# merge. It only ever writes dashboard/ on gh-pages.
+# merge. It writes workbench/ (+ a dashboard/ redirect) on gh-pages.
 
 on:
   push:
@@ -53,19 +54,19 @@ jobs:
           source .venv/bin/activate
           uv sync --extra dev
 
-      - name: Build dashboard snapshot
+      - name: Build read-only workbench snapshot
         # base-path / interactive-url are derived from the GitHub repo.
         run: |
           source .venv/bin/activate
           PYTHONPATH="$PWD" bash scripts/publish_dashboard.sh \
-            reports/published/dashboard \
-            "/${{ github.event.repository.name }}/dashboard" \
+            reports/published/workbench \
+            "/${{ github.event.repository.name }}/workbench" \
             "${{ github.server_url }}/${{ github.repository }}"
 
       - name: Publish to gh-pages
         run: |
           set -euo pipefail
-          if [ ! -f reports/published/dashboard/index.html ]; then
+          if [ ! -f reports/published/workbench/index.html ]; then
             echo "::error::build produced no bundle (no index.html); nothing to publish"
             exit 1
           fi
@@ -80,26 +81,30 @@ jobs:
             git worktree add --detach /tmp/ghp
             ( cd /tmp/ghp && git checkout --orphan gh-pages && git rm -rf . >/dev/null 2>&1 || true )
           fi
+          rm -rf /tmp/ghp/workbench
+          mkdir -p /tmp/ghp/workbench
+          cp -R reports/published/workbench/. /tmp/ghp/workbench/
+          # Legacy /dashboard/ path → redirect to /workbench/.
           rm -rf /tmp/ghp/dashboard
           mkdir -p /tmp/ghp/dashboard
-          cp -R reports/published/dashboard/. /tmp/ghp/dashboard/
+          printf '<!doctype html><meta charset="utf-8"><title>%s</title><meta http-equiv="refresh" content="0; url=../workbench/"><link rel="canonical" href="../workbench/"><script>location.replace("../workbench/"+location.search+location.hash)</script><a href="../workbench/">read-only workbench →</a>\n' "${{ github.event.repository.name }}" > /tmp/ghp/dashboard/index.html
           touch /tmp/ghp/.nojekyll
           cd /tmp/ghp
           git add -A
           if git diff --cached --quiet; then
-            echo "dashboard snapshot unchanged; skipping commit"
+            echo "read-only workbench snapshot unchanged; skipping commit"
           else
-            git commit -m "gh-pages: republish read-only dashboard (automated, ${GITHUB_SHA::7})"
+            git commit -m "gh-pages: republish read-only workbench (automated, ${GITHUB_SHA::7})"
             git push origin gh-pages
-            echo "published read-only dashboard to gh-pages:dashboard/"
+            echo "published read-only workbench to gh-pages:workbench/ (+ dashboard/ redirect)"
           fi
 
-      - name: Feature the live dashboard in README
+      - name: Feature the live workbench in README
         run: |
           set -euo pipefail
           owner="${{ github.repository_owner }}"; repo="${{ github.event.repository.name }}"
           python3 scripts/feature_dashboard_in_readme.py README.md \
-            "https://${owner}.github.io/${repo}/dashboard/" \
+            "https://${owner}.github.io/${repo}/workbench/" \
             "https://${owner}.github.io/${repo}/"
           if ! git diff --quiet README.md; then
             git config user.name  "github-actions[bot]"
