@@ -53,6 +53,12 @@ jobs:
           uv venv .venv --python 3.12.9
           source .venv/bin/activate
           uv sync --extra dev
+          # Force the current vivarium-workbench so the published snapshot ships
+          # the latest rail/renderer — uv.lock may pin an older commit, and a plain
+          # `uv sync` would otherwise republish a stale UI. --reinstall-package
+          # because main's version string can match the already-synced one.
+          uv pip install --reinstall-package vivarium-workbench \
+            "vivarium-workbench @ git+https://github.com/vivarium-collective/vivarium-workbench.git@main"
 
       - name: Build read-only workbench snapshot
         # base-path / interactive-url are derived from the GitHub repo.
