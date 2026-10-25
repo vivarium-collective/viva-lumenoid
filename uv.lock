@@ -3478,7 +3478,7 @@ dependencies = [
 [[package]]
 name = "viva-catalog"
 version = "0.1.0"
-source = { git = "https://github.com/vivarium-collective/viva-marketplace.git?branch=main#db2fe11a00d385df235ba04142c13119730822dd" }
+source = { git = "https://github.com/vivarium-collective/viva-marketplace.git?rev=4e72e3b7f6c88d9683ae113a58e59bcafc5efb65#4e72e3b7f6c88d9683ae113a58e59bcafc5efb65" }
 
 [[package]]
 name = "viva-emitters"
@@ -3594,7 +3594,7 @@ dependencies = [
 [[package]]
 name = "vivarium-workbench"
 version = "0.4.1"
-source = { git = "https://github.com/vivarium-collective/vivarium-workbench.git?branch=main#618a951d5d7492169d93abe1bcbecf9333399722" }
+source = { git = "https://github.com/vivarium-collective/vivarium-workbench.git?branch=main#e05708591c33cb32a2f8a71ca2d9b0ab4746b8d4" }
 dependencies = [
     { name = "bigraph-schema" },
     { name = "boto3" },
