@@ -108,7 +108,7 @@ meeting_alignment_2026_10_20:
   note: "Reformulate growth as an evolving PREFERRED cell area/volume (or preferred cell number), NOT imposed realized geometry — the meeting's key modeling constraint. Keep growth separate from cell division for the MVP; the paper uses proliferation, so distinguish faithful reproduction from the no-division growth extension."
 
 parent_studies:
-  - {study: bm-v1-stage1-modulus-remodelling, condition: tests-passed}
+  - {study: bm-v1-stage1-modulus-remodelling, condition: tests-passed, relation: builds-on}
 
 cites: [barrientos2026cellshape]
 

@@ -39,8 +39,8 @@ result: >
 
 pipeline_gate:
   prerequisites:
-    - {study: bm-r1-published-tissue-baseline, condition: tests-passed}
-    - {study: bm-r2-collagen-network-rheology, condition: tests-passed}
+    - {study: bm-r1-published-tissue-baseline, condition: tests-passed, relation: builds-on}
+    - {study: bm-r2-collagen-network-rheology, condition: tests-passed, relation: builds-on}
   enables:
     - bm-r5-explicit-3d-confinement
   proceed_condition: >
@@ -96,8 +96,8 @@ meeting_alignment_2026_10_20:
     so the causal experiment runs in the reduced-order 2D cross-section and is labelled as such.
 
 parent_studies:
-  - {study: bm-r1-published-tissue-baseline, condition: tests-passed}
-  - {study: bm-r2-collagen-network-rheology, condition: tests-passed}
+  - {study: bm-r1-published-tissue-baseline, condition: tests-passed, relation: builds-on}
+  - {study: bm-r2-collagen-network-rheology, condition: tests-passed, relation: builds-on}
 
 cites: [barrientos2026cellshape]
 

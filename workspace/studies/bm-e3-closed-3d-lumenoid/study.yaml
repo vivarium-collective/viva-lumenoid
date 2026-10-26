@@ -43,8 +43,8 @@ result: >
 
 pipeline_gate:
   prerequisites:
-    - {study: bm-r5-explicit-3d-confinement, condition: tests-passed}
-    - {study: bm-e2-actin-adhesion-collagen, condition: tests-passed}
+    - {study: bm-r5-explicit-3d-confinement, condition: tests-passed, relation: builds-on}
+    - {study: bm-e2-actin-adhesion-collagen, condition: tests-passed, relation: builds-on}
   enables: []
   proceed_condition: >
     A closed lumen-enclosing shell resolves over the tyssue engine with finite per-cell volumes
@@ -96,8 +96,8 @@ meeting_alignment_2026_10_20:
     lumen elasticity.
 
 parent_studies:
-  - {study: bm-r5-explicit-3d-confinement, condition: tests-passed}
-  - {study: bm-e2-actin-adhesion-collagen, condition: tests-passed}
+  - {study: bm-r5-explicit-3d-confinement, condition: tests-passed, relation: builds-on}
+  - {study: bm-e2-actin-adhesion-collagen, condition: tests-passed, relation: builds-on}
 
 cites: [barrientos2026cellshape]
 
