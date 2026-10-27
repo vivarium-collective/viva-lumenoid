@@ -550,21 +550,31 @@ def r5_monolayer_figure():
     resid = abs(total_vol[-1] - total_vol[0]) / (total_vol[0] or 1.0) * 100.0
     # SINGLE 3D scene (a mixed 3D-scene + 2D-subplot figure collapses to a strip) —
     # the per-cell area distribution is its own figure (r5_area_distribution).
-    fig = go.Figure(data=list(_mesh_traces(eptm, three_d=True, color_by="z"))
-                    + [_r5_cell_centroid_markers(eptm, color_by="area")])
+    # Suppress the mesh's own z-colorbar so only the meaningful per-cell-area
+    # colorbar shows (two colorbars otherwise stack + overlap on the right).
+    mesh = list(_mesh_traces(eptm, three_d=True, color_by="z"))
+    for t in mesh:
+        try:
+            t.update(marker_showscale=False)  # Scatter3d colorbar is marker-level
+        except Exception:
+            pass
+    fig = go.Figure(data=mesh + [_r5_cell_centroid_markers(eptm, color_by="area")])
     fig.update_layout(
         title=f"R5 (main · engineered-diagnostic) — closed 3D monolayer ({eptm.Nc} cells), centroids by per-cell area",
-        template="plotly_white", height=640, autosize=False, margin=dict(t=64, b=64, l=8, r=8),
+        template="plotly_white", height=660, autosize=False, margin=dict(t=64, b=132, l=8, r=8),
         scene=dict(aspectmode="data", xaxis_title="x", yaxis_title="y", zaxis_title="z"),
         annotations=[dict(
-            x=0.5, y=-0.02, xref="paper", yref="paper", showarrow=False,
-            text=f"A closed 3D Tyssue monolayer has finite cell volumes and identifiable basal surfaces; "
-                 f"no BM-dependent height response is established by this geometric verification alone. "
+            x=0.5, y=-0.04, xref="paper", yref="paper", showarrow=False,
+            xanchor="center", yanchor="top", align="center",
+            # pre-wrapped: annotations don't auto-wrap, so a single long line
+            # clips both paper edges — keep each line short enough to fit.
+            text=f"A closed 3D Tyssue monolayer has finite cell volumes and identifiable basal surfaces;<br>"
+                 f"no BM-dependent height response is established by this geometric verification alone.<br>"
                  f"Per-cell area {np.nanmin(area):.2f}–{np.nanmax(area):.2f} (median {np.nanmedian(area):.2f}); "
-                 f"per-cell height (vertex z-extent) uniform = {np.median(heights):.2f}; "
+                 f"per-cell height (vertex z-extent) uniform = {np.median(heights):.2f};<br>"
                  f"total cell volume conserved to {resid:.3f}% over 5 Euler steps (dt 0.01). Reduced units.<br>"
-                 f"GAP (named): the free-BM / stiff-frozen-BM / stiff-fast-relaxing-BM controls the morphology "
-                 f"ordering needs are NOT in tyssue_3d_monolayer (contractility + vol_elasticity, no BM shell).",
+                 f"GAP (named): the free-BM / stiff-frozen-BM / stiff-fast-relaxing-BM morphology-ordering<br>"
+                 f"controls are NOT in tyssue_3d_monolayer (contractility + vol_elasticity, no BM shell).",
             font=dict(size=10.5, color="#777"))])
     return fig
 

@@ -414,6 +414,35 @@ def _frame_mesh(frame):
     return rx, ry, xx, xy, nc1, s7, box_xy
 
 
+# Movie figures embed every captured frame's full coordinate set. At the
+# capture's native ~80 frames x all beads each movie's HTML runs ~2 MB, and the
+# 3D players tip over the investigation report's 2.5 MB per-figure inline cap,
+# so they are dropped as "too large to inline" (the missing-figure complaint).
+# Decimate to a smooth-enough frame count and round coordinates to 0.01 a — both
+# are visual-only and together shrink each movie ~5x so every movie inlines and
+# renders responsively.
+_MOVIE_MAX_FRAMES = 28
+
+
+def _decimate_frames(frames: list, n: int = _MOVIE_MAX_FRAMES) -> list:
+    """Evenly subsample ``frames`` to at most ``n`` (keeps first + last)."""
+    if len(frames) <= n:
+        return frames
+    idx = np.linspace(0, len(frames) - 1, n).round().astype(int)
+    out, seen = [], set()
+    for i in idx:
+        i = int(i)
+        if i not in seen:
+            seen.add(i)
+            out.append(frames[i])
+    return out
+
+
+def _rnd(a, nd: int = 2):
+    """Round coordinate arrays before embedding — trims the per-frame JSON."""
+    return np.round(np.asarray(a, dtype=float), nd)
+
+
 def network_movie_figure(result: Any, title: str = "collagen IV network") -> "object":
     """An animated player of the network's spatial state (left) synced to the
     stress trace (right) — play/pause + a phase-labelled time slider.
@@ -425,7 +454,7 @@ def network_movie_figure(result: Any, title: str = "collagen IV network") -> "ob
     from plotly.subplots import make_subplots
     import plotly.graph_objects as go
 
-    frames = result.frames or []
+    frames = _decimate_frames(result.frames or [])
     if not frames:
         raise ValueError("result has no captured frames (run with capture_frames=True)")
     t_all = np.asarray([f["t"] for f in frames])
@@ -481,11 +510,11 @@ def network_movie_figure(result: Any, title: str = "collagen IV network") -> "ob
         rx, ry, xx, xy, nc1, s7, box_xy = _frame_mesh(f)
         c = phase_color(f["phase"])
         go_frames.append(go.Frame(name=str(i), traces=[0, 1, 2, 3, 4, 6], data=[
-            go.Scatter(x=rx, y=ry),
-            go.Scatter(x=xx, y=xy),
-            go.Scatter(x=nc1[0], y=nc1[1]),
-            go.Scatter(x=s7[0], y=s7[1]),
-            go.Scatter(x=box_xy[0], y=box_xy[1], line=dict(color=c, width=2.5)),
+            go.Scatter(x=_rnd(rx), y=_rnd(ry)),
+            go.Scatter(x=_rnd(xx), y=_rnd(xy)),
+            go.Scatter(x=_rnd(nc1[0]), y=_rnd(nc1[1])),
+            go.Scatter(x=_rnd(s7[0]), y=_rnd(s7[1])),
+            go.Scatter(x=_rnd(box_xy[0]), y=_rnd(box_xy[1]), line=dict(color=c, width=2.5)),
             go.Scatter(x=[f["t"]], y=[f["sigma"]], marker=dict(color=c, size=13)),
         ]))
     fig.frames = go_frames
@@ -589,7 +618,7 @@ def network_movie_3d_figure(result: Any, title: str = "collagen IV network",
     subtitle says so; x/y are to scale.
     """
     import plotly.graph_objects as go
-    frames = result.frames or []
+    frames = _decimate_frames(result.frames or [])
     if not frames:
         raise ValueError("result has no captured frames (run with capture_frames=True)")
     lx = max(float(f["box"][0]) for f in frames)
@@ -600,14 +629,14 @@ def network_movie_3d_figure(result: Any, title: str = "collagen IV network",
         xs, ys, zs, nc1, s7 = _frame_mesh_3d(f)
         bx, by, bz = _box_wireframe_3d(float(f["box"][0]), float(f["box"][1]), float(f["box"][2]))
         return [
-            go.Scatter3d(x=xs, y=ys, z=zs, mode="lines",
+            go.Scatter3d(x=_rnd(xs), y=_rnd(ys), z=_rnd(zs), mode="lines",
                          line=dict(color="rgba(80,90,105,0.55)", width=2),
                          name="rods", showlegend=False, hoverinfo="skip"),
-            go.Scatter3d(x=nc1[0], y=nc1[1], z=nc1[2], mode="markers", name="NC1 end",
+            go.Scatter3d(x=_rnd(nc1[0]), y=_rnd(nc1[1]), z=_rnd(nc1[2]), mode="markers", name="NC1 end",
                          marker=dict(size=2.6, color=BLUE), hoverinfo="skip"),
-            go.Scatter3d(x=s7[0], y=s7[1], z=s7[2], mode="markers", name="7S end",
+            go.Scatter3d(x=_rnd(s7[0]), y=_rnd(s7[1]), z=_rnd(s7[2]), mode="markers", name="7S end",
                          marker=dict(size=2.6, color=ORANGE), hoverinfo="skip"),
-            go.Scatter3d(x=bx, y=by, z=bz, mode="lines",
+            go.Scatter3d(x=_rnd(bx), y=_rnd(by), z=_rnd(bz), mode="lines",
                          line=dict(color="rgba(120,130,145,0.6)", width=2),
                          showlegend=False, hoverinfo="skip"),
         ]
@@ -662,7 +691,7 @@ def porosity_bundling_figure(result: Any) -> "object":
             "Pore size scales with network density",
             "Bundling — protomers per strand (model under-bundles)",
             "Pore map — maximal inscribed empty discs"),
-        vertical_spacing=0.14, horizontal_spacing=0.11)
+        vertical_spacing=0.19, horizontal_spacing=0.11)
 
     # (1,1) pore-size histogram vs corneal-EM + Matrigel bands
     diam = np.asarray(result.pore_diam_nm)
@@ -727,7 +756,7 @@ def porosity_bundling_figure(result: Any) -> "object":
     fig.update_xaxes(title_text="x (a)", row=2, col=2)
     fig.update_yaxes(title_text="y (a)", row=2, col=2)
 
-    _layout(fig)
+    _layout(fig, height=860)
     fig.update_layout(title=dict(
         text=(f"<b>Stage 5 — porosity &amp; bundling</b>   "
               f"<span style='font-size:12px;color:{_MUTED}'>"
@@ -891,15 +920,25 @@ def cross_check_figure(model_pa: float | None = None,
                    fill_color=cell_fill, align="left",
                    font=dict(size=10, color=_INK), height=22)), row=1, col=1)
 
-    # right: the modulus ladder (reuse the comparator bands + model point)
+    # right: the modulus ladder (reuse the comparator bands + model point).
+    # Labels sit on the INWARD side of each point (left of right-side points,
+    # right of left-side points) and are allowed to draw into the margin
+    # (cliponaxis=False) so a comparator near either edge is never clipped.
     comps = C.MODULUS_LADDER
+    _xlo, _xhi = -2.2, 5.2
+    _xmid = (_xlo + _xhi) / 2
+
+    def _lbl(value, label):
+        right = np.log10(max(abs(value), 1e-3)) > _xmid
+        return (f"{label}  ", "middle left") if right else (f"  {label}", "middle right")
     for i, c in enumerate(comps):
         fig.add_trace(go.Scatter(x=[c.lo, c.hi], y=[i, i], mode="lines",
                       line=dict(color=_BAND_LINE, width=9), opacity=0.5,
                       showlegend=False, hoverinfo="skip"), row=1, col=2)
+        _txt, _pos = _lbl(c.value, c.label)
         fig.add_trace(go.Scatter(x=[c.value], y=[i], mode="markers+text",
                       marker=dict(size=11, color=GREEN, line=dict(width=1, color="white")),
-                      text=[f"  {c.label}"], textposition="middle right",
+                      text=[_txt], textposition=_pos, cliponaxis=False,
                       textfont=dict(size=10), showlegend=False,
                       hovertemplate=f"{c.label}: {c.value:g} Pa<extra></extra>"), row=1, col=2)
     if model_pa is not None:
@@ -908,13 +947,14 @@ def cross_check_figure(model_pa: float | None = None,
             fig.add_trace(go.Scatter(x=[max(1e-3, abs(model_lo_pa)), max(2e-3, abs(model_hi_pa))],
                           y=[my, my], mode="lines", line=dict(color=RED, width=9),
                           opacity=0.5, showlegend=False, hoverinfo="skip"), row=1, col=2)
+        _txt, _pos = _lbl(model_pa, "corrected v1")
         fig.add_trace(go.Scatter(x=[max(1e-3, abs(model_pa))], y=[my], mode="markers+text",
                       marker=dict(size=14, color=RED, symbol="diamond", line=dict(width=1.2, color="white")),
-                      text=["  corrected v1"], textposition="middle right",
+                      text=[_txt], textposition=_pos, cliponaxis=False,
                       textfont=dict(size=10, color=RED), showlegend=False,
                       hovertemplate=f"corrected v1 ~{abs(model_pa):.2g} Pa (consistent with 0)<extra></extra>"),
                       row=1, col=2)
-    fig.update_xaxes(type="log", title_text="modulus (Pa, log)", range=[-2.2, 5.2], row=1, col=2)
+    fig.update_xaxes(type="log", title_text="modulus (Pa, log)", range=[_xlo, _xhi], row=1, col=2)
     fig.update_yaxes(showticklabels=False, range=[-0.6, len(comps) + 0.6], row=1, col=2)
     _layout(fig, height=520)
     fig.update_layout(
@@ -976,12 +1016,15 @@ def faithful_angles_figure(per_seed_by_condition: dict,
         fig.update_xaxes(title_text="crosslinks per rod", row=1, col=2)
         fig.update_yaxes(title_text="elastic modulus E (kT/σ³)", row=1, col=2)
 
-    _layout(fig, height=440)
-    fig.update_layout(title=dict(
-        text=("<b>Faithful angles — the modulus becomes reproducible</b>   "
-              f"<span style='font-size:12px;color:{_MUTED}'>angles active during "
-              f"assembly (create_bonds single/angle) → positive, well-conditioned E; "
-              f"density-dependent</span>"), x=0.01, xanchor="left"))
+    _layout(fig, height=470)
+    # Extra top margin so the two-line subtitle clears the subplot titles below.
+    fig.update_layout(
+        margin=dict(l=64, r=28, t=104, b=56),
+        title=dict(
+            text=("<b>Faithful angles — the modulus becomes reproducible</b>   "
+                  f"<span style='font-size:12px;color:{_MUTED}'>angles active during "
+                  f"assembly (create_bonds single/angle) → positive, well-conditioned E; "
+                  f"density-dependent</span>"), x=0.01, xanchor="left"))
     return fig
 
 
