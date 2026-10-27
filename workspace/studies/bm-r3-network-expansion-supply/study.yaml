@@ -50,7 +50,7 @@ result: >
 # Canonical DAG edge -- R3 is the supply-mode study; it consumes R2's rheology reference.
 pipeline_gate:
   prerequisites:
-    - {study: bm-r2-collagen-network-rheology, condition: tests-passed}
+    - {study: bm-r2-collagen-network-rheology, condition: tests-passed, relation: builds-on}
   enables: []
   proceed_condition: >
     The three-mode supply ordering is now a reproducible, contract-locked result. Remaining work
@@ -114,7 +114,7 @@ meeting_alignment_2026_10_20:
   note: "The meeting requires BM deformation arising from PREFERRED epithelial growth; the existing imposed network expansion is a pre-coupling control. Explicitly mark formation-dominant dynamics (no substantial bond breaking) as INSUFFICIENT to reproduce turnover-mediated adaptation."
 
 parent_studies:
-  - {study: bm-r2-collagen-network-rheology, condition: tests-passed}
+  - {study: bm-r2-collagen-network-rheology, condition: tests-passed, relation: builds-on}
 
 cites: [barrientos2026cellshape, meadowcroft2025nonequilibrium]
 

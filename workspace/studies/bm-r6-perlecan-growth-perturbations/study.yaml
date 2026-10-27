@@ -125,9 +125,9 @@ meeting_alignment_2026_10_20:
   note: "Perlecan ordering is corrected. Do NOT present the prescribed lifetime-to-height mapping as a fully independent multiscale mechanistic prediction. The conversation prioritizes direct mechanical stiff/soft and growth-rate tests before genetic context."
 
 parent_studies:
-  - {study: bm-r1-published-tissue-baseline, condition: tests-passed}
-  - {study: bm-r5-explicit-3d-confinement, condition: tests-passed}
-  - {study: bm-r3-network-expansion-supply, condition: tests-passed}
+  - {study: bm-r1-published-tissue-baseline, condition: tests-passed, relation: builds-on}
+  - {study: bm-r5-explicit-3d-confinement, condition: tests-passed, relation: builds-on}
+  - {study: bm-r3-network-expansion-supply, condition: tests-passed, relation: builds-on}
 
 cites: [barrientos2026cellshape]
 

@@ -41,7 +41,7 @@ result: >
 
 pipeline_gate:
   prerequisites:
-    - {study: bm-r4-coupled-2d-epithelium, condition: tests-passed}
+    - {study: bm-r4-coupled-2d-epithelium, condition: tests-passed, relation: builds-on}
   enables:
     - bm-e3-closed-3d-lumenoid
   proceed_condition: >
@@ -95,7 +95,7 @@ meeting_alignment_2026_10_20:
     incompressibility is an explicit knob. The height differential is directional, not calibrated.
 
 parent_studies:
-  - {study: bm-r4-coupled-2d-epithelium, condition: tests-passed}
+  - {study: bm-r4-coupled-2d-epithelium, condition: tests-passed, relation: builds-on}
 
 cites: [barrientos2026cellshape]
 

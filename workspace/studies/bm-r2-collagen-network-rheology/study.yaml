@@ -47,8 +47,8 @@ result: >
 # Canonical DAG edge -- R2 is the molecular-scale rheology reference that gates the supply study.
 pipeline_gate:
   prerequisites:
-    - {study: bm-v1-stage1-modulus-remodelling, condition: tests-passed}
-    - {study: bm-v2-stress-vs-strainrate, condition: tests-passed}
+    - {study: bm-v1-stage1-modulus-remodelling, condition: tests-passed, relation: builds-on}
+    - {study: bm-v2-stress-vs-strainrate, condition: tests-passed, relation: builds-on}
   enables:
     - bm-r3-network-expansion-supply
   proceed_condition: >
@@ -94,8 +94,8 @@ meeting_alignment_2026_10_20:
   note: "Provide the material response needed by live cell-BM feedback and a transparent range of valid relaxation times, rather than claiming a universal lifetime-to-relaxation proportionality. Measure collagen residence time separately from bond survival; compare mechanical relaxation to epithelial preferred-growth rates."
 
 parent_studies:
-  - {study: bm-v1-stage1-modulus-remodelling, condition: tests-passed}
-  - {study: bm-v2-stress-vs-strainrate, condition: tests-passed}
+  - {study: bm-v1-stage1-modulus-remodelling, condition: tests-passed, relation: builds-on}
+  - {study: bm-v2-stress-vs-strainrate, condition: tests-passed, relation: builds-on}
 
 cites: [barrientos2026cellshape, barrientos2026basement, meadowcroft2025nonequilibrium]
 

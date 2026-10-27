@@ -36,7 +36,7 @@ result: >
 
 pipeline_gate:
   prerequisites:
-    - {study: bm-r5-explicit-3d-confinement, condition: tests-passed}
+    - {study: bm-r5-explicit-3d-confinement, condition: tests-passed, relation: builds-on}
   enables:
     - bm-e2-actin-adhesion-collagen
   proceed_condition: >
@@ -105,7 +105,7 @@ meeting_alignment_2026_10_20:
     feedback milestone. Keep separate from the next 2D/3D model acceptance gates.
 
 parent_studies:
-  - {study: bm-r5-explicit-3d-confinement, condition: tests-passed}
+  - {study: bm-r5-explicit-3d-confinement, condition: tests-passed, relation: builds-on}
 
 cites: [barrientos2026cellshape]
 

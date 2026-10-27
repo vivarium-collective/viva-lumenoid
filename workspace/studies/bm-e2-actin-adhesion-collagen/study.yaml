@@ -39,8 +39,8 @@ result: >
 
 pipeline_gate:
   prerequisites:
-    - {study: bm-e1-actomyosin-cortex, condition: tests-passed}
-    - {study: bm-r2-collagen-network-rheology, condition: tests-passed}
+    - {study: bm-e1-actomyosin-cortex, condition: tests-passed, relation: builds-on}
+    - {study: bm-r2-collagen-network-rheology, condition: tests-passed, relation: builds-on}
   enables: []
   proceed_condition: >
     An occupancy-gated cortex -> linker -> BM force transfer that conserves the force relation
@@ -107,8 +107,8 @@ meeting_alignment_2026_10_20:
     mechanics. Treat as implementation verification. Not required for the earliest MVP.
 
 parent_studies:
-  - {study: bm-e1-actomyosin-cortex, condition: tests-passed}
-  - {study: bm-r2-collagen-network-rheology, condition: tests-passed}
+  - {study: bm-e1-actomyosin-cortex, condition: tests-passed, relation: builds-on}
+  - {study: bm-r2-collagen-network-rheology, condition: tests-passed, relation: builds-on}
 
 cites: [barrientos2026cellshape]
 

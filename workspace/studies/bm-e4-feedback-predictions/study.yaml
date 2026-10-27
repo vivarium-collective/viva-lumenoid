@@ -140,8 +140,8 @@ meeting_alignment_2026_10_20:
     explicit-LAMMPS BM remains a separate, numerically-delicate verification gate.
 
 parent_studies:
-  - {study: bm-e3-closed-3d-lumenoid, condition: tests-passed}
-  - {study: bm-r6-perlecan-growth-perturbations, condition: tests-passed}
+  - {study: bm-e3-closed-3d-lumenoid, condition: tests-passed, relation: builds-on}
+  - {study: bm-r6-perlecan-growth-perturbations, condition: tests-passed, relation: builds-on}
 
 cites: [barrientos2026cellshape]
 
