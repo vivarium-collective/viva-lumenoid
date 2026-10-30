@@ -1172,6 +1172,12 @@
   
   <div id="results-summary" data-study="bm-r1-published-tissue-baseline" style="margin:0 0 16px"></div>
 
+  
+  <div id="gate-results-section" data-study="bm-r1-published-tissue-baseline" style="margin:0 0 22px" hidden>
+    <h4>Gate results <span class="muted" style="font-size:0.8em;font-weight:normal">— each acceptance test's value, graded from run data</span></h4>
+    <div id="gate-results"></div>
+  </div>
+
   <h4>Latest run preview <span class="muted" style="font-size:0.8em;font-weight:normal">— downsampled sparkline + first/last/min/max per store</span></h4>
   <div id="results-preview" data-study="bm-r1-published-tissue-baseline">
     <div class="viv-loading"><span class="viv-loading-spin" aria-hidden="true"></span><span>Loading results preview…</span></div>
@@ -1847,11 +1853,12 @@ pass_if: {"note": "bm_stress(confined) \u003e\u003e bm_stress(spread)", "op": "g
 </section>
 
 </main>
-<script>window.__DASH_CONFIG__ = { mode: "snapshot", interactiveUrl: "https://github.com/vivarium-collective/viva-lumenoid", basePath: "/viva-lumenoid/workbench", inputsDownloadBase: "https://github.com/vivarium-collective/viva-lumenoid/raw/main", provenance: {"repo_slug": "vivarium-collective/viva-lumenoid", "repo_url": "https://github.com/vivarium-collective/viva-lumenoid", "commit": "02d1b27a4b3c62af57f73d3cd8d7d5dd49e32cc5", "commit_url": "https://github.com/vivarium-collective/viva-lumenoid/commit/02d1b27a4b3c62af57f73d3cd8d7d5dd49e32cc5", "branch": "main", "lockfile": "uv.lock@aacfed865f15", "generated_at": "2026-10-27 12:49 UTC"} };</script>
+<script>window.__DASH_CONFIG__ = { mode: "snapshot", interactiveUrl: "https://github.com/vivarium-collective/viva-lumenoid", basePath: "/viva-lumenoid/workbench", inputsDownloadBase: "https://github.com/vivarium-collective/viva-lumenoid/raw/main", provenance: {"repo_slug": "vivarium-collective/viva-lumenoid", "repo_url": "https://github.com/vivarium-collective/viva-lumenoid", "commit": "5a5c758c4c9fdd97cdf3c9e3f75552694e82752e", "commit_url": "https://github.com/vivarium-collective/viva-lumenoid/commit/5a5c758c4c9fdd97cdf3c9e3f75552694e82752e", "branch": "main", "lockfile": "uv.lock@aacfed865f15", "generated_at": "2026-10-30 03:23 UTC"} };</script>
 <script src="/viva-lumenoid/workbench/assets/data-source.js"></script>
 <script src="/viva-lumenoid/workbench/assets/toast.js"></script>
 <script>
 window._studyName = "bm-r1-published-tissue-baseline";
+window.__STUDY_INVESTIGATION__ = "basement-membrane-v1";  // owning investigation (feedback save routing)
 window._study = null;  // populated by _bootstrapStudy() in study-detail.js
 
 // Save handler for the Conditions → Model settings editable rows.
@@ -1980,6 +1987,7 @@ window._seedFollowupProposal = _seedFollowupProposal;
 <script src="/viva-lumenoid/workbench/assets/progress-track.js"></script>
 <script src="/viva-lumenoid/workbench/assets/comparison-view.js"></script>
 <script src="/viva-lumenoid/workbench/assets/study-detail.js"></script>
+<script src="/viva-lumenoid/workbench/assets/study-feedback.js"></script>
 <script>
 // Re-assert the refresh-aware seed handlers AFTER study-detail.js (which
 // defines its own navigate-away _seedFollowupStudy). The embedded
