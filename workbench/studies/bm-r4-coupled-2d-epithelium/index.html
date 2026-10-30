@@ -20,7 +20,7 @@
   <div style="display:flex; align-items:center; gap:14px; justify-content:space-between;">
   <div style="display:flex; align-items:center; gap:12px; min-width:0; flex-wrap:wrap">
   <h1 class="study-title" style="margin:0">
-    <span class="study-name" id="study-name" data-slug="bm-r4-coupled-2d-epithelium" data-study-kind="computational" title="bm-r4-coupled-2d-epithelium">Coupled 2D epithelial sheet</span>
+    <span class="study-name" id="study-name" data-slug="bm-r4-coupled-2d-epithelium" data-study-kind="computational" title="bm-r4-coupled-2d-epithelium" data-edit-kind="study" data-edit-field="title" data-edit-value="Coupled 2D epithelial sheet" data-edit-label="Title">Coupled 2D epithelial sheet</span>
     
   </h1>
     
@@ -565,7 +565,8 @@
     <div class="ctr-block">
       <h2 class="overview-label ctr-h">Background</h2>
       <div class="ctr-meta">
-        <div class="ctr-meta-row"><span class="ctr-meta-k">Question</span> <span class="ctr-meta-item">Do the paper&#39;s confinement regimes survive explicit cell topology and heterogeneous growth in a spatial 2D epithelium?
+        <div class="ctr-meta-row"><span class="ctr-meta-k">Question</span> <span class="ctr-meta-item" data-edit-kind="study" data-edit-field="question" data-edit-value="Do the paper&#39;s confinement regimes survive explicit cell topology and heterogeneous growth in a spatial 2D epithelium?
+" data-edit-multiline data-edit-label="Question">Do the paper&#39;s confinement regimes survive explicit cell topology and heterogeneous growth in a spatial 2D epithelium?
 </span></div>
         
       </div>
@@ -651,7 +652,8 @@
         <details class="finding-details">
           <summary class="finding-row">
             <span class="finding-status-glyph">✓</span>
-            <span class="finding-claim finding-statement">The explicit 2D epithelial sheet resolves and relaxes over the tyssue engine to finite, uniform per-cell geometry: 12 cell-faces (faces = cells) and 24 vertices on a flat z=0 plane, every cell-face at basal area 5.0 and explicit height 1.9319, all finite.
+            <span class="finding-claim finding-statement" data-edit-kind="study" data-edit-field="findings[F1-2d-sheet-yields-finite-geometry].statement" data-edit-value="The explicit 2D epithelial sheet resolves and relaxes over the tyssue engine to finite, uniform per-cell geometry: 12 cell-faces (faces = cells) and 24 vertices on a flat z=0 plane, every cell-face at basal area 5.0 and explicit height 1.9319, all finite.
+" data-edit-multiline data-edit-label="Finding F1-2d-sheet-yields-finite-geometry">The explicit 2D epithelial sheet resolves and relaxes over the tyssue engine to finite, uniform per-cell geometry: 12 cell-faces (faces = cells) and 24 vertices on a flat z=0 plane, every cell-face at basal area 5.0 and explicit height 1.9319, all finite.
 </span>
             
             <span class="finding-chip">via <code>sheet-yields-finite-areas</code></span>
@@ -707,7 +709,8 @@
         <details class="finding-details">
           <summary class="finding-row">
             <span class="finding-status-glyph">✓</span>
-            <span class="finding-claim finding-statement">Stepping the EulerSolver five times (dt 0.01) keeps per-cell area and height finite and positive, with no NaN or blow-up -- the spatial sheet is numerically stable over short integration.
+            <span class="finding-claim finding-statement" data-edit-kind="study" data-edit-field="findings[F2-steps-stably].statement" data-edit-value="Stepping the EulerSolver five times (dt 0.01) keeps per-cell area and height finite and positive, with no NaN or blow-up -- the spatial sheet is numerically stable over short integration.
+" data-edit-multiline data-edit-label="Finding F2-steps-stably">Stepping the EulerSolver five times (dt 0.01) keeps per-cell area and height finite and positive, with no NaN or blow-up -- the spatial sheet is numerically stable over short integration.
 </span>
             
             <span class="finding-chip">via <code>sheet-steps-stably</code></span>
@@ -762,7 +765,8 @@
         <details class="finding-details">
           <summary class="finding-row">
             <span class="finding-status-glyph">◐</span>
-            <span class="finding-claim finding-statement">The quantitative spatial-vs-homogeneous confinement comparison to R1 is NOT yet a result: the sheet is homogeneous (uniform cells) and the BM traction/area law is not wired as an explicit coupling, so only well-posed geometry -- not a reproduced regime -- is established.
+            <span class="finding-claim finding-statement" data-edit-kind="study" data-edit-field="findings[F3-confinement-comparison-not-yet-wired].statement" data-edit-value="The quantitative spatial-vs-homogeneous confinement comparison to R1 is NOT yet a result: the sheet is homogeneous (uniform cells) and the BM traction/area law is not wired as an explicit coupling, so only well-posed geometry -- not a reproduced regime -- is established.
+" data-edit-multiline data-edit-label="Finding F3-confinement-comparison-not-yet-wired">The quantitative spatial-vs-homogeneous confinement comparison to R1 is NOT yet a result: the sheet is homogeneous (uniform cells) and the BM traction/area law is not wired as an explicit coupling, so only well-posed geometry -- not a reproduced regime -- is established.
 </span>
             
             <span class="finding-chip">via <code>sheet-yields-finite-areas</code></span>
@@ -817,7 +821,8 @@
         <details class="finding-details">
           <summary class="finding-row">
             <span class="finding-status-glyph">✓</span>
-            <span class="finding-claim finding-statement">A ramped PREFERRED basal area (division OFF) drives a growing REALIZED area that emerges from the mechanical balance and LAGS the target under BM resistance: at a stiff/slow BM the realized area (1.105) lags the preferred target (1.616) by a 0.317 gap, vs a 0.116 gap with no BM. The realized area is not hard-coded to the target — the lag is the confinement.
+            <span class="finding-claim finding-statement" data-edit-kind="study" data-edit-field="findings[F4-preferred-growth-drives-emergent-realized-area].statement" data-edit-value="A ramped PREFERRED basal area (division OFF) drives a growing REALIZED area that emerges from the mechanical balance and LAGS the target under BM resistance: at a stiff/slow BM the realized area (1.105) lags the preferred target (1.616) by a 0.317 gap, vs a 0.116 gap with no BM. The realized area is not hard-coded to the target — the lag is the confinement.
+" data-edit-multiline data-edit-label="Finding F4-preferred-growth-drives-emergent-realized-area">A ramped PREFERRED basal area (division OFF) drives a growing REALIZED area that emerges from the mechanical balance and LAGS the target under BM resistance: at a stiff/slow BM the realized area (1.105) lags the preferred target (1.616) by a 0.317 gap, vs a 0.116 gap with no BM. The realized area is not hard-coded to the target — the lag is the confinement.
 </span>
             
             <span class="finding-chip">via <code>growth-realized-lags-preferred</code></span>
@@ -873,7 +878,8 @@
         <details class="finding-details">
           <summary class="finding-row">
             <span class="finding-status-glyph">✓</span>
-            <span class="finding-claim finding-statement">A stiff/slow BM confines basal spreading (realized area 1.105 vs 1.428 free) and raises the reconstructed cell height (0.905 vs 0.700 free) — the confinement → taller-cell response, here in a reduced-order 2D cross-section under a fixed-volume height reconstruction.
+            <span class="finding-claim finding-statement" data-edit-kind="study" data-edit-field="findings[F5-stiff-bm-confines-and-raises-height].statement" data-edit-value="A stiff/slow BM confines basal spreading (realized area 1.105 vs 1.428 free) and raises the reconstructed cell height (0.905 vs 0.700 free) — the confinement → taller-cell response, here in a reduced-order 2D cross-section under a fixed-volume height reconstruction.
+" data-edit-multiline data-edit-label="Finding F5-stiff-bm-confines-and-raises-height">A stiff/slow BM confines basal spreading (realized area 1.105 vs 1.428 free) and raises the reconstructed cell height (0.905 vs 0.700 free) — the confinement → taller-cell response, here in a reduced-order 2D cross-section under a fixed-volume height reconstruction.
 </span>
             
             <span class="finding-chip">via <code>stiff-bm-confines-and-heightens</code></span>
@@ -935,7 +941,8 @@
         <details class="finding-details">
           <summary class="finding-row">
             <span class="finding-status-glyph">✓</span>
-            <span class="finding-claim finding-statement">A BM-stiffness gradient across the sheet produces a spatial reconstructed-height gradient — 0.761 at the soft end to 0.910 at the stiff end — so spatial BM heterogeneity maps to spatial cell-shape heterogeneity, the spatial readout the resolved sheet could not give.
+            <span class="finding-claim finding-statement" data-edit-kind="study" data-edit-field="findings[F6-bm-stiffness-gradient-makes-spatial-height-gradient].statement" data-edit-value="A BM-stiffness gradient across the sheet produces a spatial reconstructed-height gradient — 0.761 at the soft end to 0.910 at the stiff end — so spatial BM heterogeneity maps to spatial cell-shape heterogeneity, the spatial readout the resolved sheet could not give.
+" data-edit-multiline data-edit-label="Finding F6-bm-stiffness-gradient-makes-spatial-height-gradient">A BM-stiffness gradient across the sheet produces a spatial reconstructed-height gradient — 0.761 at the soft end to 0.910 at the stiff end — so spatial BM heterogeneity maps to spatial cell-shape heterogeneity, the spatial readout the resolved sheet could not give.
 </span>
             
             <span class="finding-chip">via <code>stiffness-gradient-makes-height-gradient</code></span>
@@ -1919,7 +1926,7 @@ pass_if: {"note": "height 0.910 at the stiff end vs 0.761 at the soft end", "op"
 </section>
 
 </main>
-<script>window.__DASH_CONFIG__ = { mode: "snapshot", interactiveUrl: "https://github.com/vivarium-collective/viva-lumenoid", basePath: "/viva-lumenoid/workbench", inputsDownloadBase: "https://github.com/vivarium-collective/viva-lumenoid/raw/main", provenance: {"repo_slug": "vivarium-collective/viva-lumenoid", "repo_url": "https://github.com/vivarium-collective/viva-lumenoid", "commit": "5a5c758c4c9fdd97cdf3c9e3f75552694e82752e", "commit_url": "https://github.com/vivarium-collective/viva-lumenoid/commit/5a5c758c4c9fdd97cdf3c9e3f75552694e82752e", "branch": "main", "lockfile": "uv.lock@aacfed865f15", "generated_at": "2026-10-30 03:23 UTC"} };</script>
+<script>window.__DASH_CONFIG__ = { mode: "snapshot", interactiveUrl: "https://github.com/vivarium-collective/viva-lumenoid", basePath: "/viva-lumenoid/workbench", inputsDownloadBase: "https://github.com/vivarium-collective/viva-lumenoid/raw/main", provenance: {"repo_slug": "vivarium-collective/viva-lumenoid", "repo_url": "https://github.com/vivarium-collective/viva-lumenoid", "commit": "5a5c758c4c9fdd97cdf3c9e3f75552694e82752e", "commit_url": "https://github.com/vivarium-collective/viva-lumenoid/commit/5a5c758c4c9fdd97cdf3c9e3f75552694e82752e", "branch": "main", "lockfile": "uv.lock@aacfed865f15", "generated_at": "2026-10-30 13:14 UTC"} };</script>
 <script src="/viva-lumenoid/workbench/assets/data-source.js"></script>
 <script src="/viva-lumenoid/workbench/assets/toast.js"></script>
 <script>
@@ -2054,6 +2061,7 @@ window._seedFollowupProposal = _seedFollowupProposal;
 <script src="/viva-lumenoid/workbench/assets/comparison-view.js"></script>
 <script src="/viva-lumenoid/workbench/assets/study-detail.js"></script>
 <script src="/viva-lumenoid/workbench/assets/study-feedback.js"></script>
+<script src="/viva-lumenoid/workbench/assets/inline-edit.js"></script>
 <script>
 // Re-assert the refresh-aware seed handlers AFTER study-detail.js (which
 // defines its own navigate-away _seedFollowupStudy). The embedded

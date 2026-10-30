@@ -20,7 +20,7 @@
   <div style="display:flex; align-items:center; gap:14px; justify-content:space-between;">
   <div style="display:flex; align-items:center; gap:12px; min-width:0; flex-wrap:wrap">
   <h1 class="study-title" style="margin:0">
-    <span class="study-name" id="study-name" data-slug="bm-r5-explicit-3d-confinement" data-study-kind="computational" title="bm-r5-explicit-3d-confinement">Explicit 3D cell confinement</span>
+    <span class="study-name" id="study-name" data-slug="bm-r5-explicit-3d-confinement" data-study-kind="computational" title="bm-r5-explicit-3d-confinement" data-edit-kind="study" data-edit-field="title" data-edit-value="Explicit 3D cell confinement" data-edit-label="Title">Explicit 3D cell confinement</span>
     
   </h1>
     
@@ -553,7 +553,8 @@
     <div class="ctr-block">
       <h2 class="overview-label ctr-h">Background</h2>
       <div class="ctr-meta">
-        <div class="ctr-meta-row"><span class="ctr-meta-k">Question</span> <span class="ctr-meta-item">Do growing 3D epithelial cells become taller when the basement membrane relaxes slowly?
+        <div class="ctr-meta-row"><span class="ctr-meta-k">Question</span> <span class="ctr-meta-item" data-edit-kind="study" data-edit-field="question" data-edit-value="Do growing 3D epithelial cells become taller when the basement membrane relaxes slowly?
+" data-edit-multiline data-edit-label="Question">Do growing 3D epithelial cells become taller when the basement membrane relaxes slowly?
 </span></div>
         
       </div>
@@ -634,7 +635,8 @@
         <details class="finding-details">
           <summary class="finding-row">
             <span class="finding-status-glyph">✓</span>
-            <span class="finding-claim finding-statement">The explicit 3D monolayer resolves over the tyssue engine with 206 cells whose per-cell volumes (0.5789-1.1578) and basal areas (4.5128-6.3806) emerge finite and positive from the apical/lateral/basal surface energies and volume targets, with a monolayer z-extent of ~1.0 -- no thin-prism approximation.
+            <span class="finding-claim finding-statement" data-edit-kind="study" data-edit-field="findings[F1-per-cell-volumes-emerge].statement" data-edit-value="The explicit 3D monolayer resolves over the tyssue engine with 206 cells whose per-cell volumes (0.5789-1.1578) and basal areas (4.5128-6.3806) emerge finite and positive from the apical/lateral/basal surface energies and volume targets, with a monolayer z-extent of ~1.0 -- no thin-prism approximation.
+" data-edit-multiline data-edit-label="Finding F1-per-cell-volumes-emerge">The explicit 3D monolayer resolves over the tyssue engine with 206 cells whose per-cell volumes (0.5789-1.1578) and basal areas (4.5128-6.3806) emerge finite and positive from the apical/lateral/basal surface energies and volume targets, with a monolayer z-extent of ~1.0 -- no thin-prism approximation.
 </span>
             
             <span class="finding-chip">via <code>monolayer-yields-per-cell-volumes</code></span>
@@ -690,7 +692,8 @@
         <details class="finding-details">
           <summary class="finding-row">
             <span class="finding-status-glyph">✓</span>
-            <span class="finding-claim finding-statement">Stepping the EulerSolver five times (dt 0.01) keeps per-cell area and volume finite and positive, with no NaN or blow-up -- the explicit 3D monolayer is numerically stable over short integration.
+            <span class="finding-claim finding-statement" data-edit-kind="study" data-edit-field="findings[F2-steps-stably].statement" data-edit-value="Stepping the EulerSolver five times (dt 0.01) keeps per-cell area and volume finite and positive, with no NaN or blow-up -- the explicit 3D monolayer is numerically stable over short integration.
+" data-edit-multiline data-edit-label="Finding F2-steps-stably">Stepping the EulerSolver five times (dt 0.01) keeps per-cell area and volume finite and positive, with no NaN or blow-up -- the explicit 3D monolayer is numerically stable over short integration.
 </span>
             
             <span class="finding-chip">via <code>monolayer-steps-stably</code></span>
@@ -745,7 +748,8 @@
         <details class="finding-details">
           <summary class="finding-row">
             <span class="finding-status-glyph">◐</span>
-            <span class="finding-claim finding-statement">The no-BM / elastic-BM / relaxing-BM controls the Fig target morphology ordering needs are NOT in the composite, so the central claim -- cells taller under a slowly-relaxing BM -- is not tested. Only well-posed explicit geometry is established.
+            <span class="finding-claim finding-statement" data-edit-kind="study" data-edit-field="findings[F3-bm-controls-not-yet-wired].statement" data-edit-value="The no-BM / elastic-BM / relaxing-BM controls the Fig target morphology ordering needs are NOT in the composite, so the central claim -- cells taller under a slowly-relaxing BM -- is not tested. Only well-posed explicit geometry is established.
+" data-edit-multiline data-edit-label="Finding F3-bm-controls-not-yet-wired">The no-BM / elastic-BM / relaxing-BM controls the Fig target morphology ordering needs are NOT in the composite, so the central claim -- cells taller under a slowly-relaxing BM -- is not tested. Only well-posed explicit geometry is established.
 </span>
             
             <span class="finding-chip">via <code>monolayer-yields-per-cell-volumes</code></span>
@@ -800,7 +804,8 @@
         <details class="finding-details">
           <summary class="finding-row">
             <span class="finding-status-glyph">✓</span>
-            <span class="finding-claim finding-statement">Ramping the preferred cell VOLUME + basal area (division OFF) on the real 3D monolayer grows the realized volume (190.7→252.9) while a stiff/slow BM reaction confines basal spreading (basal area 1.108 vs 1.198 free) and the realized volume lags the preferred target (347.5, gap 0.272). The confinement and the lag emerge from the vertex model + BM reaction; they are not hard-coded.
+            <span class="finding-claim finding-statement" data-edit-kind="study" data-edit-field="findings[F4-preferred-volume-growth-confined-by-bm].statement" data-edit-value="Ramping the preferred cell VOLUME + basal area (division OFF) on the real 3D monolayer grows the realized volume (190.7→252.9) while a stiff/slow BM reaction confines basal spreading (basal area 1.108 vs 1.198 free) and the realized volume lags the preferred target (347.5, gap 0.272). The confinement and the lag emerge from the vertex model + BM reaction; they are not hard-coded.
+" data-edit-multiline data-edit-label="Finding F4-preferred-volume-growth-confined-by-bm">Ramping the preferred cell VOLUME + basal area (division OFF) on the real 3D monolayer grows the realized volume (190.7→252.9) while a stiff/slow BM reaction confines basal spreading (basal area 1.108 vs 1.198 free) and the realized volume lags the preferred target (347.5, gap 0.272). The confinement and the lag emerge from the vertex model + BM reaction; they are not hard-coded.
 </span>
             
             <span class="finding-chip">via <code>stiff-bm-confines-basal-area</code></span>
@@ -856,7 +861,8 @@
         <details class="finding-details">
           <summary class="finding-row">
             <span class="finding-status-glyph">◐</span>
-            <span class="finding-claim finding-statement">Under the near-incompressible volume elasticity, the stiff-BM confinement drives volume into cell HEIGHT — mean height is marginally taller under the stiff BM (1.138 vs 1.133 free). The direction matches the paper&#39;s confinement morphology, but the magnitude is small at this mesh/parameters (directional, not a calibrated height prediction).
+            <span class="finding-claim finding-statement" data-edit-kind="study" data-edit-field="findings[F5-confinement-raises-height-directional].statement" data-edit-value="Under the near-incompressible volume elasticity, the stiff-BM confinement drives volume into cell HEIGHT — mean height is marginally taller under the stiff BM (1.138 vs 1.133 free). The direction matches the paper&#39;s confinement morphology, but the magnitude is small at this mesh/parameters (directional, not a calibrated height prediction).
+" data-edit-multiline data-edit-label="Finding F5-confinement-raises-height-directional">Under the near-incompressible volume elasticity, the stiff-BM confinement drives volume into cell HEIGHT — mean height is marginally taller under the stiff BM (1.138 vs 1.133 free). The direction matches the paper&#39;s confinement morphology, but the magnitude is small at this mesh/parameters (directional, not a calibrated height prediction).
 </span>
             
             <span class="finding-chip">via <code>confinement-raises-height-directional</code></span>
@@ -1807,7 +1813,7 @@ pass_if: {"note": "stiff height 1.138 \u003e= free 1.133 (directional, not calib
 </section>
 
 </main>
-<script>window.__DASH_CONFIG__ = { mode: "snapshot", interactiveUrl: "https://github.com/vivarium-collective/viva-lumenoid", basePath: "/viva-lumenoid/workbench", inputsDownloadBase: "https://github.com/vivarium-collective/viva-lumenoid/raw/main", provenance: {"repo_slug": "vivarium-collective/viva-lumenoid", "repo_url": "https://github.com/vivarium-collective/viva-lumenoid", "commit": "5a5c758c4c9fdd97cdf3c9e3f75552694e82752e", "commit_url": "https://github.com/vivarium-collective/viva-lumenoid/commit/5a5c758c4c9fdd97cdf3c9e3f75552694e82752e", "branch": "main", "lockfile": "uv.lock@aacfed865f15", "generated_at": "2026-10-30 03:23 UTC"} };</script>
+<script>window.__DASH_CONFIG__ = { mode: "snapshot", interactiveUrl: "https://github.com/vivarium-collective/viva-lumenoid", basePath: "/viva-lumenoid/workbench", inputsDownloadBase: "https://github.com/vivarium-collective/viva-lumenoid/raw/main", provenance: {"repo_slug": "vivarium-collective/viva-lumenoid", "repo_url": "https://github.com/vivarium-collective/viva-lumenoid", "commit": "5a5c758c4c9fdd97cdf3c9e3f75552694e82752e", "commit_url": "https://github.com/vivarium-collective/viva-lumenoid/commit/5a5c758c4c9fdd97cdf3c9e3f75552694e82752e", "branch": "main", "lockfile": "uv.lock@aacfed865f15", "generated_at": "2026-10-30 13:14 UTC"} };</script>
 <script src="/viva-lumenoid/workbench/assets/data-source.js"></script>
 <script src="/viva-lumenoid/workbench/assets/toast.js"></script>
 <script>
@@ -1942,6 +1948,7 @@ window._seedFollowupProposal = _seedFollowupProposal;
 <script src="/viva-lumenoid/workbench/assets/comparison-view.js"></script>
 <script src="/viva-lumenoid/workbench/assets/study-detail.js"></script>
 <script src="/viva-lumenoid/workbench/assets/study-feedback.js"></script>
+<script src="/viva-lumenoid/workbench/assets/inline-edit.js"></script>
 <script>
 // Re-assert the refresh-aware seed handlers AFTER study-detail.js (which
 // defines its own navigate-away _seedFollowupStudy). The embedded

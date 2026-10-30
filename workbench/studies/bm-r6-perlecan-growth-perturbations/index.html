@@ -20,7 +20,7 @@
   <div style="display:flex; align-items:center; gap:14px; justify-content:space-between;">
   <div style="display:flex; align-items:center; gap:12px; min-width:0; flex-wrap:wrap">
   <h1 class="study-title" style="margin:0">
-    <span class="study-name" id="study-name" data-slug="bm-r6-perlecan-growth-perturbations" data-study-kind="biological" title="bm-r6-perlecan-growth-perturbations">Perlecan &amp; growth perturbations on cell shape</span>
+    <span class="study-name" id="study-name" data-slug="bm-r6-perlecan-growth-perturbations" data-study-kind="biological" title="bm-r6-perlecan-growth-perturbations" data-edit-kind="study" data-edit-field="title" data-edit-value="Perlecan &amp; growth perturbations on cell shape" data-edit-label="Title">Perlecan &amp; growth perturbations on cell shape</span>
     
   </h1>
     
@@ -553,9 +553,11 @@
     <div class="ctr-block">
       <h2 class="overview-label ctr-h">Background</h2>
       <div class="ctr-meta">
-        <div class="ctr-meta-row"><span class="ctr-meta-k">Question</span> <span class="ctr-meta-item">Does the inferred chain lifetime -&gt; relaxation -&gt; shape reproduce the paper&#39;s perlecan and growth-rate intervention ordering?
+        <div class="ctr-meta-row"><span class="ctr-meta-k">Question</span> <span class="ctr-meta-item" data-edit-kind="study" data-edit-field="question" data-edit-value="Does the inferred chain lifetime -&gt; relaxation -&gt; shape reproduce the paper&#39;s perlecan and growth-rate intervention ordering?
+" data-edit-multiline data-edit-label="Question">Does the inferred chain lifetime -&gt; relaxation -&gt; shape reproduce the paper&#39;s perlecan and growth-rate intervention ordering?
 </span></div>
-        <div class="ctr-meta-row"><span class="ctr-meta-k">Hypothesis</span> <span class="ctr-meta-item">Propagating inferred collagen lifetime distributions for control, perlecan gain/loss and growth-rate changes through the relaxation-&gt;shape chain reproduces the relative cell- morphology ordering and uncertainty of Figure 7, keeping inferred and independently predicted outcomes distinct.
+        <div class="ctr-meta-row"><span class="ctr-meta-k">Hypothesis</span> <span class="ctr-meta-item" data-edit-kind="study" data-edit-field="hypothesis" data-edit-value="Propagating inferred collagen lifetime distributions for control, perlecan gain/loss and growth-rate changes through the relaxation-&gt;shape chain reproduces the relative cell- morphology ordering and uncertainty of Figure 7, keeping inferred and independently predicted outcomes distinct.
+" data-edit-multiline data-edit-label="Hypothesis">Propagating inferred collagen lifetime distributions for control, perlecan gain/loss and growth-rate changes through the relaxation-&gt;shape chain reproduces the relative cell- morphology ordering and uncertainty of Figure 7, keeping inferred and independently predicted outcomes distinct.
 </span></div>
       </div>
     </div>
@@ -563,7 +565,8 @@
 
     <div class="ctr-block">
       <h2 class="overview-label ctr-h">Model &amp; approach</h2>
-      <p class="ctr-text">Run the TurnoverShapeProcess pipeline for four conditions -- control, perlecan gain, perlecan loss, and fast growth. The inferred collagen IV lifetime (modulated by a perlecan factor) sets the BM relaxation time (inferred_relaxation = collagen_lifetime x perlecan_factor); that relaxation drives the reduced-order prism mechanics (R1) to a predicted cell height. Read inferred_relaxation (the turnover/inference quantity) and cell_height / confinement (the independent mechanical prediction) at the end of each 40-step run (dt 0.2), and check the rank-order against Barrientos Figure 7.
+      <p class="ctr-text" data-edit-kind="study" data-edit-field="objective" data-edit-value="Use inferred collagen lifetime distributions for control, perlecan gain/loss and growth-rate conditions; propagate parameter uncertainty through relaxation and shape; compare relative cell morphology and uncertainty to Fig 7 while keeping inferred vs predicted outcomes distinct.
+" data-edit-multiline data-edit-label="Objective">Run the TurnoverShapeProcess pipeline for four conditions -- control, perlecan gain, perlecan loss, and fast growth. The inferred collagen IV lifetime (modulated by a perlecan factor) sets the BM relaxation time (inferred_relaxation = collagen_lifetime x perlecan_factor); that relaxation drives the reduced-order prism mechanics (R1) to a predicted cell height. Read inferred_relaxation (the turnover/inference quantity) and cell_height / confinement (the independent mechanical prediction) at the end of each 40-step run (dt 0.2), and check the rank-order against Barrientos Figure 7.
 </p>
       <div class="ctr-meta">
         <div class="ctr-meta-row"><span class="ctr-meta-k">Model</span> <code>bm-r6-perlecan-growth-perturbations</code><a class="ov-tablink" href="#" onclick="_setStudyTab('compose');return false;">model →</a></div>
@@ -640,7 +643,8 @@
         <details class="finding-details">
           <summary class="finding-row">
             <span class="finding-status-glyph">✓</span>
-            <span class="finding-claim finding-statement">The model reproduces the paper&#39;s perlecan ordering: predicted height is tallest under knockdown/loss (0.4508), then control (0.4287), then overexpression/gain (0.3793) -- matching Barrientos Fig 7 (knockdown taller, overexpression shorter). This followed correcting an inverted assumption: the figure review caught that the model had perlecan stabilizing collagen (gain -&gt; taller), and an audit against the paper (perlecan promotes collagen IV bond breakage; overexpression lifetime ~1 h vs ~20 h control, knockdown ~500 h) fixed the perlecan_factor direction, after which the ordering matches.
+            <span class="finding-claim finding-statement" data-edit-kind="study" data-edit-field="findings[F1-perlecan-ordering-reproduced].statement" data-edit-value="The model reproduces the paper&#39;s perlecan ordering: predicted height is tallest under knockdown/loss (0.4508), then control (0.4287), then overexpression/gain (0.3793) -- matching Barrientos Fig 7 (knockdown taller, overexpression shorter). This followed correcting an inverted assumption: the figure review caught that the model had perlecan stabilizing collagen (gain -&gt; taller), and an audit against the paper (perlecan promotes collagen IV bond breakage; overexpression lifetime ~1 h vs ~20 h control, knockdown ~500 h) fixed the perlecan_factor direction, after which the ordering matches.
+" data-edit-multiline data-edit-label="Finding F1-perlecan-ordering-reproduced">The model reproduces the paper&#39;s perlecan ordering: predicted height is tallest under knockdown/loss (0.4508), then control (0.4287), then overexpression/gain (0.3793) -- matching Barrientos Fig 7 (knockdown taller, overexpression shorter). This followed correcting an inverted assumption: the figure review caught that the model had perlecan stabilizing collagen (gain -&gt; taller), and an audit against the paper (perlecan promotes collagen IV bond breakage; overexpression lifetime ~1 h vs ~20 h control, knockdown ~500 h) fixed the perlecan_factor direction, after which the ordering matches.
 </span>
             
             <span class="finding-chip">via <code>perlecan-intervention-ordering</code></span>
@@ -703,7 +707,8 @@
         <details class="finding-details">
           <summary class="finding-row">
             <span class="finding-status-glyph">✓</span>
-            <span class="finding-claim finding-statement">The inferred BM relaxation time (turnover) and the predicted cell height (mechanics) are distinct pipeline outputs; the inferred relaxation scales linearly with the perlecan factor (5.0 x factor: 0.25 / 5.0 / 125 for overexpression / control / knockdown), and perlecan reaches the predicted shape only through that relaxation time.
+            <span class="finding-claim finding-statement" data-edit-kind="study" data-edit-field="findings[F2-inferred-predicted-distinct].statement" data-edit-value="The inferred BM relaxation time (turnover) and the predicted cell height (mechanics) are distinct pipeline outputs; the inferred relaxation scales linearly with the perlecan factor (5.0 x factor: 0.25 / 5.0 / 125 for overexpression / control / knockdown), and perlecan reaches the predicted shape only through that relaxation time.
+" data-edit-multiline data-edit-label="Finding F2-inferred-predicted-distinct">The inferred BM relaxation time (turnover) and the predicted cell height (mechanics) are distinct pipeline outputs; the inferred relaxation scales linearly with the perlecan factor (5.0 x factor: 0.25 / 5.0 / 125 for overexpression / control / knockdown), and perlecan reaches the predicted shape only through that relaxation time.
 </span>
             
             <span class="finding-chip">via <code>inferred-relaxation-scales-with-perlecan</code></span>
@@ -758,7 +763,8 @@
         <details class="finding-details">
           <summary class="finding-row">
             <span class="finding-status-glyph">✓</span>
-            <span class="finding-claim finding-statement">The growth-rate axis dominates cell shape most strongly (fast growth collapses height to 0.134 vs control 0.429), but with the paper&#39;s full perlecan lifetime range the perlecan height effect is also substantial -- loss-vs-gain spread ~19% (0.4508 vs 0.3793), not the ~2-3% the inverted small-factor version showed.
+            <span class="finding-claim finding-statement" data-edit-kind="study" data-edit-field="findings[F3-growth-dominates-perlecan-substantial].statement" data-edit-value="The growth-rate axis dominates cell shape most strongly (fast growth collapses height to 0.134 vs control 0.429), but with the paper&#39;s full perlecan lifetime range the perlecan height effect is also substantial -- loss-vs-gain spread ~19% (0.4508 vs 0.3793), not the ~2-3% the inverted small-factor version showed.
+" data-edit-multiline data-edit-label="Finding F3-growth-dominates-perlecan-substantial">The growth-rate axis dominates cell shape most strongly (fast growth collapses height to 0.134 vs control 0.429), but with the paper&#39;s full perlecan lifetime range the perlecan height effect is also substantial -- loss-vs-gain spread ~19% (0.4508 vs 0.3793), not the ~2-3% the inverted small-factor version showed.
 </span>
             
             <span class="finding-chip">via <code>faster-growth-spreads</code></span>
@@ -1865,7 +1871,7 @@ pass_if: {"note": "height(fast_growth) \u003c height(control)", "op": "lt"}</pre
 </section>
 
 </main>
-<script>window.__DASH_CONFIG__ = { mode: "snapshot", interactiveUrl: "https://github.com/vivarium-collective/viva-lumenoid", basePath: "/viva-lumenoid/workbench", inputsDownloadBase: "https://github.com/vivarium-collective/viva-lumenoid/raw/main", provenance: {"repo_slug": "vivarium-collective/viva-lumenoid", "repo_url": "https://github.com/vivarium-collective/viva-lumenoid", "commit": "5a5c758c4c9fdd97cdf3c9e3f75552694e82752e", "commit_url": "https://github.com/vivarium-collective/viva-lumenoid/commit/5a5c758c4c9fdd97cdf3c9e3f75552694e82752e", "branch": "main", "lockfile": "uv.lock@aacfed865f15", "generated_at": "2026-10-30 03:23 UTC"} };</script>
+<script>window.__DASH_CONFIG__ = { mode: "snapshot", interactiveUrl: "https://github.com/vivarium-collective/viva-lumenoid", basePath: "/viva-lumenoid/workbench", inputsDownloadBase: "https://github.com/vivarium-collective/viva-lumenoid/raw/main", provenance: {"repo_slug": "vivarium-collective/viva-lumenoid", "repo_url": "https://github.com/vivarium-collective/viva-lumenoid", "commit": "5a5c758c4c9fdd97cdf3c9e3f75552694e82752e", "commit_url": "https://github.com/vivarium-collective/viva-lumenoid/commit/5a5c758c4c9fdd97cdf3c9e3f75552694e82752e", "branch": "main", "lockfile": "uv.lock@aacfed865f15", "generated_at": "2026-10-30 13:14 UTC"} };</script>
 <script src="/viva-lumenoid/workbench/assets/data-source.js"></script>
 <script src="/viva-lumenoid/workbench/assets/toast.js"></script>
 <script>
@@ -2000,6 +2006,7 @@ window._seedFollowupProposal = _seedFollowupProposal;
 <script src="/viva-lumenoid/workbench/assets/comparison-view.js"></script>
 <script src="/viva-lumenoid/workbench/assets/study-detail.js"></script>
 <script src="/viva-lumenoid/workbench/assets/study-feedback.js"></script>
+<script src="/viva-lumenoid/workbench/assets/inline-edit.js"></script>
 <script>
 // Re-assert the refresh-aware seed handlers AFTER study-detail.js (which
 // defines its own navigate-away _seedFollowupStudy). The embedded

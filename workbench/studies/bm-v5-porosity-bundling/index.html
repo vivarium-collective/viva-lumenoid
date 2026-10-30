@@ -20,7 +20,7 @@
   <div style="display:flex; align-items:center; gap:14px; justify-content:space-between;">
   <div style="display:flex; align-items:center; gap:12px; min-width:0; flex-wrap:wrap">
   <h1 class="study-title" style="margin:0">
-    <span class="study-name" id="study-name" data-slug="bm-v5-porosity-bundling" data-study-kind="computational" title="bm-v5-porosity-bundling">Network porosity &amp; strand bundling</span>
+    <span class="study-name" id="study-name" data-slug="bm-v5-porosity-bundling" data-study-kind="computational" title="bm-v5-porosity-bundling" data-edit-kind="study" data-edit-field="title" data-edit-value="Network porosity &amp; strand bundling" data-edit-label="Title">Network porosity &amp; strand bundling</span>
     
   </h1>
     
@@ -552,7 +552,7 @@
     <div class="ctr-block">
       <h2 class="overview-label ctr-h">Background</h2>
       <div class="ctr-meta">
-        <div class="ctr-meta-row"><span class="ctr-meta-k">Question</span> <span class="ctr-meta-item">Does the v1 network reproduce the measured pore-size and bundling of a real BM?</span></div>
+        <div class="ctr-meta-row"><span class="ctr-meta-k">Question</span> <span class="ctr-meta-item" data-edit-kind="study" data-edit-field="question" data-edit-value="Does the v1 network reproduce the measured pore-size and bundling of a real BM?" data-edit-multiline data-edit-label="Question">Does the v1 network reproduce the measured pore-size and bundling of a real BM?</span></div>
         
       </div>
     </div>
@@ -634,7 +634,8 @@
         <details class="finding-details">
           <summary class="finding-row">
             <span class="finding-status-glyph">✓</span>
-            <span class="finding-claim finding-statement">Pore size scales with network density and reaches the corneal-EM band (72 ± 40 nm) at the densest sampled network (median 54 nm, corrected σ≈125 nm) — the mesh is realistic and pore size is a tunable density readout, not a free universal.
+            <span class="finding-claim finding-statement" data-edit-kind="study" data-edit-field="findings[F1-porosity-matches-EM-at-density].statement" data-edit-value="Pore size scales with network density and reaches the corneal-EM band (72 ± 40 nm) at the densest sampled network (median 54 nm, corrected σ≈125 nm) — the mesh is realistic and pore size is a tunable density readout, not a free universal.
+" data-edit-multiline data-edit-label="Finding F1-porosity-matches-EM-at-density">Pore size scales with network density and reaches the corneal-EM band (72 ± 40 nm) at the densest sampled network (median 54 nm, corrected σ≈125 nm) — the mesh is realistic and pore size is a tunable density readout, not a free universal.
 </span>
             
             <span class="finding-chip">via <code>porosity-reaches-EM-band</code></span>
@@ -696,7 +697,8 @@
         <details class="finding-details">
           <summary class="finding-row">
             <span class="finding-status-glyph">✓</span>
-            <span class="finding-claim finding-statement">The NC1/7S-only topology does not bundle: mean strand size stays near 1 (~82% singletons), below the 5–7 protomers per strand measured in the PFHR-9 scaffold. The model has no lateral-association bond.
+            <span class="finding-claim finding-statement" data-edit-kind="study" data-edit-field="findings[F2-bundling-undershoots].statement" data-edit-value="The NC1/7S-only topology does not bundle: mean strand size stays near 1 (~82% singletons), below the 5–7 protomers per strand measured in the PFHR-9 scaffold. The model has no lateral-association bond.
+" data-edit-multiline data-edit-label="Finding F2-bundling-undershoots">The NC1/7S-only topology does not bundle: mean strand size stays near 1 (~82% singletons), below the 5–7 protomers per strand measured in the PFHR-9 scaffold. The model has no lateral-association bond.
 </span>
             
             <span class="finding-chip">via <code>bundling-under-shoots-5-7</code></span>
@@ -1559,7 +1561,7 @@ cites:   ["pokidysheva2025targeted"]</pre>
 </section>
 
 </main>
-<script>window.__DASH_CONFIG__ = { mode: "snapshot", interactiveUrl: "https://github.com/vivarium-collective/viva-lumenoid", basePath: "/viva-lumenoid/workbench", inputsDownloadBase: "https://github.com/vivarium-collective/viva-lumenoid/raw/main", provenance: {"repo_slug": "vivarium-collective/viva-lumenoid", "repo_url": "https://github.com/vivarium-collective/viva-lumenoid", "commit": "5a5c758c4c9fdd97cdf3c9e3f75552694e82752e", "commit_url": "https://github.com/vivarium-collective/viva-lumenoid/commit/5a5c758c4c9fdd97cdf3c9e3f75552694e82752e", "branch": "main", "lockfile": "uv.lock@aacfed865f15", "generated_at": "2026-10-30 03:23 UTC"} };</script>
+<script>window.__DASH_CONFIG__ = { mode: "snapshot", interactiveUrl: "https://github.com/vivarium-collective/viva-lumenoid", basePath: "/viva-lumenoid/workbench", inputsDownloadBase: "https://github.com/vivarium-collective/viva-lumenoid/raw/main", provenance: {"repo_slug": "vivarium-collective/viva-lumenoid", "repo_url": "https://github.com/vivarium-collective/viva-lumenoid", "commit": "5a5c758c4c9fdd97cdf3c9e3f75552694e82752e", "commit_url": "https://github.com/vivarium-collective/viva-lumenoid/commit/5a5c758c4c9fdd97cdf3c9e3f75552694e82752e", "branch": "main", "lockfile": "uv.lock@aacfed865f15", "generated_at": "2026-10-30 13:14 UTC"} };</script>
 <script src="/viva-lumenoid/workbench/assets/data-source.js"></script>
 <script src="/viva-lumenoid/workbench/assets/toast.js"></script>
 <script>
@@ -1694,6 +1696,7 @@ window._seedFollowupProposal = _seedFollowupProposal;
 <script src="/viva-lumenoid/workbench/assets/comparison-view.js"></script>
 <script src="/viva-lumenoid/workbench/assets/study-detail.js"></script>
 <script src="/viva-lumenoid/workbench/assets/study-feedback.js"></script>
+<script src="/viva-lumenoid/workbench/assets/inline-edit.js"></script>
 <script>
 // Re-assert the refresh-aware seed handlers AFTER study-detail.js (which
 // defines its own navigate-away _seedFollowupStudy). The embedded

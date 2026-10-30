@@ -20,7 +20,7 @@
   <div style="display:flex; align-items:center; gap:14px; justify-content:space-between;">
   <div style="display:flex; align-items:center; gap:12px; min-width:0; flex-wrap:wrap">
   <h1 class="study-title" style="margin:0">
-    <span class="study-name" id="study-name" data-slug="bm-r3-network-expansion-supply" data-study-kind="computational" title="bm-r3-network-expansion-supply">Network expansion &amp; collagen supply</span>
+    <span class="study-name" id="study-name" data-slug="bm-r3-network-expansion-supply" data-study-kind="computational" title="bm-r3-network-expansion-supply" data-edit-kind="study" data-edit-field="title" data-edit-value="Network expansion &amp; collagen supply" data-edit-label="Title">Network expansion &amp; collagen supply</span>
     
   </h1>
     
@@ -553,9 +553,11 @@
     <div class="ctr-block">
       <h2 class="overview-label ctr-h">Background</h2>
       <div class="ctr-meta">
-        <div class="ctr-meta-row"><span class="ctr-meta-k">Question</span> <span class="ctr-meta-item">Why are both crosslink remodeling and collagen replacement (insertion) necessary for sustained basement-membrane growth?
+        <div class="ctr-meta-row"><span class="ctr-meta-k">Question</span> <span class="ctr-meta-item" data-edit-kind="study" data-edit-field="question" data-edit-value="Why are both crosslink remodeling and collagen replacement (insertion) necessary for sustained basement-membrane growth?
+" data-edit-multiline data-edit-label="Question">Why are both crosslink remodeling and collagen replacement (insertion) necessary for sustained basement-membrane growth?
 </span></div>
-        <div class="ctr-meta-row"><span class="ctr-meta-k">Hypothesis</span> <span class="ctr-meta-item">Adding a material-insertion process lets the collagen IV composite express all three Fig 2B-C supply modes, and under growth their connectivity orders remodeling-with-insertion &gt; remodeling-without-insertion &gt; no-remodeling.
+        <div class="ctr-meta-row"><span class="ctr-meta-k">Hypothesis</span> <span class="ctr-meta-item" data-edit-kind="study" data-edit-field="hypothesis" data-edit-value="Adding a material-insertion process lets the collagen IV composite express all three Fig 2B-C supply modes, and under growth their connectivity orders remodeling-with-insertion &gt; remodeling-without-insertion &gt; no-remodeling.
+" data-edit-multiline data-edit-label="Hypothesis">Adding a material-insertion process lets the collagen IV composite express all three Fig 2B-C supply modes, and under growth their connectivity orders remodeling-with-insertion &gt; remodeling-without-insertion &gt; no-remodeling.
 </span></div>
       </div>
     </div>
@@ -563,7 +565,8 @@
 
     <div class="ctr-block">
       <h2 class="overview-label ctr-h">Model &amp; approach</h2>
-      <p class="ctr-text">A new rod-insertion mechanism (CollagenNetworkProcess._insert_rods, driven by the insert_on control port + the insert_per_step parameter) supplies fresh two-bead rods mid-run. Starting from a shared assembled network (60 rods, real NC1/7S angles), the network is grown by equibiaxial strain (strain_rate 0.003) for 12 steps in each of the three Fig 2B-C supply modes: (1) no-remodeling (chemistry off, no insertion -&gt; frozen topology stretched), (2) remodeling-without-insertion (make+break on, insert off -&gt; remodels on fixed material), (3) remodeling-with-insertion (make+break on, insert 3 rods/step -&gt; fresh material supplied). Rod count, crosslink count, in-plane stress, and crosslink-per-area density are read at the end of growth; the ordering is re-run at seeds 12345 / 777 / 2024.
+      <p class="ctr-text" data-edit-kind="study" data-edit-field="objective" data-edit-value="Implement a rod-insertion mechanism in the collagen network, verify it supplies material correctly (atom count grows, inserted rods crosslink in), and run the three supply modes under a growth protocol to test the Fig 2B-C ordering across seeds.
+" data-edit-multiline data-edit-label="Objective">A new rod-insertion mechanism (CollagenNetworkProcess._insert_rods, driven by the insert_on control port + the insert_per_step parameter) supplies fresh two-bead rods mid-run. Starting from a shared assembled network (60 rods, real NC1/7S angles), the network is grown by equibiaxial strain (strain_rate 0.003) for 12 steps in each of the three Fig 2B-C supply modes: (1) no-remodeling (chemistry off, no insertion -&gt; frozen topology stretched), (2) remodeling-without-insertion (make+break on, insert off -&gt; remodels on fixed material), (3) remodeling-with-insertion (make+break on, insert 3 rods/step -&gt; fresh material supplied). Rod count, crosslink count, in-plane stress, and crosslink-per-area density are read at the end of growth; the ordering is re-run at seeds 12345 / 777 / 2024.
 </p>
       <div class="ctr-meta">
         <div class="ctr-meta-row"><span class="ctr-meta-k">Model</span> <code>collagen-network-supply</code><a class="ov-tablink" href="#" onclick="_setStudyTab('compose');return false;">model →</a></div>
@@ -647,7 +650,8 @@
         <details class="finding-details">
           <summary class="finding-row">
             <span class="finding-status-glyph">✓</span>
-            <span class="finding-claim finding-statement">With material insertion available, the three Fig 2B-C supply modes order as the paper requires under growth: remodeling-with-insertion sustains/grows the crosslinked network (density 0.654), remodeling-without-insertion remodels on fixed material (0.480), and no-remodeling is static and dilutes most (0.247). Both the density and rod-count orderings hold at 3/3 seeds.
+            <span class="finding-claim finding-statement" data-edit-kind="study" data-edit-field="findings[F1-three-supply-modes-ordered].statement" data-edit-value="With material insertion available, the three Fig 2B-C supply modes order as the paper requires under growth: remodeling-with-insertion sustains/grows the crosslinked network (density 0.654), remodeling-without-insertion remodels on fixed material (0.480), and no-remodeling is static and dilutes most (0.247). Both the density and rod-count orderings hold at 3/3 seeds.
+" data-edit-multiline data-edit-label="Finding F1-three-supply-modes-ordered">With material insertion available, the three Fig 2B-C supply modes order as the paper requires under growth: remodeling-with-insertion sustains/grows the crosslinked network (density 0.654), remodeling-without-insertion remodels on fixed material (0.480), and no-remodeling is static and dilutes most (0.247). Both the density and rod-count orderings hold at 3/3 seeds.
 </span>
             
             <span class="finding-chip">via <code>crosslink-density-ordered</code></span>
@@ -710,7 +714,8 @@
         <details class="finding-details">
           <summary class="finding-row">
             <span class="finding-status-glyph">✓</span>
-            <span class="finding-claim finding-statement">The added insertion mechanism supplies material exactly and correctly: insert_per_step=k grows the atom count by 2k per step (deterministic), insert_on=0 holds it flat, and inserted rods crosslink in automatically because the make fix filters candidate partners by atom type (crosslinks grow 17-&gt;45 under insertion).
+            <span class="finding-claim finding-statement" data-edit-kind="study" data-edit-field="findings[F2-insertion-mechanism-exact].statement" data-edit-value="The added insertion mechanism supplies material exactly and correctly: insert_per_step=k grows the atom count by 2k per step (deterministic), insert_on=0 holds it flat, and inserted rods crosslink in automatically because the make fix filters candidate partners by atom type (crosslinks grow 17-&gt;45 under insertion).
+" data-edit-multiline data-edit-label="Finding F2-insertion-mechanism-exact">The added insertion mechanism supplies material exactly and correctly: insert_per_step=k grows the atom count by 2k per step (deterministic), insert_on=0 holds it flat, and inserted rods crosslink in automatically because the make fix filters candidate partners by atom type (crosslinks grow 17-&gt;45 under insertion).
 </span>
             
             <span class="finding-chip">via <code>insertion-grows-atoms-deterministically</code></span>
@@ -766,7 +771,8 @@
         <details class="finding-details">
           <summary class="finding-row">
             <span class="finding-status-glyph">◐</span>
-            <span class="finding-claim finding-statement">Under the faithful real-angle set, assembly/remodeling is formation-dominant at this scale (breaking is suppressed while crosslinks form), so modes 2-3 &#34;remodeling&#34; is formation + supply rather than full make/break turnover, and connectivity is read as crosslink-per-area density rather than the exact largest-connected-component. The Fig 2B-C ORDERING is reproduced; full turnover + the exact connectivity statistic are follow-ups.
+            <span class="finding-claim finding-statement" data-edit-kind="study" data-edit-field="findings[F3-remodeling-formation-dominant-scope].statement" data-edit-value="Under the faithful real-angle set, assembly/remodeling is formation-dominant at this scale (breaking is suppressed while crosslinks form), so modes 2-3 &#34;remodeling&#34; is formation + supply rather than full make/break turnover, and connectivity is read as crosslink-per-area density rather than the exact largest-connected-component. The Fig 2B-C ORDERING is reproduced; full turnover + the exact connectivity statistic are follow-ups.
+" data-edit-multiline data-edit-label="Finding F3-remodeling-formation-dominant-scope">Under the faithful real-angle set, assembly/remodeling is formation-dominant at this scale (breaking is suppressed while crosslinks form), so modes 2-3 &#34;remodeling&#34; is formation + supply rather than full make/break turnover, and connectivity is read as crosslink-per-area density rather than the exact largest-connected-component. The Fig 2B-C ORDERING is reproduced; full turnover + the exact connectivity statistic are follow-ups.
 </span>
             
             <span class="finding-chip">via <code>crosslink-density-ordered</code></span>
@@ -1923,7 +1929,7 @@ cites:   ["meadowcroft2025nonequilibrium"]</pre>
 </section>
 
 </main>
-<script>window.__DASH_CONFIG__ = { mode: "snapshot", interactiveUrl: "https://github.com/vivarium-collective/viva-lumenoid", basePath: "/viva-lumenoid/workbench", inputsDownloadBase: "https://github.com/vivarium-collective/viva-lumenoid/raw/main", provenance: {"repo_slug": "vivarium-collective/viva-lumenoid", "repo_url": "https://github.com/vivarium-collective/viva-lumenoid", "commit": "5a5c758c4c9fdd97cdf3c9e3f75552694e82752e", "commit_url": "https://github.com/vivarium-collective/viva-lumenoid/commit/5a5c758c4c9fdd97cdf3c9e3f75552694e82752e", "branch": "main", "lockfile": "uv.lock@aacfed865f15", "generated_at": "2026-10-30 03:23 UTC"} };</script>
+<script>window.__DASH_CONFIG__ = { mode: "snapshot", interactiveUrl: "https://github.com/vivarium-collective/viva-lumenoid", basePath: "/viva-lumenoid/workbench", inputsDownloadBase: "https://github.com/vivarium-collective/viva-lumenoid/raw/main", provenance: {"repo_slug": "vivarium-collective/viva-lumenoid", "repo_url": "https://github.com/vivarium-collective/viva-lumenoid", "commit": "5a5c758c4c9fdd97cdf3c9e3f75552694e82752e", "commit_url": "https://github.com/vivarium-collective/viva-lumenoid/commit/5a5c758c4c9fdd97cdf3c9e3f75552694e82752e", "branch": "main", "lockfile": "uv.lock@aacfed865f15", "generated_at": "2026-10-30 13:14 UTC"} };</script>
 <script src="/viva-lumenoid/workbench/assets/data-source.js"></script>
 <script src="/viva-lumenoid/workbench/assets/toast.js"></script>
 <script>
@@ -2058,6 +2064,7 @@ window._seedFollowupProposal = _seedFollowupProposal;
 <script src="/viva-lumenoid/workbench/assets/comparison-view.js"></script>
 <script src="/viva-lumenoid/workbench/assets/study-detail.js"></script>
 <script src="/viva-lumenoid/workbench/assets/study-feedback.js"></script>
+<script src="/viva-lumenoid/workbench/assets/inline-edit.js"></script>
 <script>
 // Re-assert the refresh-aware seed handlers AFTER study-detail.js (which
 // defines its own navigate-away _seedFollowupStudy). The embedded

@@ -20,7 +20,7 @@
   <div style="display:flex; align-items:center; gap:14px; justify-content:space-between;">
   <div style="display:flex; align-items:center; gap:12px; min-width:0; flex-wrap:wrap">
   <h1 class="study-title" style="margin:0">
-    <span class="study-name" id="study-name" data-slug="bm-r2-collagen-network-rheology" data-study-kind="computational" title="bm-r2-collagen-network-rheology">Faithful collagen IV network rheology</span>
+    <span class="study-name" id="study-name" data-slug="bm-r2-collagen-network-rheology" data-study-kind="computational" title="bm-r2-collagen-network-rheology" data-edit-kind="study" data-edit-field="title" data-edit-value="Faithful collagen IV network rheology" data-edit-label="Title">Faithful collagen IV network rheology</span>
     
   </h1>
     
@@ -553,7 +553,8 @@
     <div class="ctr-block">
       <h2 class="overview-label ctr-h">Background</h2>
       <div class="ctr-meta">
-        <div class="ctr-meta-row"><span class="ctr-meta-k">Question</span> <span class="ctr-meta-item">Is basement-membrane stress relaxation proportional to collagen IV molecular residence (turnover) time?
+        <div class="ctr-meta-row"><span class="ctr-meta-k">Question</span> <span class="ctr-meta-item" data-edit-kind="study" data-edit-field="question" data-edit-value="Is basement-membrane stress relaxation proportional to collagen IV molecular residence (turnover) time?
+" data-edit-multiline data-edit-label="Question">Is basement-membrane stress relaxation proportional to collagen IV molecular residence (turnover) time?
 </span></div>
         
       </div>
@@ -658,7 +659,8 @@
         <details class="finding-details">
           <summary class="finding-row">
             <span class="finding-status-glyph">✓</span>
-            <span class="finding-claim finding-statement">On the dense, multi-seed network (300 rods, density 3.0, 12-sigma slab, 4 seeds) the stress-relaxation time tau rises monotonically with collagen residence time -- 37.3 LJ at residence 12.5, 39.7 at 25, 43.1 at 50, 67.5 at 100, 101.6 at 200 -- reproducing the DIRECTION of Figure 2E across the full turnover range, while the elastic modulus stays turnover-independent (3.19 LJ). The relationship is an intrinsic relaxation floor (~37 LJ) at fast turnover plus a residence-dominated regime above residence ~50, not a single proportional slope. This resolves the 120-rod noise floor that had limited the earlier sweep to a single point (residence 100 -&gt; 57.7 LJ).
+            <span class="finding-claim finding-statement" data-edit-kind="study" data-edit-field="findings[F1-fig2e-direction-resolved-dense].statement" data-edit-value="On the dense, multi-seed network (300 rods, density 3.0, 12-sigma slab, 4 seeds) the stress-relaxation time tau rises monotonically with collagen residence time -- 37.3 LJ at residence 12.5, 39.7 at 25, 43.1 at 50, 67.5 at 100, 101.6 at 200 -- reproducing the DIRECTION of Figure 2E across the full turnover range, while the elastic modulus stays turnover-independent (3.19 LJ). The relationship is an intrinsic relaxation floor (~37 LJ) at fast turnover plus a residence-dominated regime above residence ~50, not a single proportional slope. This resolves the 120-rod noise floor that had limited the earlier sweep to a single point (residence 100 -&gt; 57.7 LJ).
+" data-edit-multiline data-edit-label="Finding F1-fig2e-direction-resolved-dense">On the dense, multi-seed network (300 rods, density 3.0, 12-sigma slab, 4 seeds) the stress-relaxation time tau rises monotonically with collagen residence time -- 37.3 LJ at residence 12.5, 39.7 at 25, 43.1 at 50, 67.5 at 100, 101.6 at 200 -- reproducing the DIRECTION of Figure 2E across the full turnover range, while the elastic modulus stays turnover-independent (3.19 LJ). The relationship is an intrinsic relaxation floor (~37 LJ) at fast turnover plus a residence-dominated regime above residence ~50, not a single proportional slope. This resolves the 120-rod noise floor that had limited the earlier sweep to a single point (residence 100 -&gt; 57.7 LJ).
 </span>
             
             <span class="finding-chip">via <code>tau-rises-with-residence-resolved</code></span>
@@ -721,7 +723,8 @@
         <details class="finding-details">
           <summary class="finding-row">
             <span class="finding-status-glyph">✓</span>
-            <span class="finding-claim finding-statement">The collagen IV composite (viva_lumenoid.composites.stage2_sweep / CollagenNetworkProcess) emits the real outputs this study reads: under growth loading a bounded smoke run forms a crosslinked network (n_crosslinks 5 at 40 rods) and reports a finite in-plane stress (sigma_inplane 0.250 LJ). The emitter and mechanism direction are confirmed, not assumed.
+            <span class="finding-claim finding-statement" data-edit-kind="study" data-edit-field="findings[F2-network-assembles-and-stresses].statement" data-edit-value="The collagen IV composite (viva_lumenoid.composites.stage2_sweep / CollagenNetworkProcess) emits the real outputs this study reads: under growth loading a bounded smoke run forms a crosslinked network (n_crosslinks 5 at 40 rods) and reports a finite in-plane stress (sigma_inplane 0.250 LJ). The emitter and mechanism direction are confirmed, not assumed.
+" data-edit-multiline data-edit-label="Finding F2-network-assembles-and-stresses">The collagen IV composite (viva_lumenoid.composites.stage2_sweep / CollagenNetworkProcess) emits the real outputs this study reads: under growth loading a bounded smoke run forms a crosslinked network (n_crosslinks 5 at 40 rods) and reports a finite in-plane stress (sigma_inplane 0.250 LJ). The emitter and mechanism direction are confirmed, not assumed.
 </span>
             
             <span class="finding-chip">via <code>network-forms-and-stresses</code></span>
@@ -1796,7 +1799,7 @@ cites:   ["barrientos2026basement", "barrientos2026cellshape"]</pre>
 </section>
 
 </main>
-<script>window.__DASH_CONFIG__ = { mode: "snapshot", interactiveUrl: "https://github.com/vivarium-collective/viva-lumenoid", basePath: "/viva-lumenoid/workbench", inputsDownloadBase: "https://github.com/vivarium-collective/viva-lumenoid/raw/main", provenance: {"repo_slug": "vivarium-collective/viva-lumenoid", "repo_url": "https://github.com/vivarium-collective/viva-lumenoid", "commit": "5a5c758c4c9fdd97cdf3c9e3f75552694e82752e", "commit_url": "https://github.com/vivarium-collective/viva-lumenoid/commit/5a5c758c4c9fdd97cdf3c9e3f75552694e82752e", "branch": "main", "lockfile": "uv.lock@aacfed865f15", "generated_at": "2026-10-30 03:23 UTC"} };</script>
+<script>window.__DASH_CONFIG__ = { mode: "snapshot", interactiveUrl: "https://github.com/vivarium-collective/viva-lumenoid", basePath: "/viva-lumenoid/workbench", inputsDownloadBase: "https://github.com/vivarium-collective/viva-lumenoid/raw/main", provenance: {"repo_slug": "vivarium-collective/viva-lumenoid", "repo_url": "https://github.com/vivarium-collective/viva-lumenoid", "commit": "5a5c758c4c9fdd97cdf3c9e3f75552694e82752e", "commit_url": "https://github.com/vivarium-collective/viva-lumenoid/commit/5a5c758c4c9fdd97cdf3c9e3f75552694e82752e", "branch": "main", "lockfile": "uv.lock@aacfed865f15", "generated_at": "2026-10-30 13:14 UTC"} };</script>
 <script src="/viva-lumenoid/workbench/assets/data-source.js"></script>
 <script src="/viva-lumenoid/workbench/assets/toast.js"></script>
 <script>
@@ -1931,6 +1934,7 @@ window._seedFollowupProposal = _seedFollowupProposal;
 <script src="/viva-lumenoid/workbench/assets/comparison-view.js"></script>
 <script src="/viva-lumenoid/workbench/assets/study-detail.js"></script>
 <script src="/viva-lumenoid/workbench/assets/study-feedback.js"></script>
+<script src="/viva-lumenoid/workbench/assets/inline-edit.js"></script>
 <script>
 // Re-assert the refresh-aware seed handlers AFTER study-detail.js (which
 // defines its own navigate-away _seedFollowupStudy). The embedded

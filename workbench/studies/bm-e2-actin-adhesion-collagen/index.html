@@ -20,7 +20,7 @@
   <div style="display:flex; align-items:center; gap:14px; justify-content:space-between;">
   <div style="display:flex; align-items:center; gap:12px; min-width:0; flex-wrap:wrap">
   <h1 class="study-title" style="margin:0">
-    <span class="study-name" id="study-name" data-slug="bm-e2-actin-adhesion-collagen" data-study-kind="computational" title="bm-e2-actin-adhesion-collagen">Actin-adhesion-collagen force transfer</span>
+    <span class="study-name" id="study-name" data-slug="bm-e2-actin-adhesion-collagen" data-study-kind="computational" title="bm-e2-actin-adhesion-collagen" data-edit-kind="study" data-edit-field="title" data-edit-value="Actin-adhesion-collagen force transfer" data-edit-label="Title">Actin-adhesion-collagen force transfer</span>
     
   </h1>
     
@@ -553,9 +553,11 @@
     <div class="ctr-block">
       <h2 class="overview-label ctr-h">Background</h2>
       <div class="ctr-meta">
-        <div class="ctr-meta-row"><span class="ctr-meta-k">Question</span> <span class="ctr-meta-item">How does active cortical contractility transfer force through reversible basal adhesions into the collagen IV basement membrane?
+        <div class="ctr-meta-row"><span class="ctr-meta-k">Question</span> <span class="ctr-meta-item" data-edit-kind="study" data-edit-field="question" data-edit-value="How does active cortical contractility transfer force through reversible basal adhesions into the collagen IV basement membrane?
+" data-edit-multiline data-edit-label="Question">How does active cortical contractility transfer force through reversible basal adhesions into the collagen IV basement membrane?
 </span></div>
-        <div class="ctr-meta-row"><span class="ctr-meta-k">Hypothesis</span> <span class="ctr-meta-item">Coupling an active cortex to reversible basal linkers and a collagen-IV BM patch produces a traction, linker occupancy and network deformation whose relative relaxation is set jointly by linker off-rate and crosslink turnover, measurable on a single-cell patch before multicellular coupling.
+        <div class="ctr-meta-row"><span class="ctr-meta-k">Hypothesis</span> <span class="ctr-meta-item" data-edit-kind="study" data-edit-field="hypothesis" data-edit-value="Coupling an active cortex to reversible basal linkers and a collagen-IV BM patch produces a traction, linker occupancy and network deformation whose relative relaxation is set jointly by linker off-rate and crosslink turnover, measurable on a single-cell patch before multicellular coupling.
+" data-edit-multiline data-edit-label="Hypothesis">Coupling an active cortex to reversible basal linkers and a collagen-IV BM patch produces a traction, linker occupancy and network deformation whose relative relaxation is set jointly by linker off-rate and crosslink turnover, measurable on a single-cell patch before multicellular coupling.
 </span></div>
       </div>
     </div>
@@ -563,7 +565,8 @@
 
     <div class="ctr-block">
       <h2 class="overview-label ctr-h">Model &amp; approach</h2>
-      <p class="ctr-text">Verify the deterministic force-transfer relation of the single-cell actin-adhesion-collagen patch (composite viva_lumenoid.composites.actin_adhesion_bm). Drive the BasalAdhesion linker process with a cortex tension of 2.0 (k_on 0.5, k_off 0.1, coupling_gain 1e-3) and read the traction, the linker occupancy and the BM strain rate; separately step the occupancy kinetics (k_off 0) to confirm it rises toward 1. Then run a bounded LAMMPS smoke of the full composite (real actomyosin cortex + collagen IV BM patch) to confirm the collagen BM responds to the transmitted load and emits its in-plane stress (bm_sigma).
+      <p class="ctr-text" data-edit-kind="study" data-edit-field="objective" data-edit-value="Couple active cortical contractility (E1) to reversible basal linkers and a collagen IV BM patch; measure traction, linker occupation, network deformation and relative relaxation; begin with a single-cell patch before multicellular coupling.
+" data-edit-multiline data-edit-label="Objective">Verify the deterministic force-transfer relation of the single-cell actin-adhesion-collagen patch (composite viva_lumenoid.composites.actin_adhesion_bm). Drive the BasalAdhesion linker process with a cortex tension of 2.0 (k_on 0.5, k_off 0.1, coupling_gain 1e-3) and read the traction, the linker occupancy and the BM strain rate; separately step the occupancy kinetics (k_off 0) to confirm it rises toward 1. Then run a bounded LAMMPS smoke of the full composite (real actomyosin cortex + collagen IV BM patch) to confirm the collagen BM responds to the transmitted load and emits its in-plane stress (bm_sigma).
 </p>
       <div class="ctr-meta">
         <div class="ctr-meta-row"><span class="ctr-meta-k">Model</span> <code>bm-e2-actin-adhesion-collagen</code><a class="ov-tablink" href="#" onclick="_setStudyTab('compose');return false;">model →</a></div>
@@ -625,7 +628,8 @@
         <details class="finding-details">
           <summary class="finding-row">
             <span class="finding-status-glyph">✓</span>
-            <span class="finding-claim finding-statement">The active cortex transmits force to the collagen BM through an occupancy-gated relation: the traction equals linker occupancy times cortex tension exactly (1.0 = 0.5 x 2.0 at cortex_tension 2.0), so the fraction of bound basal linkers sets how much cortical tension reaches the membrane. (holds exactly by construction -- a deterministic wiring identity, not emergent mechanics)
+            <span class="finding-claim finding-statement" data-edit-kind="study" data-edit-field="findings[F1-occupancy-gated-force-transfer].statement" data-edit-value="The active cortex transmits force to the collagen BM through an occupancy-gated relation: the traction equals linker occupancy times cortex tension exactly (1.0 = 0.5 x 2.0 at cortex_tension 2.0), so the fraction of bound basal linkers sets how much cortical tension reaches the membrane. (holds exactly by construction -- a deterministic wiring identity, not emergent mechanics)
+" data-edit-multiline data-edit-label="Finding F1-occupancy-gated-force-transfer">The active cortex transmits force to the collagen BM through an occupancy-gated relation: the traction equals linker occupancy times cortex tension exactly (1.0 = 0.5 x 2.0 at cortex_tension 2.0), so the fraction of bound basal linkers sets how much cortical tension reaches the membrane. (holds exactly by construction -- a deterministic wiring identity, not emergent mechanics)
 </span>
             
             <span class="finding-chip">via <code>traction-is-occupancy-gated</code></span>
@@ -688,7 +692,8 @@
         <details class="finding-details">
           <summary class="finding-row">
             <span class="finding-status-glyph">✓</span>
-            <span class="finding-claim finding-statement">The BM strain rate is proportional to the transmitted traction (0.001 = 1e-3 x 1.0, exact), the linker occupancy rises monotonically toward saturation (0.100 -&gt; 0.457 over six steps), and a bounded LAMMPS smoke of the full cortex+collagen composite confirms the collagen IV BM responds to the load by emitting its in-plane stress (bm_sigma).
+            <span class="finding-claim finding-statement" data-edit-kind="study" data-edit-field="findings[F2-strain-rate-proportional-and-bm-responds].statement" data-edit-value="The BM strain rate is proportional to the transmitted traction (0.001 = 1e-3 x 1.0, exact), the linker occupancy rises monotonically toward saturation (0.100 -&gt; 0.457 over six steps), and a bounded LAMMPS smoke of the full cortex+collagen composite confirms the collagen IV BM responds to the load by emitting its in-plane stress (bm_sigma).
+" data-edit-multiline data-edit-label="Finding F2-strain-rate-proportional-and-bm-responds">The BM strain rate is proportional to the transmitted traction (0.001 = 1e-3 x 1.0, exact), the linker occupancy rises monotonically toward saturation (0.100 -&gt; 0.457 over six steps), and a bounded LAMMPS smoke of the full cortex+collagen composite confirms the collagen IV BM responds to the load by emitting its in-plane stress (bm_sigma).
 </span>
             
             <span class="finding-chip">via <code>strain-rate-proportional-to-traction</code></span>
@@ -1730,7 +1735,7 @@ pass_if: {"note": "occupancy 0.100 -\u003e 0.457 over six steps, strictly increa
 </section>
 
 </main>
-<script>window.__DASH_CONFIG__ = { mode: "snapshot", interactiveUrl: "https://github.com/vivarium-collective/viva-lumenoid", basePath: "/viva-lumenoid/workbench", inputsDownloadBase: "https://github.com/vivarium-collective/viva-lumenoid/raw/main", provenance: {"repo_slug": "vivarium-collective/viva-lumenoid", "repo_url": "https://github.com/vivarium-collective/viva-lumenoid", "commit": "5a5c758c4c9fdd97cdf3c9e3f75552694e82752e", "commit_url": "https://github.com/vivarium-collective/viva-lumenoid/commit/5a5c758c4c9fdd97cdf3c9e3f75552694e82752e", "branch": "main", "lockfile": "uv.lock@aacfed865f15", "generated_at": "2026-10-30 03:23 UTC"} };</script>
+<script>window.__DASH_CONFIG__ = { mode: "snapshot", interactiveUrl: "https://github.com/vivarium-collective/viva-lumenoid", basePath: "/viva-lumenoid/workbench", inputsDownloadBase: "https://github.com/vivarium-collective/viva-lumenoid/raw/main", provenance: {"repo_slug": "vivarium-collective/viva-lumenoid", "repo_url": "https://github.com/vivarium-collective/viva-lumenoid", "commit": "5a5c758c4c9fdd97cdf3c9e3f75552694e82752e", "commit_url": "https://github.com/vivarium-collective/viva-lumenoid/commit/5a5c758c4c9fdd97cdf3c9e3f75552694e82752e", "branch": "main", "lockfile": "uv.lock@aacfed865f15", "generated_at": "2026-10-30 13:14 UTC"} };</script>
 <script src="/viva-lumenoid/workbench/assets/data-source.js"></script>
 <script src="/viva-lumenoid/workbench/assets/toast.js"></script>
 <script>
@@ -1865,6 +1870,7 @@ window._seedFollowupProposal = _seedFollowupProposal;
 <script src="/viva-lumenoid/workbench/assets/comparison-view.js"></script>
 <script src="/viva-lumenoid/workbench/assets/study-detail.js"></script>
 <script src="/viva-lumenoid/workbench/assets/study-feedback.js"></script>
+<script src="/viva-lumenoid/workbench/assets/inline-edit.js"></script>
 <script>
 // Re-assert the refresh-aware seed handlers AFTER study-detail.js (which
 // defines its own navigate-away _seedFollowupStudy). The embedded

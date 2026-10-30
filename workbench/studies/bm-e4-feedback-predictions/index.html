@@ -20,7 +20,7 @@
   <div style="display:flex; align-items:center; gap:14px; justify-content:space-between;">
   <div style="display:flex; align-items:center; gap:12px; min-width:0; flex-wrap:wrap">
   <h1 class="study-title" style="margin:0">
-    <span class="study-name" id="study-name" data-slug="bm-e4-feedback-predictions" data-study-kind="computational" title="bm-e4-feedback-predictions">LAMMPS–Tyssue coupled lumenoid</span>
+    <span class="study-name" id="study-name" data-slug="bm-e4-feedback-predictions" data-study-kind="computational" title="bm-e4-feedback-predictions" data-edit-kind="study" data-edit-field="title" data-edit-value="LAMMPS–Tyssue coupled lumenoid" data-edit-label="Title">LAMMPS–Tyssue coupled lumenoid</span>
     
   </h1>
     
@@ -553,9 +553,11 @@
     <div class="ctr-block">
       <h2 class="overview-label ctr-h">Background</h2>
       <div class="ctr-meta">
-        <div class="ctr-meta-row"><span class="ctr-meta-k">Question</span> <span class="ctr-meta-item">When do growth-driven turnover, spatial BM heterogeneity, contractility-dependent confinement, partial adhesion and network failure change cell height and lumenoid growth beyond the original paper?
+        <div class="ctr-meta-row"><span class="ctr-meta-k">Question</span> <span class="ctr-meta-item" data-edit-kind="study" data-edit-field="question" data-edit-value="When do growth-driven turnover, spatial BM heterogeneity, contractility-dependent confinement, partial adhesion and network failure change cell height and lumenoid growth beyond the original paper?
+" data-edit-multiline data-edit-label="Question">When do growth-driven turnover, spatial BM heterogeneity, contractility-dependent confinement, partial adhesion and network failure change cell height and lumenoid growth beyond the original paper?
 </span></div>
-        <div class="ctr-meta-row"><span class="ctr-meta-k">Hypothesis</span> <span class="ctr-meta-item">With one-way, uncoupled and uniform-material controls, the fully coupled system predicts regimes - growth-driven turnover, spatial BM heterogeneity, contractility-dependent confinement, partial adhesion/network failure - in which cell height and lumenoid growth depart measurably from the paper&#39;s homogeneous, one-way predictions.
+        <div class="ctr-meta-row"><span class="ctr-meta-k">Hypothesis</span> <span class="ctr-meta-item" data-edit-kind="study" data-edit-field="hypothesis" data-edit-value="With one-way, uncoupled and uniform-material controls, the fully coupled system predicts regimes - growth-driven turnover, spatial BM heterogeneity, contractility-dependent confinement, partial adhesion/network failure - in which cell height and lumenoid growth depart measurably from the paper&#39;s homogeneous, one-way predictions.
+" data-edit-multiline data-edit-label="Hypothesis">With one-way, uncoupled and uniform-material controls, the fully coupled system predicts regimes - growth-driven turnover, spatial BM heterogeneity, contractility-dependent confinement, partial adhesion/network failure - in which cell height and lumenoid growth depart measurably from the paper&#39;s homogeneous, one-way predictions.
 </span></div>
       </div>
     </div>
@@ -563,7 +565,8 @@
 
     <div class="ctr-block">
       <h2 class="overview-label ctr-h">Model &amp; approach</h2>
-      <p class="ctr-text">Run the coupled_lumenoid composite (real Tyssue epithelium, reduced-order effective BM) for 15 steps of dt 0.02 with strain_gain 20.0, tension_gain 0.02, bm_modulus 50.0, bm_relaxation 10.0, in three coupling modes — two-way (full feedback), one-way (epithelium drives the BM, no reaction fed back), and uncoupled (BM inert) — and read the emitted basal_tension and bm_sigma. Then, in two-way mode, subcycle the BM relaxation at bm_substeps {1, 2, 4, 8} and read bm_sigma to check successive-refinement convergence.
+      <p class="ctr-text" data-edit-kind="study" data-edit-field="objective" data-edit-value="Test growth-driven turnover, spatial BM heterogeneity, contractility-dependent confinement, partial adhesion and network failure, each against one-way, uncoupled and uniform-material controls, and report where the bidirectionally coupled predictions depart from the paper.
+" data-edit-multiline data-edit-label="Objective">Run the coupled_lumenoid composite (real Tyssue epithelium, reduced-order effective BM) for 15 steps of dt 0.02 with strain_gain 20.0, tension_gain 0.02, bm_modulus 50.0, bm_relaxation 10.0, in three coupling modes — two-way (full feedback), one-way (epithelium drives the BM, no reaction fed back), and uncoupled (BM inert) — and read the emitted basal_tension and bm_sigma. Then, in two-way mode, subcycle the BM relaxation at bm_substeps {1, 2, 4, 8} and read bm_sigma to check successive-refinement convergence.
 </p>
       <div class="ctr-meta">
         <div class="ctr-meta-row"><span class="ctr-meta-k">Model</span> <code>bm-e4-feedback-predictions</code><a class="ov-tablink" href="#" onclick="_setStudyTab('compose');return false;">model →</a></div>
@@ -625,7 +628,8 @@
         <details class="finding-details">
           <summary class="finding-row">
             <span class="finding-status-glyph">✓</span>
-            <span class="finding-claim finding-statement">The bidirectional epithelium&lt;-&gt;BM coupling runs end-to-end on the reduced-order BM and the three coupling controls separate exactly as the mechanism demands: two-way feeds the membrane reaction back as a non-zero basal tension (-0.2995), one-way feeds none back (0.0), and uncoupled leaves the membrane inert (bm_sigma 0.0).
+            <span class="finding-claim finding-statement" data-edit-kind="study" data-edit-field="findings[F1-bidirectional-coupling-controls-separate].statement" data-edit-value="The bidirectional epithelium&lt;-&gt;BM coupling runs end-to-end on the reduced-order BM and the three coupling controls separate exactly as the mechanism demands: two-way feeds the membrane reaction back as a non-zero basal tension (-0.2995), one-way feeds none back (0.0), and uncoupled leaves the membrane inert (bm_sigma 0.0).
+" data-edit-multiline data-edit-label="Finding F1-bidirectional-coupling-controls-separate">The bidirectional epithelium&lt;-&gt;BM coupling runs end-to-end on the reduced-order BM and the three coupling controls separate exactly as the mechanism demands: two-way feeds the membrane reaction back as a non-zero basal tension (-0.2995), one-way feeds none back (0.0), and uncoupled leaves the membrane inert (bm_sigma 0.0).
 </span>
             
             <span class="finding-chip">via <code>two-way-feeds-back-reaction</code></span>
@@ -688,7 +692,8 @@
         <details class="finding-details">
           <summary class="finding-row">
             <span class="finding-status-glyph">✓</span>
-            <span class="finding-claim finding-statement">Subcycling the reduced-order BM relaxation converges: bm_sigma over bm_substeps {1,2,4,8} = -14.976/-15.042/-15.075/-15.092, with the successive-refinement error shrinking monotonically (0.066 -&gt; 0.033 -&gt; 0.017), so |s8-s4| 0.017 &lt; |s2-s1| 0.066.
+            <span class="finding-claim finding-statement" data-edit-kind="study" data-edit-field="findings[F2-reduced-order-bm-subcycling-converges].statement" data-edit-value="Subcycling the reduced-order BM relaxation converges: bm_sigma over bm_substeps {1,2,4,8} = -14.976/-15.042/-15.075/-15.092, with the successive-refinement error shrinking monotonically (0.066 -&gt; 0.033 -&gt; 0.017), so |s8-s4| 0.017 &lt; |s2-s1| 0.066.
+" data-edit-multiline data-edit-label="Finding F2-reduced-order-bm-subcycling-converges">Subcycling the reduced-order BM relaxation converges: bm_sigma over bm_substeps {1,2,4,8} = -14.976/-15.042/-15.075/-15.092, with the successive-refinement error shrinking monotonically (0.066 -&gt; 0.033 -&gt; 0.017), so |s8-s4| 0.017 &lt; |s2-s1| 0.066.
 </span>
             
             <span class="finding-chip">via <code>bm-subcycling-converges</code></span>
@@ -744,7 +749,8 @@
         <details class="finding-details">
           <summary class="finding-row">
             <span class="finding-status-glyph">◐</span>
-            <span class="finding-claim finding-statement">The reduced-order (effective) BM path (bm_mode=reduced) is the clean, fully-converged realization; the explicit-LAMMPS-BM path is now also exercised (see F4/F5) but is numerically delicate. The spatially resolved E4 feedback predictions (turnover/heterogeneity/confinement/adhesion/failure) remain a v0 single patch, not yet simulated.
+            <span class="finding-claim finding-statement" data-edit-kind="study" data-edit-field="findings[F3-reduced-order-path-only].statement" data-edit-value="The reduced-order (effective) BM path (bm_mode=reduced) is the clean, fully-converged realization; the explicit-LAMMPS-BM path is now also exercised (see F4/F5) but is numerically delicate. The spatially resolved E4 feedback predictions (turnover/heterogeneity/confinement/adhesion/failure) remain a v0 single patch, not yet simulated.
+" data-edit-multiline data-edit-label="Finding F3-reduced-order-path-only">The reduced-order (effective) BM path (bm_mode=reduced) is the clean, fully-converged realization; the explicit-LAMMPS-BM path is now also exercised (see F4/F5) but is numerically delicate. The spatially resolved E4 feedback predictions (turnover/heterogeneity/confinement/adhesion/failure) remain a v0 single patch, not yet simulated.
 </span>
             
             <span class="finding-chip">via <code>uncoupled-bm-inert</code></span>
@@ -799,7 +805,8 @@
         <details class="finding-details">
           <summary class="finding-row">
             <span class="finding-status-glyph">✓</span>
-            <span class="finding-claim finding-statement">The EXPLICIT-LAMMPS-collagen-BM path now runs the real bidirectional loop end-to-end: the epithelial basal shell stretches a real LAMMPS collagen IV patch and its bond-virial stress is fed back as a basal tension. Over 16 steps at 40 rods the round-trip is bounded (basal area 199.0 -&gt; 160.1, lumen pressure 6.7 -&gt; 78.1), and the feedback DIRECTIONALITY control holds: two-way basal_tension != 0 (e.g. +0.106), one-way basal_tension == 0 exactly. This closes E4&#39;s main open gap (the recorded controls were previously reduced-order only).
+            <span class="finding-claim finding-statement" data-edit-kind="study" data-edit-field="findings[F4-explicit-bm-loop-demonstrated].statement" data-edit-value="The EXPLICIT-LAMMPS-collagen-BM path now runs the real bidirectional loop end-to-end: the epithelial basal shell stretches a real LAMMPS collagen IV patch and its bond-virial stress is fed back as a basal tension. Over 16 steps at 40 rods the round-trip is bounded (basal area 199.0 -&gt; 160.1, lumen pressure 6.7 -&gt; 78.1), and the feedback DIRECTIONALITY control holds: two-way basal_tension != 0 (e.g. +0.106), one-way basal_tension == 0 exactly. This closes E4&#39;s main open gap (the recorded controls were previously reduced-order only).
+" data-edit-multiline data-edit-label="Finding F4-explicit-bm-loop-demonstrated">The EXPLICIT-LAMMPS-collagen-BM path now runs the real bidirectional loop end-to-end: the epithelial basal shell stretches a real LAMMPS collagen IV patch and its bond-virial stress is fed back as a basal tension. Over 16 steps at 40 rods the round-trip is bounded (basal area 199.0 -&gt; 160.1, lumen pressure 6.7 -&gt; 78.1), and the feedback DIRECTIONALITY control holds: two-way basal_tension != 0 (e.g. +0.106), one-way basal_tension == 0 exactly. This closes E4&#39;s main open gap (the recorded controls were previously reduced-order only).
 </span>
             
             <span class="finding-chip">via <code>explicit-two-way-feeds-back-reaction</code></span>
@@ -862,7 +869,8 @@
         <details class="finding-details">
           <summary class="finding-row">
             <span class="finding-status-glyph">◐</span>
-            <span class="finding-claim finding-statement">The explicit path does NOT inherit two reduced-path behaviors. (1) Subcycle convergence FAILS/inverts: bm_sigma over bm_substeps {1,2,4,8} = -11.4/-14.5/+28.6/+1828, the successive-refinement error GROWS (3.1 -&gt; 43.1 -&gt; 1799.6) -- more subcycling destabilizes the explicit BM rather than converging it. (2) The &#34;uncoupled bm_sigma==0&#34; inert control does not transfer: the explicit collagen patch carries intrinsic bond-virial stress (uncoupled bm_sigma +1.6 at 40 rods). The explicit loop is stable only at coarse subcycling (substeps 1-2) and a bounded network (~40 rods)/duration; 120 rods/24 steps diverges (bm_sigma ~4.5e4). A stable explicit-BM subcycling integrator + explicit-path gain calibration are the open items.
+            <span class="finding-claim finding-statement" data-edit-kind="study" data-edit-field="findings[F5-explicit-path-numerically-delicate].statement" data-edit-value="The explicit path does NOT inherit two reduced-path behaviors. (1) Subcycle convergence FAILS/inverts: bm_sigma over bm_substeps {1,2,4,8} = -11.4/-14.5/+28.6/+1828, the successive-refinement error GROWS (3.1 -&gt; 43.1 -&gt; 1799.6) -- more subcycling destabilizes the explicit BM rather than converging it. (2) The &#34;uncoupled bm_sigma==0&#34; inert control does not transfer: the explicit collagen patch carries intrinsic bond-virial stress (uncoupled bm_sigma +1.6 at 40 rods). The explicit loop is stable only at coarse subcycling (substeps 1-2) and a bounded network (~40 rods)/duration; 120 rods/24 steps diverges (bm_sigma ~4.5e4). A stable explicit-BM subcycling integrator + explicit-path gain calibration are the open items.
+" data-edit-multiline data-edit-label="Finding F5-explicit-path-numerically-delicate">The explicit path does NOT inherit two reduced-path behaviors. (1) Subcycle convergence FAILS/inverts: bm_sigma over bm_substeps {1,2,4,8} = -11.4/-14.5/+28.6/+1828, the successive-refinement error GROWS (3.1 -&gt; 43.1 -&gt; 1799.6) -- more subcycling destabilizes the explicit BM rather than converging it. (2) The &#34;uncoupled bm_sigma==0&#34; inert control does not transfer: the explicit collagen patch carries intrinsic bond-virial stress (uncoupled bm_sigma +1.6 at 40 rods). The explicit loop is stable only at coarse subcycling (substeps 1-2) and a bounded network (~40 rods)/duration; 120 rods/24 steps diverges (bm_sigma ~4.5e4). A stable explicit-BM subcycling integrator + explicit-path gain calibration are the open items.
 </span>
             
             <span class="finding-chip">via <code>explicit-subcycling-converges</code></span>
@@ -918,7 +926,8 @@
         <details class="finding-details">
           <summary class="finding-row">
             <span class="finding-status-glyph">✓</span>
-            <span class="finding-claim finding-statement">With an epithelial PREFERRED growth trajectory now wired (preferred cell volume + basal area ramped; division OFF), the basal displacement is growth-driven and the REALIZED basal-area fold emerges from the mechanics: it differs by coupling mode (two-way 1.006 vs one-way/uncoupled 0.767) and LAGS the preferred target (1.150) — it is NOT hard-coded to the target. The two-way mode returns a nonzero basal reaction tension (2.824) under growth while one-way/uncoupled feed back exactly 0. This supplies the growth trajectory the prior two-way/one-way difference lacked, so the coupling difference is now observed under growth.
+            <span class="finding-claim finding-statement" data-edit-kind="study" data-edit-field="findings[F6-growth-driven-feedback-realized-not-hardcoded].statement" data-edit-value="With an epithelial PREFERRED growth trajectory now wired (preferred cell volume + basal area ramped; division OFF), the basal displacement is growth-driven and the REALIZED basal-area fold emerges from the mechanics: it differs by coupling mode (two-way 1.006 vs one-way/uncoupled 0.767) and LAGS the preferred target (1.150) — it is NOT hard-coded to the target. The two-way mode returns a nonzero basal reaction tension (2.824) under growth while one-way/uncoupled feed back exactly 0. This supplies the growth trajectory the prior two-way/one-way difference lacked, so the coupling difference is now observed under growth.
+" data-edit-multiline data-edit-label="Finding F6-growth-driven-feedback-realized-not-hardcoded">With an epithelial PREFERRED growth trajectory now wired (preferred cell volume + basal area ramped; division OFF), the basal displacement is growth-driven and the REALIZED basal-area fold emerges from the mechanics: it differs by coupling mode (two-way 1.006 vs one-way/uncoupled 0.767) and LAGS the preferred target (1.150) — it is NOT hard-coded to the target. The two-way mode returns a nonzero basal reaction tension (2.824) under growth while one-way/uncoupled feed back exactly 0. This supplies the growth trajectory the prior two-way/one-way difference lacked, so the coupling difference is now observed under growth.
 </span>
             
             <span class="finding-chip">via <code>realized-growth-not-hardcoded</code></span>
@@ -2470,7 +2479,7 @@ pass_if: {"note": "expected |s8-s4| \u003c |s2-s1|; OBSERVED divergence (1799.6 
 </section>
 
 </main>
-<script>window.__DASH_CONFIG__ = { mode: "snapshot", interactiveUrl: "https://github.com/vivarium-collective/viva-lumenoid", basePath: "/viva-lumenoid/workbench", inputsDownloadBase: "https://github.com/vivarium-collective/viva-lumenoid/raw/main", provenance: {"repo_slug": "vivarium-collective/viva-lumenoid", "repo_url": "https://github.com/vivarium-collective/viva-lumenoid", "commit": "5a5c758c4c9fdd97cdf3c9e3f75552694e82752e", "commit_url": "https://github.com/vivarium-collective/viva-lumenoid/commit/5a5c758c4c9fdd97cdf3c9e3f75552694e82752e", "branch": "main", "lockfile": "uv.lock@aacfed865f15", "generated_at": "2026-10-30 03:23 UTC"} };</script>
+<script>window.__DASH_CONFIG__ = { mode: "snapshot", interactiveUrl: "https://github.com/vivarium-collective/viva-lumenoid", basePath: "/viva-lumenoid/workbench", inputsDownloadBase: "https://github.com/vivarium-collective/viva-lumenoid/raw/main", provenance: {"repo_slug": "vivarium-collective/viva-lumenoid", "repo_url": "https://github.com/vivarium-collective/viva-lumenoid", "commit": "5a5c758c4c9fdd97cdf3c9e3f75552694e82752e", "commit_url": "https://github.com/vivarium-collective/viva-lumenoid/commit/5a5c758c4c9fdd97cdf3c9e3f75552694e82752e", "branch": "main", "lockfile": "uv.lock@aacfed865f15", "generated_at": "2026-10-30 13:14 UTC"} };</script>
 <script src="/viva-lumenoid/workbench/assets/data-source.js"></script>
 <script src="/viva-lumenoid/workbench/assets/toast.js"></script>
 <script>
@@ -2605,6 +2614,7 @@ window._seedFollowupProposal = _seedFollowupProposal;
 <script src="/viva-lumenoid/workbench/assets/comparison-view.js"></script>
 <script src="/viva-lumenoid/workbench/assets/study-detail.js"></script>
 <script src="/viva-lumenoid/workbench/assets/study-feedback.js"></script>
+<script src="/viva-lumenoid/workbench/assets/inline-edit.js"></script>
 <script>
 // Re-assert the refresh-aware seed handlers AFTER study-detail.js (which
 // defines its own navigate-away _seedFollowupStudy). The embedded

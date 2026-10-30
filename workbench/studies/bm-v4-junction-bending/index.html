@@ -20,7 +20,7 @@
   <div style="display:flex; align-items:center; gap:14px; justify-content:space-between;">
   <div style="display:flex; align-items:center; gap:12px; min-width:0; flex-wrap:wrap">
   <h1 class="study-title" style="margin:0">
-    <span class="study-name" id="study-name" data-slug="bm-v4-junction-bending" data-study-kind="computational" title="bm-v4-junction-bending">Native junction-bending modulus</span>
+    <span class="study-name" id="study-name" data-slug="bm-v4-junction-bending" data-study-kind="computational" title="bm-v4-junction-bending" data-edit-kind="study" data-edit-field="title" data-edit-value="Native junction-bending modulus" data-edit-label="Title">Native junction-bending modulus</span>
     
   </h1>
     
@@ -552,7 +552,7 @@
     <div class="ctr-block">
       <h2 class="overview-label ctr-h">Background</h2>
       <div class="ctr-meta">
-        <div class="ctr-meta-row"><span class="ctr-meta-k">Question</span> <span class="ctr-meta-item">Does junction bending yield the measurable modulus the vertex model needs?</span></div>
+        <div class="ctr-meta-row"><span class="ctr-meta-k">Question</span> <span class="ctr-meta-item" data-edit-kind="study" data-edit-field="question" data-edit-value="Does junction bending yield the measurable modulus the vertex model needs?" data-edit-multiline data-edit-label="Question">Does junction bending yield the measurable modulus the vertex model needs?</span></div>
         
       </div>
     </div>
@@ -617,7 +617,8 @@
         <details class="finding-details">
           <summary class="finding-row">
             <span class="finding-status-glyph">◆</span>
-            <span class="finding-claim finding-statement">Junction bending is implemented as `fix restrain` pinned to each junction&#39;s as-formed angle (per-junction rest angle avoids the single-rest-angle frustration), with an auto-reduced timestep and an athermal energy-minimised modulus readout.
+            <span class="finding-claim finding-statement" data-edit-kind="study" data-edit-field="findings[F1-bending-implemented].statement" data-edit-value="Junction bending is implemented as `fix restrain` pinned to each junction&#39;s as-formed angle (per-junction rest angle avoids the single-rest-angle frustration), with an auto-reduced timestep and an athermal energy-minimised modulus readout.
+" data-edit-multiline data-edit-label="Finding F1-bending-implemented">Junction bending is implemented as `fix restrain` pinned to each junction&#39;s as-formed angle (per-junction rest angle avoids the single-rest-angle frustration), with an auto-reduced timestep and an athermal energy-minimised modulus readout.
 </span>
             
             <span class="finding-chip">via <code>floppy-baseline-clean</code></span>
@@ -672,7 +673,8 @@
         <details class="finding-details">
           <summary class="finding-row">
             <span class="finding-status-glyph">◐</span>
-            <span class="finding-claim finding-statement">The as-formed restraint path — bending pinned via `fix restrain` AFTER assembly — is ill-conditioned at v1 size: |E| jumps to tens–hundreds but scatters and sign-flips across seeds (k=80 per-seed −570…+54, median −210), so it yields no calibratable value. superseded by F3: the ill-conditioning was an artifact of applying bending after assembly, not an intrinsic limit.
+            <span class="finding-claim finding-statement" data-edit-kind="study" data-edit-field="findings[F2-asformed-restraint-illconditioned].statement" data-edit-value="The as-formed restraint path — bending pinned via `fix restrain` AFTER assembly — is ill-conditioned at v1 size: |E| jumps to tens–hundreds but scatters and sign-flips across seeds (k=80 per-seed −570…+54, median −210), so it yields no calibratable value. superseded by F3: the ill-conditioning was an artifact of applying bending after assembly, not an intrinsic limit.
+" data-edit-multiline data-edit-label="Finding F2-asformed-restraint-illconditioned">The as-formed restraint path — bending pinned via `fix restrain` AFTER assembly — is ill-conditioned at v1 size: |E| jumps to tens–hundreds but scatters and sign-flips across seeds (k=80 per-seed −570…+54, median −210), so it yields no calibratable value. superseded by F3: the ill-conditioning was an artifact of applying bending after assembly, not an intrinsic limit.
 </span>
             
             <span class="finding-chip">via <code>bending-changes-mechanics</code></span>
@@ -728,7 +730,8 @@
         <details class="finding-details">
           <summary class="finding-row">
             <span class="finding-status-glyph">✓</span>
-            <span class="finding-claim finding-statement">Creating real harmonic angles as the crosslinks form (use_real_angles, matching the released bond/react templates) yields a positive, well- conditioned, reproducible modulus — per-seed 36.7/27.6/37.5 LJ (same sign, tight IQR). So the released model is not floppy once its angles are faithfully active; the modulus is finite and strongly density-dependent (≈79 Pa at 2.9 crosslinks/rod → ≈7 Pa at 1.0/rod).
+            <span class="finding-claim finding-statement" data-edit-kind="study" data-edit-field="findings[F3-faithful-angles-reproducible].statement" data-edit-value="Creating real harmonic angles as the crosslinks form (use_real_angles, matching the released bond/react templates) yields a positive, well- conditioned, reproducible modulus — per-seed 36.7/27.6/37.5 LJ (same sign, tight IQR). So the released model is not floppy once its angles are faithfully active; the modulus is finite and strongly density-dependent (≈79 Pa at 2.9 crosslinks/rod → ≈7 Pa at 1.0/rod).
+" data-edit-multiline data-edit-label="Finding F3-faithful-angles-reproducible">Creating real harmonic angles as the crosslinks form (use_real_angles, matching the released bond/react templates) yields a positive, well- conditioned, reproducible modulus — per-seed 36.7/27.6/37.5 LJ (same sign, tight IQR). So the released model is not floppy once its angles are faithfully active; the modulus is finite and strongly density-dependent (≈79 Pa at 2.9 crosslinks/rod → ≈7 Pa at 1.0/rod).
 </span>
             
             <span class="finding-chip">via <code>reproducible-modulus</code></span>
@@ -1703,7 +1706,7 @@ pass_if: {"note": "IQR \u003c 0.5\u00b7|median| \u2014 met by the real-angle pat
 </section>
 
 </main>
-<script>window.__DASH_CONFIG__ = { mode: "snapshot", interactiveUrl: "https://github.com/vivarium-collective/viva-lumenoid", basePath: "/viva-lumenoid/workbench", inputsDownloadBase: "https://github.com/vivarium-collective/viva-lumenoid/raw/main", provenance: {"repo_slug": "vivarium-collective/viva-lumenoid", "repo_url": "https://github.com/vivarium-collective/viva-lumenoid", "commit": "5a5c758c4c9fdd97cdf3c9e3f75552694e82752e", "commit_url": "https://github.com/vivarium-collective/viva-lumenoid/commit/5a5c758c4c9fdd97cdf3c9e3f75552694e82752e", "branch": "main", "lockfile": "uv.lock@aacfed865f15", "generated_at": "2026-10-30 03:23 UTC"} };</script>
+<script>window.__DASH_CONFIG__ = { mode: "snapshot", interactiveUrl: "https://github.com/vivarium-collective/viva-lumenoid", basePath: "/viva-lumenoid/workbench", inputsDownloadBase: "https://github.com/vivarium-collective/viva-lumenoid/raw/main", provenance: {"repo_slug": "vivarium-collective/viva-lumenoid", "repo_url": "https://github.com/vivarium-collective/viva-lumenoid", "commit": "5a5c758c4c9fdd97cdf3c9e3f75552694e82752e", "commit_url": "https://github.com/vivarium-collective/viva-lumenoid/commit/5a5c758c4c9fdd97cdf3c9e3f75552694e82752e", "branch": "main", "lockfile": "uv.lock@aacfed865f15", "generated_at": "2026-10-30 13:14 UTC"} };</script>
 <script src="/viva-lumenoid/workbench/assets/data-source.js"></script>
 <script src="/viva-lumenoid/workbench/assets/toast.js"></script>
 <script>
@@ -1838,6 +1841,7 @@ window._seedFollowupProposal = _seedFollowupProposal;
 <script src="/viva-lumenoid/workbench/assets/comparison-view.js"></script>
 <script src="/viva-lumenoid/workbench/assets/study-detail.js"></script>
 <script src="/viva-lumenoid/workbench/assets/study-feedback.js"></script>
+<script src="/viva-lumenoid/workbench/assets/inline-edit.js"></script>
 <script>
 // Re-assert the refresh-aware seed handlers AFTER study-detail.js (which
 // defines its own navigate-away _seedFollowupStudy). The embedded

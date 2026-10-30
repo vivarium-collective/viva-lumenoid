@@ -20,7 +20,7 @@
   <div style="display:flex; align-items:center; gap:14px; justify-content:space-between;">
   <div style="display:flex; align-items:center; gap:12px; min-width:0; flex-wrap:wrap">
   <h1 class="study-title" style="margin:0">
-    <span class="study-name" id="study-name" data-slug="bm-e1-actomyosin-cortex" data-study-kind="computational" title="bm-e1-actomyosin-cortex">Explicit actomyosin cortex mechanics</span>
+    <span class="study-name" id="study-name" data-slug="bm-e1-actomyosin-cortex" data-study-kind="computational" title="bm-e1-actomyosin-cortex" data-edit-kind="study" data-edit-field="title" data-edit-value="Explicit actomyosin cortex mechanics" data-edit-label="Title">Explicit actomyosin cortex mechanics</span>
     
   </h1>
     
@@ -553,9 +553,11 @@
     <div class="ctr-block">
       <h2 class="overview-label ctr-h">Background</h2>
       <div class="ctr-meta">
-        <div class="ctr-meta-row"><span class="ctr-meta-k">Question</span> <span class="ctr-meta-item">Can a coarse explicit actomyosin filament/crosslink/motor model reproduce the cortical tension, strain response and relaxation that an effective Tyssue cortical-energy term represents?
+        <div class="ctr-meta-row"><span class="ctr-meta-k">Question</span> <span class="ctr-meta-item" data-edit-kind="study" data-edit-field="question" data-edit-value="Can a coarse explicit actomyosin filament/crosslink/motor model reproduce the cortical tension, strain response and relaxation that an effective Tyssue cortical-energy term represents?
+" data-edit-multiline data-edit-label="Question">Can a coarse explicit actomyosin filament/crosslink/motor model reproduce the cortical tension, strain response and relaxation that an effective Tyssue cortical-energy term represents?
 </span></div>
-        <div class="ctr-meta-row"><span class="ctr-meta-k">Hypothesis</span> <span class="ctr-meta-item">A 2D cell-sized coarse filament/crosslink/motor LAMMPS patch produces a tunable active tension and a strain response/relaxation that map onto Tyssue cortical-energy parameters, so the effective cortical term can be replaced by explicit actin without changing the measured confinement in the overlap regime.
+        <div class="ctr-meta-row"><span class="ctr-meta-k">Hypothesis</span> <span class="ctr-meta-item" data-edit-kind="study" data-edit-field="hypothesis" data-edit-value="A 2D cell-sized coarse filament/crosslink/motor LAMMPS patch produces a tunable active tension and a strain response/relaxation that map onto Tyssue cortical-energy parameters, so the effective cortical term can be replaced by explicit actin without changing the measured confinement in the overlap regime.
+" data-edit-multiline data-edit-label="Hypothesis">A 2D cell-sized coarse filament/crosslink/motor LAMMPS patch produces a tunable active tension and a strain response/relaxation that map onto Tyssue cortical-energy parameters, so the effective cortical term can be replaced by explicit actin without changing the measured confinement in the overlap regime.
 </span></div>
       </div>
     </div>
@@ -563,7 +565,8 @@
 
     <div class="ctr-block">
       <h2 class="overview-label ctr-h">Model &amp; approach</h2>
-      <p class="ctr-text">Run the coarse actomyosin-cortex LAMMPS plugin over the generic LammpsModelProcess seam (a 2D periodic bead patch, n=6 -&gt; 36 beads, under Langevin dynamics) at four contractility values (LJ well depth epsilon = myosin-activity proxy) {0.5, 1.0, 2.0, 3.0}, integrating 3 steps of interval 1.0, and read the in-plane cortical tension tau = -(pxx+pyy)/2 at each point. Check that cortical tension rises strictly along the contractility sweep and that a high-contractility patch carries more tension than a low-contractility one.
+      <p class="ctr-text" data-edit-kind="study" data-edit-field="objective" data-edit-value="Build a coarse filament/crosslink/motor LAMMPS model on a 2D cell-sized patch; measure tension, strain response and relaxation; map these onto Tyssue cortical-energy parameters. NEW extension - the paper does not explicitly simulate actin.
+" data-edit-multiline data-edit-label="Objective">Run the coarse actomyosin-cortex LAMMPS plugin over the generic LammpsModelProcess seam (a 2D periodic bead patch, n=6 -&gt; 36 beads, under Langevin dynamics) at four contractility values (LJ well depth epsilon = myosin-activity proxy) {0.5, 1.0, 2.0, 3.0}, integrating 3 steps of interval 1.0, and read the in-plane cortical tension tau = -(pxx+pyy)/2 at each point. Check that cortical tension rises strictly along the contractility sweep and that a high-contractility patch carries more tension than a low-contractility one.
 </p>
       <div class="ctr-meta">
         <div class="ctr-meta-row"><span class="ctr-meta-k">Model</span> <code>bm-e1-actomyosin-cortex</code><a class="ov-tablink" href="#" onclick="_setStudyTab('compose');return false;">model →</a></div>
@@ -630,7 +633,8 @@
         <details class="finding-details">
           <summary class="finding-row">
             <span class="finding-status-glyph">✓</span>
-            <span class="finding-claim finding-statement">The explicit actomyosin cortex carries a cortical tension that rises strictly and monotonically with the myosin-contractility proxy: tau = -0.395, 0.602, 2.580, 3.978 at contractility 0.5, 1.0, 2.0, 3.0 -- a tunable active tension that maps onto a Tyssue cortical-energy parameter. (engineering verification over an LJ-activity proxy, not biological myosin evidence)
+            <span class="finding-claim finding-statement" data-edit-kind="study" data-edit-field="findings[F1-cortical-tension-monotone-in-contractility].statement" data-edit-value="The explicit actomyosin cortex carries a cortical tension that rises strictly and monotonically with the myosin-contractility proxy: tau = -0.395, 0.602, 2.580, 3.978 at contractility 0.5, 1.0, 2.0, 3.0 -- a tunable active tension that maps onto a Tyssue cortical-energy parameter. (engineering verification over an LJ-activity proxy, not biological myosin evidence)
+" data-edit-multiline data-edit-label="Finding F1-cortical-tension-monotone-in-contractility">The explicit actomyosin cortex carries a cortical tension that rises strictly and monotonically with the myosin-contractility proxy: tau = -0.395, 0.602, 2.580, 3.978 at contractility 0.5, 1.0, 2.0, 3.0 -- a tunable active tension that maps onto a Tyssue cortical-energy parameter. (engineering verification over an LJ-activity proxy, not biological myosin evidence)
 </span>
             
             <span class="finding-chip">via <code>cortex-tension-monotone-in-contractility</code></span>
@@ -693,7 +697,8 @@
         <details class="finding-details">
           <summary class="finding-row">
             <span class="finding-status-glyph">◐</span>
-            <span class="finding-claim finding-statement">At the lowest contractility (0.5) the cortical tension is slightly NEGATIVE (-0.395): the coarse patch is weakly expansive there, so the monotonic RISE -- not a positive tension at every point -- is the reproduced result.
+            <span class="finding-claim finding-statement" data-edit-kind="study" data-edit-field="findings[F2-negative-tension-at-low-contractility].statement" data-edit-value="At the lowest contractility (0.5) the cortical tension is slightly NEGATIVE (-0.395): the coarse patch is weakly expansive there, so the monotonic RISE -- not a positive tension at every point -- is the reproduced result.
+" data-edit-multiline data-edit-label="Finding F2-negative-tension-at-low-contractility">At the lowest contractility (0.5) the cortical tension is slightly NEGATIVE (-0.395): the coarse patch is weakly expansive there, so the monotonic RISE -- not a positive tension at every point -- is the reproduced result.
 </span>
             
             <span class="finding-chip">via <code>cortex-tension-monotone-in-contractility</code></span>
@@ -1654,7 +1659,7 @@ pass_if: {"note": "cortical_tension(3.0) \u003e cortical_tension(1.0)", "op": "g
 </section>
 
 </main>
-<script>window.__DASH_CONFIG__ = { mode: "snapshot", interactiveUrl: "https://github.com/vivarium-collective/viva-lumenoid", basePath: "/viva-lumenoid/workbench", inputsDownloadBase: "https://github.com/vivarium-collective/viva-lumenoid/raw/main", provenance: {"repo_slug": "vivarium-collective/viva-lumenoid", "repo_url": "https://github.com/vivarium-collective/viva-lumenoid", "commit": "5a5c758c4c9fdd97cdf3c9e3f75552694e82752e", "commit_url": "https://github.com/vivarium-collective/viva-lumenoid/commit/5a5c758c4c9fdd97cdf3c9e3f75552694e82752e", "branch": "main", "lockfile": "uv.lock@aacfed865f15", "generated_at": "2026-10-30 03:23 UTC"} };</script>
+<script>window.__DASH_CONFIG__ = { mode: "snapshot", interactiveUrl: "https://github.com/vivarium-collective/viva-lumenoid", basePath: "/viva-lumenoid/workbench", inputsDownloadBase: "https://github.com/vivarium-collective/viva-lumenoid/raw/main", provenance: {"repo_slug": "vivarium-collective/viva-lumenoid", "repo_url": "https://github.com/vivarium-collective/viva-lumenoid", "commit": "5a5c758c4c9fdd97cdf3c9e3f75552694e82752e", "commit_url": "https://github.com/vivarium-collective/viva-lumenoid/commit/5a5c758c4c9fdd97cdf3c9e3f75552694e82752e", "branch": "main", "lockfile": "uv.lock@aacfed865f15", "generated_at": "2026-10-30 13:14 UTC"} };</script>
 <script src="/viva-lumenoid/workbench/assets/data-source.js"></script>
 <script src="/viva-lumenoid/workbench/assets/toast.js"></script>
 <script>
@@ -1789,6 +1794,7 @@ window._seedFollowupProposal = _seedFollowupProposal;
 <script src="/viva-lumenoid/workbench/assets/comparison-view.js"></script>
 <script src="/viva-lumenoid/workbench/assets/study-detail.js"></script>
 <script src="/viva-lumenoid/workbench/assets/study-feedback.js"></script>
+<script src="/viva-lumenoid/workbench/assets/inline-edit.js"></script>
 <script>
 // Re-assert the refresh-aware seed handlers AFTER study-detail.js (which
 // defines its own navigate-away _seedFollowupStudy). The embedded

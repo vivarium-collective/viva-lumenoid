@@ -20,7 +20,7 @@
   <div style="display:flex; align-items:center; gap:14px; justify-content:space-between;">
   <div style="display:flex; align-items:center; gap:12px; min-width:0; flex-wrap:wrap">
   <h1 class="study-title" style="margin:0">
-    <span class="study-name" id="study-name" data-slug="bm-r1-published-tissue-baseline" data-study-kind="computational" title="bm-r1-published-tissue-baseline">Reduced-order tissue-mechanics baseline</span>
+    <span class="study-name" id="study-name" data-slug="bm-r1-published-tissue-baseline" data-study-kind="computational" title="bm-r1-published-tissue-baseline" data-edit-kind="study" data-edit-field="title" data-edit-value="Reduced-order tissue-mechanics baseline" data-edit-label="Title">Reduced-order tissue-mechanics baseline</span>
     
   </h1>
     
@@ -553,9 +553,11 @@
     <div class="ctr-block">
       <h2 class="overview-label ctr-h">Background</h2>
       <div class="ctr-meta">
-        <div class="ctr-meta-row"><span class="ctr-meta-k">Question</span> <span class="ctr-meta-item">How do basement-membrane stiffness and relaxation, relative to the proliferation (doubling) time, control growth-dependent epithelial confinement?
+        <div class="ctr-meta-row"><span class="ctr-meta-k">Question</span> <span class="ctr-meta-item" data-edit-kind="study" data-edit-field="question" data-edit-value="How do basement-membrane stiffness and relaxation, relative to the proliferation (doubling) time, control growth-dependent epithelial confinement?
+" data-edit-multiline data-edit-label="Question">How do basement-membrane stiffness and relaxation, relative to the proliferation (doubling) time, control growth-dependent epithelial confinement?
 </span></div>
-        <div class="ctr-meta-row"><span class="ctr-meta-k">Hypothesis</span> <span class="ctr-meta-item">Reimplementing the paper&#39;s fixed-volume prism / surface-tension tissue model with a viscoelastic BM reproduces Figure 1G&#39;s four stiffness-relaxation regimes and the 1H-J confinement trajectories, with the regime boundary set by the ratio of BM relaxation time to doubling time.
+        <div class="ctr-meta-row"><span class="ctr-meta-k">Hypothesis</span> <span class="ctr-meta-item" data-edit-kind="study" data-edit-field="hypothesis" data-edit-value="Reimplementing the paper&#39;s fixed-volume prism / surface-tension tissue model with a viscoelastic BM reproduces Figure 1G&#39;s four stiffness-relaxation regimes and the 1H-J confinement trajectories, with the regime boundary set by the ratio of BM relaxation time to doubling time.
+" data-edit-multiline data-edit-label="Hypothesis">Reimplementing the paper&#39;s fixed-volume prism / surface-tension tissue model with a viscoelastic BM reproduces Figure 1G&#39;s four stiffness-relaxation regimes and the 1H-J confinement trajectories, with the regime boundary set by the ratio of BM relaxation time to doubling time.
 </span></div>
       </div>
     </div>
@@ -563,7 +565,8 @@
 
     <div class="ctr-block">
       <h2 class="overview-label ctr-h">Model &amp; approach</h2>
-      <p class="ctr-text">Run the reduced-order TissuePrismProcess (one representative fixed-volume prism cell; basal area set by proliferation pushing against a viscoelastic BM; cell height = volume / basal area) over a BM-stiffness x BM-relaxation grid at a fixed doubling time (stiffness in {0.1, 0.5, 1.0, 2.0, 5.0}, relaxation in {1, 5, 20, 50}, doubling_time 5.0), integrating 40 steps of dt 0.2. Read the final cell height, the relative confinement, and the BM reaction stress at each grid point, and check the regime ordering and the monotonic trends against Barrientos Figure 1G.
+      <p class="ctr-text" data-edit-kind="study" data-edit-field="objective" data-edit-value="Reimplement the paper&#39;s fixed-volume prism/surface-tension tissue model and viscoelastic BM; sweep relative stiffness and the relaxation/doubling-time ratio; compare qualitatively and quantitatively to Barrientos et al. Figure 1G-J.
+" data-edit-multiline data-edit-label="Objective">Run the reduced-order TissuePrismProcess (one representative fixed-volume prism cell; basal area set by proliferation pushing against a viscoelastic BM; cell height = volume / basal area) over a BM-stiffness x BM-relaxation grid at a fixed doubling time (stiffness in {0.1, 0.5, 1.0, 2.0, 5.0}, relaxation in {1, 5, 20, 50}, doubling_time 5.0), integrating 40 steps of dt 0.2. Read the final cell height, the relative confinement, and the BM reaction stress at each grid point, and check the regime ordering and the monotonic trends against Barrientos Figure 1G.
 </p>
       <div class="ctr-meta">
         <div class="ctr-meta-row"><span class="ctr-meta-k">Model</span> <code>bm-r1-published-tissue-baseline</code><a class="ov-tablink" href="#" onclick="_setStudyTab('compose');return false;">model →</a></div>
@@ -640,7 +643,8 @@
         <details class="finding-details">
           <summary class="finding-row">
             <span class="finding-status-glyph">✓</span>
-            <span class="finding-claim finding-statement">The reduced-order prism + viscoelastic-BM model reproduces Figure 1G&#39;s confinement regime topology: cell height increases monotonically with BM stiffness and with BM relaxation, so a stiff, slowly-relaxing membrane confines the cell (height 0.630) and a soft, fast-relaxing one lets it spread (height 0.380).
+            <span class="finding-claim finding-statement" data-edit-kind="study" data-edit-field="findings[F1-regime-topology-reproduced].statement" data-edit-value="The reduced-order prism + viscoelastic-BM model reproduces Figure 1G&#39;s confinement regime topology: cell height increases monotonically with BM stiffness and with BM relaxation, so a stiff, slowly-relaxing membrane confines the cell (height 0.630) and a soft, fast-relaxing one lets it spread (height 0.380).
+" data-edit-multiline data-edit-label="Finding F1-regime-topology-reproduced">The reduced-order prism + viscoelastic-BM model reproduces Figure 1G&#39;s confinement regime topology: cell height increases monotonically with BM stiffness and with BM relaxation, so a stiff, slowly-relaxing membrane confines the cell (height 0.630) and a soft, fast-relaxing one lets it spread (height 0.380).
 </span>
             
             <span class="finding-chip">via <code>confinement-regime-separates</code></span>
@@ -703,7 +707,8 @@
         <details class="finding-details">
           <summary class="finding-row">
             <span class="finding-status-glyph">✓</span>
-            <span class="finding-claim finding-statement">Confinement tracks the BM reaction stress: the confined corner carries stress 2.64 while the spread corner carries 0.031, so the regime ordering is set by how much reaction stress the BM can build against proliferation, not by the stiffness value alone.
+            <span class="finding-claim finding-statement" data-edit-kind="study" data-edit-field="findings[F2-confinement-driven-by-bm-stress].statement" data-edit-value="Confinement tracks the BM reaction stress: the confined corner carries stress 2.64 while the spread corner carries 0.031, so the regime ordering is set by how much reaction stress the BM can build against proliferation, not by the stiffness value alone.
+" data-edit-multiline data-edit-label="Finding F2-confinement-driven-by-bm-stress">Confinement tracks the BM reaction stress: the confined corner carries stress 2.64 while the spread corner carries 0.031, so the regime ordering is set by how much reaction stress the BM can build against proliferation, not by the stiffness value alone.
 </span>
             
             <span class="finding-chip">via <code>confinement-tracks-bm-stress</code></span>
@@ -758,7 +763,8 @@
         <details class="finding-details">
           <summary class="finding-row">
             <span class="finding-status-glyph">◐</span>
-            <span class="finding-claim finding-statement">All grid heights are below the initial height of 1.0: the cell spreads overall as it proliferates, so the reproduced quantity is the RELATIVE regime ordering and the monotone trends, not an absolute confinement in physical units.
+            <span class="finding-claim finding-statement" data-edit-kind="study" data-edit-field="findings[F3-relative-not-absolute].statement" data-edit-value="All grid heights are below the initial height of 1.0: the cell spreads overall as it proliferates, so the reproduced quantity is the RELATIVE regime ordering and the monotone trends, not an absolute confinement in physical units.
+" data-edit-multiline data-edit-label="Finding F3-relative-not-absolute">All grid heights are below the initial height of 1.0: the cell spreads overall as it proliferates, so the reproduced quantity is the RELATIVE regime ordering and the monotone trends, not an absolute confinement in physical units.
 </span>
             
             <span class="finding-chip">via <code>height-monotonic-in-stiffness</code></span>
@@ -1853,7 +1859,7 @@ pass_if: {"note": "bm_stress(confined) \u003e\u003e bm_stress(spread)", "op": "g
 </section>
 
 </main>
-<script>window.__DASH_CONFIG__ = { mode: "snapshot", interactiveUrl: "https://github.com/vivarium-collective/viva-lumenoid", basePath: "/viva-lumenoid/workbench", inputsDownloadBase: "https://github.com/vivarium-collective/viva-lumenoid/raw/main", provenance: {"repo_slug": "vivarium-collective/viva-lumenoid", "repo_url": "https://github.com/vivarium-collective/viva-lumenoid", "commit": "5a5c758c4c9fdd97cdf3c9e3f75552694e82752e", "commit_url": "https://github.com/vivarium-collective/viva-lumenoid/commit/5a5c758c4c9fdd97cdf3c9e3f75552694e82752e", "branch": "main", "lockfile": "uv.lock@aacfed865f15", "generated_at": "2026-10-30 03:23 UTC"} };</script>
+<script>window.__DASH_CONFIG__ = { mode: "snapshot", interactiveUrl: "https://github.com/vivarium-collective/viva-lumenoid", basePath: "/viva-lumenoid/workbench", inputsDownloadBase: "https://github.com/vivarium-collective/viva-lumenoid/raw/main", provenance: {"repo_slug": "vivarium-collective/viva-lumenoid", "repo_url": "https://github.com/vivarium-collective/viva-lumenoid", "commit": "5a5c758c4c9fdd97cdf3c9e3f75552694e82752e", "commit_url": "https://github.com/vivarium-collective/viva-lumenoid/commit/5a5c758c4c9fdd97cdf3c9e3f75552694e82752e", "branch": "main", "lockfile": "uv.lock@aacfed865f15", "generated_at": "2026-10-30 13:14 UTC"} };</script>
 <script src="/viva-lumenoid/workbench/assets/data-source.js"></script>
 <script src="/viva-lumenoid/workbench/assets/toast.js"></script>
 <script>
@@ -1988,6 +1994,7 @@ window._seedFollowupProposal = _seedFollowupProposal;
 <script src="/viva-lumenoid/workbench/assets/comparison-view.js"></script>
 <script src="/viva-lumenoid/workbench/assets/study-detail.js"></script>
 <script src="/viva-lumenoid/workbench/assets/study-feedback.js"></script>
+<script src="/viva-lumenoid/workbench/assets/inline-edit.js"></script>
 <script>
 // Re-assert the refresh-aware seed handlers AFTER study-detail.js (which
 // defines its own navigate-away _seedFollowupStudy). The embedded

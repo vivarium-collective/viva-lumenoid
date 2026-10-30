@@ -20,7 +20,7 @@
   <div style="display:flex; align-items:center; gap:14px; justify-content:space-between;">
   <div style="display:flex; align-items:center; gap:12px; min-width:0; flex-wrap:wrap">
   <h1 class="study-title" style="margin:0">
-    <span class="study-name" id="study-name" data-slug="bm-e3-closed-3d-lumenoid" data-study-kind="computational" title="bm-e3-closed-3d-lumenoid">Closed 3D lumenoid morphogenesis</span>
+    <span class="study-name" id="study-name" data-slug="bm-e3-closed-3d-lumenoid" data-study-kind="computational" title="bm-e3-closed-3d-lumenoid" data-edit-kind="study" data-edit-field="title" data-edit-value="Closed 3D lumenoid morphogenesis" data-edit-label="Title">Closed 3D lumenoid morphogenesis</span>
     
   </h1>
     
@@ -553,7 +553,8 @@
     <div class="ctr-block">
       <h2 class="overview-label ctr-h">Background</h2>
       <div class="ctr-meta">
-        <div class="ctr-meta-row"><span class="ctr-meta-k">Question</span> <span class="ctr-meta-item">How do lumen pressure/volume and a basement-membrane shell set cell shape and curvature- dependent growth in a closed 3D lumenoid?
+        <div class="ctr-meta-row"><span class="ctr-meta-k">Question</span> <span class="ctr-meta-item" data-edit-kind="study" data-edit-field="question" data-edit-value="How do lumen pressure/volume and a basement-membrane shell set cell shape and curvature- dependent growth in a closed 3D lumenoid?
+" data-edit-multiline data-edit-label="Question">How do lumen pressure/volume and a basement-membrane shell set cell shape and curvature- dependent growth in a closed 3D lumenoid?
 </span></div>
         
       </div>
@@ -629,7 +630,8 @@
         <details class="finding-details">
           <summary class="finding-row">
             <span class="finding-status-glyph">✓</span>
-            <span class="finding-claim finding-statement">The closed lumenoid resolves over the tyssue engine: 78 cells, 606 faces and 298 vertices form a closed 3D shell (extent roughly +/-4.7 in x/y, -4.90 to +4.74 in z) enclosing a single lumen of volume 261.69; per-cell volumes (0.4961-3.4257) and areas (3.9018-15.6489) emerge finite and positive, and a basal surface of 78 faces (area 202.47) is exposed as the BM-coupling shell.
+            <span class="finding-claim finding-statement" data-edit-kind="study" data-edit-field="findings[F1-closed-shell-with-lumen].statement" data-edit-value="The closed lumenoid resolves over the tyssue engine: 78 cells, 606 faces and 298 vertices form a closed 3D shell (extent roughly +/-4.7 in x/y, -4.90 to +4.74 in z) enclosing a single lumen of volume 261.69; per-cell volumes (0.4961-3.4257) and areas (3.9018-15.6489) emerge finite and positive, and a basal surface of 78 faces (area 202.47) is exposed as the BM-coupling shell.
+" data-edit-multiline data-edit-label="Finding F1-closed-shell-with-lumen">The closed lumenoid resolves over the tyssue engine: 78 cells, 606 faces and 298 vertices form a closed 3D shell (extent roughly +/-4.7 in x/y, -4.90 to +4.74 in z) enclosing a single lumen of volume 261.69; per-cell volumes (0.4961-3.4257) and areas (3.9018-15.6489) emerge finite and positive, and a basal surface of 78 faces (area 202.47) is exposed as the BM-coupling shell.
 </span>
             
             <span class="finding-chip">via <code>lumenoid-is-closed-with-cells</code></span>
@@ -685,7 +687,8 @@
         <details class="finding-details">
           <summary class="finding-row">
             <span class="finding-status-glyph">✓</span>
-            <span class="finding-claim finding-statement">Stepping the EulerSolver five times (dt 0.01) keeps per-cell area and volume finite and positive, with no NaN or blow-up -- the closed lumenoid shell is numerically stable over short integration.
+            <span class="finding-claim finding-statement" data-edit-kind="study" data-edit-field="findings[F2-steps-stably].statement" data-edit-value="Stepping the EulerSolver five times (dt 0.01) keeps per-cell area and volume finite and positive, with no NaN or blow-up -- the closed lumenoid shell is numerically stable over short integration.
+" data-edit-multiline data-edit-label="Finding F2-steps-stably">Stepping the EulerSolver five times (dt 0.01) keeps per-cell area and volume finite and positive, with no NaN or blow-up -- the closed lumenoid shell is numerically stable over short integration.
 </span>
             
             <span class="finding-chip">via <code>lumenoid-steps-stably</code></span>
@@ -740,7 +743,8 @@
         <details class="finding-details">
           <summary class="finding-row">
             <span class="finding-status-glyph">◐</span>
-            <span class="finding-claim finding-statement">The lumen sits at its preferred volume (pressure 0.0 at rest) and the BM is an effective basal surface with no explicit attachment, so the lumen-growth / pressure trajectory and the curvature-dependent cell-shape prediction -- the new morphogenesis claims -- are not yet tested. Only the closed rest-state geometry and the readable lumen/BM quantities are established.
+            <span class="finding-claim finding-statement" data-edit-kind="study" data-edit-field="findings[F3-lumen-pressure-and-bm-attachment-next].statement" data-edit-value="The lumen sits at its preferred volume (pressure 0.0 at rest) and the BM is an effective basal surface with no explicit attachment, so the lumen-growth / pressure trajectory and the curvature-dependent cell-shape prediction -- the new morphogenesis claims -- are not yet tested. Only the closed rest-state geometry and the readable lumen/BM quantities are established.
+" data-edit-multiline data-edit-label="Finding F3-lumen-pressure-and-bm-attachment-next">The lumen sits at its preferred volume (pressure 0.0 at rest) and the BM is an effective basal surface with no explicit attachment, so the lumen-growth / pressure trajectory and the curvature-dependent cell-shape prediction -- the new morphogenesis claims -- are not yet tested. Only the closed rest-state geometry and the readable lumen/BM quantities are established.
 </span>
             
             <span class="finding-chip">via <code>lumenoid-is-closed-with-cells</code></span>
@@ -1555,7 +1559,7 @@ pass_if: {"note": "per-cell area and volume finite and positive after 5 Euler st
 </section>
 
 </main>
-<script>window.__DASH_CONFIG__ = { mode: "snapshot", interactiveUrl: "https://github.com/vivarium-collective/viva-lumenoid", basePath: "/viva-lumenoid/workbench", inputsDownloadBase: "https://github.com/vivarium-collective/viva-lumenoid/raw/main", provenance: {"repo_slug": "vivarium-collective/viva-lumenoid", "repo_url": "https://github.com/vivarium-collective/viva-lumenoid", "commit": "5a5c758c4c9fdd97cdf3c9e3f75552694e82752e", "commit_url": "https://github.com/vivarium-collective/viva-lumenoid/commit/5a5c758c4c9fdd97cdf3c9e3f75552694e82752e", "branch": "main", "lockfile": "uv.lock@aacfed865f15", "generated_at": "2026-10-30 03:23 UTC"} };</script>
+<script>window.__DASH_CONFIG__ = { mode: "snapshot", interactiveUrl: "https://github.com/vivarium-collective/viva-lumenoid", basePath: "/viva-lumenoid/workbench", inputsDownloadBase: "https://github.com/vivarium-collective/viva-lumenoid/raw/main", provenance: {"repo_slug": "vivarium-collective/viva-lumenoid", "repo_url": "https://github.com/vivarium-collective/viva-lumenoid", "commit": "5a5c758c4c9fdd97cdf3c9e3f75552694e82752e", "commit_url": "https://github.com/vivarium-collective/viva-lumenoid/commit/5a5c758c4c9fdd97cdf3c9e3f75552694e82752e", "branch": "main", "lockfile": "uv.lock@aacfed865f15", "generated_at": "2026-10-30 13:14 UTC"} };</script>
 <script src="/viva-lumenoid/workbench/assets/data-source.js"></script>
 <script src="/viva-lumenoid/workbench/assets/toast.js"></script>
 <script>
@@ -1690,6 +1694,7 @@ window._seedFollowupProposal = _seedFollowupProposal;
 <script src="/viva-lumenoid/workbench/assets/comparison-view.js"></script>
 <script src="/viva-lumenoid/workbench/assets/study-detail.js"></script>
 <script src="/viva-lumenoid/workbench/assets/study-feedback.js"></script>
+<script src="/viva-lumenoid/workbench/assets/inline-edit.js"></script>
 <script>
 // Re-assert the refresh-aware seed handlers AFTER study-detail.js (which
 // defines its own navigate-away _seedFollowupStudy). The embedded
