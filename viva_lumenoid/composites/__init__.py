@@ -74,6 +74,29 @@ _COMMON_PARAMS = {
     "bending_k": {"type": "float", "default": 0.0,
                   "description": "Junction bending stiffness (0 = floppy central-force network)."},
     "seed": {"type": "integer", "default": 12345, "description": "RNG seed."},
+    # Geometry + staged-protocol knobs the studies' canonical runs set. These are
+    # all real CollagenParams fields; declared here so the @composite_generator
+    # accepts a study's full baseline.params (it validates against this dict).
+    "slab_thickness": {"type": "float", "default": 2.0,
+                       "description": "Slab thickness (units of the bead spacing a)."},
+    "bead_spacing_nm": {"type": "float", "default": 125.0,
+                        "description": "Collagen-IV rod bead spacing (nm)."},
+    "persistence_length_nm": {"type": "float", "default": 40.0,
+                              "description": "Rod persistence length (nm)."},
+    "make_every": {"type": "integer", "default": 500,
+                   "description": "Crosslink make-attempt interval (steps)."},
+    "break_every": {"type": "integer", "default": 100,
+                    "description": "Crosslink break-attempt interval (steps)."},
+    "factor_mult": {"type": "float", "default": 0.66,
+                    "description": "Break/make ratio (FactorMult)."},
+    "target_strain": {"type": "float", "default": 0.15,
+                      "description": "Stretch-ramp target strain."},
+    "strain_rate": {"type": "float", "default": 0.0015,
+                    "description": "Stretch-ramp strain rate (per LJ time)."},
+    "assemble_steps": {"type": "integer", "default": 8000,
+                       "description": "Assemble-phase step count."},
+    "hold_steps": {"type": "integer", "default": 16000,
+                   "description": "Hold-phase step count."},
 }
 
 _BENDING_PARAMS = dict(_COMMON_PARAMS)

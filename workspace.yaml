@@ -4,6 +4,14 @@ created: "2026-09-30"
 plugin_version: 0.4.16
 package_path: viva_lumenoid
 
+# Baseline run length (outer composite steps) for `vivarium-workbench run study`.
+# The collagen staged protocol runs in composite time (t_assemble 80 + t_relax 160
+# + t_stretch 100 + t_hold_elastic 160 ≈ 500, then hold_viscous), one time unit per
+# outer step — so the default fallback of 5 stops mid-assemble. 600 completes the
+# full protocol into hold_viscous so phase-based readouts have data to grade.
+runtime:
+  default_n_steps: 600
+
 # Directory layout. New workspaces group their research directories under a
 # tidy `workspace/` subtree (the dirs below); the hidden `.pbg/` machine state
 # stays at the root like `.git/`. Tooling (dashboard, lint, skills) resolves

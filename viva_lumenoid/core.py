@@ -84,6 +84,26 @@ def register_workspace_processes(core):
     return core
 
 
+def register_base_emitters(core):
+    """Register the base emitter links (``ram-emitter`` etc.) into ``core``.
+
+    ``allocate_core()`` does not install them in this process-bigraph version, so a
+    composite that emits to ``local:ram-emitter`` fails at build with
+    ``no link found at address: {'protocol': 'local', 'data': 'ram-emitter'}``.
+    Idempotent — a name already present is left untouched.
+    """
+    try:
+        from process_bigraph.emitter import RAMEmitter, ConsoleEmitter, JSONEmitter
+    except Exception:
+        return core
+    for name, cls in (("ram-emitter", RAMEmitter),
+                      ("console-emitter", ConsoleEmitter),
+                      ("json-emitter", JSONEmitter)):
+        if name not in core.link_registry:
+            core.register_link(name, cls)
+    return core
+
+
 def build_core(core=None):
     """Return a process-bigraph core with this workspace's processes registered.
 
@@ -94,4 +114,5 @@ def build_core(core=None):
     if core is None:
         core = allocate_core()
     register_workspace_processes(core)
+    register_base_emitters(core)
     return core
