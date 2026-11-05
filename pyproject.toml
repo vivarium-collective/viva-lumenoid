@@ -66,6 +66,13 @@ allow-direct-references = true
 [tool.hatch.build.targets.wheel]
 packages = ["viva_lumenoid"]
 
+[tool.uv]
+# Transitive consumers (e.g. viva-simularium) conservatively cap
+# viva-discovery-engine <0.2. The v0.2.0 generation cycle is additive/compatible,
+# so force it across the whole graph until those consumers widen their cap (or the
+# engine lands on PyPI and they relock). Localized to this workspace's resolve.
+override-dependencies = ["viva-discovery-engine>=0.2,<0.3"]
+
 [tool.uv.sources]
 vivarium-workbench = { git = "https://github.com/vivarium-collective/vivarium-workbench.git", branch = "main" }
 # The AI-drivable generation contract is in engine v0.2.0 (released as a git tag,
