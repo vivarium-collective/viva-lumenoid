@@ -23,6 +23,10 @@ dependencies = [
     # Extracted from viva-template as of v0.4.16; provides the `vivarium-workbench
     # serve` CLI invoked by scripts/serve.sh.
     "vivarium-workbench",
+    # The discovery engine (investigation/study framework + the AI-drivable cycle).
+    # Direct-pinned to v0.2.0 (the generation contract) so the cycle panel + filler
+    # resolve to it rather than a stale transitive PyPI version.
+    "viva-discovery-engine>=0.2,<0.3",
 ]
 
 [project.optional-dependencies]
@@ -62,8 +66,20 @@ allow-direct-references = true
 [tool.hatch.build.targets.wheel]
 packages = ["viva_lumenoid"]
 
+[tool.uv]
+# Transitive consumers (e.g. viva-simularium) conservatively cap
+# viva-discovery-engine <0.2. The v0.2.0 generation cycle is additive/compatible,
+# so force it across the whole graph until those consumers widen their cap (or the
+# engine lands on PyPI and they relock). Localized to this workspace's resolve.
+override-dependencies = ["viva-discovery-engine>=0.2,<0.3"]
+
 [tool.uv.sources]
 vivarium-workbench = { git = "https://github.com/vivarium-collective/vivarium-workbench.git", branch = "main" }
+# The AI-drivable generation contract is in engine v0.2.0 (released as a git tag,
+# not yet on PyPI) and on viva-superpowers main — pin both from git so the whole
+# updated cycle resolves consistently (the workbench also pins them this way, #1570).
+viva-discovery-engine = { git = "https://github.com/vivarium-collective/discovery-engine.git", tag = "v0.2.0" }
+viva-superpowers = { git = "https://github.com/vivarium-collective/viva-superpowers.git", branch = "main" }
 viva-lammps = { git = "https://github.com/vivarium-collective/viva-lammps.git", branch = "main" }
 viva-smoldyn = { git = "https://github.com/vivarium-collective/viva-smoldyn.git", branch = "main" }
 viva-simularium = { git = "https://github.com/vivarium-collective/viva-simularium.git", branch = "main" }
