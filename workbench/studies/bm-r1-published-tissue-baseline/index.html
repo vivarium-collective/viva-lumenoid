@@ -236,6 +236,9 @@
 /* findings */
 .findings-section{padding:14px 16px;background:#fafbff;border:1px solid #c7d2fe;border-radius:8px}
 .finding-card{padding:12px 14px;margin:10px 0;border:1px solid #e2e8f0;border-left:5px solid #6366f1;border-radius:6px;background:#fff}
+/* Brief highlight when an item is reached via a ?ev= evidence deep-link. */
+.ev-flash{animation:ev-flash-kf 1.9s ease-out;scroll-margin-top:12px}
+@keyframes ev-flash-kf{0%{box-shadow:0 0 0 3px #fbbf24}70%{box-shadow:0 0 0 3px rgba(251,191,36,0.45)}100%{box-shadow:0 0 0 0 rgba(251,191,36,0)}}
 .finding-card.finding-status-confirms{border-left-color:#10b981}
 .finding-card.finding-status-partial{border-left-color:#f59e0b}
 .finding-card.finding-status-contradicts{border-left-color:#dc2626}
@@ -544,7 +547,8 @@
 
     <div class="ctr-block">
       <h2 class="overview-label ctr-h">Claim</h2>
-      <p class="ctr-text">The homogeneous prism model recovers the paper&#39;s confinement regimes: a fixed-volume cell grows TALL under a stiff, slowly-relaxing basement membrane and SPREADS flat under a soft, fast-relaxing one, with cell height rising monotonically along both the BM stiffness and the BM relaxation axes of the Figure 1G map.
+      <p class="ctr-text" data-edit-kind="study" data-edit-field="claim" data-edit-value="The homogeneous prism model recovers the paper&#39;s confinement regimes: a fixed-volume cell grows TALL under a stiff, slowly-relaxing basement membrane and SPREADS flat under a soft, fast-relaxing one, with cell height rising monotonically along both the BM stiffness and the BM relaxation axes of the Figure 1G map.
+" data-edit-multiline data-edit-label="Claim">The homogeneous prism model recovers the paper&#39;s confinement regimes: a fixed-volume cell grows TALL under a stiff, slowly-relaxing basement membrane and SPREADS flat under a soft, fast-relaxing one, with cell height rising monotonically along both the BM stiffness and the BM relaxation axes of the Figure 1G map.
 </p>
       
     </div>
@@ -598,7 +602,9 @@
 
     <div class="ctr-block">
       <h2 class="overview-label ctr-h">Result</h2>
-      <p class="ctr-text">The regime map reproduces cleanly and deterministically. Cell height rises monotonically with BM stiffness at every relaxation value and with BM relaxation at every stiffness value (both axes strictly non-decreasing across the full grid). The stiff, slowly-relaxing corner (stiffness 5.0, relaxation 50.0) confines the cell to height 0.630, while the soft, fast-relaxing corner (stiffness 0.1, relaxation 1.0) lets it spread to height 0.380 -- a 1.66x taller cell under confinement. The mechanism is the BM reaction stress: it reaches 2.64 (reduced units) in the confined corner and only 0.031 in the spread corner, so the stiff/slow membrane resists basal-area growth and keeps the cell tall. Heights are dimensionless and all below the initial height of 1.0 (the cell spreads from its starting shape as it proliferates); the reproduced result is the RELATIVE regime topology and the monotonic trends, not an absolute height in microns.
+      
+      <p class="ctr-text" data-edit-kind="study" data-edit-field="result" data-edit-value="The regime map reproduces cleanly and deterministically. Cell height rises monotonically with BM stiffness at every relaxation value and with BM relaxation at every stiffness value (both axes strictly non-decreasing across the full grid). The stiff, slowly-relaxing corner (stiffness 5.0, relaxation 50.0) confines the cell to height 0.630, while the soft, fast-relaxing corner (stiffness 0.1, relaxation 1.0) lets it spread to height 0.380 -- a 1.66x taller cell under confinement. The mechanism is the BM reaction stress: it reaches 2.64 (reduced units) in the confined corner and only 0.031 in the spread corner, so the stiff/slow membrane resists basal-area growth and keeps the cell tall. Heights are dimensionless and all below the initial height of 1.0 (the cell spreads from its starting shape as it proliferates); the reproduced result is the RELATIVE regime topology and the monotonic trends, not an absolute height in microns.
+" data-edit-multiline data-edit-label="Result">The regime map reproduces cleanly and deterministically. Cell height rises monotonically with BM stiffness at every relaxation value and with BM relaxation at every stiffness value (both axes strictly non-decreasing across the full grid). The stiff, slowly-relaxing corner (stiffness 5.0, relaxation 50.0) confines the cell to height 0.630, while the soft, fast-relaxing corner (stiffness 0.1, relaxation 1.0) lets it spread to height 0.380 -- a 1.66x taller cell under confinement. The mechanism is the BM reaction stress: it reaches 2.64 (reduced units) in the confined corner and only 0.031 in the spread corner, so the stiff/slow membrane resists basal-area growth and keeps the cell tall. Heights are dimensionless and all below the initial height of 1.0 (the cell spreads from its starting shape as it proliferates); the reproduced result is the RELATIVE regime topology and the monotonic trends, not an absolute height in microns.
 </p>
       
       
@@ -639,7 +645,7 @@
       
       
       
-      <div class="finding-card finding-kind-biological finding-status-confirms">
+      <div class="finding-card finding-kind-biological finding-status-confirms" id="finding-F1-regime-topology-reproduced">
         <details class="finding-details">
           <summary class="finding-row">
             <span class="finding-status-glyph">✓</span>
@@ -703,7 +709,7 @@
       
       
       
-      <div class="finding-card finding-kind-computational finding-status-confirms">
+      <div class="finding-card finding-kind-computational finding-status-confirms" id="finding-F2-confinement-driven-by-bm-stress">
         <details class="finding-details">
           <summary class="finding-row">
             <span class="finding-status-glyph">✓</span>
@@ -759,7 +765,7 @@
       
       
       
-      <div class="finding-card finding-kind-methodological finding-status-partial">
+      <div class="finding-card finding-kind-methodological finding-status-partial" id="finding-F3-relative-not-absolute">
         <details class="finding-details">
           <summary class="finding-row">
             <span class="finding-status-glyph">◐</span>
@@ -1859,7 +1865,7 @@ pass_if: {"note": "bm_stress(confined) \u003e\u003e bm_stress(spread)", "op": "g
 </section>
 
 </main>
-<script>window.__DASH_CONFIG__ = { mode: "snapshot", interactiveUrl: "https://github.com/vivarium-collective/viva-lumenoid", basePath: "/viva-lumenoid/workbench", inputsDownloadBase: "https://github.com/vivarium-collective/viva-lumenoid/raw/main", provenance: {"repo_slug": "vivarium-collective/viva-lumenoid", "repo_url": "https://github.com/vivarium-collective/viva-lumenoid", "commit": "5a5c758c4c9fdd97cdf3c9e3f75552694e82752e", "commit_url": "https://github.com/vivarium-collective/viva-lumenoid/commit/5a5c758c4c9fdd97cdf3c9e3f75552694e82752e", "branch": "main", "lockfile": "uv.lock@aacfed865f15", "generated_at": "2026-10-30 13:14 UTC"} };</script>
+<script>window.__DASH_CONFIG__ = { mode: "snapshot", interactiveUrl: "https://github.com/vivarium-collective/viva-lumenoid", basePath: "/viva-lumenoid/workbench", inputsDownloadBase: "https://github.com/vivarium-collective/viva-lumenoid/raw/main", provenance: {"repo_slug": "vivarium-collective/viva-lumenoid", "repo_url": "https://github.com/vivarium-collective/viva-lumenoid", "commit": "d160a2527722d99f4a7b71320c0fee3c6b9d4abb", "commit_url": "https://github.com/vivarium-collective/viva-lumenoid/commit/d160a2527722d99f4a7b71320c0fee3c6b9d4abb", "branch": "main", "lockfile": "uv.lock@675bcf9aa232", "generated_at": "2026-11-05 18:59 UTC"} };</script>
 <script src="/viva-lumenoid/workbench/assets/data-source.js"></script>
 <script src="/viva-lumenoid/workbench/assets/toast.js"></script>
 <script>

@@ -236,6 +236,9 @@
 /* findings */
 .findings-section{padding:14px 16px;background:#fafbff;border:1px solid #c7d2fe;border-radius:8px}
 .finding-card{padding:12px 14px;margin:10px 0;border:1px solid #e2e8f0;border-left:5px solid #6366f1;border-radius:6px;background:#fff}
+/* Brief highlight when an item is reached via a ?ev= evidence deep-link. */
+.ev-flash{animation:ev-flash-kf 1.9s ease-out;scroll-margin-top:12px}
+@keyframes ev-flash-kf{0%{box-shadow:0 0 0 3px #fbbf24}70%{box-shadow:0 0 0 3px rgba(251,191,36,0.45)}100%{box-shadow:0 0 0 0 rgba(251,191,36,0)}}
 .finding-card.finding-status-confirms{border-left-color:#10b981}
 .finding-card.finding-status-partial{border-left-color:#f59e0b}
 .finding-card.finding-status-contradicts{border-left-color:#dc2626}
@@ -544,7 +547,8 @@
 
     <div class="ctr-block">
       <h2 class="overview-label ctr-h">Claim</h2>
-      <p class="ctr-text">With a material-insertion process added to the collagen IV network, the composite now expresses all THREE Barrientos Fig 2B-C supply modes and reproduces their ordering: under growth (expansion), remodeling WITH insertion sustains and grows the crosslinked network, remodeling WITHOUT insertion cannot replace diluted material, and a frozen (no-remodeling) network is static and dilutes most. The ordering holds strictly across rod count, crosslink count, and crosslink-per-area density, and is robust across 3 seeds.
+      <p class="ctr-text" data-edit-kind="study" data-edit-field="claim" data-edit-value="With a material-insertion process added to the collagen IV network, the composite now expresses all THREE Barrientos Fig 2B-C supply modes and reproduces their ordering: under growth (expansion), remodeling WITH insertion sustains and grows the crosslinked network, remodeling WITHOUT insertion cannot replace diluted material, and a frozen (no-remodeling) network is static and dilutes most. The ordering holds strictly across rod count, crosslink count, and crosslink-per-area density, and is robust across 3 seeds.
+" data-edit-multiline data-edit-label="Claim">With a material-insertion process added to the collagen IV network, the composite now expresses all THREE Barrientos Fig 2B-C supply modes and reproduces their ordering: under growth (expansion), remodeling WITH insertion sustains and grows the crosslinked network, remodeling WITHOUT insertion cannot replace diluted material, and a frozen (no-remodeling) network is static and dilutes most. The ordering holds strictly across rod count, crosslink count, and crosslink-per-area density, and is robust across 3 seeds.
 </p>
       
     </div>
@@ -605,7 +609,9 @@
 
     <div class="ctr-block">
       <h2 class="overview-label ctr-h">Result</h2>
-      <p class="ctr-text">All three modes are now expressible and the ordering reproduces cleanly (seed 12345): rod count grows ONLY with insertion (60-&gt;96 with insertion vs 60-&gt;60 for both remodeling-without-insertion and frozen); crosslink count orders strictly with_insertion 45 &gt; without_insertion 33 &gt; frozen 17; and crosslink-per-area density (which accounts for expansion dilution) orders with_insertion 0.654 &gt; without_insertion 0.480 &gt; frozen 0.247. The density ordering and the rod-count ordering each hold at 3/3 seeds (density with_insertion 0.654/0.567/0.611, without_insertion 0.480/0.451/0.436, frozen 0.247/0.218/0.087). The insertion mechanism itself is exact and deterministic: inserting k rods/step grows the atom count by exactly 2k/step and inserted beads become crosslink-eligible automatically (crosslinks climb as rods are supplied), while insert_on=0 holds the atom count flat. HONEST SCOPE: with the faithful real-angle set the assembly/remodeling path is formation-dominant (breaking is suppressed while crosslinks form at this scale), so modes 2-3 &#34;remodeling&#34; is formation + supply rather than full make/break turnover; and density is a per-area connectivity proxy, not the largest-connected-component metric. The three-mode ORDERING of Fig 2B-C is reproduced; the absolute connectivity statistics are a documented follow-up.
+      
+      <p class="ctr-text" data-edit-kind="study" data-edit-field="result" data-edit-value="All three modes are now expressible and the ordering reproduces cleanly (seed 12345): rod count grows ONLY with insertion (60-&gt;96 with insertion vs 60-&gt;60 for both remodeling-without-insertion and frozen); crosslink count orders strictly with_insertion 45 &gt; without_insertion 33 &gt; frozen 17; and crosslink-per-area density (which accounts for expansion dilution) orders with_insertion 0.654 &gt; without_insertion 0.480 &gt; frozen 0.247. The density ordering and the rod-count ordering each hold at 3/3 seeds (density with_insertion 0.654/0.567/0.611, without_insertion 0.480/0.451/0.436, frozen 0.247/0.218/0.087). The insertion mechanism itself is exact and deterministic: inserting k rods/step grows the atom count by exactly 2k/step and inserted beads become crosslink-eligible automatically (crosslinks climb as rods are supplied), while insert_on=0 holds the atom count flat. HONEST SCOPE: with the faithful real-angle set the assembly/remodeling path is formation-dominant (breaking is suppressed while crosslinks form at this scale), so modes 2-3 &#34;remodeling&#34; is formation + supply rather than full make/break turnover; and density is a per-area connectivity proxy, not the largest-connected-component metric. The three-mode ORDERING of Fig 2B-C is reproduced; the absolute connectivity statistics are a documented follow-up.
+" data-edit-multiline data-edit-label="Result">All three modes are now expressible and the ordering reproduces cleanly (seed 12345): rod count grows ONLY with insertion (60-&gt;96 with insertion vs 60-&gt;60 for both remodeling-without-insertion and frozen); crosslink count orders strictly with_insertion 45 &gt; without_insertion 33 &gt; frozen 17; and crosslink-per-area density (which accounts for expansion dilution) orders with_insertion 0.654 &gt; without_insertion 0.480 &gt; frozen 0.247. The density ordering and the rod-count ordering each hold at 3/3 seeds (density with_insertion 0.654/0.567/0.611, without_insertion 0.480/0.451/0.436, frozen 0.247/0.218/0.087). The insertion mechanism itself is exact and deterministic: inserting k rods/step grows the atom count by exactly 2k/step and inserted beads become crosslink-eligible automatically (crosslinks climb as rods are supplied), while insert_on=0 holds the atom count flat. HONEST SCOPE: with the faithful real-angle set the assembly/remodeling path is formation-dominant (breaking is suppressed while crosslinks form at this scale), so modes 2-3 &#34;remodeling&#34; is formation + supply rather than full make/break turnover; and density is a per-area connectivity proxy, not the largest-connected-component metric. The three-mode ORDERING of Fig 2B-C is reproduced; the absolute connectivity statistics are a documented follow-up.
 </p>
       
       
@@ -646,7 +652,7 @@
       
       
       
-      <div class="finding-card finding-kind-biological finding-status-confirms">
+      <div class="finding-card finding-kind-biological finding-status-confirms" id="finding-F1-three-supply-modes-ordered">
         <details class="finding-details">
           <summary class="finding-row">
             <span class="finding-status-glyph">✓</span>
@@ -710,7 +716,7 @@
       
       
       
-      <div class="finding-card finding-kind-computational finding-status-confirms">
+      <div class="finding-card finding-kind-computational finding-status-confirms" id="finding-F2-insertion-mechanism-exact">
         <details class="finding-details">
           <summary class="finding-row">
             <span class="finding-status-glyph">✓</span>
@@ -767,7 +773,7 @@
       
       
       
-      <div class="finding-card finding-kind-methodological finding-status-partial">
+      <div class="finding-card finding-kind-methodological finding-status-partial" id="finding-F3-remodeling-formation-dominant-scope">
         <details class="finding-details">
           <summary class="finding-row">
             <span class="finding-status-glyph">◐</span>
@@ -1929,7 +1935,7 @@ cites:   ["meadowcroft2025nonequilibrium"]</pre>
 </section>
 
 </main>
-<script>window.__DASH_CONFIG__ = { mode: "snapshot", interactiveUrl: "https://github.com/vivarium-collective/viva-lumenoid", basePath: "/viva-lumenoid/workbench", inputsDownloadBase: "https://github.com/vivarium-collective/viva-lumenoid/raw/main", provenance: {"repo_slug": "vivarium-collective/viva-lumenoid", "repo_url": "https://github.com/vivarium-collective/viva-lumenoid", "commit": "5a5c758c4c9fdd97cdf3c9e3f75552694e82752e", "commit_url": "https://github.com/vivarium-collective/viva-lumenoid/commit/5a5c758c4c9fdd97cdf3c9e3f75552694e82752e", "branch": "main", "lockfile": "uv.lock@aacfed865f15", "generated_at": "2026-10-30 13:14 UTC"} };</script>
+<script>window.__DASH_CONFIG__ = { mode: "snapshot", interactiveUrl: "https://github.com/vivarium-collective/viva-lumenoid", basePath: "/viva-lumenoid/workbench", inputsDownloadBase: "https://github.com/vivarium-collective/viva-lumenoid/raw/main", provenance: {"repo_slug": "vivarium-collective/viva-lumenoid", "repo_url": "https://github.com/vivarium-collective/viva-lumenoid", "commit": "d160a2527722d99f4a7b71320c0fee3c6b9d4abb", "commit_url": "https://github.com/vivarium-collective/viva-lumenoid/commit/d160a2527722d99f4a7b71320c0fee3c6b9d4abb", "branch": "main", "lockfile": "uv.lock@675bcf9aa232", "generated_at": "2026-11-05 18:59 UTC"} };</script>
 <script src="/viva-lumenoid/workbench/assets/data-source.js"></script>
 <script src="/viva-lumenoid/workbench/assets/toast.js"></script>
 <script>

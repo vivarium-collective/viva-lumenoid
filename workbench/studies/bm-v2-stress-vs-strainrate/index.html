@@ -235,6 +235,9 @@
 /* findings */
 .findings-section{padding:14px 16px;background:#fafbff;border:1px solid #c7d2fe;border-radius:8px}
 .finding-card{padding:12px 14px;margin:10px 0;border:1px solid #e2e8f0;border-left:5px solid #6366f1;border-radius:6px;background:#fff}
+/* Brief highlight when an item is reached via a ?ev= evidence deep-link. */
+.ev-flash{animation:ev-flash-kf 1.9s ease-out;scroll-margin-top:12px}
+@keyframes ev-flash-kf{0%{box-shadow:0 0 0 3px #fbbf24}70%{box-shadow:0 0 0 3px rgba(251,191,36,0.45)}100%{box-shadow:0 0 0 0 rgba(251,191,36,0)}}
 .finding-card.finding-status-confirms{border-left-color:#10b981}
 .finding-card.finding-status-partial{border-left-color:#f59e0b}
 .finding-card.finding-status-contradicts{border-left-color:#dc2626}
@@ -543,7 +546,8 @@
 
     <div class="ctr-block">
       <h2 class="overview-label ctr-h">Claim</h2>
-      <p class="ctr-text">Imposing an equibiaxial in-plane strain rate ε̇ on the growing collagen IV network and reading the steady-state stress σ(ε̇) gives the effective viscosity η = σ/ε̇ (viscous at slow rates) and the rate at which the response turns elastic — the σ(ε̇) relation a vertex model needs.
+      <p class="ctr-text" data-edit-kind="study" data-edit-field="claim" data-edit-value="Imposing an equibiaxial in-plane strain rate ε̇ on the growing collagen IV network and reading the steady-state stress σ(ε̇) gives the effective viscosity η = σ/ε̇ (viscous at slow rates) and the rate at which the response turns elastic — the σ(ε̇) relation a vertex model needs.
+" data-edit-multiline data-edit-label="Claim">Imposing an equibiaxial in-plane strain rate ε̇ on the growing collagen IV network and reading the steady-state stress σ(ε̇) gives the effective viscosity η = σ/ε̇ (viscous at slow rates) and the rate at which the response turns elastic — the σ(ε̇) relation a vertex model needs.
 </p>
       
     </div>
@@ -577,7 +581,9 @@
 
     <div class="ctr-block">
       <h2 class="overview-label ctr-h">Result</h2>
-      <p class="ctr-text">FIGURE-REVIEW RECONCILIATION (2026-10-20): the earlier definitive claim — a &#34;faithful, density-calibrated, seed-ensemble&#34; E(ε̇) rising ≈7→11 Pa (stiffening) with τ(ε̇)≈36-51 τ — was drawn from a SINGLE seed [12345] at UN-matched total strain and is not supported. Re-running the sweep at a MATCHED total strain (ε=0.12) over 3 independent seeds (real bounded LAMMPS, 60-rod NC1-angle- stabilized network) shows σ(ε̇) nearly flat/overlapping across rates (1.24±0.29 → 1.01±0.20 → 0.99±0.37 LJ for ε̇ = 2e-3 / 6e-3 / 1.8e-2) WHILE the crosslink density falls with rate (2.00 → 1.31 → 1.04 crosslinks/rod), because a slower stretch leaves more wall-clock time for crosslink assembly. The apparent mechanical resistance is therefore CONFOUNDED by rate-dependent density, not a clean rate-stiffening signal; η_eff = σ/ε̇ falls 621 → 55 LJ·time. τ(ε̇) is not cleanly resolved at this bounded scale, so De = τ·ε̇ is not reported. A density-matched dense multi-seed sweep (Mac-mini candidate) is required to separate true rate-stiffening from the density confound and to resolve τ(ε̇).
+      
+      <p class="ctr-text" data-edit-kind="study" data-edit-field="result" data-edit-value="FIGURE-REVIEW RECONCILIATION (2026-10-20): the earlier definitive claim — a &#34;faithful, density-calibrated, seed-ensemble&#34; E(ε̇) rising ≈7→11 Pa (stiffening) with τ(ε̇)≈36-51 τ — was drawn from a SINGLE seed [12345] at UN-matched total strain and is not supported. Re-running the sweep at a MATCHED total strain (ε=0.12) over 3 independent seeds (real bounded LAMMPS, 60-rod NC1-angle- stabilized network) shows σ(ε̇) nearly flat/overlapping across rates (1.24±0.29 → 1.01±0.20 → 0.99±0.37 LJ for ε̇ = 2e-3 / 6e-3 / 1.8e-2) WHILE the crosslink density falls with rate (2.00 → 1.31 → 1.04 crosslinks/rod), because a slower stretch leaves more wall-clock time for crosslink assembly. The apparent mechanical resistance is therefore CONFOUNDED by rate-dependent density, not a clean rate-stiffening signal; η_eff = σ/ε̇ falls 621 → 55 LJ·time. τ(ε̇) is not cleanly resolved at this bounded scale, so De = τ·ε̇ is not reported. A density-matched dense multi-seed sweep (Mac-mini candidate) is required to separate true rate-stiffening from the density confound and to resolve τ(ε̇).
+" data-edit-multiline data-edit-label="Result">FIGURE-REVIEW RECONCILIATION (2026-10-20): the earlier definitive claim — a &#34;faithful, density-calibrated, seed-ensemble&#34; E(ε̇) rising ≈7→11 Pa (stiffening) with τ(ε̇)≈36-51 τ — was drawn from a SINGLE seed [12345] at UN-matched total strain and is not supported. Re-running the sweep at a MATCHED total strain (ε=0.12) over 3 independent seeds (real bounded LAMMPS, 60-rod NC1-angle- stabilized network) shows σ(ε̇) nearly flat/overlapping across rates (1.24±0.29 → 1.01±0.20 → 0.99±0.37 LJ for ε̇ = 2e-3 / 6e-3 / 1.8e-2) WHILE the crosslink density falls with rate (2.00 → 1.31 → 1.04 crosslinks/rod), because a slower stretch leaves more wall-clock time for crosslink assembly. The apparent mechanical resistance is therefore CONFOUNDED by rate-dependent density, not a clean rate-stiffening signal; η_eff = σ/ε̇ falls 621 → 55 LJ·time. τ(ε̇) is not cleanly resolved at this bounded scale, so De = τ·ε̇ is not reported. A density-matched dense multi-seed sweep (Mac-mini candidate) is required to separate true rate-stiffening from the density confound and to resolve τ(ε̇).
 </p>
       
       
@@ -1425,7 +1431,7 @@ pass_if: {"note": "\u03b7 ~ const at slow \u03b5\u0307", "op": "plateau"}</pre>
 </section>
 
 </main>
-<script>window.__DASH_CONFIG__ = { mode: "snapshot", interactiveUrl: "https://github.com/vivarium-collective/viva-lumenoid", basePath: "/viva-lumenoid/workbench", inputsDownloadBase: "https://github.com/vivarium-collective/viva-lumenoid/raw/main", provenance: {"repo_slug": "vivarium-collective/viva-lumenoid", "repo_url": "https://github.com/vivarium-collective/viva-lumenoid", "commit": "5a5c758c4c9fdd97cdf3c9e3f75552694e82752e", "commit_url": "https://github.com/vivarium-collective/viva-lumenoid/commit/5a5c758c4c9fdd97cdf3c9e3f75552694e82752e", "branch": "main", "lockfile": "uv.lock@aacfed865f15", "generated_at": "2026-10-30 13:14 UTC"} };</script>
+<script>window.__DASH_CONFIG__ = { mode: "snapshot", interactiveUrl: "https://github.com/vivarium-collective/viva-lumenoid", basePath: "/viva-lumenoid/workbench", inputsDownloadBase: "https://github.com/vivarium-collective/viva-lumenoid/raw/main", provenance: {"repo_slug": "vivarium-collective/viva-lumenoid", "repo_url": "https://github.com/vivarium-collective/viva-lumenoid", "commit": "d160a2527722d99f4a7b71320c0fee3c6b9d4abb", "commit_url": "https://github.com/vivarium-collective/viva-lumenoid/commit/d160a2527722d99f4a7b71320c0fee3c6b9d4abb", "branch": "main", "lockfile": "uv.lock@675bcf9aa232", "generated_at": "2026-11-05 18:59 UTC"} };</script>
 <script src="/viva-lumenoid/workbench/assets/data-source.js"></script>
 <script src="/viva-lumenoid/workbench/assets/toast.js"></script>
 <script>

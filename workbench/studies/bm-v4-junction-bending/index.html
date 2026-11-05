@@ -235,6 +235,9 @@
 /* findings */
 .findings-section{padding:14px 16px;background:#fafbff;border:1px solid #c7d2fe;border-radius:8px}
 .finding-card{padding:12px 14px;margin:10px 0;border:1px solid #e2e8f0;border-left:5px solid #6366f1;border-radius:6px;background:#fff}
+/* Brief highlight when an item is reached via a ?ev= evidence deep-link. */
+.ev-flash{animation:ev-flash-kf 1.9s ease-out;scroll-margin-top:12px}
+@keyframes ev-flash-kf{0%{box-shadow:0 0 0 3px #fbbf24}70%{box-shadow:0 0 0 3px rgba(251,191,36,0.45)}100%{box-shadow:0 0 0 0 rgba(251,191,36,0)}}
 .finding-card.finding-status-confirms{border-left-color:#10b981}
 .finding-card.finding-status-partial{border-left-color:#f59e0b}
 .finding-card.finding-status-contradicts{border-left-color:#dc2626}
@@ -543,7 +546,8 @@
 
     <div class="ctr-block">
       <h2 class="overview-label ctr-h">Claim</h2>
-      <p class="ctr-text">Junction bending is a released feature (an NC1 angle of stiffness 4.0 at 180°, plus 7S angles), not a new ingredient; how it is applied decides whether it gives a usable modulus. Pinning as-formed restraints on after assembly is ill-conditioned — the sign flips and no reproducible value emerges. Creating real harmonic angles as the crosslinks form, so the network equilibrates with them active (matching the released bond/react templates), gives a positive, well-conditioned, reproducible modulus. The released model is not floppy once its angles are active; its modulus is finite and strongly density-dependent.
+      <p class="ctr-text" data-edit-kind="study" data-edit-field="claim" data-edit-value="Junction bending is a released feature (an NC1 angle of stiffness 4.0 at 180°, plus 7S angles), not a new ingredient; how it is applied decides whether it gives a usable modulus. Pinning as-formed restraints on after assembly is ill-conditioned — the sign flips and no reproducible value emerges. Creating real harmonic angles as the crosslinks form, so the network equilibrates with them active (matching the released bond/react templates), gives a positive, well-conditioned, reproducible modulus. The released model is not floppy once its angles are active; its modulus is finite and strongly density-dependent.
+" data-edit-multiline data-edit-label="Claim">Junction bending is a released feature (an NC1 angle of stiffness 4.0 at 180°, plus 7S angles), not a new ingredient; how it is applied decides whether it gives a usable modulus. Pinning as-formed restraints on after assembly is ill-conditioned — the sign flips and no reproducible value emerges. Creating real harmonic angles as the crosslinks form, so the network equilibrates with them active (matching the released bond/react templates), gives a positive, well-conditioned, reproducible modulus. The released model is not floppy once its angles are active; its modulus is finite and strongly density-dependent.
 </p>
       
     </div>
@@ -577,7 +581,9 @@
 
     <div class="ctr-block">
       <h2 class="overview-label ctr-h">Result</h2>
-      <p class="ctr-text">Three ways of applying the released NC1 bending (stiffness 4.0), three seeds each at the corrected parameters: central-force (angles off) gives per-seed moduli of −0.54/−1.32/−1.14 LJ (consistent with zero); as-formed restraints give 0.9/−2.53/−0.47 (ill-conditioned, sign-flipping); and real angles created during assembly give 36.7/27.6/37.5 LJ — positive, same sign, reproducible. Creating the angles during assembly resolves the ill-conditioning. The modulus is strongly density-dependent (≈79 Pa at 2.9 crosslinks per rod, falling to ≈7 Pa at 1.0 per rod). With per-angle deletion in place (delete all and recreate on break), the stiff network also remodels during the viscous hold, giving a reproducible remodelling time (τ ≈ 40 τ) alongside the modulus. Assembly stays formation-only because allowing both formation and breaking at this scale is too sparse to percolate (≈0.18 per rod); matching the released dense balance needs the authors&#39; dense initial configuration and grand-canonical monomer exchange.
+      
+      <p class="ctr-text" data-edit-kind="study" data-edit-field="result" data-edit-value="Three ways of applying the released NC1 bending (stiffness 4.0), three seeds each at the corrected parameters: central-force (angles off) gives per-seed moduli of −0.54/−1.32/−1.14 LJ (consistent with zero); as-formed restraints give 0.9/−2.53/−0.47 (ill-conditioned, sign-flipping); and real angles created during assembly give 36.7/27.6/37.5 LJ — positive, same sign, reproducible. Creating the angles during assembly resolves the ill-conditioning. The modulus is strongly density-dependent (≈79 Pa at 2.9 crosslinks per rod, falling to ≈7 Pa at 1.0 per rod). With per-angle deletion in place (delete all and recreate on break), the stiff network also remodels during the viscous hold, giving a reproducible remodelling time (τ ≈ 40 τ) alongside the modulus. Assembly stays formation-only because allowing both formation and breaking at this scale is too sparse to percolate (≈0.18 per rod); matching the released dense balance needs the authors&#39; dense initial configuration and grand-canonical monomer exchange.
+" data-edit-multiline data-edit-label="Result">Three ways of applying the released NC1 bending (stiffness 4.0), three seeds each at the corrected parameters: central-force (angles off) gives per-seed moduli of −0.54/−1.32/−1.14 LJ (consistent with zero); as-formed restraints give 0.9/−2.53/−0.47 (ill-conditioned, sign-flipping); and real angles created during assembly give 36.7/27.6/37.5 LJ — positive, same sign, reproducible. Creating the angles during assembly resolves the ill-conditioning. The modulus is strongly density-dependent (≈79 Pa at 2.9 crosslinks per rod, falling to ≈7 Pa at 1.0 per rod). With per-angle deletion in place (delete all and recreate on break), the stiff network also remodels during the viscous hold, giving a reproducible remodelling time (τ ≈ 40 τ) alongside the modulus. Assembly stays formation-only because allowing both formation and breaking at this scale is too sparse to percolate (≈0.18 per rod); matching the released dense balance needs the authors&#39; dense initial configuration and grand-canonical monomer exchange.
 </p>
       
       
@@ -613,7 +619,7 @@
       
       
       
-      <div class="finding-card finding-kind-methodological finding-status-novel">
+      <div class="finding-card finding-kind-methodological finding-status-novel" id="finding-F1-bending-implemented">
         <details class="finding-details">
           <summary class="finding-row">
             <span class="finding-status-glyph">◆</span>
@@ -669,7 +675,7 @@
       
       
       
-      <div class="finding-card finding-kind-computational finding-status-partial">
+      <div class="finding-card finding-kind-computational finding-status-partial" id="finding-F2-asformed-restraint-illconditioned">
         <details class="finding-details">
           <summary class="finding-row">
             <span class="finding-status-glyph">◐</span>
@@ -726,7 +732,7 @@
       
       
       
-      <div class="finding-card finding-kind-computational finding-status-confirms">
+      <div class="finding-card finding-kind-computational finding-status-confirms" id="finding-F3-faithful-angles-reproducible">
         <details class="finding-details">
           <summary class="finding-row">
             <span class="finding-status-glyph">✓</span>
@@ -1706,7 +1712,7 @@ pass_if: {"note": "IQR \u003c 0.5\u00b7|median| \u2014 met by the real-angle pat
 </section>
 
 </main>
-<script>window.__DASH_CONFIG__ = { mode: "snapshot", interactiveUrl: "https://github.com/vivarium-collective/viva-lumenoid", basePath: "/viva-lumenoid/workbench", inputsDownloadBase: "https://github.com/vivarium-collective/viva-lumenoid/raw/main", provenance: {"repo_slug": "vivarium-collective/viva-lumenoid", "repo_url": "https://github.com/vivarium-collective/viva-lumenoid", "commit": "5a5c758c4c9fdd97cdf3c9e3f75552694e82752e", "commit_url": "https://github.com/vivarium-collective/viva-lumenoid/commit/5a5c758c4c9fdd97cdf3c9e3f75552694e82752e", "branch": "main", "lockfile": "uv.lock@aacfed865f15", "generated_at": "2026-10-30 13:14 UTC"} };</script>
+<script>window.__DASH_CONFIG__ = { mode: "snapshot", interactiveUrl: "https://github.com/vivarium-collective/viva-lumenoid", basePath: "/viva-lumenoid/workbench", inputsDownloadBase: "https://github.com/vivarium-collective/viva-lumenoid/raw/main", provenance: {"repo_slug": "vivarium-collective/viva-lumenoid", "repo_url": "https://github.com/vivarium-collective/viva-lumenoid", "commit": "d160a2527722d99f4a7b71320c0fee3c6b9d4abb", "commit_url": "https://github.com/vivarium-collective/viva-lumenoid/commit/d160a2527722d99f4a7b71320c0fee3c6b9d4abb", "branch": "main", "lockfile": "uv.lock@675bcf9aa232", "generated_at": "2026-11-05 18:59 UTC"} };</script>
 <script src="/viva-lumenoid/workbench/assets/data-source.js"></script>
 <script src="/viva-lumenoid/workbench/assets/toast.js"></script>
 <script>

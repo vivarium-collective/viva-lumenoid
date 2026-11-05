@@ -236,6 +236,9 @@
 /* findings */
 .findings-section{padding:14px 16px;background:#fafbff;border:1px solid #c7d2fe;border-radius:8px}
 .finding-card{padding:12px 14px;margin:10px 0;border:1px solid #e2e8f0;border-left:5px solid #6366f1;border-radius:6px;background:#fff}
+/* Brief highlight when an item is reached via a ?ev= evidence deep-link. */
+.ev-flash{animation:ev-flash-kf 1.9s ease-out;scroll-margin-top:12px}
+@keyframes ev-flash-kf{0%{box-shadow:0 0 0 3px #fbbf24}70%{box-shadow:0 0 0 3px rgba(251,191,36,0.45)}100%{box-shadow:0 0 0 0 rgba(251,191,36,0)}}
 .finding-card.finding-status-confirms{border-left-color:#10b981}
 .finding-card.finding-status-partial{border-left-color:#f59e0b}
 .finding-card.finding-status-contradicts{border-left-color:#dc2626}
@@ -544,7 +547,8 @@
 
     <div class="ctr-block">
       <h2 class="overview-label ctr-h">Claim</h2>
-      <p class="ctr-text">The explicit 3D epithelial monolayer runs over the Tyssue engine and per-cell heights and volumes emerge directly from the apical/lateral/basal surface energies and volume targets -- no thin-prism approximation: 206 cells with finite, positive volumes (0.58-1.16) and a monolayer z-extent of ~1.0. The no-BM / elastic-BM / relaxing-BM controls the morphology comparison needs are not yet in the composite.
+      <p class="ctr-text" data-edit-kind="study" data-edit-field="claim" data-edit-value="The explicit 3D epithelial monolayer runs over the Tyssue engine and per-cell heights and volumes emerge directly from the apical/lateral/basal surface energies and volume targets -- no thin-prism approximation: 206 cells with finite, positive volumes (0.58-1.16) and a monolayer z-extent of ~1.0. The no-BM / elastic-BM / relaxing-BM controls the morphology comparison needs are not yet in the composite.
+" data-edit-multiline data-edit-label="Claim">The explicit 3D epithelial monolayer runs over the Tyssue engine and per-cell heights and volumes emerge directly from the apical/lateral/basal surface energies and volume targets -- no thin-prism approximation: 206 cells with finite, positive volumes (0.58-1.16) and a monolayer z-extent of ~1.0. The no-BM / elastic-BM / relaxing-BM controls the morphology comparison needs are not yet in the composite.
 </p>
       
     </div>
@@ -595,7 +599,9 @@
 
     <div class="ctr-block">
       <h2 class="overview-label ctr-h">Result</h2>
-      <p class="ctr-text">The 3D monolayer resolves and relaxes deterministically. The mesh carries 206 cells, 1590 faces and 820 vertices; per-cell basal area ranges 4.51-6.38 and per-cell volume 0.58-1.16, all finite and positive. The monolayer z-extent is ~1.0 (vertices span z in [-1.0, 0.0]), so per-cell height emerges from the explicit surface energies and volume targets rather than from a prism approximation. Stepping the EulerSolver five times (dt 0.01) keeps per-cell area and volume finite and positive -- no NaN or blow-up (the face-level volume column is NaN by construction, since faces carry no enclosed volume in a monolayer). The honest gap: the no-BM, elastic-BM and relaxing-BM controls that the Fig target morphology ordering needs are not in the composite yet, so the &#34;taller under slow relaxation&#34; ordering is not tested here.
+      
+      <p class="ctr-text" data-edit-kind="study" data-edit-field="result" data-edit-value="The 3D monolayer resolves and relaxes deterministically. The mesh carries 206 cells, 1590 faces and 820 vertices; per-cell basal area ranges 4.51-6.38 and per-cell volume 0.58-1.16, all finite and positive. The monolayer z-extent is ~1.0 (vertices span z in [-1.0, 0.0]), so per-cell height emerges from the explicit surface energies and volume targets rather than from a prism approximation. Stepping the EulerSolver five times (dt 0.01) keeps per-cell area and volume finite and positive -- no NaN or blow-up (the face-level volume column is NaN by construction, since faces carry no enclosed volume in a monolayer). The honest gap: the no-BM, elastic-BM and relaxing-BM controls that the Fig target morphology ordering needs are not in the composite yet, so the &#34;taller under slow relaxation&#34; ordering is not tested here.
+" data-edit-multiline data-edit-label="Result">The 3D monolayer resolves and relaxes deterministically. The mesh carries 206 cells, 1590 faces and 820 vertices; per-cell basal area ranges 4.51-6.38 and per-cell volume 0.58-1.16, all finite and positive. The monolayer z-extent is ~1.0 (vertices span z in [-1.0, 0.0]), so per-cell height emerges from the explicit surface energies and volume targets rather than from a prism approximation. Stepping the EulerSolver five times (dt 0.01) keeps per-cell area and volume finite and positive -- no NaN or blow-up (the face-level volume column is NaN by construction, since faces carry no enclosed volume in a monolayer). The honest gap: the no-BM, elastic-BM and relaxing-BM controls that the Fig target morphology ordering needs are not in the composite yet, so the &#34;taller under slow relaxation&#34; ordering is not tested here.
 </p>
       
       
@@ -631,7 +637,7 @@
       
       
       
-      <div class="finding-card finding-kind-computational finding-status-confirms">
+      <div class="finding-card finding-kind-computational finding-status-confirms" id="finding-F1-per-cell-volumes-emerge">
         <details class="finding-details">
           <summary class="finding-row">
             <span class="finding-status-glyph">✓</span>
@@ -688,7 +694,7 @@
       
       
       
-      <div class="finding-card finding-kind-computational finding-status-confirms">
+      <div class="finding-card finding-kind-computational finding-status-confirms" id="finding-F2-steps-stably">
         <details class="finding-details">
           <summary class="finding-row">
             <span class="finding-status-glyph">✓</span>
@@ -744,7 +750,7 @@
       
       
       
-      <div class="finding-card finding-kind-methodological finding-status-partial">
+      <div class="finding-card finding-kind-methodological finding-status-partial" id="finding-F3-bm-controls-not-yet-wired">
         <details class="finding-details">
           <summary class="finding-row">
             <span class="finding-status-glyph">◐</span>
@@ -800,7 +806,7 @@
       
       
       
-      <div class="finding-card finding-kind-computational finding-status-confirms">
+      <div class="finding-card finding-kind-computational finding-status-confirms" id="finding-F4-preferred-volume-growth-confined-by-bm">
         <details class="finding-details">
           <summary class="finding-row">
             <span class="finding-status-glyph">✓</span>
@@ -857,7 +863,7 @@
       
       
       
-      <div class="finding-card finding-kind-computational finding-status-partial">
+      <div class="finding-card finding-kind-computational finding-status-partial" id="finding-F5-confinement-raises-height-directional">
         <details class="finding-details">
           <summary class="finding-row">
             <span class="finding-status-glyph">◐</span>
@@ -1813,7 +1819,7 @@ pass_if: {"note": "stiff height 1.138 \u003e= free 1.133 (directional, not calib
 </section>
 
 </main>
-<script>window.__DASH_CONFIG__ = { mode: "snapshot", interactiveUrl: "https://github.com/vivarium-collective/viva-lumenoid", basePath: "/viva-lumenoid/workbench", inputsDownloadBase: "https://github.com/vivarium-collective/viva-lumenoid/raw/main", provenance: {"repo_slug": "vivarium-collective/viva-lumenoid", "repo_url": "https://github.com/vivarium-collective/viva-lumenoid", "commit": "5a5c758c4c9fdd97cdf3c9e3f75552694e82752e", "commit_url": "https://github.com/vivarium-collective/viva-lumenoid/commit/5a5c758c4c9fdd97cdf3c9e3f75552694e82752e", "branch": "main", "lockfile": "uv.lock@aacfed865f15", "generated_at": "2026-10-30 13:14 UTC"} };</script>
+<script>window.__DASH_CONFIG__ = { mode: "snapshot", interactiveUrl: "https://github.com/vivarium-collective/viva-lumenoid", basePath: "/viva-lumenoid/workbench", inputsDownloadBase: "https://github.com/vivarium-collective/viva-lumenoid/raw/main", provenance: {"repo_slug": "vivarium-collective/viva-lumenoid", "repo_url": "https://github.com/vivarium-collective/viva-lumenoid", "commit": "d160a2527722d99f4a7b71320c0fee3c6b9d4abb", "commit_url": "https://github.com/vivarium-collective/viva-lumenoid/commit/d160a2527722d99f4a7b71320c0fee3c6b9d4abb", "branch": "main", "lockfile": "uv.lock@675bcf9aa232", "generated_at": "2026-11-05 18:59 UTC"} };</script>
 <script src="/viva-lumenoid/workbench/assets/data-source.js"></script>
 <script src="/viva-lumenoid/workbench/assets/toast.js"></script>
 <script>
