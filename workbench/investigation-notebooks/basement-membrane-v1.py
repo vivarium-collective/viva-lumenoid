@@ -382,7 +382,7 @@ _save_viz('bm-v1-stage1-modulus-remodelling', 'stage1-movie-3d', _render_one('ht
 # | test | measures | passes if |
 # | --- | --- | --- |
 # | network-assembles _(primary)_ | kind=count field=n_crosslinks when=end-of-assemble | op gt value 0 field n_crosslinks |
-# | elastic-modulus-consistent-with-floppy _(primary)_ | kind=slope field=sigma_inplane versus=strain phase=stretch ensemble=6 | op consistent_with_zero note floppy network; z < 4 |
+# | elastic-modulus-consistent-with-floppy _(primary)_ | kind=slope field=sigma_inplane versus=strain phase=stretch ensemble=6 | op consistent_with_zero tolerance 0.132 note floppy: |E| within a 0.132 LJ tolerance of zero (2 sigma ensemble noise; a rigid network is ~30 LJ). Graded natively by discovery-engine >=0.2.1 (DE #43). |
 # | relaxation-decays-not-densifies _(primary)_ | kind=delta field=sigma_inplane phase=hold_viscous compare_to=crosslink_count | op decreases note crosslinks decay 46→3; stress drops in the correct direction |
 # | remodelling-time-calibratable _(secondary)_ | kind=relaxation_time field=sigma_inplane phase=hold_viscous convert=hours | op calibratable target_hours 20 range_hours 3-30 across systems |
 
@@ -604,7 +604,7 @@ _save_viz('bm-v3-junction-bending-rigidity', 'rigidity-movie-3d', _render_one('h
 # | test | measures | passes if |
 # | --- | --- | --- |
 # | z-stays-below-threshold _(primary)_ | kind=max field=coordination_z | op lt value 4.0 field max_z |
-# | modulus-stays-floppy _(primary)_ | kind=value field=elastic_modulus_vs_z ensemble=3 | op consistent_with_zero note all CIs span 0 |
+# | modulus-stays-floppy _(primary)_ | kind=value field=elastic_modulus_vs_z ensemble=3 | op consistent_with_zero tolerance 0.361 note floppy: |E| within a 0.361 LJ tolerance of zero (2 sigma ensemble noise; a rigid network is ~30 LJ). Graded natively by discovery-engine >=0.2.1 (DE #43). |
 
 # ## Study: Native junction-bending modulus (`bm-v4-junction-bending`)
 #
@@ -709,7 +709,7 @@ _save_viz('bm-v4-junction-bending', 'bending-movie-3d', _render_one('html:bendin
 #
 # | test | measures | passes if |
 # | --- | --- | --- |
-# | floppy-baseline-clean _(primary)_ | kind=value field=modulus_vs_bending_k at=bending_k=0 | op near_zero tol 0.1 |
+# | floppy-baseline-clean _(primary)_ | kind=value field=modulus_vs_bending_k at=bending_k=0 | op near_zero tolerance 0.132 note floppy: |E| within a 0.132 LJ tolerance of zero (2 sigma ensemble noise; a rigid network is ~30 LJ). Graded natively by discovery-engine >=0.2.1 (DE #43). |
 # | bending-changes-mechanics _(primary)_ | kind=magnitude field=modulus_vs_bending_k at=bending_k>0 | op gt value 1.0 note |E| jumps orders of magnitude above floppy |
 # | reproducible-modulus _(primary)_ | kind=iqr_over_median field=modulus_vs_bending_k at=bending_k>0 | op lt value 0.5 note IQR < 0.5·|median| — met by the real-angle path |
 
