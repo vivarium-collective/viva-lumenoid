@@ -275,12 +275,22 @@ def _render_one(address, config, runs_db, study_yaml, overrides=None):
 # === Parameters — edit any value, then re-run from the Run cell below ===
 # Each entry is the composite's current default; the comment explains it.
 ov_viva_lumenoid_composites_stage1_composite = {
-    'n_rods'   : 200,   # Number of two-bead collagen IV rods.
-    'box_xy'   : 20.0,   # In-plane box size (units of the bead spacing a).
-    'make_prob': 0.12,   # Per-attempt crosslink formation probability (MP proxy).
-    'off_rate' : 0.02,   # Force-independent crosslink off-rate (per LJ time).
-    'bending_k': 0.0,   # Junction bending stiffness (0 = floppy central-force network).
-    'seed'     : 12345,   # RNG seed.
+    'n_rods'               : 200,   # Number of two-bead collagen IV rods.
+    'box_xy'               : 20.0,   # In-plane box size (units of the bead spacing a).
+    'make_prob'            : 0.12,   # Per-attempt crosslink formation probability (MP proxy).
+    'off_rate'             : 0.02,   # Force-independent crosslink off-rate (per LJ time).
+    'bending_k'            : 0.0,   # Junction bending stiffness (0 = floppy central-force network).
+    'seed'                 : 12345,   # RNG seed.
+    'slab_thickness'       : 2.0,   # Slab thickness (units of the bead spacing a).
+    'bead_spacing_nm'      : 125.0,   # Collagen-IV rod bead spacing (nm).
+    'persistence_length_nm': 40.0,   # Rod persistence length (nm).
+    'make_every'           : 500,   # Crosslink make-attempt interval (steps).
+    'break_every'          : 100,   # Crosslink break-attempt interval (steps).
+    'factor_mult'          : 0.66,   # Break/make ratio (FactorMult).
+    'target_strain'        : 0.15,   # Stretch-ramp target strain.
+    'strain_rate'          : 0.0015,   # Stretch-ramp strain rate (per LJ time).
+    'assemble_steps'       : 8000,   # Assemble-phase step count.
+    'hold_steps'           : 16000,   # Hold-phase step count.
 }
 
 # ### Run
@@ -401,12 +411,22 @@ _save_viz('bm-v1-stage1-modulus-remodelling', 'stage1-movie-3d', _render_one('ht
 # === Parameters — edit any value, then re-run from the Run cell below ===
 # Each entry is the composite's current default; the comment explains it.
 ov_viva_lumenoid_composites_stage2_sweep = {
-    'n_rods'   : 200,   # Number of two-bead collagen IV rods.
-    'box_xy'   : 20.0,   # In-plane box size (units of the bead spacing a).
-    'make_prob': 0.12,   # Per-attempt crosslink formation probability (MP proxy).
-    'off_rate' : 0.02,   # Force-independent crosslink off-rate (per LJ time).
-    'bending_k': 0.0,   # Junction bending stiffness (0 = floppy central-force network).
-    'seed'     : 12345,   # RNG seed.
+    'n_rods'               : 200,   # Number of two-bead collagen IV rods.
+    'box_xy'               : 20.0,   # In-plane box size (units of the bead spacing a).
+    'make_prob'            : 0.12,   # Per-attempt crosslink formation probability (MP proxy).
+    'off_rate'             : 0.02,   # Force-independent crosslink off-rate (per LJ time).
+    'bending_k'            : 0.0,   # Junction bending stiffness (0 = floppy central-force network).
+    'seed'                 : 12345,   # RNG seed.
+    'slab_thickness'       : 2.0,   # Slab thickness (units of the bead spacing a).
+    'bead_spacing_nm'      : 125.0,   # Collagen-IV rod bead spacing (nm).
+    'persistence_length_nm': 40.0,   # Rod persistence length (nm).
+    'make_every'           : 500,   # Crosslink make-attempt interval (steps).
+    'break_every'          : 100,   # Crosslink break-attempt interval (steps).
+    'factor_mult'          : 0.66,   # Break/make ratio (FactorMult).
+    'target_strain'        : 0.15,   # Stretch-ramp target strain.
+    'strain_rate'          : 0.0015,   # Stretch-ramp strain rate (per LJ time).
+    'assemble_steps'       : 8000,   # Assemble-phase step count.
+    'hold_steps'           : 16000,   # Hold-phase step count.
 }
 
 # ### Run
@@ -510,12 +530,22 @@ _save_viz('bm-v2-stress-vs-strainrate', 'stage2-movie-3d', _render_one('html:sta
 # === Parameters — edit any value, then re-run from the Run cell below ===
 # Each entry is the composite's current default; the comment explains it.
 ov_viva_lumenoid_composites_connectivity_sweep = {
-    'n_rods'   : 200,   # Number of two-bead collagen IV rods.
-    'box_xy'   : 20.0,   # In-plane box size (units of the bead spacing a).
-    'make_prob': 0.12,   # Per-attempt crosslink formation probability (MP proxy).
-    'off_rate' : 0.02,   # Force-independent crosslink off-rate (per LJ time).
-    'bending_k': 0.0,   # Junction bending stiffness (0 = floppy central-force network).
-    'seed'     : 12345,   # RNG seed.
+    'n_rods'               : 200,   # Number of two-bead collagen IV rods.
+    'box_xy'               : 20.0,   # In-plane box size (units of the bead spacing a).
+    'make_prob'            : 0.12,   # Per-attempt crosslink formation probability (MP proxy).
+    'off_rate'             : 0.02,   # Force-independent crosslink off-rate (per LJ time).
+    'bending_k'            : 0.0,   # Junction bending stiffness (0 = floppy central-force network).
+    'seed'                 : 12345,   # RNG seed.
+    'slab_thickness'       : 2.0,   # Slab thickness (units of the bead spacing a).
+    'bead_spacing_nm'      : 125.0,   # Collagen-IV rod bead spacing (nm).
+    'persistence_length_nm': 40.0,   # Rod persistence length (nm).
+    'make_every'           : 500,   # Crosslink make-attempt interval (steps).
+    'break_every'          : 100,   # Crosslink break-attempt interval (steps).
+    'factor_mult'          : 0.66,   # Break/make ratio (FactorMult).
+    'target_strain'        : 0.15,   # Stretch-ramp target strain.
+    'strain_rate'          : 0.0015,   # Stretch-ramp strain rate (per LJ time).
+    'assemble_steps'       : 8000,   # Assemble-phase step count.
+    'hold_steps'           : 16000,   # Hold-phase step count.
 }
 
 # ### Run
@@ -601,12 +631,22 @@ _save_viz('bm-v3-junction-bending-rigidity', 'rigidity-movie-3d', _render_one('h
 # === Parameters — edit any value, then re-run from the Run cell below ===
 # Each entry is the composite's current default; the comment explains it.
 ov_viva_lumenoid_composites_bending_sweep = {
-    'n_rods'   : 200,   # Number of two-bead collagen IV rods.
-    'box_xy'   : 20.0,   # In-plane box size (units of the bead spacing a).
-    'make_prob': 0.12,   # Per-attempt crosslink formation probability (MP proxy).
-    'off_rate' : 0.02,   # Force-independent crosslink off-rate (per LJ time).
-    'bending_k': 50.0,   # Junction bending stiffness (fix restrain, as-formed angles); >0 rigidifies.
-    'seed'     : 12345,   # RNG seed.
+    'n_rods'               : 200,   # Number of two-bead collagen IV rods.
+    'box_xy'               : 20.0,   # In-plane box size (units of the bead spacing a).
+    'make_prob'            : 0.12,   # Per-attempt crosslink formation probability (MP proxy).
+    'off_rate'             : 0.02,   # Force-independent crosslink off-rate (per LJ time).
+    'bending_k'            : 50.0,   # Junction bending stiffness (fix restrain, as-formed angles); >0 rigidifies.
+    'seed'                 : 12345,   # RNG seed.
+    'slab_thickness'       : 2.0,   # Slab thickness (units of the bead spacing a).
+    'bead_spacing_nm'      : 125.0,   # Collagen-IV rod bead spacing (nm).
+    'persistence_length_nm': 40.0,   # Rod persistence length (nm).
+    'make_every'           : 500,   # Crosslink make-attempt interval (steps).
+    'break_every'          : 100,   # Crosslink break-attempt interval (steps).
+    'factor_mult'          : 0.66,   # Break/make ratio (FactorMult).
+    'target_strain'        : 0.15,   # Stretch-ramp target strain.
+    'strain_rate'          : 0.0015,   # Stretch-ramp strain rate (per LJ time).
+    'assemble_steps'       : 8000,   # Assemble-phase step count.
+    'hold_steps'           : 16000,   # Hold-phase step count.
 }
 
 # ### Run
@@ -702,12 +742,22 @@ _save_viz('bm-v4-junction-bending', 'bending-movie-3d', _render_one('html:bendin
 # === Parameters — edit any value, then re-run from the Run cell below ===
 # Each entry is the composite's current default; the comment explains it.
 ov_viva_lumenoid_composites_porosity_bundling = {
-    'n_rods'   : 200,   # Number of two-bead collagen IV rods.
-    'box_xy'   : 20.0,   # In-plane box size (units of the bead spacing a).
-    'make_prob': 0.12,   # Per-attempt crosslink formation probability (MP proxy).
-    'off_rate' : 0.02,   # Force-independent crosslink off-rate (per LJ time).
-    'bending_k': 0.0,   # Junction bending stiffness (0 = floppy central-force network).
-    'seed'     : 12345,   # RNG seed.
+    'n_rods'               : 200,   # Number of two-bead collagen IV rods.
+    'box_xy'               : 20.0,   # In-plane box size (units of the bead spacing a).
+    'make_prob'            : 0.12,   # Per-attempt crosslink formation probability (MP proxy).
+    'off_rate'             : 0.02,   # Force-independent crosslink off-rate (per LJ time).
+    'bending_k'            : 0.0,   # Junction bending stiffness (0 = floppy central-force network).
+    'seed'                 : 12345,   # RNG seed.
+    'slab_thickness'       : 2.0,   # Slab thickness (units of the bead spacing a).
+    'bead_spacing_nm'      : 125.0,   # Collagen-IV rod bead spacing (nm).
+    'persistence_length_nm': 40.0,   # Rod persistence length (nm).
+    'make_every'           : 500,   # Crosslink make-attempt interval (steps).
+    'break_every'          : 100,   # Crosslink break-attempt interval (steps).
+    'factor_mult'          : 0.66,   # Break/make ratio (FactorMult).
+    'target_strain'        : 0.15,   # Stretch-ramp target strain.
+    'strain_rate'          : 0.0015,   # Stretch-ramp strain rate (per LJ time).
+    'assemble_steps'       : 8000,   # Assemble-phase step count.
+    'hold_steps'           : 16000,   # Hold-phase step count.
 }
 
 # ### Run
@@ -898,12 +948,22 @@ _save_viz('bm-r1-published-tissue-baseline', 'r1_regime', _render_one('html:r1_r
 # === Parameters — edit any value, then re-run from the Run cell below ===
 # Each entry is the composite's current default; the comment explains it.
 ov_viva_lumenoid_composites_stage2_sweep = {
-    'n_rods'   : 200,   # Number of two-bead collagen IV rods.
-    'box_xy'   : 20.0,   # In-plane box size (units of the bead spacing a).
-    'make_prob': 0.12,   # Per-attempt crosslink formation probability (MP proxy).
-    'off_rate' : 0.02,   # Force-independent crosslink off-rate (per LJ time).
-    'bending_k': 0.0,   # Junction bending stiffness (0 = floppy central-force network).
-    'seed'     : 12345,   # RNG seed.
+    'n_rods'               : 200,   # Number of two-bead collagen IV rods.
+    'box_xy'               : 20.0,   # In-plane box size (units of the bead spacing a).
+    'make_prob'            : 0.12,   # Per-attempt crosslink formation probability (MP proxy).
+    'off_rate'             : 0.02,   # Force-independent crosslink off-rate (per LJ time).
+    'bending_k'            : 0.0,   # Junction bending stiffness (0 = floppy central-force network).
+    'seed'                 : 12345,   # RNG seed.
+    'slab_thickness'       : 2.0,   # Slab thickness (units of the bead spacing a).
+    'bead_spacing_nm'      : 125.0,   # Collagen-IV rod bead spacing (nm).
+    'persistence_length_nm': 40.0,   # Rod persistence length (nm).
+    'make_every'           : 500,   # Crosslink make-attempt interval (steps).
+    'break_every'          : 100,   # Crosslink break-attempt interval (steps).
+    'factor_mult'          : 0.66,   # Break/make ratio (FactorMult).
+    'target_strain'        : 0.15,   # Stretch-ramp target strain.
+    'strain_rate'          : 0.0015,   # Stretch-ramp strain rate (per LJ time).
+    'assemble_steps'       : 8000,   # Assemble-phase step count.
+    'hold_steps'           : 16000,   # Hold-phase step count.
 }
 
 # ### Run
@@ -1000,12 +1060,22 @@ _save_viz('bm-r2-collagen-network-rheology', 'r2_rheology', _render_one('html:r2
 # === Parameters — edit any value, then re-run from the Run cell below ===
 # Each entry is the composite's current default; the comment explains it.
 ov_viva_lumenoid_composites_stage2_sweep = {
-    'n_rods'   : 200,   # Number of two-bead collagen IV rods.
-    'box_xy'   : 20.0,   # In-plane box size (units of the bead spacing a).
-    'make_prob': 0.12,   # Per-attempt crosslink formation probability (MP proxy).
-    'off_rate' : 0.02,   # Force-independent crosslink off-rate (per LJ time).
-    'bending_k': 0.0,   # Junction bending stiffness (0 = floppy central-force network).
-    'seed'     : 12345,   # RNG seed.
+    'n_rods'               : 200,   # Number of two-bead collagen IV rods.
+    'box_xy'               : 20.0,   # In-plane box size (units of the bead spacing a).
+    'make_prob'            : 0.12,   # Per-attempt crosslink formation probability (MP proxy).
+    'off_rate'             : 0.02,   # Force-independent crosslink off-rate (per LJ time).
+    'bending_k'            : 0.0,   # Junction bending stiffness (0 = floppy central-force network).
+    'seed'                 : 12345,   # RNG seed.
+    'slab_thickness'       : 2.0,   # Slab thickness (units of the bead spacing a).
+    'bead_spacing_nm'      : 125.0,   # Collagen-IV rod bead spacing (nm).
+    'persistence_length_nm': 40.0,   # Rod persistence length (nm).
+    'make_every'           : 500,   # Crosslink make-attempt interval (steps).
+    'break_every'          : 100,   # Crosslink break-attempt interval (steps).
+    'factor_mult'          : 0.66,   # Break/make ratio (FactorMult).
+    'target_strain'        : 0.15,   # Stretch-ramp target strain.
+    'strain_rate'          : 0.0015,   # Stretch-ramp strain rate (per LJ time).
+    'assemble_steps'       : 8000,   # Assemble-phase step count.
+    'hold_steps'           : 16000,   # Hold-phase step count.
 }
 
 # ### Run
