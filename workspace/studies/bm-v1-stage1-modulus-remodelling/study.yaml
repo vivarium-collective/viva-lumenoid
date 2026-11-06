@@ -233,6 +233,24 @@ runs:
         evaluated_by: code
         grader: athermal_modulus_minimise
         note: '|E|_max -0.0225 LJ within +/-0.132 floppy band (2 sigma pooled noise); rigid ~30 LJ'
+  - name: bm-v1-viscous-hold-ensemble
+    run_id: bm-v1-viscous-hold-ensemble
+    status: completed
+    base_model: viva_lumenoid.composites.stage1_composite
+    seeds:
+      - 11
+      - 22
+      - 33
+    n_steps: 200
+    method: assemble (make+break) -> hold_viscous (break only, NO stretch) — avoids the fix-deform stretch instability; measures crosslink + stress decay
+    crosslink_delta_mean: -80.3
+    computed_outcomes:
+      relaxation-decays-not-densifies:
+        measured_value: -0.1832
+        result: pass
+        evaluated_by: code
+        grader: viscous_hold_delta
+        note: hold_viscous sigma delta -0.1832 LJ (<0 = decays), crosslinks decay mean -80.3 (break-only); the network remodels by breaking, not densifying
 readouts:
   - name: elastic_modulus_lj
     description: Tangent slope of the bond-virial stress vs strain during the stretch ramp (baseline pre-stress removed).
@@ -299,7 +317,10 @@ behavior_tests:
       Under breakage-only, the held stress DECAYS as crosslinks break (not
       densifies) — the corrected remodelling mechanism.
     measure: {kind: delta, field: sigma_inplane, phase: hold_viscous, compare_to: crosslink_count}
-    pass_if: {op: decreases, note: "crosslinks decay 46→3; stress drops in the correct direction"}
+    pass_if:
+      op: <
+      value: 0
+      note: 'hold_viscous sigma delta < 0: stress decays (network breaks down), not densifies. (Was op:decreases; expressed as <0 for code grading.)'
     units: kT/a^3
     requires_simulation: stage1-seed-ensemble
   - name: remodelling-time-calibratable
@@ -492,14 +513,17 @@ findings:
       it. Replacing it with a controlled random-deletion off-rate gives a make/break
       steady state and crosslink turnover.
     evidence:
-      from_run: stage1-seed-ensemble
+      from_run: bm-v1-viscous-hold-ensemble
       from_test: relaxation-decays-not-densifies
-      observed: "crosslinks 45→401 (old, densifies) vs steady ~54 then decay 46→3 (off-rate)"
+      observed: -0.1832
+      measured_value: -0.1832
+      observed_note: hold_viscous sigma delta -0.1832 LJ (<0), crosslinks decay mean -80.3 across 3 seeds (break-only) — remodels by breaking
     explanation: "Breaking must be length-independent to be a controllable rate."
     next_action: "adopted in viva_lumenoid/collagen.py; guarded by a regression test"
     next_action_type: refine_representation
     provenance:
-      run_ids: [stage1-seed-ensemble]
+      run_ids:
+        - bm-v1-viscous-hold-ensemble
   - id: F2-floppy-below-rigidity-percolation
     kind: computational
     status: confirms
@@ -608,3 +632,6 @@ canonical_runs:
     args:
       - bm-v1-stage1-modulus-remodelling
     description: 'Athermal (minimise) floppy elastic-modulus ensemble. Needs viva-lumenoid #88.'
+  - entry: viscous-relaxation
+    script: workspace/scripts/viscous_relaxation.py
+    description: 'Assemble -> break-only viscous hold (no stretch); backs F1-offrate-not-overstretch. Needs #88 + LAMMPS.'
