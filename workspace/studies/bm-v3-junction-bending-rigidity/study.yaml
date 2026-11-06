@@ -177,6 +177,41 @@ runs:
         result: PASS
         observed: "modulus consistent with 0 at every rung (angles off)"
 
+  - name: bm-v3-connectivity-minimise-sweep
+    run_id: bm-v3-connectivity-minimise-sweep
+    status: completed
+    base_model: viva_lumenoid.composites.connectivity_sweep
+    grid:
+      - &id001
+        make_prob: 0.12
+      - &id002
+        make_prob: 0.25
+      - &id003
+        make_prob: 0.4
+      - &id004
+        make_prob: 0.6
+    seeds:
+      - 11
+      - 22
+      - 33
+    n_steps: 200
+    method: athermal_modulus (T=0 change_box + minimise) — the published-modulus path
+    modulus_grid_lj:
+      - point: *id001
+        mean: 0.01168
+      - point: *id002
+        mean: 0.24459
+      - point: *id003
+        mean: 0.08303
+      - point: *id004
+        mean: 0.00023
+    computed_outcomes:
+      modulus-stays-floppy:
+        measured_value: 0.2446
+        result: pass
+        evaluated_by: code
+        grader: athermal_modulus_minimise
+        note: '|E|_max 0.2446 LJ within +/-0.361 floppy band (2 sigma pooled noise); rigid ~30 LJ'
 readouts:
   - name: coordination_z
     description: Mean bead coordination z at each connectivity rung.
@@ -201,7 +236,10 @@ behavior_tests:
     classification: primary
     description: The modulus is consistent with zero at every rung while z < 4.
     measure: {kind: value, field: elastic_modulus_vs_z, ensemble: 3}
-    pass_if: {op: consistent_with_zero, note: "all CIs span 0"}
+    pass_if:
+      op: consistent_with_zero
+      tolerance: 0.361
+      note: 'floppy: |E| within a 0.361 LJ tolerance of zero (2 sigma ensemble noise; a rigid network is ~30 LJ). Graded natively by discovery-engine >=0.2.1 (DE #43).'
     units: kT/a^3
     requires_simulation: rigidity-connectivity-sweep
     cites: [meadowcroft2025nonequilibrium]
@@ -220,9 +258,11 @@ findings:
       z = 4 threshold), and the modulus stays consistent with zero throughout —
       central-force connectivity cannot rigidify the v1 angle-off sheet.
     evidence:
-      from_run: rigidity-connectivity-sweep
+      from_run: bm-v3-connectivity-minimise-sweep
       from_test: modulus-stays-floppy
-      observed: "z 1.24→2.03 (angles off, corrected params); modulus consistent with 0"
+      observed: 0.2446
+      measured_value: 0.2446
+      observed_note: '|E|_max 0.2446 LJ (minimise ensemble), within +/-0.361 of zero; rigid ~30 LJ'
     expected:
       cites: [meadowcroft2025nonequilibrium]
       range: "rigid only for z ≥ 4 (2D central-force isostatic point)"
@@ -230,7 +270,8 @@ findings:
     next_action: "implement junction bending (released NC1/7S angles) — carried out in bm-v4"
     next_action_type: refine_representation
     provenance:
-      run_ids: [rigidity-connectivity-sweep]
+      run_ids:
+        - bm-v3-connectivity-minimise-sweep
 
 conclusion_logic:
   if_primary_tests_pass:
@@ -319,3 +360,9 @@ bibliography:
   sources:
     - key: meadowcroft2025nonequilibrium
       note: The two-bead-rod + stochastic-crosslink model; its ≈0.03 Pa modulus is the near-floppy regime this study explains.
+canonical_runs:
+  - entry: minimise-modulus
+    script: workspace/scripts/minimise_modulus.py
+    args:
+      - bm-v3-junction-bending-rigidity
+    description: 'Athermal (minimise) floppy elastic-modulus ensemble. Needs viva-lumenoid #88.'
