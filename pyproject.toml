@@ -75,10 +75,9 @@ override-dependencies = ["viva-discovery-engine>=0.2,<0.3"]
 
 [tool.uv.sources]
 vivarium-workbench = { git = "https://github.com/vivarium-collective/vivarium-workbench.git", branch = "main" }
-# The AI-drivable generation contract is in engine v0.2.0 (released as a git tag,
-# not yet on PyPI) and on viva-superpowers main — pin both from git so the whole
-# updated cycle resolves consistently (the workbench also pins them this way, #1570).
-viva-discovery-engine = { git = "https://github.com/vivarium-collective/discovery-engine.git", tag = "v0.2.0" }
+# viva-discovery-engine resolves from PyPI (>=0.2,<0.3 -> 0.2.1) — the AI-drivable
+# generation contract + the consistent_with_zero evidence grading (DE #43) are
+# published there. viva-superpowers stays on main for the LAMMPS/cycle plumbing.
 viva-superpowers = { git = "https://github.com/vivarium-collective/viva-superpowers.git", branch = "main" }
 viva-lammps = { git = "https://github.com/vivarium-collective/viva-lammps.git", branch = "main" }
 viva-smoldyn = { git = "https://github.com/vivarium-collective/viva-smoldyn.git", branch = "main" }
