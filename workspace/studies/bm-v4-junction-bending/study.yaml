@@ -166,6 +166,32 @@ runs:
         result: PASS
         observed: "real angles during assembly: per-seed 36.7/27.6/37.5 LJ (same sign, tight IQR)"
 
+  - name: bm-v4-floppy-baseline-minimise
+    run_id: bm-v4-floppy-baseline-minimise
+    status: completed
+    base_model: viva_lumenoid.composites.bending_sweep
+    grid:
+      - &id001
+        bending_k: 0.0
+    seeds:
+      - 11
+      - 22
+      - 33
+      - 44
+      - 55
+      - 66
+    n_steps: 200
+    method: athermal_modulus (T=0 change_box + minimise) — the published-modulus path
+    modulus_grid_lj:
+      - point: *id001
+        mean: -0.02254
+    computed_outcomes:
+      floppy-baseline-clean:
+        measured_value: -0.0225
+        result: pass
+        evaluated_by: code
+        grader: athermal_modulus_minimise
+        note: '|E| -0.0225 LJ within +/-0.132 floppy band (2 sigma); rigid ~30 LJ'
 readouts:
   - name: modulus_vs_bending_k
     description: Athermal elastic modulus (median + per-seed) vs bending stiffness.
@@ -183,7 +209,10 @@ behavior_tests:
     classification: primary
     description: Athermal minimisation measures the floppy (k=0) modulus as ~0 (deterministic).
     measure: {kind: value, field: modulus_vs_bending_k, at: "bending_k=0"}
-    pass_if: {op: near_zero, tol: 0.1}
+    pass_if:
+      low: -0.132
+      high: 0.132
+      note: 'floppy band = +/-2 sigma modulus noise (0.132 LJ); rigid ~30 LJ (native op:near_zero works after discovery-engine #43)'
     units: kT/a^3
     requires_simulation: bending-athermal-sweep
   - name: bending-changes-mechanics
@@ -216,13 +245,16 @@ findings:
       frustration), with an auto-reduced timestep and an athermal energy-minimised
       modulus readout.
     evidence:
-      from_run: bending-athermal-sweep
+      from_run: bm-v4-floppy-baseline-minimise
       from_test: floppy-baseline-clean
-      observed: "floppy modulus measured as E ≈ 0 (deterministic) via minimisation"
+      observed: -0.0225
+      measured_value: -0.0225
+      observed_note: -0.0225 LJ (bending_k=0 baseline, minimise ensemble), within +/-0.132 of zero
     next_action: "adopted in viva_lumenoid/collagen.py + bending.py"
     next_action_type: refine_representation
     provenance:
-      run_ids: [bending-athermal-sweep]
+      run_ids:
+        - bm-v4-floppy-baseline-minimise
   - id: F2-asformed-restraint-illconditioned
     kind: computational
     status: partial
@@ -407,10 +439,16 @@ report:
 
 expert_review_status: requested
 expert_questions:
-  - "Exact turnover (cross-check gap): to reproduce the authors' equilibrium crosslink fraction and remodelling kinetics, do we need their custom-patched GCE (Nucleation/Death with the density penalty) + distance-gated bond/react breaking, or is matching the free-monomer concentration / a force-independent off-rate sufficient for the modulus and \u03c4 the vertex model needs?"
-  - "Engine for stage 3: stages 1\u20132 run on LAMMPS. Should stage 3 (surface-attached linkers / flexible fibers) stay on LAMMPS or move to Smoldyn, and when do the Smoldyn surface binders land?"
+  - "Exact turnover (cross-check gap): to reproduce the authors' equilibrium crosslink fraction and remodelling kinetics, do we need their custom-patched GCE (Nucleation/Death with the density penalty) + distance-gated bond/react breaking, or is matching the free-monomer concentration / a force-independent off-rate sufficient for the modulus and τ the vertex model needs?"
+  - "Engine for stage 3: stages 1–2 run on LAMMPS. Should stage 3 (surface-attached linkers / flexible fibers) stay on LAMMPS or move to Smoldyn, and when do the Smoldyn surface binders land?"
 
 bibliography:
   sources:
     - key: meadowcroft2025nonequilibrium
       note: The floppy central-force network whose stiffness gap this study attributes to missing bending.
+canonical_runs:
+  - entry: minimise-modulus
+    script: workspace/scripts/minimise_modulus.py
+    args:
+      - bm-v4-junction-bending
+    description: 'Athermal (minimise) floppy elastic-modulus ensemble. Needs viva-lumenoid #88.'

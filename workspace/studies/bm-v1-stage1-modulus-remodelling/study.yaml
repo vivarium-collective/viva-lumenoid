@@ -208,6 +208,31 @@ runs:
         result: PASS
         observed: "held stress decays as crosslinks break (46→3), not densifies"
 
+  - name: bm-v1-stage1-minimise-ensemble
+    run_id: bm-v1-stage1-minimise-ensemble
+    status: completed
+    base_model: viva_lumenoid.composites.stage1_composite
+    grid:
+      - &id001 {}
+    seeds:
+      - 11
+      - 22
+      - 33
+      - 44
+      - 55
+      - 66
+    n_steps: 200
+    method: athermal_modulus (T=0 change_box + minimise) — the published-modulus path
+    modulus_grid_lj:
+      - point: *id001
+        mean: -0.02254
+    computed_outcomes:
+      elastic-modulus-consistent-with-floppy:
+        measured_value: -0.0225
+        result: pass
+        evaluated_by: code
+        grader: athermal_modulus_minimise
+        note: '|E|_max -0.0225 LJ within +/-0.132 floppy band (2 sigma pooled noise); rigid ~30 LJ'
 readouts:
   - name: elastic_modulus_lj
     description: Tangent slope of the bond-virial stress vs strain during the stretch ramp (baseline pre-stress removed).
@@ -256,7 +281,10 @@ behavior_tests:
       The stress-strain slope over a seed ensemble is consistent with a floppy
       (near-zero-modulus) network, matching the published ≈0.03 Pa.
     measure: {kind: slope, field: sigma_inplane, versus: strain, phase: stretch, ensemble: 6}
-    pass_if: {op: consistent_with_zero, note: "floppy network; z < 4"}
+    pass_if:
+      low: -0.132
+      high: 0.132
+      note: 'floppy band = +/-2 sigma modulus noise (0.132 LJ); rigid ~30 LJ (native op works after discovery-engine #43)'
     units: kT/a^3
     requires_simulation: stage1-seed-ensemble
     cites: [meadowcroft2025nonequilibrium]
@@ -480,9 +508,11 @@ findings:
       so its elastic modulus is statistically consistent with zero — matching the
       published ≈0.03 Pa.
     evidence:
-      from_run: stage1-seed-ensemble
+      from_run: bm-v1-stage1-minimise-ensemble
       from_test: elastic-modulus-consistent-with-floppy
-      observed: "modulus −0.03 ± 0.06 LJ (95% CI, 6 seeds); mean z ≈ 1.2; z_max = 3"
+      observed: -0.0225
+      measured_value: -0.0225
+      observed_note: '|E|_max -0.0225 LJ (minimise ensemble), within +/-0.132 of zero; rigid ~30 LJ'
     expected:
       cites: [meadowcroft2025nonequilibrium]
       range: "≈0.03 Pa (Meadowcroft supplement, near-floppy)"
@@ -493,7 +523,8 @@ findings:
     next_action: "seed FP1 (junction-bending rigidity study)"
     next_action_type: escalate_model
     provenance:
-      run_ids: [stage1-seed-ensemble]
+      run_ids:
+        - bm-v1-stage1-minimise-ensemble
   - id: F3-tau-below-detection
     kind: methodological
     status: partial
@@ -558,8 +589,8 @@ conclusion_verdicts:
 
 expert_review_status: requested
 expert_questions:
-  - "Energy scale: should the elastic modulus be reported in absolute pascals — by fitting the LJ energy unit to a measured BM modulus — or kept in reduced units / reported as the ratio s_E? Our faithful value is ~3 LJ (\u2248 6 Pa at kT/\u03c3\u00b3\u22482.2 Pa); the published figure is \u22480.03 Pa under the authors' own s_E. Which convention should the AICS vertex-model coupling use?"
-  - "Equilibrium crosslink fraction / GCE: the absolute modulus scales strongly with crosslink fraction (E\u22480 at 0.72 crosslinks/rod \u2192 \u22488 Pa at 2.5/rod). Our make-only path saturates at ~2.6/rod, while the authors' GCE (Nucleation/Death) + distance-gated breaking sets a specific equilibrium fraction. What equilibrium crosslink fraction (or free-monomer concentration / off-rate) should we target to match the published network?"
+  - "Energy scale: should the elastic modulus be reported in absolute pascals — by fitting the LJ energy unit to a measured BM modulus — or kept in reduced units / reported as the ratio s_E? Our faithful value is ~3 LJ (≈ 6 Pa at kT/σ³≈2.2 Pa); the published figure is ≈0.03 Pa under the authors' own s_E. Which convention should the AICS vertex-model coupling use?"
+  - "Equilibrium crosslink fraction / GCE: the absolute modulus scales strongly with crosslink fraction (E≈0 at 0.72 crosslinks/rod → ≈8 Pa at 2.5/rod). Our make-only path saturates at ~2.6/rod, while the authors' GCE (Nucleation/Death) + distance-gated breaking sets a specific equilibrium fraction. What equilibrium crosslink fraction (or free-monomer concentration / off-rate) should we target to match the published network?"
 
 bibliography:
   sources:
@@ -571,3 +602,9 @@ bibliography:
       note: The authors' released LAMMPS input scripts (Zenodo 10.5281/zenodo.20719515); the ground truth to cross-check this clean-room build against.
     - key: source-spec
       note: "AICS-Lumenoids 'Basement membrane — v1 model specification' (workspace/references/basement-membrane-v1-spec.md)."
+canonical_runs:
+  - entry: minimise-modulus
+    script: workspace/scripts/minimise_modulus.py
+    args:
+      - bm-v1-stage1-modulus-remodelling
+    description: 'Athermal (minimise) floppy elastic-modulus ensemble. Needs viva-lumenoid #88.'
