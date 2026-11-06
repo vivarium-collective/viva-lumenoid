@@ -639,10 +639,10 @@
             
             
             <div class="finding-evidence">
-              <strong>observed:</strong> floppy modulus measured as E ≈ 0 (deterministic) via minimisation · 
+              <strong>observed:</strong> -0.0225 · 
               
               via test <a href="#bt-floppy-baseline-clean" onclick="_gotoStudyTab('audit','bt-floppy-baseline-clean');return false;"><code>floppy-baseline-clean</code></a> · 
-              in run <a href="#run-bending-athermal-sweep"><code>bending-athermal-sweep</code></a>
+              in run <a href="#run-bm-v4-floppy-baseline-minimise"><code>bm-v4-floppy-baseline-minimise</code></a>
               
               
             </div>
@@ -651,12 +651,12 @@
             <div class="finding-traceability" style="font-size:0.84em;color:#475569;padding:4px 10px;margin:4px 0">
               
               
-              runs: <a href="#run-bending-athermal-sweep"><code>bending-athermal-sweep</code></a>
+              runs: <a href="#run-bm-v4-floppy-baseline-minimise"><code>bm-v4-floppy-baseline-minimise</code></a>
             </div>
             
             
             
-            <div class="pass_if-band muted small" style="font-size:0.82em;padding:2px 10px">judged against <code>pass_if: op: near_zero · tol: 0.1</code></div>
+            <div class="pass_if-band muted small" style="font-size:0.82em;padding:2px 10px">judged against <code>pass_if: op: near_zero · tolerance: 0.132 · note: floppy: |E| within a 0.132 LJ tolerance of zero (2 sigma ensemble noise; a rigid network is ~30 LJ). Graded natively by discovery-engine &gt;=0.2.1 (DE #43).</code></div>
             
             
             
@@ -1241,7 +1241,7 @@
         <summary class="muted" style="cursor: pointer;">Assertion</summary>
         
         <pre style="background:#fff; padding:8px; margin:4px 0 0 0; border:1px solid #e2e8f0; border-radius:3px; overflow-x:auto;">measure: {"at": "bending_k=0", "field": "modulus_vs_bending_k", "kind": "value"}
-pass_if: {"op": "near_zero", "tol": 0.1}</pre>
+pass_if: {"note": "floppy: |E| within a 0.132 LJ tolerance of zero (2 sigma ensemble noise; a rigid network is ~30 LJ). Graded natively by discovery-engine \u003e=0.2.1 (DE #43).", "op": "near_zero", "tolerance": 0.132}</pre>
       </details>
       
       
@@ -1712,7 +1712,7 @@ pass_if: {"note": "IQR \u003c 0.5\u00b7|median| \u2014 met by the real-angle pat
 </section>
 
 </main>
-<script>window.__DASH_CONFIG__ = { mode: "snapshot", interactiveUrl: "https://github.com/vivarium-collective/viva-lumenoid", basePath: "/viva-lumenoid/workbench", inputsDownloadBase: "https://github.com/vivarium-collective/viva-lumenoid/raw/main", provenance: {"repo_slug": "vivarium-collective/viva-lumenoid", "repo_url": "https://github.com/vivarium-collective/viva-lumenoid", "commit": "ea761272a34a2dca31b27acfd436026be6243c51", "commit_url": "https://github.com/vivarium-collective/viva-lumenoid/commit/ea761272a34a2dca31b27acfd436026be6243c51", "branch": "main", "lockfile": "uv.lock@02435e118a3b", "generated_at": "2026-11-06 02:30 UTC"} };</script>
+<script>window.__DASH_CONFIG__ = { mode: "snapshot", interactiveUrl: "https://github.com/vivarium-collective/viva-lumenoid", basePath: "/viva-lumenoid/workbench", inputsDownloadBase: "https://github.com/vivarium-collective/viva-lumenoid/raw/basement-membrane-v1", provenance: {"repo_slug": "vivarium-collective/viva-lumenoid", "repo_url": "https://github.com/vivarium-collective/viva-lumenoid", "commit": "e73b523ce76ab02df9781a453c7eaaf2241de1b9", "commit_url": "https://github.com/vivarium-collective/viva-lumenoid/commit/e73b523ce76ab02df9781a453c7eaaf2241de1b9", "branch": "basement-membrane-v1", "lockfile": "uv.lock@02435e118a3b", "generated_at": "2026-11-06 02:32 UTC"} };</script>
 <script src="/viva-lumenoid/workbench/assets/data-source.js"></script>
 <script src="/viva-lumenoid/workbench/assets/toast.js"></script>
 <script>
