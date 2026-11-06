@@ -210,9 +210,9 @@ behavior_tests:
     description: Athermal minimisation measures the floppy (k=0) modulus as ~0 (deterministic).
     measure: {kind: value, field: modulus_vs_bending_k, at: "bending_k=0"}
     pass_if:
-      low: -0.132
-      high: 0.132
-      note: 'floppy band = +/-2 sigma modulus noise (0.132 LJ); rigid ~30 LJ (native op:near_zero works after discovery-engine #43)'
+      op: near_zero
+      tolerance: 0.132
+      note: 'floppy: |E| within a 0.132 LJ tolerance of zero (2 sigma ensemble noise; a rigid network is ~30 LJ). Graded natively by discovery-engine >=0.2.1 (DE #43).'
     units: kT/a^3
     requires_simulation: bending-athermal-sweep
   - name: bending-changes-mechanics

@@ -237,9 +237,9 @@ behavior_tests:
     description: The modulus is consistent with zero at every rung while z < 4.
     measure: {kind: value, field: elastic_modulus_vs_z, ensemble: 3}
     pass_if:
-      low: -0.361
-      high: 0.361
-      note: 'floppy band = +/-2 sigma modulus noise (0.361 LJ); rigid ~30 LJ (native op works after discovery-engine #43)'
+      op: consistent_with_zero
+      tolerance: 0.361
+      note: 'floppy: |E| within a 0.361 LJ tolerance of zero (2 sigma ensemble noise; a rigid network is ~30 LJ). Graded natively by discovery-engine >=0.2.1 (DE #43).'
     units: kT/a^3
     requires_simulation: rigidity-connectivity-sweep
     cites: [meadowcroft2025nonequilibrium]

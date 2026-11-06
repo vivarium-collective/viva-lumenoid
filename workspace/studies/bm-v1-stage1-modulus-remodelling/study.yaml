@@ -282,9 +282,9 @@ behavior_tests:
       (near-zero-modulus) network, matching the published ≈0.03 Pa.
     measure: {kind: slope, field: sigma_inplane, versus: strain, phase: stretch, ensemble: 6}
     pass_if:
-      low: -0.132
-      high: 0.132
-      note: 'floppy band = +/-2 sigma modulus noise (0.132 LJ); rigid ~30 LJ (native op works after discovery-engine #43)'
+      op: consistent_with_zero
+      tolerance: 0.132
+      note: 'floppy: |E| within a 0.132 LJ tolerance of zero (2 sigma ensemble noise; a rigid network is ~30 LJ). Graded natively by discovery-engine >=0.2.1 (DE #43).'
     units: kT/a^3
     requires_simulation: stage1-seed-ensemble
     cites: [meadowcroft2025nonequilibrium]
