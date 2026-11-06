@@ -630,11 +630,27 @@ class StagedStretchController(Process):
 
 
 def register_viva_lumenoid(core):
-    """Register this workspace's processes (idempotent)."""
+    """Register this workspace's processes (idempotent).
+
+    Also registers the base emitter links: this function is the composites'
+    ``core_extension``, so a composite built through the workbench run path (which
+    does not go through ``viva_lumenoid.core.build_core``) still gets
+    ``ram-emitter`` etc. — otherwise realization fails with
+    ``no link found at address: {'protocol': 'local', 'data': 'ram-emitter'}``.
+    """
     for name, cls in (
         ('CollagenNetworkProcess', CollagenNetworkProcess),
         ('StagedStretchController', StagedStretchController),
     ):
         if name not in core.link_registry:
             core.register_link(name, cls)
+    try:
+        from process_bigraph.emitter import RAMEmitter, ConsoleEmitter, JSONEmitter
+        for name, cls in (('ram-emitter', RAMEmitter),
+                          ('console-emitter', ConsoleEmitter),
+                          ('json-emitter', JSONEmitter)):
+            if name not in core.link_registry:
+                core.register_link(name, cls)
+    except Exception:
+        pass
     return core
