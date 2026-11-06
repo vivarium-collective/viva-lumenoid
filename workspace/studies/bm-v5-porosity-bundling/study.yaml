@@ -135,6 +135,29 @@ runs:
         result: PASS
         observed: "mean ~1.29 protomers/strand (mostly singletons); below measured 5–7"
 
+  - name: bm-v5-porosity-bundling-ensemble
+    run_id: bm-v5-porosity-bundling-ensemble
+    status: completed
+    base_model: viva_lumenoid.composites.porosity_bundling
+    seeds:
+      - 11
+      - 22
+      - 33
+    n_steps: 200
+    method: geometry.porosity (distance-transform pore sizing) + geometry.bundling on the assembled network — NO stretch
+    computed_outcomes:
+      porosity-reaches-EM-band:
+        measured_value: 93.71
+        result: pass
+        evaluated_by: code
+        grader: geometry_porosity
+        note: median pore 93.71 nm within corneal-BM EM band 32-112 nm
+      bundling-under-shoots-5-7:
+        measured_value: 1.125
+        result: pass
+        evaluated_by: code
+        grader: geometry_bundling
+        note: mean 1.125 protomers/strand (mostly singletons) — below measured 5-7
 readouts:
   - name: pore_diameter
     description: Pore-size distribution (maximal inscribed disc), in nm.
@@ -152,7 +175,10 @@ behavior_tests:
     classification: primary
     description: The simulated pore median falls within the corneal-EM band (72 ± 40 nm) at realistic density.
     measure: {kind: median, field: pore_diameter}
-    pass_if: {op: between, lo: 32.0, hi: 112.0, field: median_pore_nm}
+    pass_if:
+      low: 32.0
+      high: 112.0
+      note: median pore within the corneal-BM EM band (was op:between lo/hi)
     units: nm
     requires_simulation: porosity-bundling-density-sweep
     cites: [abrams2000nanoscale]
@@ -168,7 +194,10 @@ behavior_tests:
       distribution stays near 1 (below the measured 5–7, confirming the missing
       lateral-association bond).
     measure: {kind: mean, field: protomers_per_strand}
-    pass_if: {op: lt, value: 2.0, field: mean_strand}
+    pass_if:
+      op: <
+      value: 2.0
+      note: mean protomers/strand < 2 = mostly singletons, undershoots 5-7 (was op:lt)
     units: count
     requires_simulation: porosity-bundling-density-sweep
     cites: [pokidysheva2025targeted]
@@ -187,15 +216,18 @@ findings:
       (72 ± 40 nm) at the densest sampled network (median 54 nm, corrected σ≈125 nm) — the mesh is
       realistic and pore size is a tunable density readout, not a free universal.
     evidence:
-      from_run: porosity-bundling-density-sweep
+      from_run: bm-v5-porosity-bundling-ensemble
       from_test: porosity-reaches-EM-band
-      observed: "median pore ~54 nm at the densest network"
+      observed: 93.71
+      measured_value: 93.71
+      observed_note: median pore 93.71 nm in EM band (32-112) (3 seeds, assembled-network geometry)
     expected:
       cites: [abrams2000nanoscale]
       range: "72 ± 40 nm (corneal BM EM); 20–60 nm hydrated Matrigel"
     explanation: "Porosity is emergent from areal coverage; the comparator fixes a density."
     provenance:
-      run_ids: [porosity-bundling-density-sweep]
+      run_ids:
+        - bm-v5-porosity-bundling-ensemble
   - id: F2-bundling-undershoots
     kind: computational
     status: confirms
@@ -204,9 +236,11 @@ findings:
       (~82% singletons), below the 5–7 protomers per strand measured in the
       PFHR-9 scaffold. The model has no lateral-association bond.
     evidence:
-      from_run: porosity-bundling-density-sweep
+      from_run: bm-v5-porosity-bundling-ensemble
       from_test: bundling-under-shoots-5-7
-      observed: "mean strand ~1.29, max ~6, <5% of rods in 5–7 strands"
+      observed: 1.125
+      measured_value: 1.125
+      observed_note: mean 1.125 protomers/strand (<2, mostly singletons) (3 seeds, assembled-network geometry)
     expected:
       cites: [pokidysheva2025targeted]
       range: "5–7 protomers per strand (PFHR-9 cell-deposited scaffold)"
@@ -216,7 +250,8 @@ findings:
     next_action: "add an explicit lateral-association bond (v2) and re-measure bundling"
     next_action_type: refine_representation
     provenance:
-      run_ids: [porosity-bundling-density-sweep]
+      run_ids:
+        - bm-v5-porosity-bundling-ensemble
 
 conclusion_logic:
   if_primary_tests_pass:
@@ -341,3 +376,7 @@ bibliography:
       note: Corneal BM pore diameter 72 ± 40 nm (low-voltage SEM) — the porosity comparator.
     - key: pokidysheva2025targeted
       note: 5–7 protomers per laterally-bundled strand in the PFHR-9 scaffold — the bundling comparator.
+canonical_runs:
+  - entry: porosity-bundling
+    script: workspace/scripts/porosity_bundling.py
+    description: 'Assembled-network pore + bundling geometry; backs bm-v5 F1/F2. Needs #88 + LAMMPS.'
