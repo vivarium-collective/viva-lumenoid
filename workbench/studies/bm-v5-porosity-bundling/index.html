@@ -44,6 +44,18 @@
 
 
 
+<div class="composite-lint-banner" role="alert"
+     style="margin:8px 0 14px 0;padding:10px 14px;background:#fffbeb;border:1px solid #f59e0b;border-left-width:5px;border-radius:6px;color:#92400e;font-size:0.9em">
+  
+  <div>⚠ composite not found in registry: <code>viva_lumenoid.composites.porosity_bundling</code></div>
+  
+  <div style="margin-top:4px;font-size:0.86em;color:#a16207">
+    This study references a composite that doesn't resolve — it may not declare a
+    real, registered composite. Add a <code>.composite.yaml</code> and register it
+    in <code>core.py</code>, or fix the ref.
+  </div>
+</div>
+
 
 
 
@@ -656,10 +668,10 @@
             
             
             <div class="finding-evidence">
-              <strong>observed:</strong> 93.71 · 
+              <strong>observed:</strong> median pore ~54 nm at the densest network · 
               
               via test <a href="#bt-porosity-reaches-EM-band" onclick="_gotoStudyTab('audit','bt-porosity-reaches-EM-band');return false;"><code>porosity-reaches-EM-band</code></a> · 
-              in run <a href="#run-bm-v5-porosity-bundling-ensemble"><code>bm-v5-porosity-bundling-ensemble</code></a>
+              in run <a href="#run-porosity-bundling-density-sweep"><code>porosity-bundling-density-sweep</code></a>
               
               
             </div>
@@ -668,12 +680,12 @@
             <div class="finding-traceability" style="font-size:0.84em;color:#475569;padding:4px 10px;margin:4px 0">
               
               
-              runs: <a href="#run-bm-v5-porosity-bundling-ensemble"><code>bm-v5-porosity-bundling-ensemble</code></a>
+              runs: <a href="#run-porosity-bundling-density-sweep"><code>porosity-bundling-density-sweep</code></a>
             </div>
             
             
             
-            <div class="pass_if-band muted small" style="font-size:0.82em;padding:2px 10px">judged against <code>pass_if: low: 32.0 · high: 112.0 · note: median pore within the corneal-BM EM band (was op:between lo/hi)</code></div>
+            <div class="pass_if-band muted small" style="font-size:0.82em;padding:2px 10px">judged against <code>pass_if: op: between · lo: 32.0 · hi: 112.0 · field: median_pore_nm</code></div>
             
             
             
@@ -719,10 +731,10 @@
             
             
             <div class="finding-evidence">
-              <strong>observed:</strong> 1.125 · 
+              <strong>observed:</strong> mean strand ~1.29, max ~6, &lt;5% of rods in 5–7 strands · 
               
               via test <a href="#bt-bundling-under-shoots-5-7" onclick="_gotoStudyTab('audit','bt-bundling-under-shoots-5-7');return false;"><code>bundling-under-shoots-5-7</code></a> · 
-              in run <a href="#run-bm-v5-porosity-bundling-ensemble"><code>bm-v5-porosity-bundling-ensemble</code></a>
+              in run <a href="#run-porosity-bundling-density-sweep"><code>porosity-bundling-density-sweep</code></a>
               
               
             </div>
@@ -731,12 +743,12 @@
             <div class="finding-traceability" style="font-size:0.84em;color:#475569;padding:4px 10px;margin:4px 0">
               
               
-              runs: <a href="#run-bm-v5-porosity-bundling-ensemble"><code>bm-v5-porosity-bundling-ensemble</code></a>
+              runs: <a href="#run-porosity-bundling-density-sweep"><code>porosity-bundling-density-sweep</code></a>
             </div>
             
             
             
-            <div class="pass_if-band muted small" style="font-size:0.82em;padding:2px 10px">judged against <code>pass_if: &lt; 2.0</code></div>
+            <div class="pass_if-band muted small" style="font-size:0.82em;padding:2px 10px">judged against <code>pass_if: lt 2.0</code></div>
             
             
             
@@ -1177,7 +1189,7 @@
         <summary class="muted" style="cursor: pointer;">Assertion</summary>
         
         <pre style="background:#fff; padding:8px; margin:4px 0 0 0; border:1px solid #e2e8f0; border-radius:3px; overflow-x:auto;">measure: {"field": "pore_diameter", "kind": "median"}
-pass_if: {"high": 112.0, "low": 32.0, "note": "median pore within the corneal-BM EM band (was op:between lo/hi)"}
+pass_if: {"field": "median_pore_nm", "hi": 112.0, "lo": 32.0, "op": "between"}
 cites:   ["abrams2000nanoscale"]</pre>
       </details>
       
@@ -1240,7 +1252,7 @@ cites:   ["abrams2000nanoscale"]</pre>
         <summary class="muted" style="cursor: pointer;">Assertion</summary>
         
         <pre style="background:#fff; padding:8px; margin:4px 0 0 0; border:1px solid #e2e8f0; border-radius:3px; overflow-x:auto;">measure: {"field": "protomers_per_strand", "kind": "mean"}
-pass_if: {"note": "mean protomers/strand \u003c 2 = mostly singletons, undershoots 5-7 (was op:lt)", "op": "\u003c", "value": 2.0}
+pass_if: {"field": "mean_strand", "op": "lt", "value": 2.0}
 cites:   ["pokidysheva2025targeted"]</pre>
       </details>
       
@@ -1409,20 +1421,6 @@ cites:   ["pokidysheva2025targeted"]</pre>
 
     
     
-    
-    <div class="decide-section" style="margin-top:18px">
-      <h3 class="overview-label">Computed gate verdict</h3>
-      <p class="muted" style="margin:0 0 8px 0;font-size:0.88em">The coded gate
-        evaluator's result from the behavior-test outcomes — the evaluation the
-        conclusion rests on.</p>
-      <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
-        <span class="gate-status-passed" style="padding:2px 12px;border-radius:9999px;font-weight:700;font-size:0.85em">passed</span>
-        <span class="muted small">evaluated by code</span>
-        <span class="muted small">2/2 passed</span>
-      </div>
-      
-    </div>
-    
 
     
     
@@ -1567,7 +1565,7 @@ cites:   ["pokidysheva2025targeted"]</pre>
 </section>
 
 </main>
-<script>window.__DASH_CONFIG__ = { mode: "snapshot", interactiveUrl: "https://github.com/vivarium-collective/viva-lumenoid", basePath: "/viva-lumenoid/workbench", inputsDownloadBase: "https://github.com/vivarium-collective/viva-lumenoid/raw/basement-membrane-v1", provenance: {"repo_slug": "vivarium-collective/viva-lumenoid", "repo_url": "https://github.com/vivarium-collective/viva-lumenoid", "commit": "e73b523ce76ab02df9781a453c7eaaf2241de1b9", "commit_url": "https://github.com/vivarium-collective/viva-lumenoid/commit/e73b523ce76ab02df9781a453c7eaaf2241de1b9", "branch": "basement-membrane-v1", "lockfile": "uv.lock@02435e118a3b", "generated_at": "2026-11-06 02:32 UTC"} };</script>
+<script>window.__DASH_CONFIG__ = { mode: "snapshot", interactiveUrl: "https://github.com/vivarium-collective/viva-lumenoid", basePath: "/viva-lumenoid/workbench", inputsDownloadBase: "https://github.com/vivarium-collective/viva-lumenoid/raw/main", provenance: {"repo_slug": "vivarium-collective/viva-lumenoid", "repo_url": "https://github.com/vivarium-collective/viva-lumenoid", "commit": "48368b8b18d33d7319121fc52d19667e8b122918", "commit_url": "https://github.com/vivarium-collective/viva-lumenoid/commit/48368b8b18d33d7319121fc52d19667e8b122918", "branch": "main", "lockfile": "uv.lock@02435e118a3b", "generated_at": "2026-11-10 17:58 UTC"} };</script>
 <script src="/viva-lumenoid/workbench/assets/data-source.js"></script>
 <script src="/viva-lumenoid/workbench/assets/toast.js"></script>
 <script>

@@ -1,1 +1,1 @@
-{"present": false, "study": "bm-r1-published-tissue-baseline", "reason": "not built via the agentic model-building loop"}
+{"present": false, "study": "bm-r1-published-tissue-baseline", "reason": "ModuleNotFoundError: No module named 'discovery_engine.reporting'"}

@@ -268,30 +268,17 @@ def _render_one(address, config, runs_db, study_yaml, overrides=None):
 #
 # Each composite is a process-bigraph *document* — named processes wired by `inputs`/`outputs` ports over shared stores. Below, each composite shows what it does, then a **parameter cell** with its tunable knobs (the current default and what each one means). Edit any value, then re-run the **Run** section to rebuild and re-simulate with your changes.
 
-# **The model — `viva_lumenoid.composites.stage1_composite`**
-#
-# Stage 1 — staged protocol (assemble → relax → stretch FROZEN → hold elastic → hold viscous). Separates a reproducible elastic modulus from a crosslink-turnover remodelling time.
+# **Composite `viva_lumenoid.composites.stage1_composite`** — `spec_viva_lumenoid_composites_stage1_composite` (materialized from its `@composite_generator`)
 
-# === Parameters — edit any value, then re-run from the Run cell below ===
-# Each entry is the composite's current default; the comment explains it.
-ov_viva_lumenoid_composites_stage1_composite = {
-    'n_rods'               : 200,   # Number of two-bead collagen IV rods.
-    'box_xy'               : 20.0,   # In-plane box size (units of the bead spacing a).
-    'make_prob'            : 0.12,   # Per-attempt crosslink formation probability (MP proxy).
-    'off_rate'             : 0.02,   # Force-independent crosslink off-rate (per LJ time).
-    'bending_k'            : 0.0,   # Junction bending stiffness (0 = floppy central-force network).
-    'seed'                 : 12345,   # RNG seed.
-    'slab_thickness'       : 2.0,   # Slab thickness (units of the bead spacing a).
-    'bead_spacing_nm'      : 125.0,   # Collagen-IV rod bead spacing (nm).
-    'persistence_length_nm': 40.0,   # Rod persistence length (nm).
-    'make_every'           : 500,   # Crosslink make-attempt interval (steps).
-    'break_every'          : 100,   # Crosslink break-attempt interval (steps).
-    'factor_mult'          : 0.66,   # Break/make ratio (FactorMult).
-    'target_strain'        : 0.15,   # Stretch-ramp target strain.
-    'strain_rate'          : 0.0015,   # Stretch-ramp strain rate (per LJ time).
-    'assemble_steps'       : 8000,   # Assemble-phase step count.
-    'hold_steps'           : 16000,   # Hold-phase step count.
-}
+spec_viva_lumenoid_composites_stage1_composite = materialize_composite('viva_lumenoid.composites.stage1_composite')
+describe_spec(spec_viva_lumenoid_composites_stage1_composite)
+
+# === Edit parameters for this composite, then run the Run cell ===
+# ov_viva_lumenoid_composites_stage1_composite maps each tunable parameter to its current value (the generator's
+# defaults). Edit any entry; the Run cell rebuilds the composite with it.
+ov_viva_lumenoid_composites_stage1_composite = dict(spec_viva_lumenoid_composites_stage1_composite['_overrides'])
+import json as _json; print(_json.dumps(ov_viva_lumenoid_composites_stage1_composite, indent=2, default=str))
+# e.g.:  ov_viva_lumenoid_composites_stage1_composite['<parameter>'] = <value>
 
 # ### Run
 #
@@ -382,8 +369,8 @@ _save_viz('bm-v1-stage1-modulus-remodelling', 'stage1-movie-3d', _render_one('ht
 # | test | measures | passes if |
 # | --- | --- | --- |
 # | network-assembles _(primary)_ | kind=count field=n_crosslinks when=end-of-assemble | op gt value 0 field n_crosslinks |
-# | elastic-modulus-consistent-with-floppy _(primary)_ | kind=slope field=sigma_inplane versus=strain phase=stretch ensemble=6 | op consistent_with_zero tolerance 0.132 note floppy: |E| within a 0.132 LJ tolerance of zero (2 sigma ensemble noise; a rigid network is ~30 LJ). Graded natively by discovery-engine >=0.2.1 (DE #43). |
-# | relaxation-decays-not-densifies _(primary)_ | kind=delta field=sigma_inplane phase=hold_viscous compare_to=crosslink_count | op < value 0 note hold_viscous sigma delta < 0: stress decays (network breaks down), not densifies. (Was op:decreases; expressed as <0 for code grading.) |
+# | elastic-modulus-consistent-with-floppy _(primary)_ | kind=slope field=sigma_inplane versus=strain phase=stretch ensemble=6 | op consistent_with_zero note floppy network; z < 4 |
+# | relaxation-decays-not-densifies _(primary)_ | kind=delta field=sigma_inplane phase=hold_viscous compare_to=crosslink_count | op decreases note crosslinks decay 46→3; stress drops in the correct direction |
 # | remodelling-time-calibratable _(secondary)_ | kind=relaxation_time field=sigma_inplane phase=hold_viscous convert=hours | op calibratable target_hours 20 range_hours 3-30 across systems |
 
 # ## Study: Growth rheology: stress vs strain rate (`bm-v2-stress-vs-strainrate`)
@@ -404,30 +391,17 @@ _save_viz('bm-v1-stage1-modulus-remodelling', 'stage1-movie-3d', _render_one('ht
 #
 # Each composite is a process-bigraph *document* — named processes wired by `inputs`/`outputs` ports over shared stores. Below, each composite shows what it does, then a **parameter cell** with its tunable knobs (the current default and what each one means). Edit any value, then re-run the **Run** section to rebuild and re-simulate with your changes.
 
-# **The model — `viva_lumenoid.composites.stage2_sweep`**
-#
-# Stage 2 / R2 — growth rheology: the collagen IV network on a growing (biaxially stretching) substrate with the crosslink chemistry ON during the stretch; the σ(ε̇) sweep runs this at a range of strain rates.
+# **Composite `viva_lumenoid.composites.stage2_sweep`** — `spec_viva_lumenoid_composites_stage2_sweep` (materialized from its `@composite_generator`)
 
-# === Parameters — edit any value, then re-run from the Run cell below ===
-# Each entry is the composite's current default; the comment explains it.
-ov_viva_lumenoid_composites_stage2_sweep = {
-    'n_rods'               : 200,   # Number of two-bead collagen IV rods.
-    'box_xy'               : 20.0,   # In-plane box size (units of the bead spacing a).
-    'make_prob'            : 0.12,   # Per-attempt crosslink formation probability (MP proxy).
-    'off_rate'             : 0.02,   # Force-independent crosslink off-rate (per LJ time).
-    'bending_k'            : 0.0,   # Junction bending stiffness (0 = floppy central-force network).
-    'seed'                 : 12345,   # RNG seed.
-    'slab_thickness'       : 2.0,   # Slab thickness (units of the bead spacing a).
-    'bead_spacing_nm'      : 125.0,   # Collagen-IV rod bead spacing (nm).
-    'persistence_length_nm': 40.0,   # Rod persistence length (nm).
-    'make_every'           : 500,   # Crosslink make-attempt interval (steps).
-    'break_every'          : 100,   # Crosslink break-attempt interval (steps).
-    'factor_mult'          : 0.66,   # Break/make ratio (FactorMult).
-    'target_strain'        : 0.15,   # Stretch-ramp target strain.
-    'strain_rate'          : 0.0015,   # Stretch-ramp strain rate (per LJ time).
-    'assemble_steps'       : 8000,   # Assemble-phase step count.
-    'hold_steps'           : 16000,   # Hold-phase step count.
-}
+spec_viva_lumenoid_composites_stage2_sweep = materialize_composite('viva_lumenoid.composites.stage2_sweep')
+describe_spec(spec_viva_lumenoid_composites_stage2_sweep)
+
+# === Edit parameters for this composite, then run the Run cell ===
+# ov_viva_lumenoid_composites_stage2_sweep maps each tunable parameter to its current value (the generator's
+# defaults). Edit any entry; the Run cell rebuilds the composite with it.
+ov_viva_lumenoid_composites_stage2_sweep = dict(spec_viva_lumenoid_composites_stage2_sweep['_overrides'])
+import json as _json; print(_json.dumps(ov_viva_lumenoid_composites_stage2_sweep, indent=2, default=str))
+# e.g.:  ov_viva_lumenoid_composites_stage2_sweep['<parameter>'] = <value>
 
 # ### Run
 #
@@ -523,30 +497,17 @@ _save_viz('bm-v2-stress-vs-strainrate', 'stage2-movie-3d', _render_one('html:sta
 #
 # Each composite is a process-bigraph *document* — named processes wired by `inputs`/`outputs` ports over shared stores. Below, each composite shows what it does, then a **parameter cell** with its tunable knobs (the current default and what each one means). Edit any value, then re-run the **Run** section to rebuild and re-simulate with your changes.
 
-# **The model — `viva_lumenoid.composites.connectivity_sweep`**
-#
-# Rigidity (bm-v3, adversarial) — the CENTRAL-FORCE counterfactual: bending_k forced to 0, crosslink connectivity (z) swept to test rigidity percolation. A control that should NOT reproduce the released angle-stabilized model.
+# **Composite `viva_lumenoid.composites.connectivity_sweep`** — `spec_viva_lumenoid_composites_connectivity_sweep` (materialized from its `@composite_generator`)
 
-# === Parameters — edit any value, then re-run from the Run cell below ===
-# Each entry is the composite's current default; the comment explains it.
-ov_viva_lumenoid_composites_connectivity_sweep = {
-    'n_rods'               : 200,   # Number of two-bead collagen IV rods.
-    'box_xy'               : 20.0,   # In-plane box size (units of the bead spacing a).
-    'make_prob'            : 0.12,   # Per-attempt crosslink formation probability (MP proxy).
-    'off_rate'             : 0.02,   # Force-independent crosslink off-rate (per LJ time).
-    'bending_k'            : 0.0,   # Junction bending stiffness (0 = floppy central-force network).
-    'seed'                 : 12345,   # RNG seed.
-    'slab_thickness'       : 2.0,   # Slab thickness (units of the bead spacing a).
-    'bead_spacing_nm'      : 125.0,   # Collagen-IV rod bead spacing (nm).
-    'persistence_length_nm': 40.0,   # Rod persistence length (nm).
-    'make_every'           : 500,   # Crosslink make-attempt interval (steps).
-    'break_every'          : 100,   # Crosslink break-attempt interval (steps).
-    'factor_mult'          : 0.66,   # Break/make ratio (FactorMult).
-    'target_strain'        : 0.15,   # Stretch-ramp target strain.
-    'strain_rate'          : 0.0015,   # Stretch-ramp strain rate (per LJ time).
-    'assemble_steps'       : 8000,   # Assemble-phase step count.
-    'hold_steps'           : 16000,   # Hold-phase step count.
-}
+spec_viva_lumenoid_composites_connectivity_sweep = materialize_composite('viva_lumenoid.composites.connectivity_sweep')
+describe_spec(spec_viva_lumenoid_composites_connectivity_sweep)
+
+# === Edit parameters for this composite, then run the Run cell ===
+# ov_viva_lumenoid_composites_connectivity_sweep maps each tunable parameter to its current value (the generator's
+# defaults). Edit any entry; the Run cell rebuilds the composite with it.
+ov_viva_lumenoid_composites_connectivity_sweep = dict(spec_viva_lumenoid_composites_connectivity_sweep['_overrides'])
+import json as _json; print(_json.dumps(ov_viva_lumenoid_composites_connectivity_sweep, indent=2, default=str))
+# e.g.:  ov_viva_lumenoid_composites_connectivity_sweep['<parameter>'] = <value>
 
 # ### Run
 #
@@ -604,7 +565,7 @@ _save_viz('bm-v3-junction-bending-rigidity', 'rigidity-movie-3d', _render_one('h
 # | test | measures | passes if |
 # | --- | --- | --- |
 # | z-stays-below-threshold _(primary)_ | kind=max field=coordination_z | op lt value 4.0 field max_z |
-# | modulus-stays-floppy _(primary)_ | kind=value field=elastic_modulus_vs_z ensemble=3 | op consistent_with_zero tolerance 0.361 note floppy: |E| within a 0.361 LJ tolerance of zero (2 sigma ensemble noise; a rigid network is ~30 LJ). Graded natively by discovery-engine >=0.2.1 (DE #43). |
+# | modulus-stays-floppy _(primary)_ | kind=value field=elastic_modulus_vs_z ensemble=3 | op consistent_with_zero note all CIs span 0 |
 
 # ## Study: Native junction-bending modulus (`bm-v4-junction-bending`)
 #
@@ -624,30 +585,17 @@ _save_viz('bm-v3-junction-bending-rigidity', 'rigidity-movie-3d', _render_one('h
 #
 # Each composite is a process-bigraph *document* — named processes wired by `inputs`/`outputs` ports over shared stores. Below, each composite shows what it does, then a **parameter cell** with its tunable knobs (the current default and what each one means). Edit any value, then re-run the **Run** section to rebuild and re-simulate with your changes.
 
-# **The model — `viva_lumenoid.composites.bending_sweep`**
-#
-# FP1 (bm-v4) — the collagen IV network WITH junction bending (released NC1 value, as-formed angle restraints created during assembly). The athermal modulus is swept vs bending_k.
+# **Composite `viva_lumenoid.composites.bending_sweep`** — `spec_viva_lumenoid_composites_bending_sweep` (materialized from its `@composite_generator`)
 
-# === Parameters — edit any value, then re-run from the Run cell below ===
-# Each entry is the composite's current default; the comment explains it.
-ov_viva_lumenoid_composites_bending_sweep = {
-    'n_rods'               : 200,   # Number of two-bead collagen IV rods.
-    'box_xy'               : 20.0,   # In-plane box size (units of the bead spacing a).
-    'make_prob'            : 0.12,   # Per-attempt crosslink formation probability (MP proxy).
-    'off_rate'             : 0.02,   # Force-independent crosslink off-rate (per LJ time).
-    'bending_k'            : 50.0,   # Junction bending stiffness (fix restrain, as-formed angles); >0 rigidifies.
-    'seed'                 : 12345,   # RNG seed.
-    'slab_thickness'       : 2.0,   # Slab thickness (units of the bead spacing a).
-    'bead_spacing_nm'      : 125.0,   # Collagen-IV rod bead spacing (nm).
-    'persistence_length_nm': 40.0,   # Rod persistence length (nm).
-    'make_every'           : 500,   # Crosslink make-attempt interval (steps).
-    'break_every'          : 100,   # Crosslink break-attempt interval (steps).
-    'factor_mult'          : 0.66,   # Break/make ratio (FactorMult).
-    'target_strain'        : 0.15,   # Stretch-ramp target strain.
-    'strain_rate'          : 0.0015,   # Stretch-ramp strain rate (per LJ time).
-    'assemble_steps'       : 8000,   # Assemble-phase step count.
-    'hold_steps'           : 16000,   # Hold-phase step count.
-}
+spec_viva_lumenoid_composites_bending_sweep = materialize_composite('viva_lumenoid.composites.bending_sweep')
+describe_spec(spec_viva_lumenoid_composites_bending_sweep)
+
+# === Edit parameters for this composite, then run the Run cell ===
+# ov_viva_lumenoid_composites_bending_sweep maps each tunable parameter to its current value (the generator's
+# defaults). Edit any entry; the Run cell rebuilds the composite with it.
+ov_viva_lumenoid_composites_bending_sweep = dict(spec_viva_lumenoid_composites_bending_sweep['_overrides'])
+import json as _json; print(_json.dumps(ov_viva_lumenoid_composites_bending_sweep, indent=2, default=str))
+# e.g.:  ov_viva_lumenoid_composites_bending_sweep['<parameter>'] = <value>
 
 # ### Run
 #
@@ -709,7 +657,7 @@ _save_viz('bm-v4-junction-bending', 'bending-movie-3d', _render_one('html:bendin
 #
 # | test | measures | passes if |
 # | --- | --- | --- |
-# | floppy-baseline-clean _(primary)_ | kind=value field=modulus_vs_bending_k at=bending_k=0 | op near_zero tolerance 0.132 note floppy: |E| within a 0.132 LJ tolerance of zero (2 sigma ensemble noise; a rigid network is ~30 LJ). Graded natively by discovery-engine >=0.2.1 (DE #43). |
+# | floppy-baseline-clean _(primary)_ | kind=value field=modulus_vs_bending_k at=bending_k=0 | op near_zero tol 0.1 |
 # | bending-changes-mechanics _(primary)_ | kind=magnitude field=modulus_vs_bending_k at=bending_k>0 | op gt value 1.0 note |E| jumps orders of magnitude above floppy |
 # | reproducible-modulus _(primary)_ | kind=iqr_over_median field=modulus_vs_bending_k at=bending_k>0 | op lt value 0.5 note IQR < 0.5·|median| — met by the real-angle path |
 
@@ -735,30 +683,17 @@ _save_viz('bm-v4-junction-bending', 'bending-movie-3d', _render_one('html:bendin
 #
 # Each composite is a process-bigraph *document* — named processes wired by `inputs`/`outputs` ports over shared stores. Below, each composite shows what it does, then a **parameter cell** with its tunable knobs (the current default and what each one means). Edit any value, then re-run the **Run** section to rebuild and re-simulate with your changes.
 
-# **The model — `viva_lumenoid.composites.porosity_bundling`**
-#
-# Stage 5 (bm-v5) — the assembled collagen IV network read for its geometric readouts (pore-size distribution, protomers-per-strand) against the measured BM comparators; emits the assembly observables, not the stress trace.
+# **Composite `viva_lumenoid.composites.porosity_bundling`** — `spec_viva_lumenoid_composites_porosity_bundling` (materialized from its `@composite_generator`)
 
-# === Parameters — edit any value, then re-run from the Run cell below ===
-# Each entry is the composite's current default; the comment explains it.
-ov_viva_lumenoid_composites_porosity_bundling = {
-    'n_rods'               : 200,   # Number of two-bead collagen IV rods.
-    'box_xy'               : 20.0,   # In-plane box size (units of the bead spacing a).
-    'make_prob'            : 0.12,   # Per-attempt crosslink formation probability (MP proxy).
-    'off_rate'             : 0.02,   # Force-independent crosslink off-rate (per LJ time).
-    'bending_k'            : 0.0,   # Junction bending stiffness (0 = floppy central-force network).
-    'seed'                 : 12345,   # RNG seed.
-    'slab_thickness'       : 2.0,   # Slab thickness (units of the bead spacing a).
-    'bead_spacing_nm'      : 125.0,   # Collagen-IV rod bead spacing (nm).
-    'persistence_length_nm': 40.0,   # Rod persistence length (nm).
-    'make_every'           : 500,   # Crosslink make-attempt interval (steps).
-    'break_every'          : 100,   # Crosslink break-attempt interval (steps).
-    'factor_mult'          : 0.66,   # Break/make ratio (FactorMult).
-    'target_strain'        : 0.15,   # Stretch-ramp target strain.
-    'strain_rate'          : 0.0015,   # Stretch-ramp strain rate (per LJ time).
-    'assemble_steps'       : 8000,   # Assemble-phase step count.
-    'hold_steps'           : 16000,   # Hold-phase step count.
-}
+spec_viva_lumenoid_composites_porosity_bundling = materialize_composite('viva_lumenoid.composites.porosity_bundling')
+describe_spec(spec_viva_lumenoid_composites_porosity_bundling)
+
+# === Edit parameters for this composite, then run the Run cell ===
+# ov_viva_lumenoid_composites_porosity_bundling maps each tunable parameter to its current value (the generator's
+# defaults). Edit any entry; the Run cell rebuilds the composite with it.
+ov_viva_lumenoid_composites_porosity_bundling = dict(spec_viva_lumenoid_composites_porosity_bundling['_overrides'])
+import json as _json; print(_json.dumps(ov_viva_lumenoid_composites_porosity_bundling, indent=2, default=str))
+# e.g.:  ov_viva_lumenoid_composites_porosity_bundling['<parameter>'] = <value>
 
 # ### Run
 #
@@ -825,8 +760,8 @@ _save_viz('bm-v5-porosity-bundling', 'assembly-movie', _render_one('html:assembl
 #
 # | test | measures | passes if |
 # | --- | --- | --- |
-# | porosity-reaches-EM-band _(primary)_ | kind=median field=pore_diameter | low 32.0 high 112.0 note median pore within the corneal-BM EM band (was op:between lo/hi) |
-# | bundling-under-shoots-5-7 _(primary)_ | kind=mean field=protomers_per_strand | op < value 2.0 note mean protomers/strand < 2 = mostly singletons, undershoots 5-7 (was op:lt) |
+# | porosity-reaches-EM-band _(primary)_ | kind=median field=pore_diameter | op between lo 32.0 hi 112.0 field median_pore_nm |
+# | bundling-under-shoots-5-7 _(primary)_ | kind=mean field=protomers_per_strand | op lt value 2.0 field mean_strand |
 
 # ## Study: Reduced-order tissue-mechanics baseline (`bm-r1-published-tissue-baseline`)
 #
@@ -855,17 +790,17 @@ _save_viz('bm-v5-porosity-bundling', 'assembly-movie', _render_one('html:assembl
 #
 # Each composite is a process-bigraph *document* — named processes wired by `inputs`/`outputs` ports over shared stores. Below, each composite shows what it does, then a **parameter cell** with its tunable knobs (the current default and what each one means). Edit any value, then re-run the **Run** section to rebuild and re-simulate with your changes.
 
-# **The model — `viva_lumenoid.composites.tissue_prism_baseline`**
-#
-# R1 — reduced-order homogeneous tissue mechanics: a fixed-volume prism cell whose basal area is set by proliferation against a viscoelastic BM (stiffness + relaxation). Cell height = volume/area; the paper's Fig 1 confinement regimes emerge from BM stiffness vs the relaxation/doubling ratio. The effective-BM reference for R4/R5.
+# **Composite `viva_lumenoid.composites.tissue_prism_baseline`** — `spec_viva_lumenoid_composites_tissue_prism_baseline` (materialized from its `@composite_generator`)
 
-# === Parameters — edit any value, then re-run from the Run cell below ===
-# Each entry is the composite's current default; the comment explains it.
-ov_viva_lumenoid_composites_tissue_prism_baseline = {
-    'bm_stiffness' : 1.0,   # BM area elasticity (stiffness).
-    'bm_relaxation': 5.0,   # BM relaxation time tau_bm.
-    'doubling_time': 5.0,   # Proliferation timescale (cell doubling).
-}
+spec_viva_lumenoid_composites_tissue_prism_baseline = materialize_composite('viva_lumenoid.composites.tissue_prism_baseline')
+describe_spec(spec_viva_lumenoid_composites_tissue_prism_baseline)
+
+# === Edit parameters for this composite, then run the Run cell ===
+# ov_viva_lumenoid_composites_tissue_prism_baseline maps each tunable parameter to its current value (the generator's
+# defaults). Edit any entry; the Run cell rebuilds the composite with it.
+ov_viva_lumenoid_composites_tissue_prism_baseline = dict(spec_viva_lumenoid_composites_tissue_prism_baseline['_overrides'])
+import json as _json; print(_json.dumps(ov_viva_lumenoid_composites_tissue_prism_baseline, indent=2, default=str))
+# e.g.:  ov_viva_lumenoid_composites_tissue_prism_baseline['<parameter>'] = <value>
 
 # ### Run
 #
@@ -941,30 +876,17 @@ _save_viz('bm-r1-published-tissue-baseline', 'r1_regime', _render_one('html:r1_r
 #
 # Each composite is a process-bigraph *document* — named processes wired by `inputs`/`outputs` ports over shared stores. Below, each composite shows what it does, then a **parameter cell** with its tunable knobs (the current default and what each one means). Edit any value, then re-run the **Run** section to rebuild and re-simulate with your changes.
 
-# **The model — `viva_lumenoid.composites.stage2_sweep`**
-#
-# Stage 2 / R2 — growth rheology: the collagen IV network on a growing (biaxially stretching) substrate with the crosslink chemistry ON during the stretch; the σ(ε̇) sweep runs this at a range of strain rates.
+# **Composite `viva_lumenoid.composites.stage2_sweep`** — `spec_viva_lumenoid_composites_stage2_sweep` (materialized from its `@composite_generator`)
 
-# === Parameters — edit any value, then re-run from the Run cell below ===
-# Each entry is the composite's current default; the comment explains it.
-ov_viva_lumenoid_composites_stage2_sweep = {
-    'n_rods'               : 200,   # Number of two-bead collagen IV rods.
-    'box_xy'               : 20.0,   # In-plane box size (units of the bead spacing a).
-    'make_prob'            : 0.12,   # Per-attempt crosslink formation probability (MP proxy).
-    'off_rate'             : 0.02,   # Force-independent crosslink off-rate (per LJ time).
-    'bending_k'            : 0.0,   # Junction bending stiffness (0 = floppy central-force network).
-    'seed'                 : 12345,   # RNG seed.
-    'slab_thickness'       : 2.0,   # Slab thickness (units of the bead spacing a).
-    'bead_spacing_nm'      : 125.0,   # Collagen-IV rod bead spacing (nm).
-    'persistence_length_nm': 40.0,   # Rod persistence length (nm).
-    'make_every'           : 500,   # Crosslink make-attempt interval (steps).
-    'break_every'          : 100,   # Crosslink break-attempt interval (steps).
-    'factor_mult'          : 0.66,   # Break/make ratio (FactorMult).
-    'target_strain'        : 0.15,   # Stretch-ramp target strain.
-    'strain_rate'          : 0.0015,   # Stretch-ramp strain rate (per LJ time).
-    'assemble_steps'       : 8000,   # Assemble-phase step count.
-    'hold_steps'           : 16000,   # Hold-phase step count.
-}
+spec_viva_lumenoid_composites_stage2_sweep = materialize_composite('viva_lumenoid.composites.stage2_sweep')
+describe_spec(spec_viva_lumenoid_composites_stage2_sweep)
+
+# === Edit parameters for this composite, then run the Run cell ===
+# ov_viva_lumenoid_composites_stage2_sweep maps each tunable parameter to its current value (the generator's
+# defaults). Edit any entry; the Run cell rebuilds the composite with it.
+ov_viva_lumenoid_composites_stage2_sweep = dict(spec_viva_lumenoid_composites_stage2_sweep['_overrides'])
+import json as _json; print(_json.dumps(ov_viva_lumenoid_composites_stage2_sweep, indent=2, default=str))
+# e.g.:  ov_viva_lumenoid_composites_stage2_sweep['<parameter>'] = <value>
 
 # ### Run
 #
@@ -1053,30 +975,17 @@ _save_viz('bm-r2-collagen-network-rheology', 'r2_rheology', _render_one('html:r2
 #
 # Each composite is a process-bigraph *document* — named processes wired by `inputs`/`outputs` ports over shared stores. Below, each composite shows what it does, then a **parameter cell** with its tunable knobs (the current default and what each one means). Edit any value, then re-run the **Run** section to rebuild and re-simulate with your changes.
 
-# **The model — `viva_lumenoid.composites.stage2_sweep`**
-#
-# Stage 2 / R2 — growth rheology: the collagen IV network on a growing (biaxially stretching) substrate with the crosslink chemistry ON during the stretch; the σ(ε̇) sweep runs this at a range of strain rates.
+# **Composite `viva_lumenoid.composites.stage2_sweep`** — `spec_viva_lumenoid_composites_stage2_sweep` (materialized from its `@composite_generator`)
 
-# === Parameters — edit any value, then re-run from the Run cell below ===
-# Each entry is the composite's current default; the comment explains it.
-ov_viva_lumenoid_composites_stage2_sweep = {
-    'n_rods'               : 200,   # Number of two-bead collagen IV rods.
-    'box_xy'               : 20.0,   # In-plane box size (units of the bead spacing a).
-    'make_prob'            : 0.12,   # Per-attempt crosslink formation probability (MP proxy).
-    'off_rate'             : 0.02,   # Force-independent crosslink off-rate (per LJ time).
-    'bending_k'            : 0.0,   # Junction bending stiffness (0 = floppy central-force network).
-    'seed'                 : 12345,   # RNG seed.
-    'slab_thickness'       : 2.0,   # Slab thickness (units of the bead spacing a).
-    'bead_spacing_nm'      : 125.0,   # Collagen-IV rod bead spacing (nm).
-    'persistence_length_nm': 40.0,   # Rod persistence length (nm).
-    'make_every'           : 500,   # Crosslink make-attempt interval (steps).
-    'break_every'          : 100,   # Crosslink break-attempt interval (steps).
-    'factor_mult'          : 0.66,   # Break/make ratio (FactorMult).
-    'target_strain'        : 0.15,   # Stretch-ramp target strain.
-    'strain_rate'          : 0.0015,   # Stretch-ramp strain rate (per LJ time).
-    'assemble_steps'       : 8000,   # Assemble-phase step count.
-    'hold_steps'           : 16000,   # Hold-phase step count.
-}
+spec_viva_lumenoid_composites_stage2_sweep = materialize_composite('viva_lumenoid.composites.stage2_sweep')
+describe_spec(spec_viva_lumenoid_composites_stage2_sweep)
+
+# === Edit parameters for this composite, then run the Run cell ===
+# ov_viva_lumenoid_composites_stage2_sweep maps each tunable parameter to its current value (the generator's
+# defaults). Edit any entry; the Run cell rebuilds the composite with it.
+ov_viva_lumenoid_composites_stage2_sweep = dict(spec_viva_lumenoid_composites_stage2_sweep['_overrides'])
+import json as _json; print(_json.dumps(ov_viva_lumenoid_composites_stage2_sweep, indent=2, default=str))
+# e.g.:  ov_viva_lumenoid_composites_stage2_sweep['<parameter>'] = <value>
 
 # ### Run
 #
@@ -1152,16 +1061,17 @@ _save_viz('bm-r3-network-expansion-supply', 'r3_supply', _render_one('html:r3_su
 #
 # Each composite is a process-bigraph *document* — named processes wired by `inputs`/`outputs` ports over shared stores. Below, each composite shows what it does, then a **parameter cell** with its tunable knobs (the current default and what each one means). Edit any value, then re-run the **Run** section to rebuild and re-simulate with your changes.
 
-# **The model — `viva_lumenoid.composites.tyssue_2d_sheet`**
-#
-# R4 — coupled 2D epithelium on the vivarium-tyssue engine: a polygonal sheet relaxed with the merged CrossSectionGeometry (explicit per-cell height DOF for the prism/height relation). The homogeneous reference for the confinement response (vs R1).
+# **Composite `viva_lumenoid.composites.tyssue_2d_sheet`** — `spec_viva_lumenoid_composites_tyssue_2d_sheet` (materialized from its `@composite_generator`)
 
-# === Parameters — edit any value, then re-run from the Run cell below ===
-# Each entry is the composite's current default; the comment explains it.
-ov_viva_lumenoid_composites_tyssue_2d_sheet = {
-    'line_tension' : 0.1,   # Junction line tension of the 2D sheet.
-    'prefered_area': 1.0,   # Target cell area.
-}
+spec_viva_lumenoid_composites_tyssue_2d_sheet = materialize_composite('viva_lumenoid.composites.tyssue_2d_sheet')
+describe_spec(spec_viva_lumenoid_composites_tyssue_2d_sheet)
+
+# === Edit parameters for this composite, then run the Run cell ===
+# ov_viva_lumenoid_composites_tyssue_2d_sheet maps each tunable parameter to its current value (the generator's
+# defaults). Edit any entry; the Run cell rebuilds the composite with it.
+ov_viva_lumenoid_composites_tyssue_2d_sheet = dict(spec_viva_lumenoid_composites_tyssue_2d_sheet['_overrides'])
+import json as _json; print(_json.dumps(ov_viva_lumenoid_composites_tyssue_2d_sheet, indent=2, default=str))
+# e.g.:  ov_viva_lumenoid_composites_tyssue_2d_sheet['<parameter>'] = <value>
 
 # ### Run
 #
@@ -1253,16 +1163,17 @@ _save_viz('bm-r4-coupled-2d-epithelium', 'r4_bm_hypothesis', _render_one('html:r
 #
 # Each composite is a process-bigraph *document* — named processes wired by `inputs`/`outputs` ports over shared stores. Below, each composite shows what it does, then a **parameter cell** with its tunable knobs (the current default and what each one means). Edit any value, then re-run the **Run** section to rebuild and re-simulate with your changes.
 
-# **The model — `viva_lumenoid.composites.tyssue_3d_monolayer`**
-#
-# R5 — explicit 3D cell confinement: a Tyssue 3D monolayer (MonolayerGeometry) with apical/basal/lateral surfaces and cell-volume targets, so cell height + basal area emerge explicitly (no prism approximation).
+# **Composite `viva_lumenoid.composites.tyssue_3d_monolayer`** — `spec_viva_lumenoid_composites_tyssue_3d_monolayer` (materialized from its `@composite_generator`)
 
-# === Parameters — edit any value, then re-run from the Run cell below ===
-# Each entry is the composite's current default; the comment explains it.
-ov_viva_lumenoid_composites_tyssue_3d_monolayer = {
-    'contractility' : 0.05,   # Apical/basal face contractility.
-    'vol_elasticity': 1.0,   # Cell volume elasticity (resists height change).
-}
+spec_viva_lumenoid_composites_tyssue_3d_monolayer = materialize_composite('viva_lumenoid.composites.tyssue_3d_monolayer')
+describe_spec(spec_viva_lumenoid_composites_tyssue_3d_monolayer)
+
+# === Edit parameters for this composite, then run the Run cell ===
+# ov_viva_lumenoid_composites_tyssue_3d_monolayer maps each tunable parameter to its current value (the generator's
+# defaults). Edit any entry; the Run cell rebuilds the composite with it.
+ov_viva_lumenoid_composites_tyssue_3d_monolayer = dict(spec_viva_lumenoid_composites_tyssue_3d_monolayer['_overrides'])
+import json as _json; print(_json.dumps(ov_viva_lumenoid_composites_tyssue_3d_monolayer, indent=2, default=str))
+# e.g.:  ov_viva_lumenoid_composites_tyssue_3d_monolayer['<parameter>'] = <value>
 
 # ### Run
 #
@@ -1368,17 +1279,17 @@ _save_viz('bm-r5-explicit-3d-confinement', 'r5_bm_hypothesis', _render_one('html
 #
 # Each composite is a process-bigraph *document* — named processes wired by `inputs`/`outputs` ports over shared stores. Below, each composite shows what it does, then a **parameter cell** with its tunable knobs (the current default and what each one means). Edit any value, then re-run the **Run** section to rebuild and re-simulate with your changes.
 
-# **The model — `viva_lumenoid.composites.turnover_shape_pipeline`**
-#
-# R6 — turnover->relaxation->shape inference pipeline: an inferred collagen IV lifetime (modulated by perlecan) sets the BM relaxation time, which the reduced-order prism model turns into a predicted cell shape. Inferred (relaxation) and predicted (shape) are kept distinct; conditions are control / perlecan gain-loss / growth rate.
+# **Composite `viva_lumenoid.composites.turnover_shape_pipeline`** — `spec_viva_lumenoid_composites_turnover_shape_pipeline` (materialized from its `@composite_generator`)
 
-# === Parameters — edit any value, then re-run from the Run cell below ===
-# Each entry is the composite's current default; the comment explains it.
-ov_viva_lumenoid_composites_turnover_shape_pipeline = {
-    'collagen_lifetime': 5.0,   # Inferred collagen IV molecular lifetime.
-    'perlecan_factor'  : 1.0,   # Perlecan modulation: >1 stabilizes (longer lifetime), <1 destabilizes.
-    'doubling_time'    : 5.0,   # Growth-rate condition (cell doubling time).
-}
+spec_viva_lumenoid_composites_turnover_shape_pipeline = materialize_composite('viva_lumenoid.composites.turnover_shape_pipeline')
+describe_spec(spec_viva_lumenoid_composites_turnover_shape_pipeline)
+
+# === Edit parameters for this composite, then run the Run cell ===
+# ov_viva_lumenoid_composites_turnover_shape_pipeline maps each tunable parameter to its current value (the generator's
+# defaults). Edit any entry; the Run cell rebuilds the composite with it.
+ov_viva_lumenoid_composites_turnover_shape_pipeline = dict(spec_viva_lumenoid_composites_turnover_shape_pipeline['_overrides'])
+import json as _json; print(_json.dumps(ov_viva_lumenoid_composites_turnover_shape_pipeline, indent=2, default=str))
+# e.g.:  ov_viva_lumenoid_composites_turnover_shape_pipeline['<parameter>'] = <value>
 
 # ### Run
 #
@@ -1457,18 +1368,17 @@ _save_viz('bm-r6-perlecan-growth-perturbations', 'r6_intervention', _render_one(
 #
 # Each composite is a process-bigraph *document* — named processes wired by `inputs`/`outputs` ports over shared stores. Below, each composite shows what it does, then a **parameter cell** with its tunable knobs (the current default and what each one means). Edit any value, then re-run the **Run** section to rebuild and re-simulate with your changes.
 
-# **The model — `viva_lumenoid.composites.actomyosin_cortex`**
-#
-# E1 (extension) — a coarse 2D actomyosin cortex on the viva-lammps model seam (LammpsModelProcess + the actomyosin-cortex plugin). Contractility (LJ ε, a myosin-activity proxy) tunes the cortical tension that will map onto a Tyssue cortical-energy parameter.
+# **Composite `viva_lumenoid.composites.actomyosin_cortex`** — `spec_viva_lumenoid_composites_actomyosin_cortex` (materialized from its `@composite_generator`)
 
-# === Parameters — edit any value, then re-run from the Run cell below ===
-# Each entry is the composite's current default; the comment explains it.
-ov_viva_lumenoid_composites_actomyosin_cortex = {
-    'n'            : 8,   # Cortex patch size (lattice replications per side).
-    'contractility': 1.0,   # Myosin activity proxy (LJ well depth); higher = more cortical tension.
-    'temperature'  : 0.2,   # Langevin temperature (LJ units).
-    'seed'         : 12345,   # RNG seed.
-}
+spec_viva_lumenoid_composites_actomyosin_cortex = materialize_composite('viva_lumenoid.composites.actomyosin_cortex')
+describe_spec(spec_viva_lumenoid_composites_actomyosin_cortex)
+
+# === Edit parameters for this composite, then run the Run cell ===
+# ov_viva_lumenoid_composites_actomyosin_cortex maps each tunable parameter to its current value (the generator's
+# defaults). Edit any entry; the Run cell rebuilds the composite with it.
+ov_viva_lumenoid_composites_actomyosin_cortex = dict(spec_viva_lumenoid_composites_actomyosin_cortex['_overrides'])
+import json as _json; print(_json.dumps(ov_viva_lumenoid_composites_actomyosin_cortex, indent=2, default=str))
+# e.g.:  ov_viva_lumenoid_composites_actomyosin_cortex['<parameter>'] = <value>
 
 # ### Run
 #
@@ -1555,19 +1465,17 @@ _save_viz('bm-e1-actomyosin-cortex', 'e1_tension_components', _render_one('html:
 #
 # Each composite is a process-bigraph *document* — named processes wired by `inputs`/`outputs` ports over shared stores. Below, each composite shows what it does, then a **parameter cell** with its tunable knobs (the current default and what each one means). Edit any value, then re-run the **Run** section to rebuild and re-simulate with your changes.
 
-# **The model — `viva_lumenoid.composites.actin_adhesion_bm`**
-#
-# E2 (extension) — actin-adhesion-collagen force transfer: an actomyosin cortex (LAMMPS seam) pulls through reversible basal linkers (BasalAdhesion) on a collagen IV BM patch (CollagenNetworkProcess). Measures traction, linker occupancy and the BM deformation on a single-cell patch.
+# **Composite `viva_lumenoid.composites.actin_adhesion_bm`** — `spec_viva_lumenoid_composites_actin_adhesion_bm` (materialized from its `@composite_generator`)
 
-# === Parameters — edit any value, then re-run from the Run cell below ===
-# Each entry is the composite's current default; the comment explains it.
-ov_viva_lumenoid_composites_actin_adhesion_bm = {
-    'contractility': 1.5,   # Cortex myosin-activity proxy (drives cortex tension).
-    'k_on'         : 0.5,   # Basal-linker binding rate.
-    'k_off'        : 0.1,   # Basal-linker unbinding rate.
-    'coupling_gain': 0.0001,   # Transmitted traction -> BM strain rate.
-    'n_rods'       : 40,   # Collagen rods in the single-cell BM patch.
-}
+spec_viva_lumenoid_composites_actin_adhesion_bm = materialize_composite('viva_lumenoid.composites.actin_adhesion_bm')
+describe_spec(spec_viva_lumenoid_composites_actin_adhesion_bm)
+
+# === Edit parameters for this composite, then run the Run cell ===
+# ov_viva_lumenoid_composites_actin_adhesion_bm maps each tunable parameter to its current value (the generator's
+# defaults). Edit any entry; the Run cell rebuilds the composite with it.
+ov_viva_lumenoid_composites_actin_adhesion_bm = dict(spec_viva_lumenoid_composites_actin_adhesion_bm['_overrides'])
+import json as _json; print(_json.dumps(ov_viva_lumenoid_composites_actin_adhesion_bm, indent=2, default=str))
+# e.g.:  ov_viva_lumenoid_composites_actin_adhesion_bm['<parameter>'] = <value>
 
 # ### Run
 #
@@ -1646,16 +1554,17 @@ _save_viz('bm-e2-actin-adhesion-collagen', 'e2_bm_response', _render_one('html:e
 #
 # Each composite is a process-bigraph *document* — named processes wired by `inputs`/`outputs` ports over shared stores. Below, each composite shows what it does, then a **parameter cell** with its tunable knobs (the current default and what each one means). Edit any value, then re-run the **Run** section to rebuild and re-simulate with your changes.
 
-# **The model — `viva_lumenoid.composites.closed_lumenoid`**
-#
-# E3 (extension) — a closed 3D lumenoid on the vivarium-tyssue engine (EulerSolver over the merged LumenoidGeometry + lumenoid mesh). Tracks a Laplace lumen pressure on top of the enclosed lumen volume and exposes the basal surface as the basement-membrane coupling shell (the surface the collagen BM attaches to).
+# **Composite `viva_lumenoid.composites.closed_lumenoid`** — `spec_viva_lumenoid_composites_closed_lumenoid` (materialized from its `@composite_generator`)
 
-# === Parameters — edit any value, then re-run from the Run cell below ===
-# Each entry is the composite's current default; the comment explains it.
-ov_viva_lumenoid_composites_closed_lumenoid = {
-    'contractility'   : 0.05,   # Apical/basal face contractility of the lumenoid cells.
-    'lumen_elasticity': 1.0,   # Lumen pressure stiffness: P = lumen_elasticity*(V0 - V).
-}
+spec_viva_lumenoid_composites_closed_lumenoid = materialize_composite('viva_lumenoid.composites.closed_lumenoid')
+describe_spec(spec_viva_lumenoid_composites_closed_lumenoid)
+
+# === Edit parameters for this composite, then run the Run cell ===
+# ov_viva_lumenoid_composites_closed_lumenoid maps each tunable parameter to its current value (the generator's
+# defaults). Edit any entry; the Run cell rebuilds the composite with it.
+ov_viva_lumenoid_composites_closed_lumenoid = dict(spec_viva_lumenoid_composites_closed_lumenoid['_overrides'])
+import json as _json; print(_json.dumps(ov_viva_lumenoid_composites_closed_lumenoid, indent=2, default=str))
+# e.g.:  ov_viva_lumenoid_composites_closed_lumenoid['<parameter>'] = <value>
 
 # ### Run
 #
@@ -1742,20 +1651,17 @@ _save_viz('bm-e3-closed-3d-lumenoid', 'e3_lumen_dynamics', _render_one('html:e3_
 #
 # Each composite is a process-bigraph *document* — named processes wired by `inputs`/`outputs` ports over shared stores. Below, each composite shows what it does, then a **parameter cell** with its tunable knobs (the current default and what each one means). Edit any value, then re-run the **Run** section to rebuild and re-simulate with your changes.
 
-# **The model — `viva_lumenoid.composites.coupled_lumenoid`**
-#
-# E4 / P3 capstone — bidirectional LAMMPS collagen-BM <-> Tyssue epithelium coupling: the lumenoid's basal BM-shell surface stretches an explicit LAMMPS collagen IV BM patch, whose stress feeds back as a basal tension on the epithelium. The force round-trip the multiscale campaign is built toward (explicit-BM realization).
+# **Composite `viva_lumenoid.composites.coupled_lumenoid`** — `spec_viva_lumenoid_composites_coupled_lumenoid` (materialized from its `@composite_generator`)
 
-# === Parameters — edit any value, then re-run from the Run cell below ===
-# Each entry is the composite's current default; the comment explains it.
-ov_viva_lumenoid_composites_coupled_lumenoid = {
-    'bm_rods'      : 40,   # Collagen rods in the explicit LAMMPS BM patch.
-    'strain_gain'  : 20.0,   # Epithelial basal strain-rate -> BM strain-rate.
-    'tension_gain' : 0.02,   # BM stress -> added basal contractility (reaction force).
-    'coupling_mode': 'two-way',   # two-way | one-way (no reaction) | uncoupled (inert BM).
-    'bm_mode'      : 'explicit',   # explicit (LAMMPS collagen) | reduced (effective viscoelastic BM).
-    'bm_substeps'  : 1,   # BM subcycles per epithelial macro-step (convergence).
-}
+spec_viva_lumenoid_composites_coupled_lumenoid = materialize_composite('viva_lumenoid.composites.coupled_lumenoid')
+describe_spec(spec_viva_lumenoid_composites_coupled_lumenoid)
+
+# === Edit parameters for this composite, then run the Run cell ===
+# ov_viva_lumenoid_composites_coupled_lumenoid maps each tunable parameter to its current value (the generator's
+# defaults). Edit any entry; the Run cell rebuilds the composite with it.
+ov_viva_lumenoid_composites_coupled_lumenoid = dict(spec_viva_lumenoid_composites_coupled_lumenoid['_overrides'])
+import json as _json; print(_json.dumps(ov_viva_lumenoid_composites_coupled_lumenoid, indent=2, default=str))
+# e.g.:  ov_viva_lumenoid_composites_coupled_lumenoid['<parameter>'] = <value>
 
 # ### Run
 #

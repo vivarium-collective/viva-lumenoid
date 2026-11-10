@@ -2,6 +2,6 @@
   "mode": "snapshot",
   "smsApiBase": "",
   "repo": "https://github.com/vivarium-collective/viva-lumenoid",
-  "commit": "e73b523ce76ab02df9781a453c7eaaf2241de1b9",
-  "generated_from_ref": "basement-membrane-v1"
+  "commit": "48368b8b18d33d7319121fc52d19667e8b122918",
+  "generated_from_ref": "main"
 }
