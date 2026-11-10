@@ -540,6 +540,16 @@ followup_proposals:
       and full make/break turnover (at the authors' dense config) would make the reproduction
       quantitative rather than directional.
     status: proposed
+  - id: fp-r3-fig2c-reproduction
+    title: "Reproduce the Barrientos 2026 Fig 2C visualization with the actual collagen model"
+    motivation: >
+      Reviewer (inline, 2026-11-09) asks for a reproduction of the Fig 2C visualization using
+      the real collagen model, showing the change in network density / crosslinking under the
+      three supply modes (no-remodeling, remodeling-without-insertion, remodeling-with-insertion).
+    hypothesized_mechanism: >
+      Rendering the three-mode network snapshots the way Fig 2C does would make the density /
+      crosslink changes under growth directly comparable to the published panel.
+    status: proposed
 
 discovery_implications:
   resolved_uncertainties:
@@ -573,6 +583,13 @@ expert_review_status: requested
 expert_questions:
   - "Supply model: is uniform-random rod insertion at a fixed per-step rate the right collagen-supply abstraction, or should supply be concentration-dependent / spatially gradiented?"
   - "Turnover: should the canonical three-mode run use full make/break turnover at the authors' dense config (rather than the formation-dominant real-angle make-only path at this reduced scale) before the reproduction is called quantitative?"
+
+review_actions:
+- source: inline-feedback
+  date: "2026-11-09"
+  item: "Reviewer asks to reproduce the Barrientos 2026 Fig 2C visualization using the actual collagen model, showing the change in density / crosslinking under the three supply modes."
+  action: "Recorded as followup_proposal fp-r3-fig2c-reproduction (render the three-mode network snapshots the way Fig 2C does, showing density / crosslink change under growth). Visualization work deferred to a follow-up; the three-mode ordering result and numbers unchanged."
+  status: deferred-followup
 
 bibliography:
   sources:

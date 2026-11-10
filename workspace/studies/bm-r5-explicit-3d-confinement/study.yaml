@@ -11,6 +11,23 @@ gate_status: passed
 design_status: drafted
 confidence: Investigating
 
+review_actions:
+  - source: mogre-deep-review
+    date: "2026-11-09"
+    item: "This is the first real vertex-model run WITH growth (good), but the BM is a single scalar Maxwell element on the MEAN basal area, fed back as uniform basal FaceContractility and driven by hand-set (k, tau) — not an explicit BM."
+    action: "Reframed the claim / result / report verdict / caveat / findings wording: kept the credit that this is the first real vertex-model run with growth, but relabeled the BM as a single scalar Maxwell element on the mean basal area (hand-set k, tau) fed back as uniform basal FaceContractility — NOT an explicit BM and NOT an elastic sheet (contractility penalizes perimeter squared, not area dilation), so it neither reduces to R1 nor represents an explicit BM. Added a limitation capturing this."
+    status: reframed
+  - source: inline-feedback
+    date: "2026-11-09"
+    item: "The previous study (R4) must be resolved before R5; R4 is being reframed to an engine-and-wiring check, so R5's R4 prerequisite is not yet satisfied."
+    action: "Noted on pipeline_gate that the R4 prerequisite is NOT yet satisfied (R4 was reframed to an engine-and-wiring check, not a resolved coupled-sheet result), so this gate is not fabricated as passed. Recorded as an acknowledged review action."
+    status: acknowledged
+  - source: inline-feedback
+    date: "2026-11-09"
+    item: "Provide a video of tyssue cells growing — taller under confinement or spreading over a softer BM."
+    action: "Recorded followup_proposals entry fp-r5-growth-video (render a dynamic video of the tyssue monolayer growing taller under a slow/stiff BM vs spreading over a soft BM). Cannot render the video here."
+    status: deferred-followup
+
 claim: >
   The explicit 3D epithelial monolayer runs over the Tyssue engine and per-cell heights and
   volumes emerge directly from the apical/lateral/basal surface energies and volume targets --
@@ -38,6 +55,11 @@ result: >
   construction, since faces carry no enclosed volume in a monolayer). The honest gap: the no-BM,
   elastic-BM and relaxing-BM controls that the Fig target morphology ordering needs are not in
   the composite yet, so the "taller under slow relaxation" ordering is not tested here.
+  BM FRAMING (2026-11-09 review): this is the first real vertex-model run WITH growth, but the
+  BM in the growth-coupling run is NOT an explicit BM — it is a single scalar Maxwell element on
+  the MEAN basal area, driven by hand-set (k, tau) and fed back as uniform basal
+  FaceContractility. Contractility penalizes perimeter squared, not area dilation, so this BM
+  neither reduces to R1 nor represents an elastic sheet.
 
 pipeline_gate:
   prerequisites:
@@ -50,6 +72,11 @@ pipeline_gate:
     closed lumenoid (E3) builds on. Advancing to the quantitative "taller under slow BM
     relaxation" morphology claim additionally requires the no-BM / elastic-BM / relaxing-BM
     controls, which are flagged as a followup.
+  prerequisite_status: >
+    NOT yet satisfied (2026-11-09 review): the R4 prerequisite is being reframed to an
+    engine-and-wiring check (12 independent per-cell scalar ODEs, no neighbour coupling), not a
+    resolved coupled-sheet result, so R5's "R4 tests-passed" prerequisite is not treated as
+    cleared. This gate is not fabricated as passed.
 
 question: >
   Do growing 3D epithelial cells become taller when the basement membrane relaxes slowly?
@@ -266,6 +293,7 @@ conclusion_logic:
 limitations:
   - "Qualitative spatial-engine check only: the study confirms explicit 3D per-cell volumes and an emergent height exist and stay well-posed, not that cells are taller under slow BM relaxation."
   - "HONEST GAP: the no-BM / elastic-BM / relaxing-BM controls the morphology ordering needs are NOT in the composite -- the central question (taller under slow relaxation) is not tested here."
+  - "BM IS A SCALAR MAXWELL ELEMENT, not an explicit BM (2026-11-09 review): the growth-coupling run feeds the BM reaction as a single scalar Maxwell element on the MEAN basal area, driven by hand-set (k, tau), fed back as UNIFORM basal FaceContractility. Contractility penalizes perimeter squared, not area dilation, so it neither reduces to R1 nor represents an elastic sheet; and a periodic/fixed monolayer_box would itself confine in-plane growth (an implicit rigid BM). The 0.4% height difference (1.138 vs 1.133) is a null at this resolution, not a directional result, and the realized-volume gap (0.272) with no free-control gap reported may be vertex-model drag rather than BM confinement."
   - "Single deterministic configuration (no parameter sweep, n_replicates = 1); replication across the three BM controls is a gap."
   - "Monolayer height is read as the vertex z-extent, not a per-cell stored scalar; face-level volume is NaN by construction (faces enclose no volume) and is excluded from the per-cell finiteness check."
   - "Reduced units; no calibration to microns."
@@ -364,7 +392,11 @@ report:
     the apical/lateral/basal surface energies and volume targets, no prism approximation. This
     establishes the explicit 3D substrate the closed lumenoid builds on. It is a qualitative
     engine check only: the no-BM / elastic-BM / relaxing-BM controls the morphology ordering
-    needs are not yet in the composite.
+    needs are not yet in the composite. BM FRAMING (2026-11-09 review): this is the first real
+    vertex-model run WITH growth, but the BM is NOT explicit — it is a single scalar Maxwell
+    element on the MEAN basal area (hand-set k, tau) fed back as uniform basal FaceContractility,
+    which penalizes perimeter squared (not area dilation), so it neither reduces to R1 nor
+    represents an elastic sheet; the 0.4% height difference is a null at this resolution.
   confidence: medium
   evidence_quality: regression-only
   main_insight: >
@@ -374,6 +406,9 @@ report:
   caveat: >
     The three BM-relaxation controls are not wired, so the central "taller under slow relaxation"
     morphology ordering is not tested -- this is a substrate-runs result, not a reproduction.
+    The BM is a single scalar Maxwell element on the mean basal area (hand-set k, tau) fed back
+    as uniform basal FaceContractility, NOT an explicit BM; the height differential (1.138 vs
+    1.133, 0.4%) is a null at this resolution, not a directional confinement result.
 
 findings:
   - id: F1-per-cell-volumes-emerge
@@ -462,6 +497,11 @@ findings:
       into cell HEIGHT — mean height is marginally taller under the stiff BM (1.138 vs 1.133
       free). The direction matches the paper's confinement morphology, but the magnitude is
       small at this mesh/parameters (directional, not a calibrated height prediction).
+      REFRAME (2026-11-09 review): the 0.4% difference (1.138 vs 1.133) is a null at this
+      resolution, not a directional result; the BM here is a scalar Maxwell element on the mean
+      basal area fed back as perimeter-squared FaceContractility (not area dilation), and the
+      realized-volume gap (0.272) with no free-control gap reported may be vertex-model drag
+      rather than BM confinement.
     evidence:
       from_run: r5-growth-coupling
       from_test: confinement-raises-height-directional
@@ -484,6 +524,15 @@ followup_proposals:
       distribution against the paper's morphology ordering.
     hypothesized_mechanism: "A slowly-relaxing BM should confine cells (smaller basal area, larger height) relative to an elastic or absent BM, reproducing the paper's morphology ordering in the explicit 3D model."
     status: proposed
+  - id: fp-r5-growth-video
+    title: "Render a video of tyssue cells growing taller under confinement vs spreading over a soft BM"
+    motivation: >
+      The inline review asked for a dynamic video of tyssue cells growing — taller under a
+      slow/stiff BM and spreading over a softer BM. The current R5 artifact is a geometry/movie
+      of the relaxing mesh; render a growth-coupling video that shows cells changing height under
+      the BM-relaxation controls so the morphology response is visible, not only tabulated.
+    hypothesized_mechanism: "A side-by-side growth video (stiff/slow BM vs soft BM) should make the confinement -> height response legible, once the BM-shell controls above are wired."
+    status: proposed
 
 discovery_implications:
   resolved_uncertainties:
@@ -494,6 +543,7 @@ discovery_implications:
     - "The quantitative height / basal-area distribution vs BM relaxation."
   followup_study_proposals:
     - {id: fp-r5-bm-shell-controls, title: "no-BM / elastic-BM / relaxing-BM controls on the 3D monolayer"}
+    - {id: fp-r5-growth-video, title: "Video of tyssue cells growing taller under confinement vs spreading over soft BM"}
 
 conclusion_verdicts:
   regression_compatibility:

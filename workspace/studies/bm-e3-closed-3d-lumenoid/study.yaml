@@ -11,6 +11,30 @@ gate_status: passed
 design_status: drafted
 confidence: Investigating
 
+review_actions:
+  - source: mogre-deep-review
+    date: "2026-11-09"
+    item: "Check the apical/basal orientation: E3/E4 use lumen_side=basal and bm_side=basal, but the E3 numbers (basal area 202.5 => sphere R~4.0, V~271 vs lumen volume 261.7; vertices to ~+/-4.8 outside that surface) suggest basal is the INNER lumen-facing surface — possibly inside-out."
+    action: >
+      Recorded the orientation check as an OPEN verification (not resolved here -- no fabricated
+      resolution). Added an honest limitation stating the geometric inconsistency the reviewer found
+      (basal-as-inner-surface would make the shell inside-out relative to an apical-lumen / outer-BM
+      lumenoid, matching tyssue's Drosophila-ellipsoid convention), added an expert_question, and
+      added a followup proposal (fp-e3-verify-apical-basal-orientation) to confirm the orientation
+      before any curvature-dependent or lumen-pressure prediction. Also flagged the reviewer's second
+      readout inconsistency (per-cell basal area 3.90-15.65 vs 78 faces totalling 202.5, mean 2.6).
+    status: acknowledged
+  - source: inline-feedback
+    date: "2026-11-09"
+    item: "2D composition must pass before moving to 3D; the pressure/volume relation is interesting but can be a follow-up (could Simularium drive dynamic visualizations?)."
+    action: >
+      Acknowledged the 2D-before-3D sequencing honestly: this 3D study is a qualitative geometry
+      rest-state check (no lumen-growth / pressure trajectory is claimed as a result), and the
+      pressure/volume trajectory is already carried as followup fp-e3-lumen-pressure-and-bm-attachment.
+      Added a dynamic-visualization followup (fp-e3-simularium-dynamic-viz) for a Simularium movie.
+      No 2D-coupling gate is marked as passed.
+    status: acknowledged
+
 claim: >
   A closed 3D lumenoid runs over the Tyssue engine: 78 cells enclose a single lumen, per-cell
   volumes emerge finite and positive (0.50-3.43), and a basal surface (78 faces, area 202.5) is
@@ -243,6 +267,7 @@ limitations:
   - "The BM is an effective basal surface only (78 faces, area 202.47); the explicit collagen/LAMMPS attachment and the reduced-order-vs-resolved BM consistency check are not wired."
   - "The measured shell extent (roughly +/-4.7 in x/y, -4.90 to +4.74 in z) is wider than the +/-4.3 of the earlier reconstruction -- reported here from the live run."
   - "Single deterministic configuration (no parameter sweep, n_replicates = 1); reduced units, no micron calibration."
+  - "ORIENTATION (flagged by deep review 2026-11-09, NOT yet resolved): the composite uses lumen_side=basal and bm_side=basal, but the geometry suggests basal is the INNER, lumen-facing surface -- total basal area 202.47 corresponds to an equal-area sphere of R~4.0 / V~271 vs the reported lumen volume 261.7, and vertices extend to ~+/-4.8 (outside that surface). For a lumenoid with an apical lumen and an outer BM this would be inside-out (it matches tyssue's Drosophila-ellipsoid convention), reversing cell wedging under curvature and placing lumen pressure and BM tension on the same surface. The orientation must be confirmed before any curvature-dependent or lumen-pressure prediction. Separately, the per-cell basal-area readout (3.90-15.65) is inconsistent with 78 basal faces totalling 202.47 (mean 2.6); which faces that readout uses is unverified."
 
 visualizations:
   - name: closed_3d_lumenoid_movie
@@ -374,6 +399,31 @@ followup_proposals:
       explicit BM shell, and measure curvature-dependent cell shape against BM relaxation.
     hypothesized_mechanism: "A growing lumen raising pressure against a slowly-relaxing BM shell should produce curvature-dependent cell shapes -- the morphogenesis prediction beyond the flat-substrate paper."
     status: proposed
+  - id: fp-e3-verify-apical-basal-orientation
+    title: "Verify the apical/basal orientation of the closed lumenoid (inside-out check)"
+    motivation: >
+      Reviewer (deep review): E3/E4 use lumen_side=basal and bm_side=basal, but the E3 numbers
+      (basal area 202.47 -> equal-area sphere R~4.0 / V~271 vs lumen volume 261.7; vertices to
+      ~+/-4.8 outside that surface) suggest basal is the inner, lumen-facing surface -- inside-out
+      for an apical-lumen / outer-BM lumenoid (matching tyssue's Drosophila-ellipsoid convention).
+      This reverses cell wedging under curvature and puts lumen pressure and BM tension on the same
+      surface. Also reconcile the per-cell basal-area readout (3.90-15.65) with the 78-face total
+      (202.47, mean 2.6).
+    hypothesized_mechanism: >
+      Inspecting LumenoidGeometry's surface assignment (and comparing vertex radii to the basal and
+      apical surfaces) should establish which surface is lumen-facing; the orientation must be fixed
+      and consistent between E3 and E4 before any curvature-dependent or lumen-pressure prediction.
+    status: proposed
+  - id: fp-e3-simularium-dynamic-viz
+    title: "Dynamic Simularium visualization of the closed lumenoid"
+    motivation: >
+      Reviewer (inline, 2026-11-09): could Simularium drive dynamic visualizations of the lumenoid?
+      Once the lumen is driven off its rest volume (fp-e3-lumen-pressure-and-bm-attachment), a
+      Simularium movie of the shell deforming would make the morphogenesis trajectory legible.
+    hypothesized_mechanism: >
+      A Simularium export of the per-step mesh would animate lumen filling and curvature-dependent
+      cell shape, complementing the static geometry-verification figure.
+    status: proposed
 
 discovery_implications:
   resolved_uncertainties:
@@ -408,6 +458,7 @@ expert_review_status: requested
 expert_questions:
   - "The lumen starts at its preferred volume (pressure 0.0). Should the canonical E3 run instead drive the lumen off rest (influx or a volume ramp) so the pressure/volume trajectory is part of the evidence?"
   - "Is the effective basal BM surface (78 faces, area 202.47) a sufficient coupling shell for the morphogenesis claim, or must the explicit collagen/LAMMPS attachment be wired first?"
+  - "Orientation: with lumen_side=basal / bm_side=basal, is the basal surface the INNER (lumen-facing) or OUTER (BM) surface? The E3 geometry (basal area 202.47 -> sphere R~4.0, vertices to ~+/-4.8) suggests basal is inner, i.e. inside-out for an apical-lumen / outer-BM lumenoid; this must be confirmed before any curvature-dependent or lumen-pressure prediction, and the per-cell basal-area readout (3.90-15.65) reconciled with the 78-face total (202.47, mean 2.6)."
 
 bibliography:
   sources:
