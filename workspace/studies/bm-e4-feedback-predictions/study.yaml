@@ -690,7 +690,7 @@ visualizations:
     caption: >
       The coupling made explicit: the Tyssue epithelium (left) and the explicit LAMMPS collagen IV BM (right) joined by two arrows that PULSE with the live signals — the epithelial basal strain stretching the collagen (red, downward) and the collagen stress fed back as basal tension (blue, upward) — over a co-evolution trace strip with a moving time cursor. You watch the bidirectional force round-trip close in real time. Two-way mode, explicit LAMMPS BM, reduced units.
 - name: e4_coupling_roundtrip
-  address: "html:e4_coupling_roundtrip.html"
+  address: "html:viz/e4_coupling_roundtrip.html"
   config:
     title: "E4 — coupling round-trip: forward strain → collagen stress → feedback tension"
     evidence_status: observed
@@ -698,7 +698,7 @@ visualizations:
     caption: >
       The bidirectional loop as three co-evolving signals: the epithelial basal strain rate ε̇ (top) stretches the explicit LAMMPS collagen BM, whose stress σ (middle) responds, and that stress is fed back as basal tension (bottom). The three-mode contrast IS the coupling — the feedback closes ONLY in two-way (blue); one-way (orange) pins the tension at 0, and uncoupled (grey) leaves the collagen barely stressed. Real explicit-BM run, reduced units.
 - name: e4_growth_feedback
-  address: "html:e4_growth_feedback.html"
+  address: "html:viz/e4_growth_feedback.html"
   config:
     title: "Growth-driven two-way feedback: realized basal growth lags the target"
     evidence_status: observed
@@ -732,7 +732,7 @@ visualizations:
       RIGHT the explicit LAMMPS collagen IV BM patch (stress σ annotated) it is coupled to.
       The bidirectional loop runs bounded only in the stable small-rods regime (reduced units).
 - name: e4_feedback
-  address: "html:e4_feedback.html"
+  address: "html:viz/e4_feedback.html"
   config:
     title: "Coupling-control time courses: two-way / one-way / uncoupled (engineered-diagnostic, demoted)"
     evidence_status: engineered-diagnostic
@@ -750,7 +750,7 @@ visualizations:
       morphogenetic prediction: the explicit-LAMMPS collagen BM is NOT in this loop (reduced-order BM only)
       and there is no growth trajectory (named gaps).
 - name: e4_subcycle_convergence
-  address: "html:e4_subcycle_convergence.html"
+  address: "html:viz/e4_subcycle_convergence.html"
   config:
     title: "BM subcycling convergence (engineered-diagnostic)"
     evidence_status: engineered-diagnostic

@@ -341,7 +341,7 @@ visualizations:
     caption: >
       Animated movie of the cortex bead patch that drives the deterministic occupancy-gated force transfer in E2. Coupling unit-test input, not emergent integrin mechanics.
 - name: e2_force_transfer
-  address: "html:e2_force_transfer.html"
+  address: "html:viz/e2_force_transfer.html"
   config:
     title: "Force-transfer coupling unit test: occupancy-gated traction (engineered-diagnostic)"
     evidence_status: engineered-diagnostic
@@ -360,7 +360,7 @@ visualizations:
       PRESCRIBED cortical traction; it does NOT establish microscopic integrin mechanics or a
       force-conserving multiscale coupling (named gap).
 - name: e2_bm_response
-  address: "html:e2_bm_response.html"
+  address: "html:viz/e2_bm_response.html"
   config:
     title: "Actin -> adhesion -> collagen BM bounded smoke: the BM responds (engineered-diagnostic)"
     evidence_status: engineered-diagnostic

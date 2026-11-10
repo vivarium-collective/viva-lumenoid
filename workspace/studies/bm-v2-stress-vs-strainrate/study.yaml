@@ -265,7 +265,7 @@ visualizations:
   # PRIMARY (figure-review 2026-10-20): the 3-panel rheology summary with the
   # paired connectivity readout.
 - name: v2-rheology-main
-  address: "html:v2_rheology_main.html"
+  address: "html:viz/v2_rheology_main.html"
   config:
     title: "Growth rate vs apparent mechanical resistance (+ paired connectivity)"
     evidence_status: observed
@@ -292,7 +292,7 @@ visualizations:
       rate-stiffening from the density confound.
   # Demoted (figure-review): the stress-derived E(ε̇)/τ(ε̇) deliverable + movies.
 - name: coupling
-  address: "html:coupling.html"
+  address: "html:viz/coupling.html"
   config:
     title: "Vertex-model coupling — E(ε̇) and τ(ε̇) (stress-derived)"
     evidence_status: engineered-diagnostic
@@ -303,7 +303,7 @@ visualizations:
       independently validated; they belong AFTER the primary rheology summary, not
       as a headline deliverable. Supplement.
 - name: stage2-diagnostic
-  address: "html:stage2_diagnostic.html"
+  address: "html:viz/stage2_diagnostic.html"
   config:
     title: "Stage 2 — σ(ε̇) diagnostic"
     evidence_status: engineered-diagnostic
@@ -312,7 +312,7 @@ visualizations:
       Near-duplicate σ(ε̇) diagnostic; a smoke/diagnostic view, not an independent
       finding. Supplement.
 - name: stage2-movie
-  address: "html:stage2_movie.html"
+  address: "html:viz/stage2_movie.html"
   config:
     title: "Simulation movie — the growing substrate stretches"
     evidence_status: engineered-diagnostic
@@ -323,7 +323,7 @@ visualizations:
       coherent). Retained as the single optional movie, removed from the linear
       narrative. Supplement.
 - name: stage2-movie-3d
-  address: "html:stage2_movie_3d.html"
+  address: "html:viz/stage2_movie_3d.html"
   config:
     title: "3D view — the slab stretching, rotatable"
     evidence_status: engineered-diagnostic

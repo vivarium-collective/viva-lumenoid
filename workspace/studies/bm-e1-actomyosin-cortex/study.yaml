@@ -294,7 +294,7 @@ visualizations:
     caption: >
       Animated movie of the LJ bead patch contracting under the well-depth proxy. Engineering verification of tunable effective tension — NOT explicit actin filaments/motors; the x-axis proxy is not biological myosin activity.
 - name: e1_cortical_tension
-  address: "html:e1_cortical_tension.html"
+  address: "html:viz/e1_cortical_tension.html"
   config:
     title: "LJ-patch effective tension: tunability + seed/size sensitivity (engineered-diagnostic)"
     evidence_status: engineered-diagnostic
@@ -310,7 +310,7 @@ visualizations:
       explicit actin filaments, motors or crosslinkers, and the model exposes no strain input, so
       force-strain and step-strain relaxation curves are NOT producible here (named gap).
 - name: e1_tension_components
-  address: "html:e1_tension_components.html"
+  address: "html:viz/e1_tension_components.html"
   config:
     title: "Pressure components of the LJ-patch tension (engineered-diagnostic)"
     evidence_status: engineered-diagnostic

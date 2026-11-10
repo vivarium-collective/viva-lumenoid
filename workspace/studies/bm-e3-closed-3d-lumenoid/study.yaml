@@ -279,7 +279,7 @@ visualizations:
     caption: >
       Animated movie of the closed 78-cell Tyssue lumenoid shell (xy projection). Geometry verification of the closed lumen + basal BM-coupling surface; no lumen-filling drive is wired yet (pressure 0 at rest).
 - name: e3_lumenoid
-  address: "html:e3_lumenoid.html"
+  address: "html:viz/e3_lumenoid.html"
   config:
     title: "Closed 3D lumenoid shell: geometry verification (engineered-diagnostic)"
     evidence_status: engineered-diagnostic
@@ -296,7 +296,7 @@ visualizations:
       volume 261.7, total cell volume 173.6), not morphogenesis. This verifies the geometry only; lumen
       filling and BM-regulated morphogenesis remain untested (see supplement).
 - name: e3_lumen_dynamics
-  address: "html:e3_lumen_dynamics.html"
+  address: "html:viz/e3_lumen_dynamics.html"
   config:
     title: "Lumen/BM state is static at rest -- no lumen-filling drive wired (hypothesis)"
     evidence_status: hypothesis

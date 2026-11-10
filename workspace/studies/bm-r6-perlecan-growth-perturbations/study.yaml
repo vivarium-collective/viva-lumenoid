@@ -379,7 +379,7 @@ limitations:
 
 visualizations:
 - name: r6_intervention
-  address: "html:r6_intervention.html"
+  address: "html:viz/r6_intervention.html"
   config:
     title: "Perlecan/growth intervention on predicted cell height (Barrientos Fig 7 reproduction)"
     evidence_status: reproduced

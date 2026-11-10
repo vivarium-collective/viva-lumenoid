@@ -300,7 +300,7 @@ limitations:
 
 visualizations:
 - name: r5_area_distribution
-  address: "html:r5_area_distribution.html"
+  address: "html:viz/r5_area_distribution.html"
   config:
     title: "R5 — per-cell basal-area distribution"
     evidence_status: observed
@@ -316,7 +316,7 @@ visualizations:
     caption: >
       Animated movie of the 206-cell closed 3D Tyssue monolayer (xy projection of the mesh edges). Geometry verification with conserved per-cell volumes; BM-shell coupling is not wired (see the hypothesis panel).
 - name: r5_growth_confinement
-  address: "html:r5_growth_confinement.html"
+  address: "html:viz/r5_growth_confinement.html"
   config:
     title: "3D monolayer growth: preferred-volume growth + BM confinement → height"
     evidence_status: observed
@@ -335,7 +335,7 @@ visualizations:
       units; incompressibility is a declared knob; the height differential is directional,
       not a calibrated prediction.
 - name: r5_monolayer
-  address: "html:r5_monolayer.html"
+  address: "html:viz/r5_monolayer.html"
   config:
     title: "Closed 3D monolayer render + per-cell area distribution (demoted)"
     evidence_status: engineered-diagnostic
@@ -357,7 +357,7 @@ visualizations:
       needs are NOT in tyssue_3d_monolayer (params: contractility + vol_elasticity, no
       BM shell coupling).
 - name: r5_volume_hist
-  address: "html:r5_volume_hist.html"
+  address: "html:viz/r5_volume_hist.html"
   config:
     title: "Cell-volume distribution appendix"
     evidence_status: engineered-diagnostic
@@ -369,7 +369,7 @@ visualizations:
       conserved to <0.01% over 5 Euler steps at dt 0.01). Finite volumes do NOT by
       themselves establish BM-dependent confinement; reduced units, single run.
 - name: r5_bm_hypothesis
-  address: "html:r5_bm_hypothesis.html"
+  address: "html:viz/r5_bm_hypothesis.html"
   config:
     title: "Matched BM controls (hypothesis)"
     evidence_status: hypothesis

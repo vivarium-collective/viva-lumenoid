@@ -412,7 +412,7 @@ visualizations:
     caption: >
       Animated movie of the collagen network with crosslink turnover AND material insertion (the third Fig-2B/C supply mode): new rods appear and crosslink in as the network expands. Illustrative companion to the three-mode ordering figure.
 - name: r3_supply
-  address: "html:r3_supply.html"
+  address: "html:viz/r3_supply.html"
   config:
     title: "Three supply modes -- network expansion vs collagen insertion (Fig 2B-C)"
     caption: >
