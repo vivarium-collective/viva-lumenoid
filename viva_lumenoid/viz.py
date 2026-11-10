@@ -1110,8 +1110,9 @@ def coupling_figure(points) -> "object":
     fig.update_layout(title=dict(
         text=("<b>Vertex-model coupling — E(ε̇) and τ(ε̇) from the faithful model</b>   "
               f"<span style='font-size:12px;color:{_MUTED}'>the two numbers the AICS "
-              f"vertex model takes (offline coupling); E stiffens with growth rate, "
-              f"τ ≈ constant (crosslink kinetics)</span>"), x=0.01, xanchor="left"))
+              f"vertex model would take (offline coupling); the earlier rate-stiffening "
+              f"claim is retracted — E(ε̇) is unresolved and τ(ε̇) is set by crosslink kinetics</span>"),
+        x=0.01, xanchor="left"))
     return fig
 
 
@@ -1173,66 +1174,84 @@ def _polish(fig):
     gr = getattr(fig, "_grid_ref", None)
     ncols = _ncols(fig)
     has_subplots = bool(gr) and (ncols > 1 or len(gr) > 1)
+    # Titles are wrapped tighter than the plot is wide so a single line never
+    # overruns a narrow container (the study viz tab is ~700 px with the sidebar
+    # open). Wrapping to more lines is cheap — the top margin grows with n_lines.
     n_lines = 1
     if lay.title and lay.title.text:
         rich = "<span" in lay.title.text
-        txt = _wrap_title(lay.title.text, 86 if rich else 80)
+        txt = _wrap_title(lay.title.text, 60 if rich else 56)
         n_lines = txt.count("<br>") + 1
         if rich:
             fig.update_layout(title=dict(text=txt, font=dict(size=13)))
         else:
             fig.update_layout(title=dict(text=txt, x=0.5, xanchor="center",
                                          xref="paper", font=dict(size=14)))
-    sub_w = {1: 80, 2: 44, 3: 30}.get(ncols, 40)
+    # Subplot titles wrap short enough that two adjacent ones never collide in the
+    # gap between panels (the chars below are ~half a panel's width).
+    sub_w = {1: 60, 2: 30, 3: 20}.get(ncols, 26)
     for ann in list(lay.annotations or []):
         if _is_subtitle(ann):
             ann.text = _wrap_segment(ann.text, sub_w)
             ann.font = dict(size=11, color=(ann.font.color if ann.font else None))
-    # Legend placement. A top horizontal legend on a multi-panel figure collides
-    # with the subplot titles, so move it to the bottom; a legend already at the
-    # bottom is normalized to the same band. Then push any caption annotations
-    # clear of the legend (which may wrap to two rows).
+    # Does any x-axis carry a title? Those sit in the same bottom band a horizontal
+    # legend would, so the legend has to clear them.
+    def _axis_has_title(k):
+        try:
+            ax = lay[k]
+            return bool(getattr(getattr(ax, "title", None), "text", None))
+        except Exception:
+            return False
+    has_x_titles = any(_axis_has_title(k) for k in dir(lay)
+                       if k == "xaxis" or (k.startswith("xaxis") and k[6:].isdigit()))
+    # --- Bottom stack laid out in PIXELS, then converted to paper fractions ---
+    # Below the plot sit (in order) the x-axis titles, a horizontal legend, and any
+    # gray caption annotations. Stacking them as paper-y *fractions* of a fixed
+    # height squeezes the plot when the caption is long, so instead: reserve a pixel
+    # band per element, GROW the figure height to fit, and place each at a y derived
+    # from the preserved plot height. No overlap at any width; the plot keeps its
+    # size and the figure just gets taller.
+    m = lay.margin
+    top_px = max(m.t or 0, 44 + 26 * n_lines)
+    # Wrap long gray caption annotations (bottom, y<0) so they never run off an edge.
+    caps = [a for a in (lay.annotations or []) if a.y is not None and a.y < 0
+            and str(getattr(a, "xref", "")) == "paper"]
+    cap_lines = 0
+    for a in caps:
+        plain = _re.sub("<[^>]+>", "", a.text or "")
+        if a.text and "<br>" not in a.text and len(plain) > 96:
+            a.text = _wrap_segment(a.text, 96)
+        a.yanchor = "top"
+        cap_lines += (a.text or "").count("<br>") + 1
+
     leg = lay.legend
     h_leg = bool(leg and leg.orientation == "h")
-    leg_top = h_leg and (leg.y is None or leg.y >= 1.0)
-    leg_bottom = h_leg and (leg.y is not None and leg.y < 0)
-    leg_y = None
-    if leg_top and has_subplots:
-        # a top legend collides with subplot titles -> move it below the panels
-        leg_y = -0.14
+    want_bottom_leg = h_leg and ((leg.y is None or leg.y >= 1.0) and (has_subplots or has_x_titles)
+                                 or (leg.y is not None and leg.y < 0))
+
+    # Pixel bands below the plot.
+    plot_px = max(240, (lay.height or 500) - top_px - 56)
+    axis_px = 34 if has_x_titles else 6
+    leg_px = 58 if want_bottom_leg else 0          # two-row-safe horizontal legend
+    cap_px = (cap_lines * 16 + 12) if caps else 0
+    gap = 10
+    bottom_px = 24 + axis_px + leg_px + cap_px + gap
+
+    if want_bottom_leg:
         lf = (leg.font.size if leg.font and leg.font.size else 10)
+        leg_y = -(axis_px + 26) / plot_px
         fig.update_layout(legend=dict(orientation="h", yanchor="top", y=leg_y,
                                       x=0.5, xanchor="center", font=dict(size=lf)))
-    elif leg_bottom:
-        # already a bottom legend: leave its position (it was placed deliberately)
-        leg_y = leg.y
-    if leg_y is not None:
-        # keep caption annotations below the legend's lower extent (~2 rows)
-        cap_ceiling = leg_y - 0.13
-        caps = [a for a in (lay.annotations or []) if a.y is not None and a.y < 0]
-        above = [a for a in caps if a.y > cap_ceiling]
-        if above:
-            delta = max(a.y for a in above) - cap_ceiling
-            for a in caps:
-                a.y = a.y - delta
-    # Wrap long bottom caption annotations (gray explanatory text) so they don't
-    # run off either edge; count the extra lines for the bottom margin.
-    extra_cap_lines = 0
-    for ann in list(lay.annotations or []):
-        if (str(getattr(ann, "xref", "")) == "paper" and ann.y is not None and ann.y < 0
-                and ann.text and "<br>" not in ann.text
-                and len(_re.sub("<[^>]+>", "", ann.text)) > 110):
-            ann.text = _wrap_segment(ann.text, 112)
-            ann.yanchor = "top"
-            extra_cap_lines += ann.text.count("<br>")
-    low = min([a.y for a in (lay.annotations or []) if a.y is not None and a.y < 0]
-              + ([leg_y] if leg_y is not None else []) + [0.0])
-    m = lay.margin
-    fig.update_layout(margin=dict(
-        t=max(m.t or 80, 44 + 26 * n_lines),
-        b=max(m.b or 56, 56 + int(abs(min(low, 0.0)) * (lay.height or 600)) + 14
-              + 16 * extra_cap_lines),
-        l=m.l or 64, r=m.r or 44))
+    # Stack captions from just under the legend (or axis titles) downward.
+    cap_top_px = axis_px + leg_px + 14
+    running = cap_top_px
+    for a in caps:
+        a.y = -running / plot_px
+        running += ((a.text or "").count("<br>") + 1) * 16 + 8
+
+    fig.update_layout(
+        height=top_px + plot_px + bottom_px,
+        margin=dict(t=top_px, b=bottom_px, l=m.l or 64, r=m.r or 44))
     return fig
 
 

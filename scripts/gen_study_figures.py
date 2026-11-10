@@ -10,7 +10,23 @@ from viva_lumenoid.viz import save_html
 from viva_lumenoid.study_figures import (
     STUDY_FIGURES, EXTRA_STUDY_FIGURES, COMPANION_FIGURES, V5_EXTRA_FIGURES,
     driving_schema_figure,
+    coupling_contract_figure, reference_state_figure, regime_placement_figure,
+    validation_scorecard_figure,
 )
+
+# Investigation-level review-response figures (2026-11-09): a reviewer's framing
+# made visible — coupling as wiring, one reference BM state, regime placement
+# under scale uncertainty, mechanistic acceptance tests.
+INVESTIGATION_FIGURES = [
+    ("coupling_contract", coupling_contract_figure,
+     "The coupling contract — BM↔epithelium as wiring, and where R4/R5/E4 stand"),
+    ("reference_bm_state", reference_state_figure,
+     "One reference BM state — the reported moduli are one model at different states"),
+    ("regime_placement", regime_placement_figure,
+     "Which regime does the lumenoid sit in? Undetermined until the scale is pinned"),
+    ("validation_scorecard", validation_scorecard_figure,
+     "Make the acceptance tests mechanistic — several primary tests cannot fail"),
+]
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 STUD = ROOT / "workspace" / "studies"
@@ -41,6 +57,8 @@ TITLES = {
     "bm_v4_faithful_angles": "Junction angles formed during assembly stabilise the modulus (real LAMMPS)",
     "bm_v5_porosity": "Simulated pore size reaches the corneal-EM reference at density (real geometry)",
     "bm_v5_bundling": "The NC1/7S-only network under-bundles — no lateral-association bond (real geometry)",
+    "r1_regime_placement": "Where the reference BM lands on the regime map — undetermined until the scale is pinned",
+    "r4_coupling_contract": "The coupling contract — express the BM↔epithelium edge as wiring (R4 is not wired this way yet)",
 }
 
 
@@ -54,6 +72,13 @@ def main():
         results.append(("[investigation]", "driving_schema", "schema", "ok"))
     except Exception as e:
         results.append(("[investigation]", "driving_schema", "schema", f"FAIL {type(e).__name__}: {e}"))
+    # Investigation-level review-response figures.
+    for name, fn, title in INVESTIGATION_FIGURES:
+        try:
+            save_html(fn(), str(INV / "viz" / f"{name}.html"), title)
+            results.append(("[investigation]", name, "review", "ok"))
+        except Exception as e:
+            results.append(("[investigation]", name, "review", f"FAIL {type(e).__name__}: {e}"))
     all_figs = [(slug, name, fn, kind) for slug, (name, fn, kind) in STUDY_FIGURES.items()]
     all_figs += list(EXTRA_STUDY_FIGURES)
     all_figs += [(slug, name, fn, kind) for slug, (name, fn, kind) in COMPANION_FIGURES.items()]

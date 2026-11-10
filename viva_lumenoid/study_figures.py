@@ -30,8 +30,13 @@ def _go():
 # ---------------------------------------------------------------------------
 # small shared helpers
 # ---------------------------------------------------------------------------
-def _diagram(title: str, xr=(0, 10), yr=(0, 10), height=620):
-    """Blank annotated-diagram canvas (hidden axes) for the schematics."""
+def _diagram(title: str, xr=(0, 10), yr=(0, 10), height=620, tag=DESIGN_TAG,
+             tag_color=RED):
+    """Blank annotated-diagram canvas (hidden axes) for the schematics.
+
+    ``tag`` is the footer label; pass a different string for non-design-target
+    diagrams (e.g. the reviewer contract/status figures) or ``None`` to omit it.
+    """
     go = _go()
     fig = go.Figure()
     fig.update_layout(
@@ -39,8 +44,9 @@ def _diagram(title: str, xr=(0, 10), yr=(0, 10), height=620):
         xaxis=dict(range=xr, visible=False), yaxis=dict(range=yr, visible=False),
         margin=dict(l=20, r=20, t=90, b=70), showlegend=False,
     )
-    fig.add_annotation(x=0.5, y=-0.07, xref="paper", yref="paper", showarrow=False,
-                       text=f"<b>{DESIGN_TAG}</b>", font=dict(color=RED, size=12))
+    if tag:
+        fig.add_annotation(x=0.5, y=-0.07, xref="paper", yref="paper", showarrow=False,
+                           text=f"<b>{tag}</b>", font=dict(color=tag_color, size=12))
     return fig
 
 
@@ -180,9 +186,9 @@ def e1_cortical_tension_figure(proxies=(0.5, 1.0, 2.0, 3.0, 4.0),
                              line=dict(color=BLUE, width=3), marker=dict(size=9),
                              name="mean τ vs patch size", text=[f"{a} beads" for a in atoms]),
                   row=1, col=2)
-    fig.update_xaxes(title_text="LJ well-depth proxy ε (reduced; attraction strength, NOT biological myosin activity)",
+    fig.update_xaxes(title_text="LJ well-depth proxy ε (not biological myosin)",
                      row=1, col=1)
-    fig.update_yaxes(title_text="effective in-plane tension τ = −(pₓₓ+p_yy)/2 (reduced LJ stress)", row=1, col=1)
+    fig.update_yaxes(title_text="effective in-plane tension τ (reduced LJ stress)", row=1, col=1)
     fig.update_xaxes(title_text="patch size n (n×n bead lattice)", row=1, col=2)
     fig.update_yaxes(title_text="τ (reduced LJ stress)", row=1, col=2)
     fig.update_layout(
@@ -1143,7 +1149,7 @@ def r1_regime_figure():
     fig = make_subplots(
         rows=3, cols=2, column_widths=[0.62, 0.38], row_heights=[1, 1, 1],
         specs=[[{"rowspan": 3}, {}], [None, {}], [None, {}]],
-        subplot_titles=("A — confinement phase map (reduced-order reimplementation)",
+        subplot_titles=("A — confinement phase map",
                         "B — soft / fast-relaxing", "C — intermediate", "D — stiff / slow-relaxing"))
     fig.add_trace(go.Heatmap(z=C, x=stiff, y=ratio, colorscale="Viridis",
                              colorbar=dict(title="confinement<br>(h/h₀)", len=0.95)),
@@ -1530,9 +1536,9 @@ def v2_rheology_main_figure():
     fig = make_subplots(
         rows=1, cols=3, horizontal_spacing=0.09,
         subplot_titles=(
-            "A — σ(ε̇) at matched strain ε=0.12",
-            "B — effective viscosity η_eff = σ/ε̇",
-            "C — crosslinks / rod (paired connectivity)"))
+            "A — σ(ε̇) at matched strain",
+            "B — viscosity η_eff = σ/ε̇",
+            "C — crosslinks / rod"))
     fig.add_trace(go.Scatter(x=rates, y=sig_m, error_y=dict(type="data", array=sig_s),
                              mode="lines+markers", line=dict(color=BLUE, width=3),
                              marker=dict(size=10), showlegend=False), row=1, col=1)
@@ -1550,8 +1556,7 @@ def v2_rheology_main_figure():
     fig.update_yaxes(title_text="crosslinks / rod", row=1, col=3)
     fig.update_layout(
         template="plotly_white", height=520, margin=dict(t=92, b=118),
-        title="bm-v2 — growth rate vs apparent mechanical resistance, with the paired "
-              "connectivity readout (observed, bounded-preliminary; 3 seeds)")
+        title="bm-v2 — growth rate vs apparent mechanical resistance (observed, 3 seeds)")
     fig.add_annotation(
         x=0.5, y=-0.30, xref="paper", yref="paper", showarrow=False,
         font=dict(size=11, color="#777"), align="center",
@@ -2139,6 +2144,221 @@ def e4_growth_feedback_figure():
     return fig
 
 
+# ===========================================================================
+# Review-response figures (2026-11-09) — built to answer a reviewer's framing:
+# express the coupling as wiring, pin ONE reference BM state, place it on the
+# regime map under its scale uncertainty, and replace un-failable tests with
+# mechanistic ones. These encode a review's structural critique and the
+# investigation's real numbers; they are not new simulation results.
+# ===========================================================================
+_REVIEW_TAG = "REVIEWER CONTRACT — proposed wiring + honest current status (not a simulation result)"
+
+
+def coupling_contract_figure():
+    """The coupling contract the reviewer asks for, as a single picture.
+
+    (1) Express the BM↔epithelium interface as process-bigraph wiring — the BM
+    as an energy on each basal face inside the vertex force balance, exchanging
+    a slow state (rest area / K) rather than a stiff force. (2) The four controls
+    are wiring edges, not parameters. (3) Where R4/R5/E4 actually are today:
+    engine-and-wiring checks, because none expresses that edge."""
+    go = _go()
+    fig = _diagram("The coupling contract — BM↔epithelium as wiring, and where the studies stand",
+                   xr=(0, 12), yr=(0, 12), height=820, tag=_REVIEW_TAG, tag_color="#6b7280")
+
+    # ---- Band 1: the contract wiring (y 8.4–11.6) ----
+    fig.add_annotation(x=0.2, y=11.5, text="<b>① The contract: express the BM↔epithelium edge as process-bigraph wiring</b>",
+                       showarrow=False, xanchor="left", font=dict(size=13, color="#1f2328"))
+    _box(fig, 0.2, 9.5, 2.4, 10.7, "growth<br>(preferred schedule)", GREEN)
+    _box(fig, 3.9, 9.1, 6.6, 11.1, "vertex_model<br>(EulerSolver,<br>tyssue)", BLUE)
+    _box(fig, 8.5, 9.1, 11.8, 11.1, "bm process<br>ReducedBM | CollagenNetwork<br>(same port schema)", PURPLE)
+    # Short edge labels in the gaps (full port semantics are in the note below).
+    _arrow(fig, 2.4, 10.1, 3.9, 10.1, "")
+    _arrow(fig, 6.6, 10.5, 8.5, 10.5, "")
+    _arrow(fig, 8.5, 9.7, 6.6, 9.7, "")
+    fig.add_annotation(x=3.15, y=10.55, text="preferred<br>area/vol", showarrow=False,
+                       font=dict(size=9.5, color="#555"), align="center")
+    fig.add_annotation(x=7.55, y=10.95, text="basal areas →", showarrow=False,
+                       font=dict(size=9.5, color="#555"))
+    fig.add_annotation(x=7.55, y=9.25, text="← BM tension<br>(K, A_rest)", showarrow=False,
+                       font=dict(size=9.5, color="#555"), align="center")
+    fig.add_annotation(
+        x=0.2, y=8.6, xanchor="left", showarrow=False, font=dict(size=11, color="#444"),
+        text=("BM = energy on each basal face  E_f = (K/2)(A_f − A_rest)² / A_rest,  tension T_f = K(A_f − A_rest)/A_rest clipped ≥ 0,  "
+              "rest area relaxes dA_rest/dt = (A_f − A_rest)/τ.<br>"
+              "Shared vertices carry force between neighbours; reduces to R1's prism law in the homogeneous limit, so “R5/E4 → R1” becomes a test that can pass."))
+
+    # ---- Band 2: controls = wiring (y 4.6–7.9) ----
+    fig.add_annotation(x=0.2, y=7.85, text="<b>② The controls are wiring edges, not parameters</b>",
+                       showarrow=False, xanchor="left", font=dict(size=13, color="#1f2328"))
+    controls = [  # (x0, label, has_bm, v_to_bm, bm_to_v)
+        (0.3, "no-BM", False, False, False),
+        (3.3, "one-way (V→BM)", True, True, False),
+        (6.3, "two-way", True, True, True),
+        (9.1, "uncoupled", True, False, False),
+    ]
+    for x0, label, has_bm, v2b, b2v in controls:
+        _box(fig, x0 + 0.05, 6.0, x0 + 0.95, 6.9, "V", BLUE)
+        if has_bm:
+            _box(fig, x0 + 1.55, 6.0, x0 + 2.45, 6.9, "BM", PURPLE)
+        if v2b:
+            _arrow(fig, x0 + 0.95, 6.6, x0 + 1.55, 6.6, "")
+        if b2v:
+            _arrow(fig, x0 + 1.55, 6.3, x0 + 0.95, 6.3, "")
+        fig.add_annotation(x=x0 + 1.25, y=5.45, text=label, showarrow=False,
+                           font=dict(size=11, color="#333"))
+
+    # ---- Band 3: where the studies actually are (y 0.3–4.2) ----
+    fig.add_annotation(x=0.2, y=4.15, text="<b>③ Where R4 / R5 / E4 are today — engine-and-wiring checks, because none expresses that edge</b>",
+                       showarrow=False, xanchor="left", font=dict(size=13, color="#1f2328"))
+    _box(fig, 0.3, 0.5, 3.9, 3.5,
+         "<b>R4</b><br>12 independent per-cell<br>Maxwell ODEs (R1×N),<br>no neighbour coupling;<br>height = V₀/A by construction", RED)
+    _box(fig, 4.2, 0.5, 7.8, 3.5,
+         "<b>R5</b><br>one scalar Maxwell on the<br>mean basal area (hand-set<br>k, τ) as uniform<br>FaceContractility", RED)
+    _box(fig, 8.1, 0.5, 11.7, 3.5,
+         "<b>E4</b><br>both engines inside one<br>Process (inputs()={}); BM<br>type by internal enum; no<br>LJ↔tissue unit map", RED)
+    return fig
+
+
+def reference_state_figure():
+    """Pin ONE reference BM state and show the six reported moduli are the SAME
+    model at different crosslink/density states — not a six-way disagreement.
+
+    The reviewer's exec-summary point: name one reference (angle-stabilized,
+    authors' dense geometry, 12σ slab) with its E, τ, uncertainty, propagate it,
+    and pin the absolute pascal scale before any confinement claim (the BM:cell
+    stiffness ratio it sets is one of R1's two regime axes)."""
+    go = _go()
+    # (label, value_Pa, lo_Pa, hi_Pa, state, role) — role ∈ reference | state | superseded | published
+    rows = [
+        ("published CG model", 0.03, 0.01, 0.08, "sparse / near-percolation", "published"),
+        ("R2 dense (reference)", 6.0, 3.0, 8.0, "angle-stabilized, authors' density", "reference"),
+        ("R2 saturated", 8.0, 6.0, 9.5, "high crosslink fraction", "state"),
+        ("v1 3-seed (retired)", 11.0, 6.0, 16.0, "angle-stabilized, 3 seeds (deleted study)", "superseded"),
+        ("v4 athermal (retired)", 72.0, 61.0, 83.0, "junction-bending only (deleted study)", "superseded"),
+    ]
+    color = {"published": "rgba(120,130,145,0.6)", "reference": GREEN,
+             "state": BLUE, "superseded": "rgba(170,120,160,0.55)"}
+    fig = go.Figure()
+    # reference band spanning the whole height
+    fig.add_vrect(x0=3.0, x1=8.0, fillcolor="rgba(84,162,75,0.10)", line_width=0)
+    fig.add_vline(x=6.0, line=dict(color=GREEN, width=1.5, dash="dash"))
+    for i, (label, val, lo, hi, state, role) in enumerate(rows):
+        c = color[role]
+        fig.add_trace(go.Scatter(
+            x=[lo, hi], y=[i, i], mode="lines", line=dict(color=c, width=9),
+            opacity=0.5, showlegend=False, hoverinfo="skip"))
+        sym = "diamond" if role == "reference" else "circle"
+        sz = 16 if role == "reference" else 12
+        # Label points INWARD (left of right-half points, right of left-half) so a
+        # label never runs off the edge; the full state string stays in the hover.
+        import math as _m
+        inward_left = _m.log10(val) > 0.1          # right half of the log axis
+        pos = "middle left" if inward_left else "middle right"
+        txt = f"{label}  " if inward_left else f"  {label}"
+        fig.add_trace(go.Scatter(
+            x=[val], y=[i], mode="markers+text", cliponaxis=False,
+            marker=dict(size=sz, color=c, symbol=sym, line=dict(width=1.2, color="white")),
+            text=[txt], textposition=pos,
+            textfont=dict(size=11, color=("#1f2328" if role != "superseded" else "#8a7898")),
+            showlegend=False,
+            hovertemplate=f"{label}: {val:g} Pa ({state})<extra></extra>"))
+    fig.add_annotation(x=6.0, y=len(rows) - 0.35, text="reference BM state", showarrow=False,
+                       font=dict(size=11, color=GREEN), xanchor="center")
+    fig.update_xaxes(type="log", title_text="elastic modulus E (Pa, log) — convention ≈ 2.2 Pa per kT/σ³",
+                     range=[-2.2, 2.4])
+    fig.update_yaxes(showticklabels=False, range=[-0.6, len(rows) - 0.2])
+    _layout(fig, height=430)
+    fig.update_layout(
+        margin=dict(l=20, r=30, t=70, b=56),
+        title=dict(text=("<b>One reference BM state — the six reported moduli are one model at different crosslink/density states</b>   "
+                   "<span style='font-size:12px;color:#6b7280'>pin the dense angle-stabilized reference (E ≈ 6 Pa, τ ≈ 40–60) and "
+                   "propagate it; the absolute pascal scale sets the BM:cell stiffness ratio that decides the regime</span>"),
+                   x=0.01, xanchor="left"))
+    return fig
+
+
+def regime_placement_figure():
+    """Place the reference BM on R1's regime map, under its scale uncertainty.
+
+    The reviewer: the BM:cell stiffness ratio is one of R1's two axes and decides
+    which regime the lumenoid sits in — but the absolute scale is unpinned, so
+    the reference lands anywhere from negligible to comparable to cortical tension
+    (Y = E·h ≈ 1e-5 N/m at 6 Pa to 1e-4 N/m at 80 Pa; cortex ≈ 1e-4–1e-3 N/m).
+    Until the LJ↔tissue unit map pins E and τ, the regime is undetermined."""
+    go = _go()
+    stiff = np.geomspace(0.1, 10.0, 14)
+    ratio = np.geomspace(0.1, 10.0, 14)
+    Z = np.zeros((len(ratio), len(stiff)))
+    for i, r in enumerate(ratio):
+        for j, k in enumerate(stiff):
+            _, _, conf = _prism_trajectory(k, r)
+            Z[i, j] = conf[-1]
+    fig = go.Figure()
+    fig.add_trace(go.Heatmap(z=Z, x=stiff, y=ratio, colorscale="Viridis",
+                             colorbar=dict(title="confinement<br>(h/h₀)")))
+    fig.add_trace(go.Contour(z=Z, x=stiff, y=ratio, showscale=False,
+                             contours=dict(start=1.0, end=1.0, size=1.0, coloring="none"),
+                             line=dict(color="white", width=2), hoverinfo="skip"))
+    # reference stiffness-ratio band: 6 Pa ≈ 0.1 (Y/cortex ~ 1e-5/1e-4) up to
+    # 80 Pa ≈ 1.5 — the scale ambiguity the reviewer flags. Drawn as a vertical
+    # band spanning the full relaxation axis (the y unit map is also unpinned).
+    fig.add_vrect(x0=0.1, x1=1.5, fillcolor="rgba(228,87,86,0.14)", line_width=0)
+    fig.add_vline(x=0.1, line=dict(color=RED, width=1.5, dash="dot"))
+    fig.add_vline(x=1.5, line=dict(color=RED, width=1.5, dash="dot"))
+    fig.add_annotation(x=np.sqrt(0.1 * 1.5), y=ratio[-1] * 0.8, xref="x", yref="y",
+                       text="reference BM lands in this band<br>E≈6 Pa → 80 Pa (scale not pinned)",
+                       showarrow=False, font=dict(size=11, color=RED),
+                       bgcolor="rgba(255,255,255,0.75)")
+    fig.update_xaxes(type="log", title_text="BM stiffness relative to cell (Y_BM / cortical tension)")
+    fig.update_yaxes(type="log", title_text="BM relaxation / doubling time")
+    _layout(fig, height=520)
+    fig.update_layout(
+        margin=dict(l=70, r=30, t=72, b=60),
+        title=dict(text=("<b>Which regime does the lumenoid sit in? Undetermined until the scale is pinned</b>   "
+                   "<span style='font-size:12px;color:#6b7280'>the reference BM's dimensionless stiffness spans the confinement boundary "
+                   "(white) under the 6→80 Pa scale ambiguity — pin the LJ↔tissue unit map before any confinement claim</span>"),
+                   x=0.01, xanchor="left"))
+    return fig
+
+
+def validation_scorecard_figure():
+    """Swap un-failable acceptance tests for mechanistic ones (the reviewer's
+    validation section). Each row: the current test that cannot fail, why, and
+    the mechanistic test that would actually gate the claim."""
+    go = _go()
+    rows = [
+        ("R4", "stiff_height > 0", "passes for any positive height",
+         "sign: realized basal area two-way ≤ one-way/uncoupled; BM work ≤ 0 during expansion; tension ≥ 0"),
+        ("R5", "confinement ≥ (1.138 vs 1.133)", "0.4% from one deterministic run — within noise",
+         "effect size: Δheight vs seed / mesh / dt spread; quasi-static free control (no-BM tracks preferred area)"),
+        ("E4", "checks ≠ 0 / = 0 (wiring)", "tests presence, explicitly not sign",
+         "sign of the feedback + homogeneous limit: R5/E4 at matched (K ratio, τ/T_growth) reproduce R1"),
+        ("all", "provenance {kind: simulation}", "no run parameters recorded (R5 growth run)",
+         "record run parameters for every sim; exchange-cadence convergence, not only within-step subcycling"),
+    ]
+    red_fill = "rgba(228,87,86,0.12)"
+    grn_fill = "rgba(84,162,75,0.12)"
+    fig = go.Figure(go.Table(
+        columnwidth=[8, 26, 26, 48],
+        header=dict(values=["<b>Study</b>", "<b>Current test (cannot fail)</b>",
+                            "<b>Why it cannot fail</b>", "<b>Mechanistic test to use instead</b>"],
+                    fill_color="#f1f3f5", align="left", font=dict(size=11, color="#1f2328"), height=30),
+        cells=dict(
+            values=[[r[0] for r in rows], [r[1] for r in rows], [r[2] for r in rows], [r[3] for r in rows]],
+            fill_color=[["#fafbfc"] * len(rows), [red_fill] * len(rows), [red_fill] * len(rows),
+                        [grn_fill] * len(rows)],
+            align="left", font=dict(size=10, color="#1f2328"), height=44)))
+    _layout(fig, height=360)
+    fig.update_layout(
+        margin=dict(l=16, r=16, t=64, b=28),
+        title=dict(text=("<b>Make the acceptance tests mechanistic — several primary tests cannot fail</b>   "
+                   "<span style='font-size:12px;color:#6b7280'>replace existence checks (red) with sign, effect-size, "
+                   "quasi-static-control and homogeneous-limit tests (green)</span>"),
+                   x=0.01, xanchor="left"))
+    return fig
+
+
 STUDY_FIGURES = {
     "bm-v1-stage1-modulus-remodelling": ("v1_stage1_main", v1_stage1_main_figure, "data"),
     "bm-v2-stress-vs-strainrate": ("v2_rheology_main", v2_rheology_main_figure, "data"),
@@ -2187,6 +2407,11 @@ EXTRA_STUDY_FIGURES = [
     ("bm-r4-coupled-2d-epithelium", "r4_confinement", r4_confinement_figure, "data"),
     ("bm-r5-explicit-3d-confinement", "r5_monolayer", r5_monolayer_figure, "data"),
     ("bm-e4-feedback-predictions", "e4_feedback", e4_feedback_figure, "data"),
+    # Review-response companions (2026-11-09): the regime placement under scale
+    # uncertainty on R1, and the coupling contract on R4 (the study a reviewer
+    # most wants re-wired). Investigation-level copies render in gen_study_figures.
+    ("bm-r1-published-tissue-baseline", "r1_regime_placement", regime_placement_figure, "data"),
+    ("bm-r4-coupled-2d-epithelium", "r4_coupling_contract", coupling_contract_figure, "schematic"),
 ]
 
 
