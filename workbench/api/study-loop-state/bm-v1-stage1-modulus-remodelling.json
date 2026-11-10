@@ -1,1 +1,0 @@
-{"present": false, "study": "bm-v1-stage1-modulus-remodelling", "reason": "ModuleNotFoundError: No module named 'discovery_engine.reporting'"}

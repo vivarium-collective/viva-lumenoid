@@ -612,8 +612,8 @@
     <div class="ctr-block">
       <h2 class="overview-label ctr-h">Result</h2>
       
-      <p class="ctr-text" data-edit-kind="study" data-edit-field="result" data-edit-value="The 3D monolayer resolves and relaxes deterministically. The mesh carries 206 cells, 1590 faces and 820 vertices; per-cell basal area ranges 4.51-6.38 and per-cell volume 0.58-1.16, all finite and positive. The monolayer z-extent is ~1.0 (vertices span z in [-1.0, 0.0]), so per-cell height emerges from the explicit surface energies and volume targets rather than from a prism approximation. Stepping the EulerSolver five times (dt 0.01) keeps per-cell area and volume finite and positive -- no NaN or blow-up (the face-level volume column is NaN by construction, since faces carry no enclosed volume in a monolayer). The honest gap: the no-BM, elastic-BM and relaxing-BM controls that the Fig target morphology ordering needs are not in the composite yet, so the &#34;taller under slow relaxation&#34; ordering is not tested here.
-" data-edit-multiline data-edit-label="Result">The 3D monolayer resolves and relaxes deterministically. The mesh carries 206 cells, 1590 faces and 820 vertices; per-cell basal area ranges 4.51-6.38 and per-cell volume 0.58-1.16, all finite and positive. The monolayer z-extent is ~1.0 (vertices span z in [-1.0, 0.0]), so per-cell height emerges from the explicit surface energies and volume targets rather than from a prism approximation. Stepping the EulerSolver five times (dt 0.01) keeps per-cell area and volume finite and positive -- no NaN or blow-up (the face-level volume column is NaN by construction, since faces carry no enclosed volume in a monolayer). The honest gap: the no-BM, elastic-BM and relaxing-BM controls that the Fig target morphology ordering needs are not in the composite yet, so the &#34;taller under slow relaxation&#34; ordering is not tested here.
+      <p class="ctr-text" data-edit-kind="study" data-edit-field="result" data-edit-value="The 3D monolayer resolves and relaxes deterministically. The mesh carries 206 cells, 1590 faces and 820 vertices; per-cell basal area ranges 4.51-6.38 and per-cell volume 0.58-1.16, all finite and positive. The monolayer z-extent is ~1.0 (vertices span z in [-1.0, 0.0]), so per-cell height emerges from the explicit surface energies and volume targets rather than from a prism approximation. Stepping the EulerSolver five times (dt 0.01) keeps per-cell area and volume finite and positive -- no NaN or blow-up (the face-level volume column is NaN by construction, since faces carry no enclosed volume in a monolayer). The honest gap: the no-BM, elastic-BM and relaxing-BM controls that the Fig target morphology ordering needs are not in the composite yet, so the &#34;taller under slow relaxation&#34; ordering is not tested here. BM FRAMING (2026-11-09 review): this is the first real vertex-model run WITH growth, but the BM in the growth-coupling run is NOT an explicit BM — it is a single scalar Maxwell element on the MEAN basal area, driven by hand-set (k, tau) and fed back as uniform basal FaceContractility. Contractility penalizes perimeter squared, not area dilation, so this BM neither reduces to R1 nor represents an elastic sheet.
+" data-edit-multiline data-edit-label="Result">The 3D monolayer resolves and relaxes deterministically. The mesh carries 206 cells, 1590 faces and 820 vertices; per-cell basal area ranges 4.51-6.38 and per-cell volume 0.58-1.16, all finite and positive. The monolayer z-extent is ~1.0 (vertices span z in [-1.0, 0.0]), so per-cell height emerges from the explicit surface energies and volume targets rather than from a prism approximation. Stepping the EulerSolver five times (dt 0.01) keeps per-cell area and volume finite and positive -- no NaN or blow-up (the face-level volume column is NaN by construction, since faces carry no enclosed volume in a monolayer). The honest gap: the no-BM, elastic-BM and relaxing-BM controls that the Fig target morphology ordering needs are not in the composite yet, so the &#34;taller under slow relaxation&#34; ordering is not tested here. BM FRAMING (2026-11-09 review): this is the first real vertex-model run WITH growth, but the BM in the growth-coupling run is NOT an explicit BM — it is a single scalar Maxwell element on the MEAN basal area, driven by hand-set (k, tau) and fed back as uniform basal FaceContractility. Contractility penalizes perimeter squared, not area dilation, so this BM neither reduces to R1 nor represents an elastic sheet.
 </p>
       
       
@@ -879,8 +879,8 @@
         <details class="finding-details">
           <summary class="finding-row">
             <span class="finding-status-glyph">◐</span>
-            <span class="finding-claim finding-statement" data-edit-kind="study" data-edit-field="findings[F5-confinement-raises-height-directional].statement" data-edit-value="Under the near-incompressible volume elasticity, the stiff-BM confinement drives volume into cell HEIGHT — mean height is marginally taller under the stiff BM (1.138 vs 1.133 free). The direction matches the paper&#39;s confinement morphology, but the magnitude is small at this mesh/parameters (directional, not a calibrated height prediction).
-" data-edit-multiline data-edit-label="Finding F5-confinement-raises-height-directional">Under the near-incompressible volume elasticity, the stiff-BM confinement drives volume into cell HEIGHT — mean height is marginally taller under the stiff BM (1.138 vs 1.133 free). The direction matches the paper&#39;s confinement morphology, but the magnitude is small at this mesh/parameters (directional, not a calibrated height prediction).
+            <span class="finding-claim finding-statement" data-edit-kind="study" data-edit-field="findings[F5-confinement-raises-height-directional].statement" data-edit-value="Under the near-incompressible volume elasticity, the stiff-BM confinement drives volume into cell HEIGHT — mean height is marginally taller under the stiff BM (1.138 vs 1.133 free). The direction matches the paper&#39;s confinement morphology, but the magnitude is small at this mesh/parameters (directional, not a calibrated height prediction). REFRAME (2026-11-09 review): the 0.4% difference (1.138 vs 1.133) is a null at this resolution, not a directional result; the BM here is a scalar Maxwell element on the mean basal area fed back as perimeter-squared FaceContractility (not area dilation), and the realized-volume gap (0.272) with no free-control gap reported may be vertex-model drag rather than BM confinement.
+" data-edit-multiline data-edit-label="Finding F5-confinement-raises-height-directional">Under the near-incompressible volume elasticity, the stiff-BM confinement drives volume into cell HEIGHT — mean height is marginally taller under the stiff BM (1.138 vs 1.133 free). The direction matches the paper&#39;s confinement morphology, but the magnitude is small at this mesh/parameters (directional, not a calibrated height prediction). REFRAME (2026-11-09 review): the 0.4% difference (1.138 vs 1.133) is a null at this resolution, not a directional result; the BM here is a scalar Maxwell element on the mean basal area fed back as perimeter-squared FaceContractility (not area dilation), and the realized-volume gap (0.272) with no free-control gap reported may be vertex-model drag rather than BM confinement.
 </span>
             
             <span class="finding-chip">via <code>confinement-raises-height-directional</code></span>
@@ -1697,7 +1697,7 @@ pass_if: {"note": "stiff height 1.138 \u003e= free 1.133 (directional, not calib
       <h3 class="overview-label">Limitations</h3>
       <p class="muted" style="margin:0 0 6px 0;font-size:0.85em">What this study explicitly does NOT validate (prevents overclaim).</p>
       <ul style="margin:0 0 0 18px;padding:0;font-size:0.93em">
-        <li style="margin:2px 0">Qualitative spatial-engine check only: the study confirms explicit 3D per-cell volumes and an emergent height exist and stay well-posed, not that cells are taller under slow BM relaxation.</li><li style="margin:2px 0">HONEST GAP: the no-BM / elastic-BM / relaxing-BM controls the morphology ordering needs are NOT in the composite -- the central question (taller under slow relaxation) is not tested here.</li><li style="margin:2px 0">Single deterministic configuration (no parameter sweep, n_replicates = 1); replication across the three BM controls is a gap.</li><li style="margin:2px 0">Monolayer height is read as the vertex z-extent, not a per-cell stored scalar; face-level volume is NaN by construction (faces enclose no volume) and is excluded from the per-cell finiteness check.</li><li style="margin:2px 0">Reduced units; no calibration to microns.</li>
+        <li style="margin:2px 0">Qualitative spatial-engine check only: the study confirms explicit 3D per-cell volumes and an emergent height exist and stay well-posed, not that cells are taller under slow BM relaxation.</li><li style="margin:2px 0">HONEST GAP: the no-BM / elastic-BM / relaxing-BM controls the morphology ordering needs are NOT in the composite -- the central question (taller under slow relaxation) is not tested here.</li><li style="margin:2px 0">BM IS A SCALAR MAXWELL ELEMENT, not an explicit BM (2026-11-09 review): the growth-coupling run feeds the BM reaction as a single scalar Maxwell element on the MEAN basal area, driven by hand-set (k, tau), fed back as UNIFORM basal FaceContractility. Contractility penalizes perimeter squared, not area dilation, so it neither reduces to R1 nor represents an elastic sheet; and a periodic/fixed monolayer_box would itself confine in-plane growth (an implicit rigid BM). The 0.4% height difference (1.138 vs 1.133) is a null at this resolution, not a directional result, and the realized-volume gap (0.272) with no free-control gap reported may be vertex-model drag rather than BM confinement.</li><li style="margin:2px 0">Single deterministic configuration (no parameter sweep, n_replicates = 1); replication across the three BM controls is a gap.</li><li style="margin:2px 0">Monolayer height is read as the vertex z-extent, not a per-cell stored scalar; face-level volume is NaN by construction (faces enclose no volume) and is excluded from the per-cell finiteness check.</li><li style="margin:2px 0">Reduced units; no calibration to microns.</li>
       </ul>
     </div>
     
@@ -1777,7 +1777,7 @@ pass_if: {"note": "stiff height 1.138 \u003e= free 1.133 (directional, not calib
       <div class="di-group">
         <h3>Follow-up study proposals
           <span class="muted" style="font-weight:normal;font-size:0.82em">(discovered)</span>
-          <span class="muted" style="font-weight:normal;font-size:0.85em">(1)</span></h3>
+          <span class="muted" style="font-weight:normal;font-size:0.85em">(2)</span></h3>
         <p class="muted" style="margin:0 0 8px 0;font-size:0.85em">Click <strong>➕ Add to investigation</strong> to spawn a new study node in the investigation graph.</p>
         <div class="followup-list">
           
@@ -1795,6 +1795,23 @@ pass_if: {"note": "stiff height 1.138 \u003e= free 1.133 (directional, not calib
             <div class="followup-actions" style="margin-top:8px">
               <button class="btn-seed-followup"
                       onclick="_seedFollowupProposal('bm-r5-explicit-3d-confinement', "fp-r5-bm-shell-controls")">➕ Add to investigation</button>
+            </div>
+          </div>
+          
+          
+          <div class="di-card di-fup-card">
+            <div class="followup-header">
+              <strong class="followup-title">Video of tyssue cells growing taller under confinement vs spreading over soft BM</strong>
+              
+              
+              
+              
+            </div>
+            
+            
+            <div class="followup-actions" style="margin-top:8px">
+              <button class="btn-seed-followup"
+                      onclick="_seedFollowupProposal('bm-r5-explicit-3d-confinement', "fp-r5-growth-video")">➕ Add to investigation</button>
             </div>
           </div>
           
@@ -1817,7 +1834,7 @@ pass_if: {"note": "stiff height 1.138 \u003e= free 1.133 (directional, not calib
 </section>
 
 </main>
-<script>window.__DASH_CONFIG__ = { mode: "snapshot", interactiveUrl: "https://github.com/vivarium-collective/viva-lumenoid", basePath: "/viva-lumenoid/workbench", inputsDownloadBase: "https://github.com/vivarium-collective/viva-lumenoid/raw/main", provenance: {"repo_slug": "vivarium-collective/viva-lumenoid", "repo_url": "https://github.com/vivarium-collective/viva-lumenoid", "commit": "48368b8b18d33d7319121fc52d19667e8b122918", "commit_url": "https://github.com/vivarium-collective/viva-lumenoid/commit/48368b8b18d33d7319121fc52d19667e8b122918", "branch": "main", "lockfile": "uv.lock@02435e118a3b", "generated_at": "2026-11-10 17:58 UTC"} };</script>
+<script>window.__DASH_CONFIG__ = { mode: "snapshot", interactiveUrl: "https://github.com/vivarium-collective/viva-lumenoid", basePath: "/viva-lumenoid/workbench", inputsDownloadBase: "https://github.com/vivarium-collective/viva-lumenoid/raw/basement-membrane-v1", provenance: {"repo_slug": "vivarium-collective/viva-lumenoid", "repo_url": "https://github.com/vivarium-collective/viva-lumenoid", "commit": "59db806c281585f2d1d06fecca54908b74488ff0", "commit_url": "https://github.com/vivarium-collective/viva-lumenoid/commit/59db806c281585f2d1d06fecca54908b74488ff0", "branch": "basement-membrane-v1", "lockfile": "uv.lock@02435e118a3b", "generated_at": "2026-11-10 19:49 UTC"} };</script>
 <script src="/viva-lumenoid/workbench/assets/data-source.js"></script>
 <script src="/viva-lumenoid/workbench/assets/toast.js"></script>
 <script>

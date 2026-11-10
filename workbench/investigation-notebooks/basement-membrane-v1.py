@@ -23,7 +23,7 @@ if _os.environ.get("PYTHONUTF8") != "1":
 #
 # **Question.** How does collagen IV molecular turnover set basement-membrane (BM) stress relaxation, and how do BM mechanics, epithelial growth and actomyosin mechanics jointly determine epithelial cell height and lumenoid morphology? (The original v1 sub-question — the effective modulus E(ε̇) and remodelling time τ(ε̇) a growing boundary produces, the two numbers the AICS vertex model couples to — is the P0/P1 reproduction core this campaign now builds on.)
 #
-# A coarse-grained model of the collagen IV basement membrane, built in Vivarium from the AICS lumenoid specification, grown into a reproduction and extension of Barrientos et al. (Cell 2026). The reproduction studies target the paper's Figures 1 (tissue-mechanics regimes), 2 (collagen rheology + supply) and 7 (perlecan/growth perturbations); the extension studies add spatial 2D/3D Tyssue epithelia, bidirectional LAMMPS–Tyssue coupling, an actomyosin cortex and a closed lumenoid. All studies now RUN end-to-end against their real composites and carry recorded evidence — but each is scoped honestly by evidence status (observed / reproduced / engineered-diagnostic / hypothesis / contradicted, per docs/figure-conventions.md), not scored as paper reproduction on a smoke test or a geometry screenshot. The membrane-build (v1–v5) and the paper reproductions (R1 Fig 1 regime topology, R2 Fig 2E direction, R3 Fig 2B/C supply ordering, R6 Fig 7 perlecan ordering) are the strongest results; the spatial and extension studies are preliminary. R6 reproduces Fig 7 only after a review-caught fix: its perlecan direction had been inverted and was corrected against the paper. FOLLOWING the 2026-10-20 modeling review, the spatial/coupled studies were refocused on the agreed PREFERRED-vs-REALIZED two-way feedback: R4 (2D cross-section), R5 (3D monolayer) and E4 (coupling) now DRIVE a growing preferred geometry (division OFF) and MEASURE the emergent, lagging realized geometry + cell height under BM confinement — the realized geometry is verified not hard-coded to the target. These are demonstrated in reduced order / reduced units (qualitatively consistent with the paper's confinement direction), not calibrated reproductions; explicit-LAMMPS coupling remains a separate verification gate. See meeting_alignment_2026_10_20 for the full spine + staging.
+# A coarse-grained model of the collagen IV basement membrane, built in Vivarium from the AICS lumenoid specification, grown into a reproduction and extension of Barrientos et al. (Cell 2026). The reproduction studies target the paper's Figures 1 (tissue-mechanics regimes), 2 (collagen rheology + supply) and 7 (perlecan/growth perturbations); the extension studies add spatial 2D/3D Tyssue epithelia, bidirectional LAMMPS–Tyssue coupling, an actomyosin cortex and a closed lumenoid. All studies now RUN end-to-end against their real composites and carry recorded evidence — but each is scoped honestly by evidence status (observed / reproduced / engineered-diagnostic / hypothesis / contradicted, per docs/figure-conventions.md), not scored as paper reproduction on a smoke test or a geometry screenshot. The membrane-build (the collagen-network studies, incl. V2) and the paper reproductions (R1 Fig 1 regime topology, R2 Fig 2E direction, R3 Fig 2B/C supply ordering, R6 Fig 7 perlecan ordering) are the strongest results; the spatial and extension studies are preliminary. R6 reproduces Fig 7 only after a review-caught fix: its perlecan direction had been inverted and was corrected against the paper. FOLLOWING the 2026-10-20 modeling review, the spatial/coupled studies were refocused on the agreed PREFERRED-vs-REALIZED two-way feedback: R4 (2D cross-section), R5 (3D monolayer) and E4 (coupling) now DRIVE a growing preferred geometry (division OFF) and MEASURE the emergent, lagging realized geometry + cell height under BM confinement — the realized geometry is verified not hard-coded to the target. These are demonstrated in reduced order / reduced units (qualitatively consistent with the paper's confinement direction), not calibrated reproductions; explicit-LAMMPS coupling remains a separate verification gate. See meeting_alignment_2026_10_20 for the full spine + staging.
 #
 # ---
 #
@@ -250,136 +250,13 @@ def _render_one(address, config, runs_db, study_yaml, overrides=None):
         return _p.read_text(encoding='utf-8', errors='replace')
     return f'<p style="color:#6b7280">unsupported figure type: {address}</p>'
 
-# ## Study: Elastic modulus & remodelling-time separation (`bm-v1-stage1-modulus-remodelling`)
-#
-# **Question.** Can the clean-room collagen IV network separate an elastic modulus from a viscous remodelling time, as the paper's staged protocol does?
-#
-# **Purpose.** A crosslinked semiflexible rod network stores elastic energy in stretched bonds under fast load (crosslinks frozen), and dissipates it over the crosslink turnover time when make/break is switched on.
-#
-# **Claim.** A coarse-grained collagen IV network (two-bead rods, stochastic NC1/7S crosslinks, no excluded volume) run through the spec's stage-1 protocol — stretch, hold, then switch the chemistry on — yields a separable elastic modulus and remodelling (stress-relaxation) time on real LAMMPS.
-
-# ### Parameters
-#
-# | simulation | composite | steps | params |
-# | --- | --- | --- | --- |
-# | `collagen-iv-network-stage1` | `viva_lumenoid.composites.stage1_composite` | 0 | n_rods=200, box_xy=20.0, slab_thickness=2.0, bead_spacing_nm=114.0, persistence_length_nm=40.0, make_prob=0.12, make_every=100, break_every=100, factor_mult=0.66, target_strain=0.15, strain_rate=0.0015, assemble_steps=8000, hold_steps=16000, seed=12345 |
-
-# ### The model & its parameters
-#
-# Each composite is a process-bigraph *document* — named processes wired by `inputs`/`outputs` ports over shared stores. Below, each composite shows what it does, then a **parameter cell** with its tunable knobs (the current default and what each one means). Edit any value, then re-run the **Run** section to rebuild and re-simulate with your changes.
-
-# **Composite `viva_lumenoid.composites.stage1_composite`** — `spec_viva_lumenoid_composites_stage1_composite` (materialized from its `@composite_generator`)
-
-spec_viva_lumenoid_composites_stage1_composite = materialize_composite('viva_lumenoid.composites.stage1_composite')
-describe_spec(spec_viva_lumenoid_composites_stage1_composite)
-
-# === Edit parameters for this composite, then run the Run cell ===
-# ov_viva_lumenoid_composites_stage1_composite maps each tunable parameter to its current value (the generator's
-# defaults). Edit any entry; the Run cell rebuilds the composite with it.
-ov_viva_lumenoid_composites_stage1_composite = dict(spec_viva_lumenoid_composites_stage1_composite['_overrides'])
-import json as _json; print(_json.dumps(ov_viva_lumenoid_composites_stage1_composite, indent=2, default=str))
-# e.g.:  ov_viva_lumenoid_composites_stage1_composite['<parameter>'] = <value>
-
-# ### Run
-#
-# _Set `STEPS`, then run. Each composite is built live from its (edited) spec above and run; a composite whose module processes aren't implemented yet reports the error instead of crashing. Set `RERUN = False` to skip re-simulating._
-
-# === Study: bm-v1-stage1-modulus-remodelling ===
-STUDY = 'bm-v1-stage1-modulus-remodelling'
-STUDY_DIR = REPO / 'workspace/studies' / STUDY
-STUDY_YAML = str(STUDY_DIR / "study.yaml")
-RUNS_DB = str(STUDY_DIR / "runs.db")
-
-# This study has no *recorded* runs yet. RERUN builds its declared
-# composite(s) live and runs them; a composite whose module processes
-# are not implemented yet reports the error instead of crashing.
-STEPS_collagen_iv_network_stage1 = 100
-INTERVAL_collagen_iv_network_stage1 = 1.0
-
-if RERUN:
-    from process_bigraph import Composite
-    try:
-        with quiet():  # keep per-step stdout out of the notebook
-            _ov = ov_viva_lumenoid_composites_stage1_composite if 'ov_viva_lumenoid_composites_stage1_composite' in dir() else None  # edits from the panel cell, if any
-            spec_viva_lumenoid_composites_stage1_composite = materialize_composite('viva_lumenoid.composites.stage1_composite', _ov)
-            _comp = Composite({'state': spec_viva_lumenoid_composites_stage1_composite['state']}, core=core)
-            _comp.run(STEPS_collagen_iv_network_stage1)
-        print('ran', 'collagen-iv-network-stage1', f'(viva_lumenoid.composites.stage1_composite) for', STEPS_collagen_iv_network_stage1, 'steps')
-    except Exception as _e:
-        print(f"collagen-iv-network-stage1 not runnable yet: {type(_e).__name__}: {_e}")
-else:
-    print("RERUN=False — not re-simulating.")
-
-# ### Visualizations
-#
-# _Results are shown by the figures below, produced by the run above._
-
-# **v1-stage1-main**
-
-def _save_viz(study, slug, html):
-    d = REPO / 'reports/notebooks/figures' / study
-    d.mkdir(parents=True, exist_ok=True)
-    out = d / (slug + '.html')
-    out.write_text(html, encoding='utf-8')
-    print('  wrote', out)
-
-
-# v1-stage1-main
-_save_viz('bm-v1-stage1-modulus-remodelling', 'v1-stage1-main', _render_one('html:v1_stage1_main.html', {'title': 'Stage 1 — NC1-angle-stabilized modulus AND remodelling, separated', 'evidence_status': 'observed', 'tier': 'main', 'caption': 'How to read: look at panel B — the slope of the fitted line through the stress-vs-strain points is the elastic modulus, so a positive non-zero slope means the network carries tensile stress rather than being floppy; panel C then shows the bonds breaking and re-forming (remodeling) as the stress relaxes. An NC1-angle-stabilized collagen IV network develops tensile stress during imposed biaxial stretching and relaxes when bond remodeling resumes. Shaded phases (stretch / frozen-hold / chemistry-on-hold) define the protocol; (B) plots the network BOND-VIRIAL in-plane stress vs strain (reduced LJ units, not total/hydrostatic) with the tangent elastic modulus E = 4.98 ± 2.15 LJ (≈ 11 ± 5 Pa at kT/σ³≈2.2 Pa — energy scale unresolved) fit over strain ∈ [0.01, 0.08]; (C) tracks crosslinks vs the largest connected component; (D) shows one labeled as-formed network (seed 11). Independently repeated runs (3 seeds, real bounded LAMMPS on a 60-rod dense slab) give E with the spread shown. HONEST SCOPE: this is NC1-angle- stabilized only — the released 7S junction angles (k=1.0 @155° and @60°) and the 7S-specific break cutoff (0.95 vs the NC1 1.35 used for both) are NOT implemented, so it is not a full reproduction of the released angle set. The relaxation time τ ≈ 4 ± 4 LJ is NOT cleanly resolved at this bounded scale; a dense multi-seed sweep (Mac-mini candidate) is needed to report τ.\n'}, RUNS_DB, STUDY_YAML))
-
-# **stage1-faithful**
-
-# stage1-faithful
-_save_viz('bm-v1-stage1-modulus-remodelling', 'stage1-faithful', _render_one('html:stage1_faithful.html', {'title': 'Stage 1 (faithful angles, un-simplified) — modulus AND remodelling', 'evidence_status': 'observed', 'tier': 'supplement', 'caption': 'The earlier un-simplified four-panel faithful-angle run; superseded as the primary by v1-stage1-main (same NC1-angle-stabilized network, simplified panels). Retained as supplement. NC1 angles only; 7S angles not implemented.\n'}, RUNS_DB, STUDY_YAML))
-
-# **stage1-diagnostic**
-
-# stage1-diagnostic
-_save_viz('bm-v1-stage1-modulus-remodelling', 'stage1-diagnostic', _render_one('html:stage1_diagnostic.html', {'title': 'Stage 1 (angle-off) — modulus & remodelling diagnostic', 'evidence_status': 'engineered-diagnostic', 'tier': 'supplement', 'caption': 'Near-duplicate diagnostic of the angle-OFF (central-force) transcription; a smoke/diagnostic view, not biological evidence. Supplement.\n'}, RUNS_DB, STUDY_YAML))
-
-# **cross-check**
-
-# cross-check
-_save_viz('bm-v1-stage1-modulus-remodelling', 'cross-check', _render_one('html:cross_check.html', {'title': 'Cross-check — clean-room vs the released code', 'evidence_status': 'engineered-diagnostic', 'tier': 'supplement', 'caption': 'Provenance cross-check of the clean-room parameters against the released LAMMPS input scripts — a verification panel, not an independent finding. Supplement.\n'}, RUNS_DB, STUDY_YAML))
-
-# **modulus-vs-fraction**
-
-# modulus-vs-fraction
-_save_viz('bm-v1-stage1-modulus-remodelling', 'modulus-vs-fraction', _render_one('html:modulus_vs_fraction.html', {'title': 'Modulus vs crosslink fraction (corroborating)', 'evidence_status': 'engineered-diagnostic', 'tier': 'supplement', 'caption': 'Corroborating modulus-vs-crosslink-fraction trend. Demoted to supplement: the energy→Pa conversion (kT/σ³≈2.2 Pa) carries the unresolved-energy-scale caveat and the trend is not shown with per-seed points/range here; read as provenance/corroboration, not an independent reproduction.\n'}, RUNS_DB, STUDY_YAML))
-
-# **modulus-ladder**
-
-# modulus-ladder
-_save_viz('bm-v1-stage1-modulus-remodelling', 'modulus-ladder', _render_one('html:modulus_ladder.html', {'title': 'Modulus ladder — v1 in the published very-soft regime', 'evidence_status': 'engineered-diagnostic', 'tier': 'supplement', 'caption': 'Parameter ladder placing v1 in the published very-soft regime — a parameter/heterogeneous-comparator panel, not an independent finding. Supplement.\n'}, RUNS_DB, STUDY_YAML))
-
-# **stage1-movie**
-
-# stage1-movie
-_save_viz('bm-v1-stage1-modulus-remodelling', 'stage1-movie', _render_one('html:stage1_movie.html', {'title': 'Simulation movie — the staged protocol unfolding', 'evidence_status': 'engineered-diagnostic', 'tier': 'supplement', 'caption': 'Optional animation of the staged protocol; retained as the single optional movie, removed from the linear narrative. Supplement.\n'}, RUNS_DB, STUDY_YAML))
-
-# **stage1-movie-3d**
-
-# stage1-movie-3d
-_save_viz('bm-v1-stage1-modulus-remodelling', 'stage1-movie-3d', _render_one('html:stage1_movie_3d.html', {'title': '3D view — the quasi-2D slab, rotatable', 'evidence_status': 'engineered-diagnostic', 'tier': 'supplement', 'caption': '3D rotatable view of the same clip; supplement (removed from the linear narrative).\n'}, RUNS_DB, STUDY_YAML))
-
-# ### Acceptance criteria
-#
-# _Pre-registered checks (criteria/thresholds only — run the cells above to evaluate them)._
-#
-# | test | measures | passes if |
-# | --- | --- | --- |
-# | network-assembles _(primary)_ | kind=count field=n_crosslinks when=end-of-assemble | op gt value 0 field n_crosslinks |
-# | elastic-modulus-consistent-with-floppy _(primary)_ | kind=slope field=sigma_inplane versus=strain phase=stretch ensemble=6 | op consistent_with_zero note floppy network; z < 4 |
-# | relaxation-decays-not-densifies _(primary)_ | kind=delta field=sigma_inplane phase=hold_viscous compare_to=crosslink_count | op decreases note crosslinks decay 46→3; stress drops in the correct direction |
-# | remodelling-time-calibratable _(secondary)_ | kind=relaxation_time field=sigma_inplane phase=hold_viscous convert=hours | op calibratable target_hours 20 range_hours 3-30 across systems |
-
 # ## Study: Growth rheology: stress vs strain rate (`bm-v2-stress-vs-strainrate`)
 #
 # **Question.** What is σ(ε̇), and where does the network cross from viscous to elastic?
 #
 # **Purpose.** At ε̇ below the crosslink turnover rate the network remodels fast enough to flow (σ ∝ ε̇, constant η); above it, bonds cannot relax between deformation increments and the response stiffens.
 #
-# **Claim.** Imposing an equibiaxial in-plane strain rate ε̇ on the growing collagen IV network and reading the steady-state stress σ(ε̇) gives the effective viscosity η = σ/ε̇ (viscous at slow rates) and the rate at which the response turns elastic — the σ(ε̇) relation a vertex model needs.
+# **Claim.** The deliverable of this study is the CONSTITUTIVE LAW the vertex model consumes: imposing an equibiaxial in-plane strain rate ε̇ on the growing collagen IV network and reading the steady-state stress σ(ε̇) is the measurement from which a two-mode Maxwell / standard-linear-solid model is fit — an intrinsic elastic floor plus a residence-dominated relaxation mode — stated over its valid ε̇ and residence ranges and expressed in tissue units. ReducedBM then BECOMES that fit, not a hand-set (k, τ). (Note: the areal strain rate = 2× the linear ε̇ — multiscale_coupling.py passes the areal rate dA/A/dt.)
 
 # ### Parameters
 #
@@ -439,28 +316,36 @@ else:
 
 # **v2-rheology-main**
 
+def _save_viz(study, slug, html):
+    d = REPO / 'reports/notebooks/figures' / study
+    d.mkdir(parents=True, exist_ok=True)
+    out = d / (slug + '.html')
+    out.write_text(html, encoding='utf-8')
+    print('  wrote', out)
+
+
 # v2-rheology-main
-_save_viz('bm-v2-stress-vs-strainrate', 'v2-rheology-main', _render_one('html:v2_rheology_main.html', {'title': 'Growth rate vs apparent mechanical resistance (+ paired connectivity)', 'evidence_status': 'observed', 'tier': 'main', 'caption': "How to read: compare panel A (stress at each growth rate) against panel C (crosslinks per rod at each rate); if the stress curve stays flat while the crosslink density drops, the apparent stiffening is driven by how much the network managed to assemble, not by the growth rate itself. Imposed growth rate ε̇ changes the network's apparent mechanical resistance; the paired crosslink-density readout assesses whether the response reflects turnover competition or a rate-dependent change in structure. (A) σ(ε̇) is the network BOND-VIRIAL in-plane stress (reduced LJ units) read at a MATCHED total strain ε=0.12 (σ averaged over strain ∈ [0.096, 0.12]); (B) effective viscosity η_eff = σ/ε̇; (C) crosslinks-per-rod at each rate. Error bars are 3 independent networks (seeds 11/22/33; 60-rod NC1-angle-stabilized network, chemistry ON during stretch; real bounded LAMMPS). HONEST CONCLUSION: at this bounded scale σ(ε̇) is nearly flat/overlapping across rates (1.24→1.01→0.99 LJ) WHILE crosslinks/rod falls with rate (2.00→1.31→1.04) — the apparent resistance is CONFOUNDED by rate-dependent assembly time, not a clean rate-stiffening signal. η_eff falls 621→55 LJ·time. De = τ·ε̇ is not reported because τ is not resolved at this scale. A density-matched dense multi-seed sweep (Mac-mini candidate) is required to separate true rate-stiffening from the density confound.\n"}, RUNS_DB, STUDY_YAML))
+_save_viz('bm-v2-stress-vs-strainrate', 'v2-rheology-main', _render_one('html:viz/v2_rheology_main.html', {'title': 'Growth rate vs apparent mechanical resistance (+ paired connectivity)', 'evidence_status': 'observed', 'tier': 'main', 'caption': "How to read: compare panel A (stress at each growth rate) against panel C (crosslinks per rod at each rate); if the stress curve stays flat while the crosslink density drops, the apparent stiffening is driven by how much the network managed to assemble, not by the growth rate itself. Imposed growth rate ε̇ changes the network's apparent mechanical resistance; the paired crosslink-density readout assesses whether the response reflects turnover competition or a rate-dependent change in structure. (A) σ(ε̇) is the network BOND-VIRIAL in-plane stress (reduced LJ units) read at a MATCHED total strain ε=0.12 (σ averaged over strain ∈ [0.096, 0.12]); (B) effective viscosity η_eff = σ/ε̇; (C) crosslinks-per-rod at each rate. Error bars are 3 independent networks (seeds 11/22/33; 60-rod NC1-angle-stabilized network, chemistry ON during stretch; real bounded LAMMPS). HONEST CONCLUSION: at this bounded scale σ(ε̇) is nearly flat/overlapping across rates (1.24→1.01→0.99 LJ) WHILE crosslinks/rod falls with rate (2.00→1.31→1.04) — the apparent resistance is CONFOUNDED by rate-dependent assembly time, not a clean rate-stiffening signal. η_eff falls 621→55 LJ·time. De = τ·ε̇ is not reported because τ is not resolved at this scale. A density-matched dense multi-seed sweep (Mac-mini candidate) is required to separate true rate-stiffening from the density confound.\n"}, RUNS_DB, STUDY_YAML))
 
 # **coupling**
 
 # coupling
-_save_viz('bm-v2-stress-vs-strainrate', 'coupling', _render_one('html:coupling.html', {'title': 'Vertex-model coupling — E(ε̇) and τ(ε̇) (stress-derived)', 'evidence_status': 'engineered-diagnostic', 'tier': 'supplement', 'caption': 'The earlier single-seed E(ε̇)/τ(ε̇) coupling table. Demoted: these are stress-derived quantities presented from a single seed [12345] and are not independently validated; they belong AFTER the primary rheology summary, not as a headline deliverable. Supplement.\n'}, RUNS_DB, STUDY_YAML))
+_save_viz('bm-v2-stress-vs-strainrate', 'coupling', _render_one('html:viz/coupling.html', {'title': 'Vertex-model coupling — E(ε̇) and τ(ε̇) (stress-derived)', 'evidence_status': 'engineered-diagnostic', 'tier': 'supplement', 'caption': 'The earlier single-seed E(ε̇)/τ(ε̇) coupling table. Demoted: these are stress-derived quantities presented from a single seed [12345] and are not independently validated; they belong AFTER the primary rheology summary, not as a headline deliverable. Supplement.\n'}, RUNS_DB, STUDY_YAML))
 
 # **stage2-diagnostic**
 
 # stage2-diagnostic
-_save_viz('bm-v2-stress-vs-strainrate', 'stage2-diagnostic', _render_one('html:stage2_diagnostic.html', {'title': 'Stage 2 — σ(ε̇) diagnostic', 'evidence_status': 'engineered-diagnostic', 'tier': 'supplement', 'caption': 'Near-duplicate σ(ε̇) diagnostic; a smoke/diagnostic view, not an independent finding. Supplement.\n'}, RUNS_DB, STUDY_YAML))
+_save_viz('bm-v2-stress-vs-strainrate', 'stage2-diagnostic', _render_one('html:viz/stage2_diagnostic.html', {'title': 'Stage 2 — σ(ε̇) diagnostic', 'evidence_status': 'engineered-diagnostic', 'tier': 'supplement', 'caption': 'Near-duplicate σ(ε̇) diagnostic; a smoke/diagnostic view, not an independent finding. Supplement.\n'}, RUNS_DB, STUDY_YAML))
 
 # **stage2-movie**
 
 # stage2-movie
-_save_viz('bm-v2-stress-vs-strainrate', 'stage2-movie', _render_one('html:stage2_movie.html', {'title': 'Simulation movie — the growing substrate stretches', 'evidence_status': 'engineered-diagnostic', 'tier': 'supplement', 'caption': 'Optional animation of the growing substrate (box outline grows with the imposed equibiaxial strain, synced to σ(t); frames are periodic-image coherent). Retained as the single optional movie, removed from the linear narrative. Supplement.\n'}, RUNS_DB, STUDY_YAML))
+_save_viz('bm-v2-stress-vs-strainrate', 'stage2-movie', _render_one('html:viz/stage2_movie.html', {'title': 'Simulation movie — the growing substrate stretches', 'evidence_status': 'engineered-diagnostic', 'tier': 'supplement', 'caption': 'Optional animation of the growing substrate (box outline grows with the imposed equibiaxial strain, synced to σ(t); frames are periodic-image coherent). Retained as the single optional movie, removed from the linear narrative. Supplement.\n'}, RUNS_DB, STUDY_YAML))
 
 # **stage2-movie-3d**
 
 # stage2-movie-3d
-_save_viz('bm-v2-stress-vs-strainrate', 'stage2-movie-3d', _render_one('html:stage2_movie_3d.html', {'title': '3D view — the slab stretching, rotatable', 'evidence_status': 'engineered-diagnostic', 'tier': 'supplement', 'caption': '3D rotatable view of the same deforming clip; supplement (removed from the linear narrative).\n'}, RUNS_DB, STUDY_YAML))
+_save_viz('bm-v2-stress-vs-strainrate', 'stage2-movie-3d', _render_one('html:viz/stage2_movie_3d.html', {'title': '3D view — the slab stretching, rotatable', 'evidence_status': 'engineered-diagnostic', 'tier': 'supplement', 'caption': '3D rotatable view of the same deforming clip; supplement (removed from the linear narrative).\n'}, RUNS_DB, STUDY_YAML))
 
 # ### Acceptance criteria
 #
@@ -471,297 +356,6 @@ _save_viz('bm-v2-stress-vs-strainrate', 'stage2-movie-3d', _render_one('html:sta
 # | sweep-runs _(primary)_ | kind=count field=rates | op gt value 0 field n_rates |
 # | viscosity-defined _(primary)_ | kind=value field=eta_lowrate | op finite field eta_lowrate |
 # | viscous-plateau-vs-elastic _(secondary)_ | kind=slope field=eta_effective versus=strain_rate scale=log | op plateau note η ~ const at slow ε̇ |
-
-# ## Study: Rigidity percolation (central-force control) (`bm-v3-junction-bending-rigidity`)
-#
-# **Question.** Can more crosslink connectivity rigidify the v1 network, or is bending required?
-#
-# **Purpose.** Maxwell rigidity percolation: a central-force network is floppy below z = 2d (= 4 in 2D). Bond-bending constraints lower the threshold and rigidify sub- isostatic networks.
-#
-# **Claim.** This study originally explained the soft modulus as a central-force rigidity-percolation effect (z ≤ 3 < 4). The released code is not a central-force network — it sets junction angles (NC1 at 180° with stiffness 4.0, 7S at 155° and 60°) — so that explanation does not describe the published model, which carries those angles and is still soft (≈0.03 Pa). What this connectivity sweep actually shows is that with angles off (our earlier transcription) and the corrected parameters, the network is sub-isostatic (z tops out at ≈2.0) and soft — a property of the angle-off transcription, not of the paper.
-
-# ### Parameters
-#
-# | simulation | composite | steps | params |
-# | --- | --- | --- | --- |
-# | `connectivity-sweep` | `viva_lumenoid.composites.connectivity_sweep` | 0 | n_rods=200, box_xy=20.0, assemble_steps=8000, hold_steps=8000, rungs=[(1,3,0.12),(2,4,0.25),(3,5,0.40),(5,8,0.60)], seeds=[11,22,33] |
-#
-# Declared parameter sets (`study.yaml` variants):
-#
-# - **nc1x1-7sx3** — `nc1_max_crosslinks=1`, `svns_max_crosslinks=3`, `make_prob=0.12`
-# - **nc1x2-7sx4** — `nc1_max_crosslinks=2`, `svns_max_crosslinks=4`, `make_prob=0.25`
-# - **nc1x3-7sx5** — `nc1_max_crosslinks=3`, `svns_max_crosslinks=5`, `make_prob=0.4`
-# - **nc1x5-7sx8** — `nc1_max_crosslinks=5`, `svns_max_crosslinks=8`, `make_prob=0.6`
-
-# ### The model & its parameters
-#
-# Each composite is a process-bigraph *document* — named processes wired by `inputs`/`outputs` ports over shared stores. Below, each composite shows what it does, then a **parameter cell** with its tunable knobs (the current default and what each one means). Edit any value, then re-run the **Run** section to rebuild and re-simulate with your changes.
-
-# **Composite `viva_lumenoid.composites.connectivity_sweep`** — `spec_viva_lumenoid_composites_connectivity_sweep` (materialized from its `@composite_generator`)
-
-spec_viva_lumenoid_composites_connectivity_sweep = materialize_composite('viva_lumenoid.composites.connectivity_sweep')
-describe_spec(spec_viva_lumenoid_composites_connectivity_sweep)
-
-# === Edit parameters for this composite, then run the Run cell ===
-# ov_viva_lumenoid_composites_connectivity_sweep maps each tunable parameter to its current value (the generator's
-# defaults). Edit any entry; the Run cell rebuilds the composite with it.
-ov_viva_lumenoid_composites_connectivity_sweep = dict(spec_viva_lumenoid_composites_connectivity_sweep['_overrides'])
-import json as _json; print(_json.dumps(ov_viva_lumenoid_composites_connectivity_sweep, indent=2, default=str))
-# e.g.:  ov_viva_lumenoid_composites_connectivity_sweep['<parameter>'] = <value>
-
-# ### Run
-#
-# _Set `STEPS`, then run. Each composite is built live from its (edited) spec above and run; a composite whose module processes aren't implemented yet reports the error instead of crashing. Set `RERUN = False` to skip re-simulating._
-
-# === Study: bm-v3-junction-bending-rigidity ===
-STUDY = 'bm-v3-junction-bending-rigidity'
-STUDY_DIR = REPO / 'workspace/studies' / STUDY
-STUDY_YAML = str(STUDY_DIR / "study.yaml")
-RUNS_DB = str(STUDY_DIR / "runs.db")
-
-# This study has no *recorded* runs yet. RERUN builds its declared
-# composite(s) live and runs them; a composite whose module processes
-# are not implemented yet reports the error instead of crashing.
-STEPS_connectivity_sweep = 100
-INTERVAL_connectivity_sweep = 1.0
-
-if RERUN:
-    from process_bigraph import Composite
-    try:
-        with quiet():  # keep per-step stdout out of the notebook
-            _ov = ov_viva_lumenoid_composites_connectivity_sweep if 'ov_viva_lumenoid_composites_connectivity_sweep' in dir() else None  # edits from the panel cell, if any
-            spec_viva_lumenoid_composites_connectivity_sweep = materialize_composite('viva_lumenoid.composites.connectivity_sweep', _ov)
-            _comp = Composite({'state': spec_viva_lumenoid_composites_connectivity_sweep['state']}, core=core)
-            _comp.run(STEPS_connectivity_sweep)
-        print('ran', 'connectivity-sweep', f'(viva_lumenoid.composites.connectivity_sweep) for', STEPS_connectivity_sweep, 'steps')
-    except Exception as _e:
-        print(f"connectivity-sweep not runnable yet: {type(_e).__name__}: {_e}")
-else:
-    print("RERUN=False — not re-simulating.")
-
-# ### Visualizations
-#
-# _Results are shown by the figures below, produced by the run above._
-
-# **v3-centralforce-control**
-
-# v3-centralforce-control
-_save_viz('bm-v3-junction-bending-rigidity', 'v3-centralforce-control', _render_one('html:v3_centralforce_control.html', {'title': 'Central-force control does not reproduce the released network', 'evidence_status': 'engineered-diagnostic', 'tier': 'main', 'caption': "How to read: read coordination z left-to-right on the x-axis and the modulus points up the y-axis; because the points scatter around zero (every error bar crosses the zero reference) and z never climbs toward the z=4 Maxwell line, adding connectivity alone does not stiffen this central-force control network. With angular potentials intentionally removed (bending_k=0), changing the allowable end-link valency does not produce a reproducibly positive modulus across sampled connectivities. This artificial control must NOT be interpreted as the mechanism of softness in the published model. Measured coordination z = 1 + crosslinks/rod is on the x-axis; each seed's athermal (energy-minimization) modulus is a point with a zero reference and the ensemble mean ± SD (released-code LAMMPS, reduced LJ units; 60-rod network, 3 seeds 11/22/33). z rises 1.17 → 1.61 across the swept crosslink caps and never approaches 4; the modulus is scattered about zero with seed-spread exceeding the mean at every rung (every CI spans 0) — not reproducibly positive, by design. The z=4 Maxwell line is drawn ONLY as the idealized 2D central-force heuristic — it is NOT a threshold for the released, angle-stabilized, finite-thickness network, which carries junction angles and is soft for other reasons (missing components, thin-sheet geometry, no pre-stress).\n"}, RUNS_DB, STUDY_YAML))
-
-# **rigidity-movie**
-
-# rigidity-movie
-_save_viz('bm-v3-junction-bending-rigidity', 'rigidity-movie', _render_one('html:rigidity_movie.html', {'title': 'Simulation movie — high-connectivity network (NC1×5 + 7S×8)', 'evidence_status': 'engineered-diagnostic', 'tier': 'supplement', 'caption': 'Optional animation of the high-connectivity angle-off network; removed from the main narrative (a control, not a result). Supplement.\n'}, RUNS_DB, STUDY_YAML))
-
-# **rigidity-movie-3d**
-
-# rigidity-movie-3d
-_save_viz('bm-v3-junction-bending-rigidity', 'rigidity-movie-3d', _render_one('html:rigidity_movie_3d.html', {'title': '3D view — the connected network, rotatable', 'evidence_status': 'engineered-diagnostic', 'tier': 'supplement', 'caption': '3D rotatable view of the same angle-off network; supplement (removed from the main narrative).\n'}, RUNS_DB, STUDY_YAML))
-
-# ### Acceptance criteria
-#
-# _Pre-registered checks (criteria/thresholds only — run the cells above to evaluate them)._
-#
-# | test | measures | passes if |
-# | --- | --- | --- |
-# | z-stays-below-threshold _(primary)_ | kind=max field=coordination_z | op lt value 4.0 field max_z |
-# | modulus-stays-floppy _(primary)_ | kind=value field=elastic_modulus_vs_z ensemble=3 | op consistent_with_zero note all CIs span 0 |
-
-# ## Study: Native junction-bending modulus (`bm-v4-junction-bending`)
-#
-# **Question.** Does junction bending yield the measurable modulus the vertex model needs?
-#
-# **Purpose.** Bending constraints at crosslink junctions lift a sub-isostatic (z < 4) central-force network out of the floppy regime — the physically-expected rigidity source for a semiflexible fiber network.
-#
-# **Claim.** Junction bending is a released feature (an NC1 angle of stiffness 4.0 at 180°, plus 7S angles), not a new ingredient; how it is applied decides whether it gives a usable modulus. Pinning as-formed restraints on after assembly is ill-conditioned — the sign flips and no reproducible value emerges. Creating real harmonic angles as the crosslinks form, so the network equilibrates with them active (matching the released bond/react templates), gives a positive, well-conditioned, reproducible modulus. The released model is not floppy once its angles are active; its modulus is finite and strongly density-dependent.
-
-# ### Parameters
-#
-# | simulation | composite | steps | params |
-# | --- | --- | --- | --- |
-# | `junction-bending-network` | `viva_lumenoid.composites.bending_sweep` | 0 | n_rods=200, box_xy=20.0, bending_k=4.0, timestep=0.002, seed=12345 |
-
-# ### The model & its parameters
-#
-# Each composite is a process-bigraph *document* — named processes wired by `inputs`/`outputs` ports over shared stores. Below, each composite shows what it does, then a **parameter cell** with its tunable knobs (the current default and what each one means). Edit any value, then re-run the **Run** section to rebuild and re-simulate with your changes.
-
-# **Composite `viva_lumenoid.composites.bending_sweep`** — `spec_viva_lumenoid_composites_bending_sweep` (materialized from its `@composite_generator`)
-
-spec_viva_lumenoid_composites_bending_sweep = materialize_composite('viva_lumenoid.composites.bending_sweep')
-describe_spec(spec_viva_lumenoid_composites_bending_sweep)
-
-# === Edit parameters for this composite, then run the Run cell ===
-# ov_viva_lumenoid_composites_bending_sweep maps each tunable parameter to its current value (the generator's
-# defaults). Edit any entry; the Run cell rebuilds the composite with it.
-ov_viva_lumenoid_composites_bending_sweep = dict(spec_viva_lumenoid_composites_bending_sweep['_overrides'])
-import json as _json; print(_json.dumps(ov_viva_lumenoid_composites_bending_sweep, indent=2, default=str))
-# e.g.:  ov_viva_lumenoid_composites_bending_sweep['<parameter>'] = <value>
-
-# ### Run
-#
-# _Set `STEPS`, then run. Each composite is built live from its (edited) spec above and run; a composite whose module processes aren't implemented yet reports the error instead of crashing. Set `RERUN = False` to skip re-simulating._
-
-# === Study: bm-v4-junction-bending ===
-STUDY = 'bm-v4-junction-bending'
-STUDY_DIR = REPO / 'workspace/studies' / STUDY
-STUDY_YAML = str(STUDY_DIR / "study.yaml")
-RUNS_DB = str(STUDY_DIR / "runs.db")
-
-# This study has no *recorded* runs yet. RERUN builds its declared
-# composite(s) live and runs them; a composite whose module processes
-# are not implemented yet reports the error instead of crashing.
-STEPS_junction_bending_network = 100
-INTERVAL_junction_bending_network = 1.0
-
-if RERUN:
-    from process_bigraph import Composite
-    try:
-        with quiet():  # keep per-step stdout out of the notebook
-            _ov = ov_viva_lumenoid_composites_bending_sweep if 'ov_viva_lumenoid_composites_bending_sweep' in dir() else None  # edits from the panel cell, if any
-            spec_viva_lumenoid_composites_bending_sweep = materialize_composite('viva_lumenoid.composites.bending_sweep', _ov)
-            _comp = Composite({'state': spec_viva_lumenoid_composites_bending_sweep['state']}, core=core)
-            _comp.run(STEPS_junction_bending_network)
-        print('ran', 'junction-bending-network', f'(viva_lumenoid.composites.bending_sweep) for', STEPS_junction_bending_network, 'steps')
-    except Exception as _e:
-        print(f"junction-bending-network not runnable yet: {type(_e).__name__}: {_e}")
-else:
-    print("RERUN=False — not re-simulating.")
-
-# ### Visualizations
-#
-# _Results are shown by the figures below, produced by the run above._
-
-# **faithful-angles**
-
-# faithful-angles
-_save_viz('bm-v4-junction-bending', 'faithful-angles', _render_one('html:bm_v4_faithful_angles.html', {'title': 'Junction angles formed during assembly stabilise the modulus', 'evidence_status': 'observed', 'tier': 'main', 'caption': 'How to read: compare the three control groups\' modulus points — only the "angles formed during assembly" case sits clearly above zero while the central-force and post-hoc-restraint cases straddle zero, so a positive and repeatable modulus means the junction angles must be present while the network assembles; panel B shows that modulus rising with crosslinks per rod. Per-seed equibiaxial-stretch tangent modulus (reduced LJ units, kT/σ³; ×2.2 → Pa, carrying the unresolved-energy-scale caveat) at matched box (13σ), density and loading protocol for three controls — central force (angles off, k=0), post-hoc as-formed harmonic restraints (k=4), and real NC1 harmonic angles created DURING assembly (k=4, 180°). Real LAMMPS (run_faithful_comparison; 3 seeds 11/22/33, one deterministic run each). Forming the angles during assembly gives positive, reproducible per-seed moduli (36.7/27.6/37.5 kT/σ³ ≈ 81/61/83 Pa) where the central-force control is consistent with zero (−0.54/−1.32/−1.14) and the post-hoc restraint sign-flips (0.9/−2.53/−0.47); connectivity is an important covariate (panel B: modulus rises monotonically with crosslinks/rod). The paper already has angle terms — this is matching the released angle set applied the released way (angles active during assembly), NOT a novel physical correction. FIDELITY GAP (named): only the NC1 junction angle (k=4 @180°, create_bonds single/angle type 1) is implemented; the two released 7S angles (k≈1 @155° and @60°) are NOT. The absolute Pa value additionally depends on matching the released make+break crosslink density — the dense-config, multi-seed reproducible value is a Mac-mini candidate.\n'}, RUNS_DB, STUDY_YAML))
-
-# **bending-diagnostic**
-
-# bending-diagnostic
-_save_viz('bm-v4-junction-bending', 'bending-diagnostic', _render_one('html:bending_diagnostic.html', {'title': 'Junction-bending stiffness ladder (diagnostic)', 'evidence_status': 'engineered-diagnostic', 'tier': 'supplement', 'caption': 'Athermal elastic modulus vs the junction-bending stiffness bending_k (reduced LJ, kT/σ³), swept around the released NC1 value k=4.0. A parameter ladder / conditioning diagnostic: the paper already sets these angle terms, so sweeping bending_k is a sensitivity check, not a novel physical correction. Superseded for the headline claim by the angle-during-assembly figure above.\n'}, RUNS_DB, STUDY_YAML))
-
-# **bending-movie**
-
-# bending-movie
-_save_viz('bm-v4-junction-bending', 'bending-movie', _render_one('html:bending_movie.html', {'title': 'Simulation movie — bending-pinned network (supplement)', 'evidence_status': 'engineered-diagnostic', 'tier': 'supplement', 'caption': 'Optional animation of the junction-bending network assembling at the released NC1 stiffness (k=4.0). Illustrative spatial context; not a quantitative result. 2D top-down projection of the quasi-2D slab.\n'}, RUNS_DB, STUDY_YAML))
-
-# **bending-movie-3d**
-
-# bending-movie-3d
-_save_viz('bm-v4-junction-bending', 'bending-movie-3d', _render_one('html:bending_movie_3d.html', {'title': '3D view — the bending-pinned network (supplement)', 'evidence_status': 'engineered-diagnostic', 'tier': 'supplement', 'caption': 'Rotatable 3D view of the same bending-network clip (z exaggerated for visibility). Illustrative; not a quantitative result.\n'}, RUNS_DB, STUDY_YAML))
-
-# ### Acceptance criteria
-#
-# _Pre-registered checks (criteria/thresholds only — run the cells above to evaluate them)._
-#
-# | test | measures | passes if |
-# | --- | --- | --- |
-# | floppy-baseline-clean _(primary)_ | kind=value field=modulus_vs_bending_k at=bending_k=0 | op near_zero tol 0.1 |
-# | bending-changes-mechanics _(primary)_ | kind=magnitude field=modulus_vs_bending_k at=bending_k>0 | op gt value 1.0 note |E| jumps orders of magnitude above floppy |
-# | reproducible-modulus _(primary)_ | kind=iqr_over_median field=modulus_vs_bending_k at=bending_k>0 | op lt value 0.5 note IQR < 0.5·|median| — met by the real-angle path |
-
-# ## Study: Network porosity & strand bundling (`bm-v5-porosity-bundling`)
-#
-# **Question.** Does the v1 network reproduce the measured pore-size and bundling of a real BM?
-#
-# **Purpose.** Porosity is set by the areal density of rods (an emergent mesh); bundling requires lateral association of 5–7 protomers into a strand, a bond the released NC1/7S model does not have (it can bundle only through 7S branching).
-#
-# **Claim.** Of the two geometric readouts the model should reproduce, one is met and one is not. The simulated pore-size distribution reaches the measured corneal-EM band (72 ± 40 nm) at realistic density, while the protomers-per-strand distribution stays near 1, below the measured 5-7. The released NC1/7S topology has no lateral-association bond, so it cannot form multi-protomer strands — a limitation identified in advance.
-
-# ### Parameters
-#
-# | simulation | composite | steps | params |
-# | --- | --- | --- | --- |
-# | `porosity-bundling-network` | `viva_lumenoid.composites.porosity_bundling` | 0 | n_rods=500, box_xy=20.0, assemble_steps=8000 |
-#
-# Declared parameter sets (`study.yaml` variants):
-#
-# - **density-sweep** — `box_xy=20.0`
-
-# ### The model & its parameters
-#
-# Each composite is a process-bigraph *document* — named processes wired by `inputs`/`outputs` ports over shared stores. Below, each composite shows what it does, then a **parameter cell** with its tunable knobs (the current default and what each one means). Edit any value, then re-run the **Run** section to rebuild and re-simulate with your changes.
-
-# **Composite `viva_lumenoid.composites.porosity_bundling`** — `spec_viva_lumenoid_composites_porosity_bundling` (materialized from its `@composite_generator`)
-
-spec_viva_lumenoid_composites_porosity_bundling = materialize_composite('viva_lumenoid.composites.porosity_bundling')
-describe_spec(spec_viva_lumenoid_composites_porosity_bundling)
-
-# === Edit parameters for this composite, then run the Run cell ===
-# ov_viva_lumenoid_composites_porosity_bundling maps each tunable parameter to its current value (the generator's
-# defaults). Edit any entry; the Run cell rebuilds the composite with it.
-ov_viva_lumenoid_composites_porosity_bundling = dict(spec_viva_lumenoid_composites_porosity_bundling['_overrides'])
-import json as _json; print(_json.dumps(ov_viva_lumenoid_composites_porosity_bundling, indent=2, default=str))
-# e.g.:  ov_viva_lumenoid_composites_porosity_bundling['<parameter>'] = <value>
-
-# ### Run
-#
-# _Set `STEPS`, then run. Each composite is built live from its (edited) spec above and run; a composite whose module processes aren't implemented yet reports the error instead of crashing. Set `RERUN = False` to skip re-simulating._
-
-# === Study: bm-v5-porosity-bundling ===
-STUDY = 'bm-v5-porosity-bundling'
-STUDY_DIR = REPO / 'workspace/studies' / STUDY
-STUDY_YAML = str(STUDY_DIR / "study.yaml")
-RUNS_DB = str(STUDY_DIR / "runs.db")
-
-# This study has no *recorded* runs yet. RERUN builds its declared
-# composite(s) live and runs them; a composite whose module processes
-# are not implemented yet reports the error instead of crashing.
-STEPS_porosity_bundling_network = 100
-INTERVAL_porosity_bundling_network = 1.0
-
-if RERUN:
-    from process_bigraph import Composite
-    try:
-        with quiet():  # keep per-step stdout out of the notebook
-            _ov = ov_viva_lumenoid_composites_porosity_bundling if 'ov_viva_lumenoid_composites_porosity_bundling' in dir() else None  # edits from the panel cell, if any
-            spec_viva_lumenoid_composites_porosity_bundling = materialize_composite('viva_lumenoid.composites.porosity_bundling', _ov)
-            _comp = Composite({'state': spec_viva_lumenoid_composites_porosity_bundling['state']}, core=core)
-            _comp.run(STEPS_porosity_bundling_network)
-        print('ran', 'porosity-bundling-network', f'(viva_lumenoid.composites.porosity_bundling) for', STEPS_porosity_bundling_network, 'steps')
-    except Exception as _e:
-        print(f"porosity-bundling-network not runnable yet: {type(_e).__name__}: {_e}")
-else:
-    print("RERUN=False — not re-simulating.")
-
-# ### Visualizations
-#
-# _Results are shown by the figures below, produced by the run above._
-
-# **pore-size-coverage**
-
-# pore-size-coverage
-_save_viz('bm-v5-porosity-bundling', 'pore-size-coverage', _render_one('html:bm_v5_porosity.html', {'title': 'Simulated pore size reaches the corneal-EM reference at density', 'evidence_status': 'observed', 'tier': 'main', 'caption': "How to read: follow the pore-diameter distributions as areal coverage rises (median shifts 88 → 62 → 54 nm); the result is reached when the densest network's distribution overlaps the shaded corneal-EM reference band, meaning the simulated mesh has reached a realistic open-mesh pore size. Simulated pore-diameter distribution (maximal-inscribed-disc / distance-transform method, periodic plane) at three areal-coverage rungs; lengths via σ = 125 nm. Real assembled-network geometry (single deterministic run, seed 12345; box 13σ, 12σ slab, assemble 10000). Median pore falls with coverage (88 → 62 → 54 nm) and the densest network reaches the corneal-EM REFERENCE band (72 ± 40 nm; Abrams 2000, low-voltage SEM), shaded. Panels C/D show the mesh at low (200 rods) vs high (500 rods) density as a 2D top-down projection of the quasi-2D slab, with matched 2σ ≈ 250 nm scale bars. The corneal-EM band is a cross-system REFERENCE for an open-mesh length scale, NOT validation for lumenoid BM; the match holds at one coverage, it is not a universal property.\n"}, RUNS_DB, STUDY_YAML))
-
-# **protomers-per-strand**
-
-# protomers-per-strand
-_save_viz('bm-v5-porosity-bundling', 'protomers-per-strand', _render_one('html:bm_v5_bundling.html', {'title': 'The NC1/7S-only network under-bundles (no lateral-association bond)', 'evidence_status': 'observed', 'tier': 'main', 'caption': 'How to read: look at where the protomers-per-strand distribution sits relative to the shaded 5–7 reference band; because it piles up at 1 (mostly single protomers) and falls well short of the band, the network under-bundles — the gap between the distribution and the shaded band is the missing lateral association. Protomers-per-strand distribution at the densest network. STRAND DEFINITION: a connected component of rods whose minimum-image midpoints lie within the measured cell-deposited lateral spacing (59.5 nm ≈ 0.48σ) AND run ≤22° parallel. Real geometry (single deterministic run, seed 12345). Strands are predominantly isolated protomers (mean 1.38, 76% singletons, max 6; ~6% of rods in strands of 5–7), below the PFHR-9 REFERENCE band (5–7 protomers/strand; Pokidysheva 2025, immuno-gold SEM), shaded. The shortfall is consistent with the released NC1/7S topology having no explicit lateral-association bond; it is NOT evidence that NC1/7S chemistry alone recapitulates bundled BM. The PFHR-9 band is a cross-system reference, not validation; the missing lateral association is the named gap.\n'}, RUNS_DB, STUDY_YAML))
-
-# **porosity-bundling**
-
-# porosity-bundling
-_save_viz('bm-v5-porosity-bundling', 'porosity-bundling', _render_one('html:porosity_bundling.html', {'title': 'Stage 5 — combined porosity & bundling panel (supplement)', 'evidence_status': 'observed', 'tier': 'supplement', 'caption': 'The original 2×2 panel (pore histogram + density scaling + strand sizes + pore map), retained as a combined reference. Superseded for the headline narrative by the two split story figures above. Same real geometry; the measured bands are cross-system references, not validation.\n'}, RUNS_DB, STUDY_YAML))
-
-# **evidence-map**
-
-# evidence-map
-_save_viz('bm-v5-porosity-bundling', 'evidence-map', _render_one('html:evidence_map.html', {'title': 'Comparison-audit — readouts vs measured comparators (supplement)', 'evidence_status': 'engineered-diagnostic', 'tier': 'supplement', 'caption': "A comparison-audit forest plot of every spec comparator (geometry, pores, modulus, bundling, time) with the model's own values where run. The panels span incompatible units and biological systems, so it is an audit table, not a single scientific claim — kept in supplement per the figure review.\n"}, RUNS_DB, STUDY_YAML))
-
-# **assembly-movie**
-
-# assembly-movie
-_save_viz('bm-v5-porosity-bundling', 'assembly-movie', _render_one('html:assembly_movie.html', {'title': 'Simulation movie — a porous collagen IV mesh forms (supplement)', 'evidence_status': 'engineered-diagnostic', 'tier': 'supplement', 'caption': 'Optional animation of the collagen IV mesh assembling. Illustrative spatial context; the quantitative pore/bundle readouts are in the two main figures. 2D top-down projection of the quasi-2D slab.\n'}, RUNS_DB, STUDY_YAML))
-
-# ### Acceptance criteria
-#
-# _Pre-registered checks (criteria/thresholds only — run the cells above to evaluate them)._
-#
-# | test | measures | passes if |
-# | --- | --- | --- |
-# | porosity-reaches-EM-band _(primary)_ | kind=median field=pore_diameter | op between lo 32.0 hi 112.0 field median_pore_nm |
-# | bundling-under-shoots-5-7 _(primary)_ | kind=mean field=protomers_per_strand | op lt value 2.0 field mean_strand |
 
 # ## Study: Reduced-order tissue-mechanics baseline (`bm-r1-published-tissue-baseline`)
 #
@@ -839,7 +433,12 @@ else:
 # **r1_regime**
 
 # r1_regime
-_save_viz('bm-r1-published-tissue-baseline', 'r1_regime', _render_one('html:r1_regime.html', {'title': 'Confinement across BM stiffness × relaxation/doubling, with regime boundary + trajectories (cf. Fig 1)', 'evidence_status': 'observed', 'tier': 'main', 'caption': 'How to read: Panel A is a heat-map of confinement (h/h₀) over BM stiffness (one axis) and the BM-relaxation / doubling-time ratio (the other); the stiff, slowly-relaxing corner — warm colors above the drawn confinement=1 boundary — is where cells go tall and confined, while panels B–D trace the basal-area growth behind individual corners. Reduced-order epithelial model predicts cell confinement across the two dimensionless axes the paper uses — BM stiffness relative to the cell and BM relaxation time / proliferation (doubling) time. Panel A maps confinement (h/h₀) with the confinement=1 boundary drawn and the three sampled regimes marked; panels B–D show representative basal-area growth trajectories for the soft/fast, intermediate and stiff/slow corners. This is our analytic reimplementation of the Barrientos Fig 1 model (not a simulation and not a digitized overlay of the published boundaries): the regime topology is consistent with Fig 1 — tall/confined in the stiff, slowly-relaxing corner — and a quantitative boundary overlay vs digitized Fig 1G is the open follow-up.\n'}, RUNS_DB, STUDY_YAML))
+_save_viz('bm-r1-published-tissue-baseline', 'r1_regime', _render_one('html:viz/r1_regime.html', {'title': 'Confinement across BM stiffness × relaxation/doubling, with regime boundary + trajectories (cf. Fig 1)', 'evidence_status': 'observed', 'tier': 'main', 'caption': 'How to read: Panel A is a heat-map of confinement (h/h₀) over BM stiffness (one axis) and the BM-relaxation / doubling-time ratio (the other); the stiff, slowly-relaxing corner — warm colors above the drawn confinement=1 boundary — is where cells go tall and confined, while panels B–D trace the basal-area growth behind individual corners. Reduced-order epithelial model predicts cell confinement across the two dimensionless axes the paper uses — BM stiffness relative to the cell and BM relaxation time / proliferation (doubling) time. Panel A maps confinement (h/h₀) with the confinement=1 boundary drawn and the three sampled regimes marked; panels B–D show representative basal-area growth trajectories for the soft/fast, intermediate and stiff/slow corners. This is our analytic reimplementation of the Barrientos Fig 1 model (not a simulation and not a digitized overlay of the published boundaries): the regime topology is consistent with Fig 1 — tall/confined in the stiff, slowly-relaxing corner — and a quantitative boundary overlay vs digitized Fig 1G is the open follow-up.\n'}, RUNS_DB, STUDY_YAML))
+
+# **r1_regime_placement**
+
+# r1_regime_placement
+_save_viz('bm-r1-published-tissue-baseline', 'r1_regime_placement', _render_one('html:viz/r1_regime_placement.html', {'title': 'Where the reference BM lands on the regime map — undetermined until the scale is pinned', 'caption': "Companion to the regime map: the reference BM's dimensionless stiffness spans the confinement boundary under the 6→80 Pa scale ambiguity, so which regime the lumenoid occupies cannot be read off until the LJ↔tissue unit map pins the modulus and relaxation time.\n"}, RUNS_DB, STUDY_YAML))
 
 # ### Acceptance criteria
 #
@@ -930,12 +529,12 @@ _save_viz('bm-r2-collagen-network-rheology', 'collagen_network_rheology_movie', 
 # **r2_fig2e**
 
 # r2_fig2e
-_save_viz('bm-r2-collagen-network-rheology', 'r2_fig2e', _render_one('html:r2_fig2e.html', {'title': 'Stress-relaxation time τ vs collagen residence (Barrientos Fig 2E)', 'evidence_status': 'observed', 'tier': 'main', 'caption': 'How to read: Read the stress-relaxation time τ (y-axis) against collagen residence time (x-axis); the curve rising from left to right — longer residence giving larger τ — is the Fig 2E result, and the flat floor at the left shows τ bottoming out at fast turnover. REAL measured data (dense multi-seed sweep: 300 rods, density 3.0, 12σ slab, 4 seeds): the stress-relaxation time τ rises monotonically with collagen residence time (37→102 LJ over residence 12.5→200), reproducing the Fig 2E direction. τ carries an intrinsic relaxation floor (~37 LJ) at fast turnover and is residence-dominated above residence ~50; the modulus is turnover-independent (3.19 LJ). The open marker (residence 200) resolved at only 1/4 seeds.\n'}, RUNS_DB, STUDY_YAML))
+_save_viz('bm-r2-collagen-network-rheology', 'r2_fig2e', _render_one('html:viz/r2_fig2e.html', {'title': 'Stress-relaxation time τ vs collagen residence (Barrientos Fig 2E)', 'evidence_status': 'observed', 'tier': 'main', 'caption': 'How to read: Read the stress-relaxation time τ (y-axis) against collagen residence time (x-axis); the curve rising from left to right — longer residence giving larger τ — is the Fig 2E result, and the flat floor at the left shows τ bottoming out at fast turnover. REAL measured data (dense multi-seed sweep: 300 rods, density 3.0, 12σ slab, 4 seeds): the stress-relaxation time τ rises monotonically with collagen residence time (37→102 LJ over residence 12.5→200), reproducing the Fig 2E direction. τ carries an intrinsic relaxation floor (~37 LJ) at fast turnover and is residence-dominated above residence ~50; the modulus is turnover-independent (3.19 LJ). The open marker (residence 200) resolved at only 1/4 seeds.\n'}, RUNS_DB, STUDY_YAML))
 
 # **r2_rheology**
 
 # r2_rheology
-_save_viz('bm-r2-collagen-network-rheology', 'r2_rheology', _render_one('html:r2_rheology.html', {'title': 'Collagen network assembly + stress — 40-rod smoke test (methods)', 'evidence_status': 'engineered-diagnostic', 'tier': 'supplement', 'caption': 'A small 40-rod LAMMPS smoke test confirms that bonds form and the simulated network reports finite in-plane stress (network bond-virial, reduced LJ units); it does not establish the lifetime–relaxation law — that is the primary figure above. Methods/verification only.\n'}, RUNS_DB, STUDY_YAML))
+_save_viz('bm-r2-collagen-network-rheology', 'r2_rheology', _render_one('html:viz/r2_rheology.html', {'title': 'Collagen network assembly + stress — 40-rod smoke test (methods)', 'evidence_status': 'engineered-diagnostic', 'tier': 'supplement', 'caption': 'A small 40-rod LAMMPS smoke test confirms that bonds form and the simulated network reports finite in-plane stress (network bond-virial, reduced LJ units); it does not establish the lifetime–relaxation law — that is the primary figure above. Methods/verification only.\n'}, RUNS_DB, STUDY_YAML))
 
 # ### Acceptance criteria
 #
@@ -1029,7 +628,7 @@ _save_viz('bm-r3-network-expansion-supply', 'network_expansion_supply_movie', _r
 # **r3_supply**
 
 # r3_supply
-_save_viz('bm-r3-network-expansion-supply', 'r3_supply', _render_one('html:r3_supply.html', {'title': 'Three supply modes -- network expansion vs collagen insertion (Fig 2B-C)', 'caption': 'How to read: Compare the three supply modes by how well each keeps the growing network crosslinked (crosslink density / rod count); remodeling-with-insertion sits highest, remodeling-without-insertion in the middle, and no-remodeling lowest and most diluted — that top-to-bottom ordering is the reproduced Fig 2B–C result. The three Barrientos Fig 2B-C supply modes under growth: remodeling-with-insertion sustains and grows the crosslinked network (rods 60->96, density 0.65), remodeling-without-insertion remodels on fixed material (density 0.48), and no-remodeling is static and dilutes most (density 0.25). Ordering robust across 3 seeds.\n'}, RUNS_DB, STUDY_YAML))
+_save_viz('bm-r3-network-expansion-supply', 'r3_supply', _render_one('html:viz/r3_supply.html', {'title': 'Three supply modes -- network expansion vs collagen insertion (Fig 2B-C)', 'caption': 'How to read: Compare the three supply modes by how well each keeps the growing network crosslinked (crosslink density / rod count); remodeling-with-insertion sits highest, remodeling-without-insertion in the middle, and no-remodeling lowest and most diluted — that top-to-bottom ordering is the reproduced Fig 2B–C result. The three Barrientos Fig 2B-C supply modes under growth: remodeling-with-insertion sustains and grows the crosslinked network (rods 60->96, density 0.65), remodeling-without-insertion remodels on fixed material (density 0.48), and no-remodeling is static and dilutes most (density 0.25). Ordering robust across 3 seeds.\n'}, RUNS_DB, STUDY_YAML))
 
 # ### Acceptance criteria
 #
@@ -1110,7 +709,7 @@ else:
 # **r4_growth_coupling**
 
 # r4_growth_coupling
-_save_viz('bm-r4-coupled-2d-epithelium', 'r4_growth_coupling', _render_one('html:r4_growth_coupling.html', {'title': '2D coupled growth: preferred area → emergent realized area + height', 'evidence_status': 'observed', 'tier': 'main', 'caption': 'How to read: In panel A the gap between the dashed preferred-area line and the solid realized-area curves is the confinement; a stiffer BM widens the gap and, in B, makes the cell taller — panels C and D show the BM reaction stress and the resulting spatial cell-height gradient across a stiffness row. MAIN (evidence: observed) — the agreed 2D coupled-growth experiment (2026-10-20 review). A PREFERRED (target) basal area A0(t) grows (proliferation OFF — growth, not cell division); the REALIZED mean area A(t) emerges from the mechanical balance and LAGS the target because a viscoelastic BM resists spreading — that gap IS the confinement, and it is NOT hard-coded to the target. (A) target vs realized area for a free (no-BM) and a stiff/slow BM; (B) reconstructed cell height h = V0/A (a stiff BM confines spreading and drives height up); (C) BM reaction stress across stiffness/relaxation regimes; (D) a BM-stiffness gradient across the row produces a spatial cell-height gradient. Reduced-order 2D CROSS-SECTION of prism cells (the effective-BM realization); height is reconstructed under a declared fixed-volume assumption. Reduced units. NOTE: the resolved vertex-model sheet (tyssue_2d_sheet / CrossSectionGeometry) is a STATIC mesh at the engine level — its area does not respond to prefered_area — so the causal experiment is run in this reduced-order cross-section and the resolved-sheet version remains a named engine limitation.\n'}, RUNS_DB, STUDY_YAML))
+_save_viz('bm-r4-coupled-2d-epithelium', 'r4_growth_coupling', _render_one('html:viz/r4_growth_coupling.html', {'title': '2D coupled growth: preferred area → emergent realized area + height', 'evidence_status': 'observed', 'tier': 'main', 'caption': 'How to read: In panel A the gap between the dashed preferred-area line and the solid realized-area curves is the confinement; a stiffer BM widens the gap and, in B, makes the cell taller — panels C and D show the BM reaction stress and the resulting spatial cell-height gradient across a stiffness row. MAIN (evidence: observed) — the agreed 2D coupled-growth experiment (2026-10-20 review). A PREFERRED (target) basal area A0(t) grows (proliferation OFF — growth, not cell division); the REALIZED mean area A(t) emerges from the mechanical balance and LAGS the target because a viscoelastic BM resists spreading — that gap IS the confinement, and it is NOT hard-coded to the target. (A) target vs realized area for a free (no-BM) and a stiff/slow BM; (B) reconstructed cell height h = V0/A (a stiff BM confines spreading and drives height up); (C) BM reaction stress across stiffness/relaxation regimes; (D) a BM-stiffness gradient across the row produces a spatial cell-height gradient. Reduced-order 2D CROSS-SECTION of prism cells (the effective-BM realization); height is reconstructed under a declared fixed-volume assumption. Reduced units. NOTE: the resolved vertex-model sheet (tyssue_2d_sheet / CrossSectionGeometry) is a STATIC mesh at the engine level — its area does not respond to prefered_area — so the causal experiment is run in this reduced-order cross-section and the resolved-sheet version remains a named engine limitation.\n'}, RUNS_DB, STUDY_YAML))
 
 # **coupled_2d_epithelium_movie**
 
@@ -1120,17 +719,22 @@ _save_viz('bm-r4-coupled-2d-epithelium', 'coupled_2d_epithelium_movie', _render_
 # **r4_confinement**
 
 # r4_confinement
-_save_viz('bm-r4-coupled-2d-epithelium', 'r4_confinement', _render_one('html:r4_confinement.html', {'title': '2D sheet static substrate vs R1 confinement benchmark (demoted)', 'evidence_status': 'observed', 'tier': 'supplement', 'caption': 'SUPPLEMENT (demoted 2026-10-20) — superseded as the main by the coupled-growth figure above. Documents that the resolved vertex-model tyssue_2d_sheet is a static substrate (all 12 cells relax to the identical basal area 5.0, max vertex displacement ~0) against the R1 confinement benchmark — the engine limitation that motivates running the causal experiment in the reduced-order cross-section. Original caption follows. MAIN (evidence: observed) — NOT a reproduction. Left: the real tyssue_2d_sheet readout over the vivarium-tyssue EulerSolver (dt 0.01) — mean per-cell basal area (fold-change vs step 0) and the stored CrossSection prism-height degree of freedom. Both are flat: all 12 cells relax to the identical basal area (5.0 reduced) and prism-height DOF (1.9319 reduced), and the max vertex displacement over the run is ~0, so the sheet is a pre-equilibrated static mesh with no spatial heterogeneity. Right: the R1 reduced-order prism benchmark (real TissuePrismProcess runs) — the confinement h/h0 trajectory for three BM regimes (soft/fast 0.998->0.38, intermediate 0.998->0.43, stiff/slow 0.998->0.70) — the confinement response the sheet does NOT reproduce. Axes dimensionless (reduced units); single deterministic run (no stochasticity). GAP (named): tyssue_2d_sheet exposes only line_tension + prefered_area — NO BM stiffness / relaxation / traction coupling — so the BM-dependent confinement regimes of Barrientos Fig 1 cannot be produced here; the right panel is the R1 benchmark, not the tyssue sheet.\n'}, RUNS_DB, STUDY_YAML))
+_save_viz('bm-r4-coupled-2d-epithelium', 'r4_confinement', _render_one('html:viz/r4_confinement.html', {'title': '2D sheet static substrate vs R1 confinement benchmark (demoted)', 'evidence_status': 'observed', 'tier': 'supplement', 'caption': 'SUPPLEMENT (demoted 2026-10-20) — superseded as the main by the coupled-growth figure above. Documents that the resolved vertex-model tyssue_2d_sheet is a static substrate (all 12 cells relax to the identical basal area 5.0, max vertex displacement ~0) against the R1 confinement benchmark — the engine limitation that motivates running the causal experiment in the reduced-order cross-section. Original caption follows. MAIN (evidence: observed) — NOT a reproduction. Left: the real tyssue_2d_sheet readout over the vivarium-tyssue EulerSolver (dt 0.01) — mean per-cell basal area (fold-change vs step 0) and the stored CrossSection prism-height degree of freedom. Both are flat: all 12 cells relax to the identical basal area (5.0 reduced) and prism-height DOF (1.9319 reduced), and the max vertex displacement over the run is ~0, so the sheet is a pre-equilibrated static mesh with no spatial heterogeneity. Right: the R1 reduced-order prism benchmark (real TissuePrismProcess runs) — the confinement h/h0 trajectory for three BM regimes (soft/fast 0.998->0.38, intermediate 0.998->0.43, stiff/slow 0.998->0.70) — the confinement response the sheet does NOT reproduce. Axes dimensionless (reduced units); single deterministic run (no stochasticity). GAP (named): tyssue_2d_sheet exposes only line_tension + prefered_area — NO BM stiffness / relaxation / traction coupling — so the BM-dependent confinement regimes of Barrientos Fig 1 cannot be produced here; the right panel is the R1 benchmark, not the tyssue sheet.\n'}, RUNS_DB, STUDY_YAML))
 
 # **r4_sheet**
 
 # r4_sheet
-_save_viz('bm-r4-coupled-2d-epithelium', 'r4_sheet', _render_one('html:r4_sheet.html', {'title': '12-cell planar Tyssue mesh thumbnail (z=0)', 'evidence_status': 'engineered-diagnostic', 'tier': 'supplement', 'caption': 'SUPPLEMENT (evidence: engineered-diagnostic) — a 12-cell planar Tyssue geometry resolves and relaxes on the merged CrossSectionGeometry; this verifies mesh construction but NOT BM-dependent epithelial confinement. The geometry is planar (z=0) and does NOT compute a real 3D cell height: the per-face height column is a stored CrossSection prism degree of freedom, not a resolved apical-basal distance. Reduced units; architecture/methods thumbnail only.\n'}, RUNS_DB, STUDY_YAML))
+_save_viz('bm-r4-coupled-2d-epithelium', 'r4_sheet', _render_one('html:viz/r4_sheet.html', {'title': '12-cell planar Tyssue mesh thumbnail (z=0)', 'evidence_status': 'engineered-diagnostic', 'tier': 'supplement', 'caption': 'SUPPLEMENT (evidence: engineered-diagnostic) — a 12-cell planar Tyssue geometry resolves and relaxes on the merged CrossSectionGeometry; this verifies mesh construction but NOT BM-dependent epithelial confinement. The geometry is planar (z=0) and does NOT compute a real 3D cell height: the per-face height column is a stored CrossSection prism degree of freedom, not a resolved apical-basal distance. Reduced units; architecture/methods thumbnail only.\n'}, RUNS_DB, STUDY_YAML))
 
 # **r4_bm_hypothesis**
 
 # r4_bm_hypothesis
-_save_viz('bm-r4-coupled-2d-epithelium', 'r4_bm_hypothesis', _render_one('html:r4_bm_hypothesis.html', {'title': 'BM-stiffness-dependent confinement (hypothesis)', 'evidence_status': 'hypothesis', 'tier': 'supplement', 'caption': 'SUPPLEMENT (evidence: hypothesis) — the BM-stiffness-dependent confinement test the figure review asked for (matched low/high-BM-relaxation cell-sheet snapshots and a basal-area-vs-time panel stratified by BM stiffness, with the R1 benchmark overlaid). NOT producible from tyssue_2d_sheet: its parameters are line_tension + prefered_area, and BM stiffness / relaxation / traction coupling is not wired into the composite. Marked hypothesis until that coupling exists.\n'}, RUNS_DB, STUDY_YAML))
+_save_viz('bm-r4-coupled-2d-epithelium', 'r4_bm_hypothesis', _render_one('html:viz/r4_bm_hypothesis.html', {'title': 'BM-stiffness-dependent confinement (hypothesis)', 'evidence_status': 'hypothesis', 'tier': 'supplement', 'caption': 'SUPPLEMENT (evidence: hypothesis) — the BM-stiffness-dependent confinement test the figure review asked for (matched low/high-BM-relaxation cell-sheet snapshots and a basal-area-vs-time panel stratified by BM stiffness, with the R1 benchmark overlaid). NOT producible from tyssue_2d_sheet: its parameters are line_tension + prefered_area, and BM stiffness / relaxation / traction coupling is not wired into the composite. Marked hypothesis until that coupling exists.\n'}, RUNS_DB, STUDY_YAML))
+
+# **r4_coupling_contract**
+
+# r4_coupling_contract
+_save_viz('bm-r4-coupled-2d-epithelium', 'r4_coupling_contract', _render_one('html:viz/r4_coupling_contract.html', {'title': 'The coupling contract — express the BM↔epithelium edge as wiring (R4 is not wired this way yet)', 'caption': 'R4 today runs 12 independent per-cell Maxwell ODEs with no neighbour coupling, so it is an engine-and-wiring check, not a confinement result. This figure shows the contract that would make it one: the BM as a basal-surface energy on the shared-vertex sheet, with the no-BM/one-way/two-way/uncoupled controls expressed as wiring edges.\n'}, RUNS_DB, STUDY_YAML))
 
 # ### Acceptance criteria
 #
@@ -1212,7 +816,7 @@ else:
 # **r5_area_distribution**
 
 # r5_area_distribution
-_save_viz('bm-r5-explicit-3d-confinement', 'r5_area_distribution', _render_one('html:r5_area_distribution.html', {'title': 'R5 — per-cell basal-area distribution', 'evidence_status': 'observed', 'tier': 'supplement', 'caption': 'The per-cell basal-area distribution from the single real monolayer run (split out of the 3D figure so neither layout collapses). Reduced units.\n'}, RUNS_DB, STUDY_YAML))
+_save_viz('bm-r5-explicit-3d-confinement', 'r5_area_distribution', _render_one('html:viz/r5_area_distribution.html', {'title': 'R5 — per-cell basal-area distribution', 'evidence_status': 'observed', 'tier': 'supplement', 'caption': 'The per-cell basal-area distribution from the single real monolayer run (split out of the 3D figure so neither layout collapses). Reduced units.\n'}, RUNS_DB, STUDY_YAML))
 
 # **explicit_3d_confinement_movie**
 
@@ -1222,22 +826,22 @@ _save_viz('bm-r5-explicit-3d-confinement', 'explicit_3d_confinement_movie', _ren
 # **r5_growth_confinement**
 
 # r5_growth_confinement
-_save_viz('bm-r5-explicit-3d-confinement', 'r5_growth_confinement', _render_one('html:r5_growth_confinement.html', {'title': '3D monolayer growth: preferred-volume growth + BM confinement → height', 'evidence_status': 'observed', 'tier': 'main', 'caption': 'How to read: In panel A the realized volume (solid) grows but stays below the preferred-volume target (dashed), so the confinement is emergent rather than imposed; in B a stiff/slow BM holds basal area below the free case, and in C that squeezed area reappears as greater cell height (the free-vs-stiff gap), with D showing the per-cell height spread. MAIN (evidence: observed) — the 3D geometric upgrade after the 2D causal result (2026-10-20 review). Preferred cell VOLUME + basal area are ramped (division OFF) on the real Tyssue MonolayerGeometry; a reduced-order viscoelastic BM reaction resists basal spreading. (A) preferred vs realized total volume — realized grows (190.7→252.9) and lags the target (347.5, gap 0.272), emergent not hard-coded; (B) basal area, free vs stiff BM — a stiff/slow BM confines spreading (1.108 vs 1.198 free); (C) mean cell height free vs stiff — under the near-incompressible volume elasticity, confinement drives volume into height (1.138 vs 1.133 free, directional); (D) per-cell final height distribution. Real Tyssue; cell height is the emergent apical-basal z-extent. Reduced units; incompressibility is a declared knob; the height differential is directional, not a calibrated prediction.\n'}, RUNS_DB, STUDY_YAML))
+_save_viz('bm-r5-explicit-3d-confinement', 'r5_growth_confinement', _render_one('html:viz/r5_growth_confinement.html', {'title': '3D monolayer growth: preferred-volume growth + BM confinement → height', 'evidence_status': 'observed', 'tier': 'main', 'caption': 'How to read: In panel A the realized volume (solid) grows but stays below the preferred-volume target (dashed), so the confinement is emergent rather than imposed; in B a stiff/slow BM holds basal area below the free case, and in C that squeezed area reappears as greater cell height (the free-vs-stiff gap), with D showing the per-cell height spread. MAIN (evidence: observed) — the 3D geometric upgrade after the 2D causal result (2026-10-20 review). Preferred cell VOLUME + basal area are ramped (division OFF) on the real Tyssue MonolayerGeometry; a reduced-order viscoelastic BM reaction resists basal spreading. (A) preferred vs realized total volume — realized grows (190.7→252.9) and lags the target (347.5, gap 0.272), emergent not hard-coded; (B) basal area, free vs stiff BM — a stiff/slow BM confines spreading (1.108 vs 1.198 free); (C) mean cell height free vs stiff — under the near-incompressible volume elasticity, confinement drives volume into height (1.138 vs 1.133 free, directional); (D) per-cell final height distribution. Real Tyssue; cell height is the emergent apical-basal z-extent. Reduced units; incompressibility is a declared knob; the height differential is directional, not a calibrated prediction.\n'}, RUNS_DB, STUDY_YAML))
 
 # **r5_monolayer**
 
 # r5_monolayer
-_save_viz('bm-r5-explicit-3d-confinement', 'r5_monolayer', _render_one('html:r5_monolayer.html', {'title': 'Closed 3D monolayer render + per-cell area distribution (demoted)', 'evidence_status': 'engineered-diagnostic', 'tier': 'supplement', 'caption': 'SUPPLEMENT (demoted 2026-10-20) — superseded as the main by the growth-confinement figure above; kept as the geometry/architecture illustration. Original caption follows. MAIN (evidence: engineered-diagnostic) — a model illustration, not a biological result. The closed 3D Tyssue monolayer (MonolayerGeometry, 206 cells) over the vivarium-tyssue EulerSolver (dt 0.01): the vertex wireframe is coloured by z (apical vs basal surface) and the cell centroids by per-cell area (common colour limits), with the real per-cell area distribution alongside (cell_df.area 4.51-6.38 reduced, median 6.34). A closed 3D monolayer has finite cell volumes and identifiable basal surfaces, but no BM-dependent height response is established by this geometric verification alone: per-cell HEIGHT (vertex z-extent) is uniform (= 1.00) in this single run, and total cell volume is conserved to <0.01% over 5 Euler steps. Single deterministic run; reduced units. GAP (named): the free-BM / stiff-frozen-BM / stiff-fast-relaxing-BM matched controls the morphology ordering needs are NOT in tyssue_3d_monolayer (params: contractility + vol_elasticity, no BM shell coupling).\n'}, RUNS_DB, STUDY_YAML))
+_save_viz('bm-r5-explicit-3d-confinement', 'r5_monolayer', _render_one('html:viz/r5_monolayer.html', {'title': 'Closed 3D monolayer render + per-cell area distribution (demoted)', 'evidence_status': 'engineered-diagnostic', 'tier': 'supplement', 'caption': 'SUPPLEMENT (demoted 2026-10-20) — superseded as the main by the growth-confinement figure above; kept as the geometry/architecture illustration. Original caption follows. MAIN (evidence: engineered-diagnostic) — a model illustration, not a biological result. The closed 3D Tyssue monolayer (MonolayerGeometry, 206 cells) over the vivarium-tyssue EulerSolver (dt 0.01): the vertex wireframe is coloured by z (apical vs basal surface) and the cell centroids by per-cell area (common colour limits), with the real per-cell area distribution alongside (cell_df.area 4.51-6.38 reduced, median 6.34). A closed 3D monolayer has finite cell volumes and identifiable basal surfaces, but no BM-dependent height response is established by this geometric verification alone: per-cell HEIGHT (vertex z-extent) is uniform (= 1.00) in this single run, and total cell volume is conserved to <0.01% over 5 Euler steps. Single deterministic run; reduced units. GAP (named): the free-BM / stiff-frozen-BM / stiff-fast-relaxing-BM matched controls the morphology ordering needs are NOT in tyssue_3d_monolayer (params: contractility + vol_elasticity, no BM shell coupling).\n'}, RUNS_DB, STUDY_YAML))
 
 # **r5_volume_hist**
 
 # r5_volume_hist
-_save_viz('bm-r5-explicit-3d-confinement', 'r5_volume_hist', _render_one('html:r5_volume_hist.html', {'title': 'Cell-volume distribution appendix', 'evidence_status': 'engineered-diagnostic', 'tier': 'supplement', 'caption': 'SUPPLEMENT (evidence: engineered-diagnostic) — geometry-validation appendix. The standalone per-cell volume distribution (cell_df.vol 0.58-1.16 reduced, median 1.16, target 1.0) with the volume-conservation residual stated (total cell volume conserved to <0.01% over 5 Euler steps at dt 0.01). Finite volumes do NOT by themselves establish BM-dependent confinement; reduced units, single run.\n'}, RUNS_DB, STUDY_YAML))
+_save_viz('bm-r5-explicit-3d-confinement', 'r5_volume_hist', _render_one('html:viz/r5_volume_hist.html', {'title': 'Cell-volume distribution appendix', 'evidence_status': 'engineered-diagnostic', 'tier': 'supplement', 'caption': 'SUPPLEMENT (evidence: engineered-diagnostic) — geometry-validation appendix. The standalone per-cell volume distribution (cell_df.vol 0.58-1.16 reduced, median 1.16, target 1.0) with the volume-conservation residual stated (total cell volume conserved to <0.01% over 5 Euler steps at dt 0.01). Finite volumes do NOT by themselves establish BM-dependent confinement; reduced units, single run.\n'}, RUNS_DB, STUDY_YAML))
 
 # **r5_bm_hypothesis**
 
 # r5_bm_hypothesis
-_save_viz('bm-r5-explicit-3d-confinement', 'r5_bm_hypothesis', _render_one('html:r5_bm_hypothesis.html', {'title': 'Matched BM controls (hypothesis)', 'evidence_status': 'hypothesis', 'tier': 'supplement', 'caption': 'SUPPLEMENT (evidence: hypothesis) — the matched free-BM / stiff-frozen-BM / stiff-fast-relaxing-BM conditions the morphology ordering needs (before/after 3D cell images coloured by cell height, a height distribution by condition, height-vs-doubling-time traces, basal/apical area, and a volume-conservation residual + explicit energy/traction terms). NOT producible from tyssue_3d_monolayer: its parameters are contractility + vol_elasticity and there is no BM-shell coupling. Marked hypothesis until that coupling exists.\n'}, RUNS_DB, STUDY_YAML))
+_save_viz('bm-r5-explicit-3d-confinement', 'r5_bm_hypothesis', _render_one('html:viz/r5_bm_hypothesis.html', {'title': 'Matched BM controls (hypothesis)', 'evidence_status': 'hypothesis', 'tier': 'supplement', 'caption': 'SUPPLEMENT (evidence: hypothesis) — the matched free-BM / stiff-frozen-BM / stiff-fast-relaxing-BM conditions the morphology ordering needs (before/after 3D cell images coloured by cell height, a height distribution by condition, height-vs-doubling-time traces, basal/apical area, and a volume-conservation residual + explicit energy/traction terms). NOT producible from tyssue_3d_monolayer: its parameters are contractility + vol_elasticity and there is no BM-shell coupling. Marked hypothesis until that coupling exists.\n'}, RUNS_DB, STUDY_YAML))
 
 # ### Acceptance criteria
 #
@@ -1328,7 +932,7 @@ else:
 # **r6_intervention**
 
 # r6_intervention
-_save_viz('bm-r6-perlecan-growth-perturbations', 'r6_intervention', _render_one('html:r6_intervention.html', {'title': 'Perlecan/growth intervention on predicted cell height (Barrientos Fig 7 reproduction)', 'evidence_status': 'reproduced', 'tier': 'main', 'caption': "How to read: Read predicted cell height (y-axis) across the perlecan conditions — knockdown gives the tallest cells, control intermediate, overexpression the shortest (the ordering that reproduces Fig 7) — and note that moving to faster growth (the right-hand side) flattens every condition. Predicted cell height per perlecan and growth-rate condition (inferred BM relaxation annotated), reproducing the paper's Figure 7 after correcting the perlecan direction. Perlecan knockdown lengthens the collagen IV lifetime (~500 h) → slower BM relaxation → the tallest cells; overexpression shortens it (~1 h) → faster relaxation → the shortest; control intermediate — matching Barrientos et al. (perlecan promotes collagen bond breakage). Faster growth (right) spreads the cell flat regardless of perlecan. Reduced units; the perlecan factors encode the paper's measured lifetime ratios.\n"}, RUNS_DB, STUDY_YAML))
+_save_viz('bm-r6-perlecan-growth-perturbations', 'r6_intervention', _render_one('html:viz/r6_intervention.html', {'title': 'Perlecan/growth intervention on predicted cell height (Barrientos Fig 7 reproduction)', 'evidence_status': 'reproduced', 'tier': 'main', 'caption': "How to read: Read predicted cell height (y-axis) across the perlecan conditions — knockdown gives the tallest cells, control intermediate, overexpression the shortest (the ordering that reproduces Fig 7) — and note that moving to faster growth (the right-hand side) flattens every condition. Predicted cell height per perlecan and growth-rate condition (inferred BM relaxation annotated), reproducing the paper's Figure 7 after correcting the perlecan direction. Perlecan knockdown lengthens the collagen IV lifetime (~500 h) → slower BM relaxation → the tallest cells; overexpression shortens it (~1 h) → faster relaxation → the shortest; control intermediate — matching Barrientos et al. (perlecan promotes collagen bond breakage). Faster growth (right) spreads the cell flat regardless of perlecan. Reduced units; the perlecan factors encode the paper's measured lifetime ratios.\n"}, RUNS_DB, STUDY_YAML))
 
 # ### Acceptance criteria
 #
@@ -1422,12 +1026,12 @@ _save_viz('bm-e1-actomyosin-cortex', 'actomyosin_cortex_movie', _render_one('gif
 # **e1_cortical_tension**
 
 # e1_cortical_tension
-_save_viz('bm-e1-actomyosin-cortex', 'e1_cortical_tension', _render_one('html:e1_cortical_tension.html', {'title': 'LJ-patch effective tension: tunability + seed/size sensitivity (engineered-diagnostic)', 'evidence_status': 'engineered-diagnostic', 'tier': 'supplement', 'caption': "ENGINEERING VERIFICATION (not biological evidence), real LAMMPS, reduced LJ units. Panel A: the patch's effective in-plane tension tau = -(pxx+pyy)/2 vs the LJ well-depth proxy epsilon (attraction strength, NOT calibrated biological myosin activity), as a seed ensemble (3 seeds, 30 steps, n=6) — the seed-mean rises (approx -0.19, 0.45, 1.82, 2.79, 2.91 at epsilon 0.5/1.0/2.0/3.0/4.0) with a wide per-seed min/max band, and the smallest proxy is weakly expansive (tau<0). Panel B: patch-size sensitivity (n = 5..8 bead lattice at epsilon=2.0). This verifies tunability but does NOT reproduce filament-based active contractility or calibrated cortical tension: the patch has no explicit actin filaments, motors or crosslinkers, and the model exposes no strain input, so force-strain and step-strain relaxation curves are NOT producible here (named gap).\n"}, RUNS_DB, STUDY_YAML))
+_save_viz('bm-e1-actomyosin-cortex', 'e1_cortical_tension', _render_one('html:viz/e1_cortical_tension.html', {'title': 'LJ-patch effective tension: tunability + seed/size sensitivity (engineered-diagnostic)', 'evidence_status': 'engineered-diagnostic', 'tier': 'supplement', 'caption': "ENGINEERING VERIFICATION (not biological evidence), real LAMMPS, reduced LJ units. Panel A: the patch's effective in-plane tension tau = -(pxx+pyy)/2 vs the LJ well-depth proxy epsilon (attraction strength, NOT calibrated biological myosin activity), as a seed ensemble (3 seeds, 30 steps, n=6) — the seed-mean rises (approx -0.19, 0.45, 1.82, 2.79, 2.91 at epsilon 0.5/1.0/2.0/3.0/4.0) with a wide per-seed min/max band, and the smallest proxy is weakly expansive (tau<0). Panel B: patch-size sensitivity (n = 5..8 bead lattice at epsilon=2.0). This verifies tunability but does NOT reproduce filament-based active contractility or calibrated cortical tension: the patch has no explicit actin filaments, motors or crosslinkers, and the model exposes no strain input, so force-strain and step-strain relaxation curves are NOT producible here (named gap).\n"}, RUNS_DB, STUDY_YAML))
 
 # **e1_tension_components**
 
 # e1_tension_components
-_save_viz('bm-e1-actomyosin-cortex', 'e1_tension_components', _render_one('html:e1_tension_components.html', {'title': 'Pressure components of the LJ-patch tension (engineered-diagnostic)', 'evidence_status': 'engineered-diagnostic', 'tier': 'supplement', 'caption': 'Diagnostic decomposition (reduced LJ units): the seed-mean pxx, pyy and tau = -(pxx+pyy)/2 vs the LJ well-depth proxy. At small epsilon the repulsive/thermal pressure outweighs the LJ attraction, so the net in-plane stress is expansive (tau<0); this explains the negative tension at the smallest proxy. A mechanism diagnostic, not a biological measurement.\n'}, RUNS_DB, STUDY_YAML))
+_save_viz('bm-e1-actomyosin-cortex', 'e1_tension_components', _render_one('html:viz/e1_tension_components.html', {'title': 'Pressure components of the LJ-patch tension (engineered-diagnostic)', 'evidence_status': 'engineered-diagnostic', 'tier': 'supplement', 'caption': 'Diagnostic decomposition (reduced LJ units): the seed-mean pxx, pyy and tau = -(pxx+pyy)/2 vs the LJ well-depth proxy. At small epsilon the repulsive/thermal pressure outweighs the LJ attraction, so the net in-plane stress is expansive (tau<0); this explains the negative tension at the smallest proxy. A mechanism diagnostic, not a biological measurement.\n'}, RUNS_DB, STUDY_YAML))
 
 # ### Acceptance criteria
 #
@@ -1519,12 +1123,12 @@ _save_viz('bm-e2-actin-adhesion-collagen', 'actin_adhesion_collagen_movie', _ren
 # **e2_force_transfer**
 
 # e2_force_transfer
-_save_viz('bm-e2-actin-adhesion-collagen', 'e2_force_transfer', _render_one('html:e2_force_transfer.html', {'title': 'Force-transfer coupling unit test: occupancy-gated traction (engineered-diagnostic)', 'evidence_status': 'engineered-diagnostic', 'tier': 'main', 'caption': "How to read: follow the occupancy, traction and strain-rate traces as the prescribed cortex tension steps up from 1.0 to 3.0 — occupancy climbs 0.5 -> 0.83 and traction and strain rate rise in step with it, while the zero-linker control stays flat at zero; the gated-transfer result is that all three outputs move only when linkers are present. COUPLING UNIT TEST (deterministic mapping, NOT a biological result), real run of the pure BasalAdhesion process, reduced units. A prescribed cortex-tension step series (1.0 then 3.0) drives reversible linker occupancy (rising 0.5 -> 0.83 under k_on=0.5/k_off=0.1); the transmitted traction = occupancy x tension and the BM strain rate = coupling_gain x traction, exactly by construction. The zero-linker control (k_on=0, forced exactly past process-bigraph's 0.0-config drop) pins occupancy, traction and strain rate to zero. This verifies that deterministic occupancy gating correctly scales a PRESCRIBED cortical traction; it does NOT establish microscopic integrin mechanics or a force-conserving multiscale coupling (named gap).\n"}, RUNS_DB, STUDY_YAML))
+_save_viz('bm-e2-actin-adhesion-collagen', 'e2_force_transfer', _render_one('html:viz/e2_force_transfer.html', {'title': 'Force-transfer coupling unit test: occupancy-gated traction (engineered-diagnostic)', 'evidence_status': 'engineered-diagnostic', 'tier': 'main', 'caption': "How to read: follow the occupancy, traction and strain-rate traces as the prescribed cortex tension steps up from 1.0 to 3.0 — occupancy climbs 0.5 -> 0.83 and traction and strain rate rise in step with it, while the zero-linker control stays flat at zero; the gated-transfer result is that all three outputs move only when linkers are present. COUPLING UNIT TEST (deterministic mapping, NOT a biological result), real run of the pure BasalAdhesion process, reduced units. A prescribed cortex-tension step series (1.0 then 3.0) drives reversible linker occupancy (rising 0.5 -> 0.83 under k_on=0.5/k_off=0.1); the transmitted traction = occupancy x tension and the BM strain rate = coupling_gain x traction, exactly by construction. The zero-linker control (k_on=0, forced exactly past process-bigraph's 0.0-config drop) pins occupancy, traction and strain rate to zero. This verifies that deterministic occupancy gating correctly scales a PRESCRIBED cortical traction; it does NOT establish microscopic integrin mechanics or a force-conserving multiscale coupling (named gap).\n"}, RUNS_DB, STUDY_YAML))
 
 # **e2_bm_response**
 
 # e2_bm_response
-_save_viz('bm-e2-actin-adhesion-collagen', 'e2_bm_response', _render_one('html:e2_bm_response.html', {'title': 'Actin -> adhesion -> collagen BM bounded smoke: the BM responds (engineered-diagnostic)', 'evidence_status': 'engineered-diagnostic', 'tier': 'supplement', 'caption': 'End-to-end wiring smoke (real, bounded; reduced units): the LAMMPS actomyosin cortex pulls through the reversible basal linkers on a 20-rod collagen IV BM patch over 6 coupling steps. Occupancy rises 0.5 -> 0.83, the transmitted traction tracks the (noisy) cortex tension, and the collagen BM carries a finite in-plane stress and accumulates strain (strain approx 7e-5 -> 7e-4), confirming the composite is wired end-to-end. The BM reaction is real but a force-CONSERVING coupling and microscopic integrin mechanics are NOT established (named gap).\n'}, RUNS_DB, STUDY_YAML))
+_save_viz('bm-e2-actin-adhesion-collagen', 'e2_bm_response', _render_one('html:viz/e2_bm_response.html', {'title': 'Actin -> adhesion -> collagen BM bounded smoke: the BM responds (engineered-diagnostic)', 'evidence_status': 'engineered-diagnostic', 'tier': 'supplement', 'caption': 'End-to-end wiring smoke (real, bounded; reduced units): the LAMMPS actomyosin cortex pulls through the reversible basal linkers on a 20-rod collagen IV BM patch over 6 coupling steps. Occupancy rises 0.5 -> 0.83, the transmitted traction tracks the (noisy) cortex tension, and the collagen BM carries a finite in-plane stress and accumulates strain (strain approx 7e-5 -> 7e-4), confirming the composite is wired end-to-end. The BM reaction is real but a force-CONSERVING coupling and microscopic integrin mechanics are NOT established (named gap).\n'}, RUNS_DB, STUDY_YAML))
 
 # ### Acceptance criteria
 #
@@ -1608,12 +1212,12 @@ _save_viz('bm-e3-closed-3d-lumenoid', 'closed_3d_lumenoid_movie', _render_one('g
 # **e3_lumenoid**
 
 # e3_lumenoid
-_save_viz('bm-e3-closed-3d-lumenoid', 'e3_lumenoid', _render_one('html:e3_lumenoid.html', {'title': 'Closed 3D lumenoid shell: geometry verification (engineered-diagnostic)', 'evidence_status': 'engineered-diagnostic', 'tier': 'main', 'caption': 'How to read: compare the full 3D shell with the equatorial section cut beside it at the same scale — the section reveals a single enclosed lumen ringed by the 78 cells, with the exposed basal BM-coupling surface labelled on the outside; the result is that the closed shell is geometrically well-posed (finite per-cell volumes, one lumen), not that it grows. GEOMETRY VERIFICATION (illustration, not a growing-lumenoid result), real tyssue build, reduced units. A 78-cell closed Tyssue shell on the merged LumenoidGeometry, shown as the 3D shell plus an equatorial section cut (z approx median) at the same scale with a 1-length-unit scale bar; the enclosed lumen and the exposed basal BM-coupling surface are labelled. The counts are GEOMETRY metrics (78 cells, lumen volume 261.7, total cell volume 173.6), not morphogenesis. This verifies the geometry only; lumen filling and BM-regulated morphogenesis remain untested (see supplement).\n'}, RUNS_DB, STUDY_YAML))
+_save_viz('bm-e3-closed-3d-lumenoid', 'e3_lumenoid', _render_one('html:viz/e3_lumenoid.html', {'title': 'Closed 3D lumenoid shell: geometry verification (engineered-diagnostic)', 'evidence_status': 'engineered-diagnostic', 'tier': 'main', 'caption': 'How to read: compare the full 3D shell with the equatorial section cut beside it at the same scale — the section reveals a single enclosed lumen ringed by the 78 cells, with the exposed basal BM-coupling surface labelled on the outside; the result is that the closed shell is geometrically well-posed (finite per-cell volumes, one lumen), not that it grows. GEOMETRY VERIFICATION (illustration, not a growing-lumenoid result), real tyssue build, reduced units. A 78-cell closed Tyssue shell on the merged LumenoidGeometry, shown as the 3D shell plus an equatorial section cut (z approx median) at the same scale with a 1-length-unit scale bar; the enclosed lumen and the exposed basal BM-coupling surface are labelled. The counts are GEOMETRY metrics (78 cells, lumen volume 261.7, total cell volume 173.6), not morphogenesis. This verifies the geometry only; lumen filling and BM-regulated morphogenesis remain untested (see supplement).\n'}, RUNS_DB, STUDY_YAML))
 
 # **e3_lumen_dynamics**
 
 # e3_lumen_dynamics
-_save_viz('bm-e3-closed-3d-lumenoid', 'e3_lumen_dynamics', _render_one('html:e3_lumen_dynamics.html', {'title': 'Lumen/BM state is static at rest -- no lumen-filling drive wired (hypothesis)', 'evidence_status': 'hypothesis', 'tier': 'supplement', 'caption': 'GAP NAMED (hypothesis for a panel not yet producible), real 12-step EulerSolver run, reduced units. The lumen volume (261.7), lumen pressure (0.0) and basal BM-shell surface area (202.5) are FLAT across the run: the shell sits at rest equilibrium and NO lumen-filling drive is wired -- there is no LumenElasticity effector in the force balance and no lumen-volume target ramp, so the lumen is a geometry diagnostic, not a driven degree of freedom. A dynamic lumen-filling / BM-regulated morphogenesis panel is therefore NOT producible from this composite; shown honestly as flat with the gap named.\n'}, RUNS_DB, STUDY_YAML))
+_save_viz('bm-e3-closed-3d-lumenoid', 'e3_lumen_dynamics', _render_one('html:viz/e3_lumen_dynamics.html', {'title': 'Lumen/BM state is static at rest -- no lumen-filling drive wired (hypothesis)', 'evidence_status': 'hypothesis', 'tier': 'supplement', 'caption': 'GAP NAMED (hypothesis for a panel not yet producible), real 12-step EulerSolver run, reduced units. The lumen volume (261.7), lumen pressure (0.0) and basal BM-shell surface area (202.5) are FLAT across the run: the shell sits at rest equilibrium and NO lumen-filling drive is wired -- there is no LumenElasticity effector in the force balance and no lumen-volume target ramp, so the lumen is a geometry diagnostic, not a driven degree of freedom. A dynamic lumen-filling / BM-regulated morphogenesis panel is therefore NOT producible from this composite; shown honestly as flat with the gap named.\n'}, RUNS_DB, STUDY_YAML))
 
 # ### Acceptance criteria
 #
@@ -1634,7 +1238,7 @@ _save_viz('bm-e3-closed-3d-lumenoid', 'e3_lumen_dynamics', _render_one('html:e3_
 #
 # **Purpose.** The epithelium and its collagen basement membrane are coupled both ways. The growing basal surface stretches the membrane (forward half); the membrane's stress pushes back on the cells as a basal tension (reaction half). Closing this loop lets lumen pressure and cell shape respond to how fast the membrane remodels. Matched controls -- driving the membrane without feedback (one-way) or leaving it inert (uncoupled) -- separate the coupling's effect from the rest of the model.
 #
-# **Claim.** The epithelium and its collagen basement membrane are coupled both ways: the growing basal surface stretches the membrane and the membrane's stress pushes back on the cells as a basal tension. On the reduced-order (effective) BM path the bidirectional loop runs end-to-end, the three coupling controls (two-way / one-way / uncoupled) behave exactly as the mechanism demands, and subcycling the BM relaxation converges. The EXPLICIT-LAMMPS-collagen-BM path now also runs the real bidirectional loop with correct feedback directionality (two-way feeds a non-zero basal tension back, one-way does not), closing E4's main gap. It reveals two honest departures from the effective-BM path: the explicit collagen carries intrinsic bond-virial stress (so the reduced "uncoupled bm_sigma==0" inert control does not transfer), and its subcycling DIVERGES rather than converges -- so the explicit loop is stable only in a bounded regime (~40 rods, coarse subcycling), and a stable explicit-BM subcycling integrator + gain calibration are the open items.
+# **Claim.** The epithelium and its collagen basement membrane are coupled both ways: the growing basal surface stretches the membrane and the membrane's stress pushes back on the cells as a basal tension. On the reduced-order (effective) BM path the bidirectional loop runs end-to-end, the three coupling controls (two-way / one-way / uncoupled) behave exactly as the mechanism demands, and subcycling the BM relaxation converges. The EXPLICIT-LAMMPS-collagen-BM path also RUNS the bidirectional loop and shows the correct feedback directionality (two-way feeds a non-zero basal tension back, one-way does not), but it is a WIRING CHECK, NOT a validated or confinement result: it does not use the investigation's validated BM (the central-force network is floppy without bending_k, ~40 rods in a 2-sigma slab against R2's 300 rods in 12 sigma) and has no LJ<->tissue unit map. Its apparent subcycling "divergence" is consistent with a TIME-ACCOUNTING artifact (the collagen process integrates proportionally more BM time as bm_substeps rises), not a physical instability, so the explicit numbers are not reported as a numerical or confinement finding. Calibrating the explicit path against the validated angle-stabilized BM, adding a units Step, and auditing the substep time-accounting are the open items.
 
 # ### Parameters
 #
@@ -1715,12 +1319,12 @@ _save_viz('bm-e4-feedback-predictions', 'e4_coupling_loop_movie', _render_one('g
 # **e4_coupling_roundtrip**
 
 # e4_coupling_roundtrip
-_save_viz('bm-e4-feedback-predictions', 'e4_coupling_roundtrip', _render_one('html:e4_coupling_roundtrip.html', {'title': 'E4 — coupling round-trip: forward strain → collagen stress → feedback tension', 'evidence_status': 'observed', 'tier': 'main', 'caption': 'The bidirectional loop as three co-evolving signals: the epithelial basal strain rate ε̇ (top) stretches the explicit LAMMPS collagen BM, whose stress σ (middle) responds, and that stress is fed back as basal tension (bottom). The three-mode contrast IS the coupling — the feedback closes ONLY in two-way (blue); one-way (orange) pins the tension at 0, and uncoupled (grey) leaves the collagen barely stressed. Real explicit-BM run, reduced units.\n'}, RUNS_DB, STUDY_YAML))
+_save_viz('bm-e4-feedback-predictions', 'e4_coupling_roundtrip', _render_one('html:viz/e4_coupling_roundtrip.html', {'title': 'E4 — coupling round-trip: forward strain → collagen stress → feedback tension', 'evidence_status': 'observed', 'tier': 'main', 'caption': 'The bidirectional loop as three co-evolving signals: the epithelial basal strain rate ε̇ (top) stretches the explicit LAMMPS collagen BM, whose stress σ (middle) responds, and that stress is fed back as basal tension (bottom). The three-mode contrast IS the coupling — the feedback closes ONLY in two-way (blue); one-way (orange) pins the tension at 0, and uncoupled (grey) leaves the collagen barely stressed. Real explicit-BM run, reduced units.\n'}, RUNS_DB, STUDY_YAML))
 
 # **e4_growth_feedback**
 
 # e4_growth_feedback
-_save_viz('bm-e4-feedback-predictions', 'e4_growth_feedback', _render_one('html:e4_growth_feedback.html', {'title': 'Growth-driven two-way feedback: realized basal growth lags the target', 'evidence_status': 'observed', 'tier': 'main', 'caption': 'How to read: in panel A the solid realized basal-area curves sit BELOW the dashed preferred-growth target and separate by coupling mode (two-way reaches 1.006, one-way and uncoupled 0.767, target 1.150); in panel C only the two-way curve carries a non-zero reaction tension, while one-way and uncoupled stay exactly at 0. MAIN (evidence: observed) — the growth-driven two-way feedback (2026-10-20 review). The epithelial PREFERRED geometry grows (cell volume + basal area ramped; division OFF), driving basal displacement; the reduced-order BM reacts and feeds a reaction tension back. Synchronized series for uncoupled / one-way / two-way: (A) preferred vs realized basal-area fold — realized EMERGES and differs by mode (two-way 1.006 vs one-way/uncoupled 0.767) and lags the preferred target (1.150), i.e. it is NOT hard-coded to the target; (B) BM reaction stress; (C) basal reaction tension fed back (two-way nonzero, one-way/uncoupled exactly 0). Reduced-order BM path; the explicit-LAMMPS BM is a SEPARATE verification gate (numerically delicate — see F5). BM stress/tension magnitudes are reduced-unit, not calibrated.\n'}, RUNS_DB, STUDY_YAML))
+_save_viz('bm-e4-feedback-predictions', 'e4_growth_feedback', _render_one('html:viz/e4_growth_feedback.html', {'title': 'Growth-driven two-way feedback: realized basal growth lags the target', 'evidence_status': 'observed', 'tier': 'main', 'caption': 'How to read: in panel A the solid realized basal-area curves sit BELOW the dashed preferred-growth target and separate by coupling mode (two-way reaches 1.006, one-way and uncoupled 0.767, target 1.150); in panel C only the two-way curve carries a non-zero reaction tension, while one-way and uncoupled stay exactly at 0. MAIN (evidence: observed) — the growth-driven two-way feedback (2026-10-20 review). The epithelial PREFERRED geometry grows (cell volume + basal area ramped; division OFF), driving basal displacement; the reduced-order BM reacts and feeds a reaction tension back. Synchronized series for uncoupled / one-way / two-way: (A) preferred vs realized basal-area fold — realized EMERGES and differs by mode (two-way 1.006 vs one-way/uncoupled 0.767) and lags the preferred target (1.150), i.e. it is NOT hard-coded to the target; (B) BM reaction stress; (C) basal reaction tension fed back (two-way nonzero, one-way/uncoupled exactly 0). Reduced-order BM path; the explicit-LAMMPS BM is a SEPARATE verification gate (numerically delicate — see F5). BM stress/tension magnitudes are reduced-unit, not calibrated.\n'}, RUNS_DB, STUDY_YAML))
 
 # **feedback_predictions_movie**
 
@@ -1730,12 +1334,12 @@ _save_viz('bm-e4-feedback-predictions', 'feedback_predictions_movie', _render_on
 # **e4_feedback**
 
 # e4_feedback
-_save_viz('bm-e4-feedback-predictions', 'e4_feedback', _render_one('html:e4_feedback.html', {'title': 'Coupling-control time courses: two-way / one-way / uncoupled (engineered-diagnostic, demoted)', 'evidence_status': 'engineered-diagnostic', 'tier': 'supplement', 'caption': 'SUPPLEMENT (demoted 2026-10-20 — superseded as main by the growth-driven figure above; this one has NO growth trajectory). Original caption: COUPLING CONTROL (correct software wiring, NOT a mechanistic prediction), real 15-step reduced-order runs (dt 0.02, strain_gain 20, tension_gain 0.02, bm_modulus 50, bm_relaxation 10), reduced units. Aligned time courses of basal BM-shell area, BM stress sigma, basal tension fed back and basal strain rate for three coupling modes in identical conditions. The two-way path returns a nonzero BM reaction (basal tension approx -0.300) that damps the epithelial contraction (basal area 199.0 -> 195.9) while one-way and uncoupled feed back zero (basal tension 0.0, basal area 199.0 -> 164.2); uncoupled leaves the BM inert (sigma 0.0). This demonstrates correct wiring of the coupling controls, NOT a morphogenetic prediction: the explicit-LAMMPS collagen BM is NOT in this loop (reduced-order BM only) and there is no growth trajectory (named gaps).\n'}, RUNS_DB, STUDY_YAML))
+_save_viz('bm-e4-feedback-predictions', 'e4_feedback', _render_one('html:viz/e4_feedback.html', {'title': 'Coupling-control time courses: two-way / one-way / uncoupled (engineered-diagnostic, demoted)', 'evidence_status': 'engineered-diagnostic', 'tier': 'supplement', 'caption': 'SUPPLEMENT (demoted 2026-10-20 — superseded as main by the growth-driven figure above; this one has NO growth trajectory). Original caption: COUPLING CONTROL (correct software wiring, NOT a mechanistic prediction), real 15-step reduced-order runs (dt 0.02, strain_gain 20, tension_gain 0.02, bm_modulus 50, bm_relaxation 10), reduced units. Aligned time courses of basal BM-shell area, BM stress sigma, basal tension fed back and basal strain rate for three coupling modes in identical conditions. The two-way path returns a nonzero BM reaction (basal tension approx -0.300) that damps the epithelial contraction (basal area 199.0 -> 195.9) while one-way and uncoupled feed back zero (basal tension 0.0, basal area 199.0 -> 164.2); uncoupled leaves the BM inert (sigma 0.0). This demonstrates correct wiring of the coupling controls, NOT a morphogenetic prediction: the explicit-LAMMPS collagen BM is NOT in this loop (reduced-order BM only) and there is no growth trajectory (named gaps).\n'}, RUNS_DB, STUDY_YAML))
 
 # **e4_subcycle_convergence**
 
 # e4_subcycle_convergence
-_save_viz('bm-e4-feedback-predictions', 'e4_subcycle_convergence', _render_one('html:e4_subcycle_convergence.html', {'title': 'BM subcycling convergence (engineered-diagnostic)', 'evidence_status': 'engineered-diagnostic', 'tier': 'supplement', 'caption': 'CONVERGENCE CHECK (real two-way reduced-order runs), reduced units. The final BM stress sigma vs the number of BM subcycles per epithelial macro-step (bm_substeps 1/2/4/8: sigma approx -14.98, -15.04, -15.07, -15.09) with the successive-refinement differences |Delta sigma| approx 0.066, 0.033, 0.017 halving at each refinement -> the subcycled BM converges. This is BM subcycling convergence only; exchange-cadence convergence (shrinking the epithelium<->BM exchange interval itself) is NOT wired (named gap).\n'}, RUNS_DB, STUDY_YAML))
+_save_viz('bm-e4-feedback-predictions', 'e4_subcycle_convergence', _render_one('html:viz/e4_subcycle_convergence.html', {'title': 'BM subcycling convergence (engineered-diagnostic)', 'evidence_status': 'engineered-diagnostic', 'tier': 'supplement', 'caption': 'CONVERGENCE CHECK (real two-way reduced-order runs), reduced units. The final BM stress sigma vs the number of BM subcycles per epithelial macro-step (bm_substeps 1/2/4/8: sigma approx -14.98, -15.04, -15.07, -15.09) with the successive-refinement differences |Delta sigma| approx 0.066, 0.033, 0.017 halving at each refinement -> the subcycled BM converges. This is BM subcycling convergence only; exchange-cadence convergence (shrinking the epithelium<->BM exchange interval itself) is NOT wired (named gap).\n'}, RUNS_DB, STUDY_YAML))
 
 # ### Acceptance criteria
 #
@@ -1776,3 +1380,4 @@ _save_viz('bm-e4-feedback-predictions', 'e4_subcycle_convergence', _render_one('
 # - Growth rate: extract ε̇ from the lumenoid radius over time (still needed).
 # - Slab thickness and layer count (one z-stack away).
 # - Which readout calibrates and which validates: the remodelling time calibrates the formation probability and the time unit, so it cannot also validate.
+# - Coupling contract FIRST (reviewer, 2026-11-09): before rebuilding R4->R5->E4, settle the BM<->epithelium contract. Proposal: model the BM as an energy on each basal face inside the vertex force balance (E_f = (K_BM/2)(A_f - A_f_rest)^2 / A_f_rest; tension T_f = K_BM (A_f - A_f_rest)/A_f_rest clipped >= 0 since a fibrous sheet buckles rather than holding compression; rest area relaxes on turnover, dA_f_rest/dt = (A_f - A_f_rest)/tau, optional supply term for R3). This reduces to R1's prism law in the homogeneous limit (so "R5/E4 reduce to R1" becomes a passable test) and gives force continuity via shared vertices (per-cell Maxwell elements, R4, cannot). Split by timescale: the fast elastic part lives as a tyssue effector in the vertex solver; the BM process evolves only the slow state (A_rest / K / tau), with analytic-Maxwell and LAMMPS-RVE realizations sharing one port schema. Express controls as wiring (no-BM = drop the bm process; one-way = drop bm->vertex; uncoupled = drop vertex->bm). Engine ask: vivarium-tyssue EulerSolver needs per-face parameter inputs and basal-surface outputs (fix CrossSectionGeometry not responding to prefered_area rather than replacing it with a 0D surrogate). Status: open design, gates R4/R5/E4.
