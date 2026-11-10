@@ -349,6 +349,13 @@ followup_proposals:
     with the areal-vs-linear factor of 2 (areal ε̇ = 2× linear ε̇) carried explicitly.
   status: proposed
 
+- id: fp-v2-box-strain-movie
+  title: Coherent stress-strain movie with the simulation box annotated by strain
+  motivation: >-
+    Expert feedback (verdict: warn): the stress-vs-strain movie appears to jump across timepoints, and the box deformation should be visible. The jumps are a snapshot-decimation artifact of the committed coarse-analysis frames; capture_clip (small dt, periodic-unwrap, COM-drift removal) already produces a continuous clip. Re-render the stage-2 movie from a capture_clip clip and overlay the simulation box outline annotated with the instantaneous equibiaxial strain, so the stretch is read directly off the box.
+  hypothesized_mechanism: >-
+    A coherent capture_clip clip plus a strain-annotated box outline removes the apparent time-jumps and makes the equibiaxial deformation legible, without changing any measured rheology.
+  status: proposed
 expert_review_status: requested
 expert_questions:
 - "Coupling units: the E(ε̇) handed to the vertex model is in reduced units (~3–5 LJ, ≈7–11 Pa at kT/σ³≈2.2). Should the coupling pass absolute pascals (requiring the energy-scale fit) or reduced units — which does the AICS vertex model expect?"

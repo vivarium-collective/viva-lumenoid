@@ -369,6 +369,7 @@ findings:
   next_action_type: escalate_model
   provenance:
     run_ids: [r1-stiffness-relaxation-grid]
+  seeded_study: bm-r4-coupled-2d-epithelium
 - id: F2-confinement-driven-by-bm-stress
   kind: computational
   status: confirms
@@ -401,6 +402,7 @@ findings:
   next_action_type: refine_representation
   provenance:
     run_ids: [r1-stiffness-relaxation-grid]
+  seeded_study: bm-r4-coupled-2d-epithelium
 
 followup_proposals:
 - id: fp-r1-reversibility

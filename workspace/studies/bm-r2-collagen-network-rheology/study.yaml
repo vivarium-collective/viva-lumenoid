@@ -448,6 +448,7 @@ findings:
     run_ids: [r2-dense-multiseed-sweep]
     random_seeds: [11, 22, 33, 44]
   cites: [barrientos2026cellshape, barrientos2026basement]
+  seeded_study: fp-r2-handoff-record
 - id: F2-network-assembles-and-stresses
   kind: computational
   status: confirms

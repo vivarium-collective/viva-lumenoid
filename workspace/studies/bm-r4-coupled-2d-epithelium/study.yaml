@@ -178,7 +178,7 @@ simulation_set:
   - "sheet-steps-stably: pass"
 - name: r4-coupled-growth
   status: completed
-  base_model: viva_lumenoid.growth_runs.run_sheet_growth_2d
+  base_model: viva_lumenoid.composites.tyssue_2d_sheet
   provenance: {kind: simulation}
   fixed: {mode: exponential, rate: 0.04, steps: 60, dt: 0.2}
   axes: {bm_stiffness: [0.0, 1.0, 3.0, 5.0], bm_relaxation: [10.0, 50.0], stiffness_gradient: [0.0, 1.6]}
@@ -470,6 +470,7 @@ findings:
   next_action_type: escalate_model
   provenance:
     run_ids: [r4-2d-sheet-relaxation]
+  seeded_study: bm-r5-explicit-3d-confinement
 - id: F2-steps-stably
   kind: computational
   status: confirms
@@ -501,6 +502,7 @@ findings:
   next_action_type: refine_representation
   provenance:
     run_ids: [r4-2d-sheet-relaxation]
+  seeded_study: fp-r4-bm-traction-and-r1-comparison
 - id: F4-preferred-growth-drives-emergent-realized-area
   kind: computational
   status: confirms
@@ -528,6 +530,7 @@ findings:
   next_action_type: escalate_model
   provenance:
     run_ids: [r4-coupled-growth]
+  seeded_study: fp-r4-neighbour-coupling-and-vertex-sheet
 - id: F5-stiff-bm-confines-and-raises-height
   kind: computational
   status: confirms
@@ -549,6 +552,7 @@ findings:
   next_action_type: calibrate
   provenance:
     run_ids: [r4-coupled-growth]
+  seeded_study: fp-r4-bm-traction-and-r1-comparison
 - id: F6-bm-stiffness-gradient-makes-spatial-height-gradient
   kind: computational
   status: confirms
