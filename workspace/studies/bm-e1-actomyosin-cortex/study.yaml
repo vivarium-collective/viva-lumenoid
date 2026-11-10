@@ -11,6 +11,18 @@ gate_status: passed
 design_status: drafted
 confidence: Accepted
 
+review_actions:
+- source: inline-feedback
+  date: "2026-11-09"
+  item: "Study needs redesigning; actin-cortex integration should become a follow-up so this study can focus on the core BM question."
+  action: >
+    Acknowledged: the explicit actomyosin cortex is a NEW extension, not part of the core
+    BM-vertex coupling question, and is already flagged as a future extension in
+    meeting_alignment_2026_10_20. Recorded a followup proposal (fp-e1-split-actin-followup) to
+    carve actin-cortex integration into its own follow-up study and keep this investigation
+    focused on BM composition and the BM<->vertex coupling first.
+  status: deferred-followup
+
 claim: >
   A coarse actomyosin cortex carries a cortical tension that rises monotonically with the
   myosin-contractility proxy, giving a tunable active tension that can be mapped onto the
@@ -36,9 +48,9 @@ result: >
 
 pipeline_gate:
   prerequisites:
-    - {study: bm-r5-explicit-3d-confinement, condition: tests-passed, relation: builds-on}
+  - {study: bm-r5-explicit-3d-confinement, condition: tests-passed, relation: builds-on}
   enables:
-    - bm-e2-actin-adhesion-collagen
+  - bm-e2-actin-adhesion-collagen
   proceed_condition: >
     A monotone, tunable cortical tension (rising with the myosin-contractility proxy) is the
     explicit-cortex tension source the force-transfer study (E2) pulls through its basal
@@ -84,11 +96,11 @@ description: |
   by explicit actin.
 
 key_assumptions:
-  - "A coarse 2D LJ bead patch stands in for the actomyosin cortex; beads are not resolved filaments/crosslinks/motors (v0 coarse model)."
-  - "The LJ well depth (contractility) is the myosin-activity proxy: higher contractility => higher active tension."
-  - "Cortical tension is the in-plane proxy tau = -(pxx+pyy)/2 (a line-tension / cortical-energy proxy), not a measured surface tension."
-  - "Reduced LJ units throughout: tension, pressure, temperature and contractility are dimensionless; no calibration to pN/um or pascals is claimed."
-  - "Single cortex patch (36 beads, periodic): no neighbours, no explicit coupling to the BM here -- that is E2."
+- "A coarse 2D LJ bead patch stands in for the actomyosin cortex; beads are not resolved filaments/crosslinks/motors (v0 coarse model)."
+- "The LJ well depth (contractility) is the myosin-activity proxy: higher contractility => higher active tension."
+- "Cortical tension is the in-plane proxy tau = -(pxx+pyy)/2 (a line-tension / cortical-energy proxy), not a measured surface tension."
+- "Reduced LJ units throughout: tension, pressure, temperature and contractility are dimensionless; no calibration to pN/um or pascals is claimed."
+- "Single cortex patch (36 beads, periodic): no neighbours, no explicit coupling to the BM here -- that is E2."
 
 model_assumptions_declaration:
   preferred_vs_realized: "n/a — actomyosin cortex patch, not a cell-geometry study"
@@ -105,52 +117,52 @@ meeting_alignment_2026_10_20:
     feedback milestone. Keep separate from the next 2D/3D model acceptance gates.
 
 parent_studies:
-  - {study: bm-r5-explicit-3d-confinement, condition: tests-passed, relation: builds-on}
+- {study: bm-r5-explicit-3d-confinement, condition: tests-passed, relation: builds-on}
 
 cites: [barrientos2026cellshape]
 
 baseline:
-  - name: bm-e1-actomyosin-cortex
-    composite: viva_lumenoid.composites.actomyosin_cortex
-    params:
-      n: 6
-      contractility: 1.0
-    note: >
-      A coarse actomyosin cortex built on the same molecular-dynamics engine as
-      the collagen network: a flat patch of active filaments whose contractility
-      sets the cortical tension. That tension is the quantity the epithelial model
-      later reads as its cortical energy.
+- name: bm-e1-actomyosin-cortex
+  composite: viva_lumenoid.composites.actomyosin_cortex
+  params:
+    n: 6
+    contractility: 1.0
+  note: >
+    A coarse actomyosin cortex built on the same molecular-dynamics engine as
+    the collagen network: a flat patch of active filaments whose contractility
+    sets the cortical tension. That tension is the quantity the epithelial model
+    later reads as its cortical energy.
 
 variants:
-  - name: low-contractility
-    description: "Low myosin activity (contractility 0.5) -- weakly expansive patch, cortical tension slightly negative."
-    params: {contractility: 0.5}
-  - name: high-contractility
-    description: "High myosin activity (contractility 3.0) -- strongly contractile patch, highest cortical tension."
-    params: {contractility: 3.0}
+- name: low-contractility
+  description: "Low myosin activity (contractility 0.5) -- weakly expansive patch, cortical tension slightly negative."
+  params: {contractility: 0.5}
+- name: high-contractility
+  description: "High myosin activity (contractility 3.0) -- strongly contractile patch, highest cortical tension."
+  params: {contractility: 3.0}
 
 conditions:
   baseline:
     composite: viva_lumenoid.composites.actomyosin_cortex
     params: {n: 6, contractility: 1.0}
   variants:
-    - name: low-contractility
-      description: "Low contractility -> slightly negative tension."
-    - name: high-contractility
-      description: "High contractility -> highest tension."
+  - name: low-contractility
+    description: "Low contractility -> slightly negative tension."
+  - name: high-contractility
+    description: "High contractility -> highest tension."
   model_settings:
-    - name: contractility
-      default: 1.0
-      current: 1.0
-      range: [0.5, 3.0]
-      units: reduced (LJ well depth epsilon)
-      notes: "Myosin-activity proxy; the swept axis of the cortical-tension response."
-    - name: n
-      default: 8
-      current: 6
-      range: [5, 8]
-      units: lattice replications per side
-      notes: "Patch size; n=6 gives a 36-bead square-lattice cortex patch."
+  - name: contractility
+    default: 1.0
+    current: 1.0
+    range: [0.5, 3.0]
+    units: reduced (LJ well depth epsilon)
+    notes: "Myosin-activity proxy; the swept axis of the cortical-tension response."
+  - name: n
+    default: 8
+    current: 6
+    range: [5, 8]
+    units: lattice replications per side
+    notes: "Patch size; n=6 gives a 36-bead square-lattice cortex patch."
 
 robustness:
   parameter_sweep: true
@@ -161,89 +173,89 @@ robustness:
     4-point contractility sweep {0.5, 1.0, 2.0, 3.0} rather than a seed ensemble.
 
 simulation_set:
-  - name: e1-contractility-sweep
-    status: completed
-    base_model: viva_lumenoid.composites.actomyosin_cortex
-    axes:
-      contractility: [0.5, 1.0, 2.0, 3.0]
-    fixed: {n: 6, steps: 3, interval: 1.0, seed: 12345}
-    metrics:
-      cortical_tension_c0p5: -0.3951
-      cortical_tension_c1p0: 0.6021
-      cortical_tension_c2p0: 2.5801
-      cortical_tension_c3p0: 3.9778
-      num_atoms: 36
-      monotone_increasing_in_contractility: true
-      tension_high_gt_low: true
-    pass_fail_tests:
-      - "cortex-tension-monotone-in-contractility: pass"
-      - "higher-contractility-higher-tension: pass"
+- name: e1-contractility-sweep
+  status: completed
+  base_model: viva_lumenoid.composites.actomyosin_cortex
+  axes:
+    contractility: [0.5, 1.0, 2.0, 3.0]
+  fixed: {n: 6, steps: 3, interval: 1.0, seed: 12345}
+  metrics:
+    cortical_tension_c0p5: -0.3951
+    cortical_tension_c1p0: 0.6021
+    cortical_tension_c2p0: 2.5801
+    cortical_tension_c3p0: 3.9778
+    num_atoms: 36
+    monotone_increasing_in_contractility: true
+    tension_high_gt_low: true
+  pass_fail_tests:
+  - "cortex-tension-monotone-in-contractility: pass"
+  - "higher-contractility-higher-tension: pass"
 
 # Canonical run record -- feeds the dashboard's Ran . Tests . Verdict strip.
 runs:
-  - name: e1-contractility-sweep
-    base_model: viva_lumenoid.composites.actomyosin_cortex
-    status: completed
-    outcomes:
-      cortex-tension-monotone-in-contractility:
-        result: PASS
-        observed: "cortical_tension = -0.395, 0.602, 2.580, 3.978 for contractility 0.5/1.0/2.0/3.0 -- strictly increasing"
-      higher-contractility-higher-tension:
-        result: PASS
-        observed: "cortical_tension(3.0)=3.978 > cortical_tension(1.0)=0.602"
+- name: e1-contractility-sweep
+  base_model: viva_lumenoid.composites.actomyosin_cortex
+  status: completed
+  outcomes:
+    cortex-tension-monotone-in-contractility:
+      result: PASS
+      observed: "cortical_tension = -0.395, 0.602, 2.580, 3.978 for contractility 0.5/1.0/2.0/3.0 -- strictly increasing"
+    higher-contractility-higher-tension:
+      result: PASS
+      observed: "cortical_tension(3.0)=3.978 > cortical_tension(1.0)=0.602"
 
 readouts:
-  - name: cortical_tension
-    description: In-plane cortical tension tau = -(pxx+pyy)/2; the active-tension readout that maps onto the Tyssue cortical-energy parameter.
-    store_path: "cortical_tension"
-    units: reduced (LJ stress)
-    status: primary
-  - name: pressure_xx
-    description: In-plane xx pressure component of the cortex patch.
-    store_path: "pressure_xx"
-    units: reduced (LJ stress)
-    status: measured
-  - name: pressure_yy
-    description: In-plane yy pressure component of the cortex patch.
-    store_path: "pressure_yy"
-    units: reduced (LJ stress)
-    status: measured
-  - name: temperature
-    description: Langevin temperature of the cortex patch (thermostat diagnostic).
-    store_path: "temperature"
-    units: reduced (LJ temperature)
-    status: measured
-  - name: num_atoms
-    description: Number of beads in the cortex patch (6x6 square lattice = 36).
-    store_path: "num_atoms"
-    units: count
-    status: measured
+- name: cortical_tension
+  description: In-plane cortical tension tau = -(pxx+pyy)/2; the active-tension readout that maps onto the Tyssue cortical-energy parameter.
+  store_path: "cortical_tension"
+  units: reduced (LJ stress)
+  status: primary
+- name: pressure_xx
+  description: In-plane xx pressure component of the cortex patch.
+  store_path: "pressure_xx"
+  units: reduced (LJ stress)
+  status: measured
+- name: pressure_yy
+  description: In-plane yy pressure component of the cortex patch.
+  store_path: "pressure_yy"
+  units: reduced (LJ stress)
+  status: measured
+- name: temperature
+  description: Langevin temperature of the cortex patch (thermostat diagnostic).
+  store_path: "temperature"
+  units: reduced (LJ temperature)
+  status: measured
+- name: num_atoms
+  description: Number of beads in the cortex patch (6x6 square lattice = 36).
+  store_path: "num_atoms"
+  units: count
+  status: measured
 
 behavior_tests:
-  - name: cortex-tension-monotone-in-contractility
-    classification: primary
-    description: >
-      Cortical tension rises strictly along the contractility sweep {0.5, 1.0, 2.0, 3.0} --
-      the headline monotone active-tension response.
-    measure: {kind: monotonicity, field: cortical_tension, versus: contractility}
-    pass_if: {op: strictly_increasing, note: "cortical_tension strictly increasing across contractility 0.5<1.0<2.0<3.0"}
-    units: reduced
-    requires_simulation: e1-contractility-sweep
+- name: cortex-tension-monotone-in-contractility
+  classification: primary
+  description: >
+    Cortical tension rises strictly along the contractility sweep {0.5, 1.0, 2.0, 3.0} --
+    the headline monotone active-tension response.
+  measure: {kind: monotonicity, field: cortical_tension, versus: contractility}
+  pass_if: {op: strictly_increasing, note: "cortical_tension strictly increasing across contractility 0.5<1.0<2.0<3.0"}
+  units: reduced
+  requires_simulation: e1-contractility-sweep
+  cites: [barrientos2026cellshape]
+  calibration_anchor:
+    observed_value: "-0.395 < 0.602 < 2.580 < 3.978"
+    literature_target: "active cortical tension rises with myosin activity (cortical-energy proxy)"
+    resolution: concept
     cites: [barrientos2026cellshape]
-    calibration_anchor:
-      observed_value: "-0.395 < 0.602 < 2.580 < 3.978"
-      literature_target: "active cortical tension rises with myosin activity (cortical-energy proxy)"
-      resolution: concept
-      cites: [barrientos2026cellshape]
-  - name: higher-contractility-higher-tension
-    classification: primary
-    description: >
-      A high-contractility patch carries more cortical tension than a low-contractility one
-      (tension(3) > tension(1)).
-    measure: {kind: compare, field: cortical_tension, cases: ["contractility=3.0", "contractility=1.0"]}
-    pass_if: {op: gt, note: "cortical_tension(3.0) > cortical_tension(1.0)"}
-    units: reduced
-    requires_simulation: e1-contractility-sweep
+- name: higher-contractility-higher-tension
+  classification: primary
+  description: >
+    A high-contractility patch carries more cortical tension than a low-contractility one
+    (tension(3) > tension(1)).
+  measure: {kind: compare, field: cortical_tension, cases: ["contractility=3.0", "contractility=1.0"]}
+  pass_if: {op: gt, note: "cortical_tension(3.0) > cortical_tension(1.0)"}
+  units: reduced
+  requires_simulation: e1-contractility-sweep
 
 falsifiability: >
   The claim would be overturned if cortical tension were NOT monotone increasing across the
@@ -258,56 +270,56 @@ conclusion_logic:
     implementation_status: "The actomyosin-cortex LAMMPS plugin runs end-to-end over the LammpsModelProcess seam and carries a tunable cortical tension."
     biological_validation: "Cortical tension rises monotonically with the myosin-contractility proxy -- a tension that maps onto a Tyssue cortical-energy parameter."
     pipeline_unblocks:
-      - "E2 actin-adhesion-collagen force transfer -- this is its explicit cortex-tension source."
+    - "E2 actin-adhesion-collagen force transfer -- this is its explicit cortex-tension source."
   if_primary_tests_fail:
     diagnose:
-      - "Tension flat/non-monotone -- check the LJ well depth is actually the swept contractility and the patch equilibrated (raise steps)."
-      - "Thermostat noise dominating -- read tension at a fixed seed / average over more steps."
+    - "Tension flat/non-monotone -- check the LJ well depth is actually the swept contractility and the patch equilibrated (raise steps)."
+    - "Thermostat noise dominating -- read tension at a fixed seed / average over more steps."
     block_downstream: "Do not use as the E2 cortex-tension source until the monotone response holds."
 
 limitations:
-  - "Reduced LJ units throughout; no calibration to pN/um or pascals."
-  - "At the lowest contractility (0.5) the cortical tension is slightly NEGATIVE (-0.395) -- the patch is weakly expansive there; the claim is the monotonic RISE, not a positive tension at every point."
-  - "Coarse v0 cortex: a 2D LJ bead patch, not resolved filaments/crosslinks/motors; strain response and relaxation mapping are characterised qualitatively, not yet calibrated to a Tyssue parameter."
-  - "Single 36-bead patch, periodic, at a fixed seed: no neighbours and no explicit BM coupling (that is E2)."
-  - "tau = -(pxx+pyy)/2 is an in-plane stress proxy for cortical tension, not a measured surface/line tension."
+- "Reduced LJ units throughout; no calibration to pN/um or pascals."
+- "At the lowest contractility (0.5) the cortical tension is slightly NEGATIVE (-0.395) -- the patch is weakly expansive there; the claim is the monotonic RISE, not a positive tension at every point."
+- "Coarse v0 cortex: a 2D LJ bead patch, not resolved filaments/crosslinks/motors; strain response and relaxation mapping are characterised qualitatively, not yet calibrated to a Tyssue parameter."
+- "Single 36-bead patch, periodic, at a fixed seed: no neighbours and no explicit BM coupling (that is E2)."
+- "tau = -(pxx+pyy)/2 is an in-plane stress proxy for cortical tension, not a measured surface/line tension."
 
 visualizations:
-  - name: actomyosin_cortex_movie
-    address: "gif:bm-e1-actomyosin-cortex.gif"
-    config:
-      title: "E1 — actomyosin cortex contracting (movie)"
-      evidence_status: engineered-diagnostic
-      tier: supplement
-      caption: >
-        Animated movie of the LJ bead patch contracting under the well-depth proxy. Engineering verification of tunable effective tension — NOT explicit actin filaments/motors; the x-axis proxy is not biological myosin activity.
-  - name: e1_cortical_tension
-    address: "html:e1_cortical_tension.html"
-    config:
-      title: "LJ-patch effective tension: tunability + seed/size sensitivity (engineered-diagnostic)"
-      evidence_status: engineered-diagnostic
-      tier: supplement
-      caption: >
-        ENGINEERING VERIFICATION (not biological evidence), real LAMMPS, reduced LJ units. Panel A: the
-        patch's effective in-plane tension tau = -(pxx+pyy)/2 vs the LJ well-depth proxy epsilon
-        (attraction strength, NOT calibrated biological myosin activity), as a seed ensemble (3 seeds, 30
-        steps, n=6) — the seed-mean rises (approx -0.19, 0.45, 1.82, 2.79, 2.91 at epsilon 0.5/1.0/2.0/3.0/4.0)
-        with a wide per-seed min/max band, and the smallest proxy is weakly expansive (tau<0). Panel B:
-        patch-size sensitivity (n = 5..8 bead lattice at epsilon=2.0). This verifies tunability but does NOT
-        reproduce filament-based active contractility or calibrated cortical tension: the patch has no
-        explicit actin filaments, motors or crosslinkers, and the model exposes no strain input, so
-        force-strain and step-strain relaxation curves are NOT producible here (named gap).
-  - name: e1_tension_components
-    address: "html:e1_tension_components.html"
-    config:
-      title: "Pressure components of the LJ-patch tension (engineered-diagnostic)"
-      evidence_status: engineered-diagnostic
-      tier: supplement
-      caption: >
-        Diagnostic decomposition (reduced LJ units): the seed-mean pxx, pyy and tau = -(pxx+pyy)/2 vs the LJ
-        well-depth proxy. At small epsilon the repulsive/thermal pressure outweighs the LJ attraction, so the
-        net in-plane stress is expansive (tau<0); this explains the negative tension at the smallest proxy. A
-        mechanism diagnostic, not a biological measurement.
+- name: actomyosin_cortex_movie
+  address: "gif:bm-e1-actomyosin-cortex.gif"
+  config:
+    title: "E1 — actomyosin cortex contracting (movie)"
+    evidence_status: engineered-diagnostic
+    tier: supplement
+    caption: >
+      Animated movie of the LJ bead patch contracting under the well-depth proxy. Engineering verification of tunable effective tension — NOT explicit actin filaments/motors; the x-axis proxy is not biological myosin activity.
+- name: e1_cortical_tension
+  address: "html:viz/e1_cortical_tension.html"
+  config:
+    title: "LJ-patch effective tension: tunability + seed/size sensitivity (engineered-diagnostic)"
+    evidence_status: engineered-diagnostic
+    tier: supplement
+    caption: >
+      ENGINEERING VERIFICATION (not biological evidence), real LAMMPS, reduced LJ units. Panel A: the
+      patch's effective in-plane tension tau = -(pxx+pyy)/2 vs the LJ well-depth proxy epsilon
+      (attraction strength, NOT calibrated biological myosin activity), as a seed ensemble (3 seeds, 30
+      steps, n=6) — the seed-mean rises (approx -0.19, 0.45, 1.82, 2.79, 2.91 at epsilon 0.5/1.0/2.0/3.0/4.0)
+      with a wide per-seed min/max band, and the smallest proxy is weakly expansive (tau<0). Panel B:
+      patch-size sensitivity (n = 5..8 bead lattice at epsilon=2.0). This verifies tunability but does NOT
+      reproduce filament-based active contractility or calibrated cortical tension: the patch has no
+      explicit actin filaments, motors or crosslinkers, and the model exposes no strain input, so
+      force-strain and step-strain relaxation curves are NOT producible here (named gap).
+- name: e1_tension_components
+  address: "html:viz/e1_tension_components.html"
+  config:
+    title: "Pressure components of the LJ-patch tension (engineered-diagnostic)"
+    evidence_status: engineered-diagnostic
+    tier: supplement
+    caption: >
+      Diagnostic decomposition (reduced LJ units): the seed-mean pxx, pyy and tau = -(pxx+pyy)/2 vs the LJ
+      well-depth proxy. At small epsilon the repulsive/thermal pressure outweighs the LJ attraction, so the
+      net in-plane stress is expansive (tau<0); this explains the negative tension at the smallest proxy. A
+      mechanism diagnostic, not a biological measurement.
 
 report:
   title: "E1 -- explicit actomyosin cortex tension (contractility response)"
@@ -333,70 +345,84 @@ report:
     not an absolute tension in physical units.
 
 findings:
-  - id: F1-cortical-tension-monotone-in-contractility
-    kind: computational
-    status: confirms
-    tier: interpretation
-    mechanism_origin: engineered
-    statement: >
-      The explicit actomyosin cortex carries a cortical tension that rises strictly and
-      monotonically with the myosin-contractility proxy: tau = -0.395, 0.602, 2.580, 3.978 at
-      contractility 0.5, 1.0, 2.0, 3.0 -- a tunable active tension that maps onto a Tyssue
-      cortical-energy parameter. (engineering verification over an LJ-activity proxy, not
-      biological myosin evidence)
-    evidence:
-      from_run: e1-contractility-sweep
-      from_test: cortex-tension-monotone-in-contractility
-      observed: "cortical_tension strictly increasing -0.395 < 0.602 < 2.580 < 3.978; tension(3)/tension(1) ~ 6.6x"
-    expected:
-      cites: [barrientos2026cellshape]
-      summary: "active cortical tension rises with myosin activity (the cortical-energy proxy the epithelial model reads)"
-    explanation: >
-      The LJ well depth stands in for myosin contractility; a deeper well pulls the patch inward,
-      so the in-plane stress tau = -(pxx+pyy)/2 the patch sustains increases with contractility.
-    next_action: "use as the explicit cortex-tension source for the E2 force-transfer study"
-    next_action_type: escalate_model
-    provenance:
-      run_ids: [e1-contractility-sweep]
-  - id: F2-negative-tension-at-low-contractility
-    kind: computational
-    status: partial
-    tier: observation
-    statement: >
-      At the lowest contractility (0.5) the cortical tension is slightly NEGATIVE (-0.395): the
-      coarse patch is weakly expansive there, so the monotonic RISE -- not a positive tension at
-      every point -- is the reproduced result.
-    evidence:
-      from_run: e1-contractility-sweep
-      from_test: cortex-tension-monotone-in-contractility
-      observed: "cortical_tension(0.5) = -0.395 < 0; all higher contractilities positive"
-    explanation: "Below a threshold contractility the thermal/repulsive pressure outweighs the LJ attraction, so the net in-plane stress is expansive; the sweep's ordering is unaffected."
-    next_action: "calibrate the zero-tension contractility and the tension->cortical-energy mapping when coupling to Tyssue"
-    next_action_type: refine_representation
-    provenance:
-      run_ids: [e1-contractility-sweep]
+- id: F1-cortical-tension-monotone-in-contractility
+  kind: computational
+  status: confirms
+  tier: interpretation
+  mechanism_origin: engineered
+  statement: >
+    The explicit actomyosin cortex carries a cortical tension that rises strictly and
+    monotonically with the myosin-contractility proxy: tau = -0.395, 0.602, 2.580, 3.978 at
+    contractility 0.5, 1.0, 2.0, 3.0 -- a tunable active tension that maps onto a Tyssue
+    cortical-energy parameter. (engineering verification over an LJ-activity proxy, not
+    biological myosin evidence)
+  evidence:
+    from_run: e1-contractility-sweep
+    from_test: cortex-tension-monotone-in-contractility
+    observed: "cortical_tension strictly increasing -0.395 < 0.602 < 2.580 < 3.978; tension(3)/tension(1) ~ 6.6x"
+  expected:
+    cites: [barrientos2026cellshape]
+    summary: "active cortical tension rises with myosin activity (the cortical-energy proxy the epithelial model reads)"
+  explanation: >
+    The LJ well depth stands in for myosin contractility; a deeper well pulls the patch inward,
+    so the in-plane stress tau = -(pxx+pyy)/2 the patch sustains increases with contractility.
+  next_action: "use as the explicit cortex-tension source for the E2 force-transfer study"
+  next_action_type: escalate_model
+  provenance:
+    run_ids: [e1-contractility-sweep]
+  seeded_study: bm-e2-actin-adhesion-collagen
+- id: F2-negative-tension-at-low-contractility
+  kind: computational
+  status: partial
+  tier: observation
+  statement: >
+    At the lowest contractility (0.5) the cortical tension is slightly NEGATIVE (-0.395): the
+    coarse patch is weakly expansive there, so the monotonic RISE -- not a positive tension at
+    every point -- is the reproduced result.
+  evidence:
+    from_run: e1-contractility-sweep
+    from_test: cortex-tension-monotone-in-contractility
+    observed: "cortical_tension(0.5) = -0.395 < 0; all higher contractilities positive"
+  explanation: "Below a threshold contractility the thermal/repulsive pressure outweighs the LJ attraction, so the net in-plane stress is expansive; the sweep's ordering is unaffected."
+  next_action: "calibrate the zero-tension contractility and the tension->cortical-energy mapping when coupling to Tyssue"
+  next_action_type: refine_representation
+  provenance:
+    run_ids: [e1-contractility-sweep]
+  seeded_study: bm-e2-actin-adhesion-collagen
 
 followup_proposals:
-  - id: fp-e1-strain-relaxation
-    title: "Characterise the cortex strain response and relaxation, and calibrate the tension->cortical-energy mapping"
-    motivation: >
-      This study records the contractility->tension response but not the strain response and
-      relaxation the plan also calls for, nor a calibrated mapping onto a specific Tyssue
-      cortical-energy value. Impose a strain / tension step and read the relaxation, then fit the
-      effective cortical-energy parameter.
-    hypothesized_mechanism: "The viscoelastic cortex should show a contractility-dependent relaxation time that sets the effective cortical-energy stiffness."
-    status: proposed
+- id: fp-e1-strain-relaxation
+  title: "Characterise the cortex strain response and relaxation, and calibrate the tension->cortical-energy mapping"
+  motivation: >
+    This study records the contractility->tension response but not the strain response and
+    relaxation the plan also calls for, nor a calibrated mapping onto a specific Tyssue
+    cortical-energy value. Impose a strain / tension step and read the relaxation, then fit the
+    effective cortical-energy parameter.
+  hypothesized_mechanism: "The viscoelastic cortex should show a contractility-dependent relaxation time that sets the effective cortical-energy stiffness."
+  status: proposed
+- id: fp-e1-split-actin-followup
+  title: "Split explicit actomyosin-cortex integration into a dedicated follow-up study"
+  motivation: >
+    Reviewer (inline, 2026-11-09): this study needs redesigning -- actin-cortex integration
+    should be a separate follow-up so the investigation can focus on the core basement-membrane
+    question (BM composition and the BM<->vertex coupling) first. The explicit cortex is a
+    promising route to cell-cell contacts / focal adhesions but is tangential to the current MVP.
+  hypothesized_mechanism: >
+    A redesigned, standalone actomyosin-cortex study (cortex tension, strain response, relaxation
+    and the cortical-energy mapping) can be developed independently once the BM question is
+    settled, without gating the BM-vertex coupling milestone.
+  status: proposed
 
 discovery_implications:
   resolved_uncertainties:
-    - "A coarse LJ bead patch produces a tunable, monotone active cortical tension (the contractility->tension response)."
-    - "The LJ well depth is a workable myosin-contractility proxy for an explicit-actin cortex."
+  - "A coarse LJ bead patch produces a tunable, monotone active cortical tension (the contractility->tension response)."
+  - "The LJ well depth is a workable myosin-contractility proxy for an explicit-actin cortex."
   remaining_uncertainties:
-    - "The strain response and relaxation, and a calibrated tension->Tyssue-cortical-energy mapping."
-    - "Absolute cortical tension in physical units -- reduced LJ units only."
-    - "Whether replacing the effective cortical term with explicit actin leaves the measured confinement unchanged in an overlap regime."
+  - "The strain response and relaxation, and a calibrated tension->Tyssue-cortical-energy mapping."
+  - "Absolute cortical tension in physical units -- reduced LJ units only."
+  - "Whether replacing the effective cortical term with explicit actin leaves the measured confinement unchanged in an overlap regime."
   followup_study_proposals:
-    - {id: fp-e1-strain-relaxation, title: "Cortex strain response / relaxation + cortical-energy calibration"}
+  - {id: fp-e1-strain-relaxation, title: "Cortex strain response / relaxation + cortical-energy calibration"}
 
 conclusion_verdicts:
   regression_compatibility:
@@ -418,10 +444,10 @@ conclusion_verdicts:
 
 expert_review_status: requested
 expert_questions:
-  - "Mapping: should the contractility->tension response be calibrated to a specific Tyssue cortical-energy value (and in physical units) before explicit actin replaces the effective cortical term, or is the monotone reduced-unit response sufficient for the E2 coupling?"
-  - "Fidelity: is a coarse LJ bead patch an acceptable v0 cortex, or does the force-transfer chain require a filament/crosslink/motor-resolved cortex to avoid double-counting tension when coupled to the BM?"
+- "Mapping: should the contractility->tension response be calibrated to a specific Tyssue cortical-energy value (and in physical units) before explicit actin replaces the effective cortical term, or is the monotone reduced-unit response sufficient for the E2 coupling?"
+- "Fidelity: is a coarse LJ bead patch an acceptable v0 cortex, or does the force-transfer chain require a filament/crosslink/motor-resolved cortex to avoid double-counting tension when coupled to the BM?"
 
 bibliography:
   sources:
-    - key: barrientos2026cellshape
-      note: "Barrientos et al. cell-shape paper; the effective cortical-energy term this explicit actomyosin cortex is an extension of (the paper does not simulate actin explicitly)."
+  - key: barrientos2026cellshape
+    note: "Barrientos et al. cell-shape paper; the effective cortical-energy term this explicit actomyosin cortex is an extension of (the paper does not simulate actin explicitly)."

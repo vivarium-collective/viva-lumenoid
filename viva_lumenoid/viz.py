@@ -1110,8 +1110,9 @@ def coupling_figure(points) -> "object":
     fig.update_layout(title=dict(
         text=("<b>Vertex-model coupling — E(ε̇) and τ(ε̇) from the faithful model</b>   "
               f"<span style='font-size:12px;color:{_MUTED}'>the two numbers the AICS "
-              f"vertex model takes (offline coupling); E stiffens with growth rate, "
-              f"τ ≈ constant (crosslink kinetics)</span>"), x=0.01, xanchor="left"))
+              f"vertex model would take (offline coupling); the earlier rate-stiffening "
+              f"claim is retracted — E(ε̇) is unresolved and τ(ε̇) is set by crosslink kinetics</span>"),
+        x=0.01, xanchor="left"))
     return fig
 
 
