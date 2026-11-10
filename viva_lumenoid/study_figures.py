@@ -1149,7 +1149,7 @@ def r1_regime_figure():
     fig = make_subplots(
         rows=3, cols=2, column_widths=[0.62, 0.38], row_heights=[1, 1, 1],
         specs=[[{"rowspan": 3}, {}], [None, {}], [None, {}]],
-        subplot_titles=("A — confinement phase map (reduced-order reimplementation)",
+        subplot_titles=("A — confinement phase map",
                         "B — soft / fast-relaxing", "C — intermediate", "D — stiff / slow-relaxing"))
     fig.add_trace(go.Heatmap(z=C, x=stiff, y=ratio, colorscale="Viridis",
                              colorbar=dict(title="confinement<br>(h/h₀)", len=0.95)),
@@ -2170,12 +2170,19 @@ def coupling_contract_figure():
     # ---- Band 1: the contract wiring (y 8.4–11.6) ----
     fig.add_annotation(x=0.2, y=11.5, text="<b>① The contract: express the BM↔epithelium edge as process-bigraph wiring</b>",
                        showarrow=False, xanchor="left", font=dict(size=13, color="#1f2328"))
-    _box(fig, 0.3, 9.5, 2.6, 10.7, "growth<br>(preferred schedule)", GREEN)
-    _box(fig, 4.3, 9.1, 7.1, 11.1, "vertex_model<br>(EulerSolver,<br>tyssue)", BLUE)
-    _box(fig, 8.7, 9.1, 11.7, 11.1, "bm process<br>ReducedBM | CollagenNetwork<br>(same port schema)", PURPLE)
-    _arrow(fig, 2.6, 10.1, 4.3, 10.1, "preferred area/vol")
-    _arrow(fig, 7.1, 10.5, 8.7, 10.5, "basal face areas (strain)")
-    _arrow(fig, 8.7, 9.7, 7.1, 9.7, "BM tension on basal faces (K, A_rest)")
+    _box(fig, 0.2, 9.5, 2.4, 10.7, "growth<br>(preferred schedule)", GREEN)
+    _box(fig, 3.9, 9.1, 6.6, 11.1, "vertex_model<br>(EulerSolver,<br>tyssue)", BLUE)
+    _box(fig, 8.5, 9.1, 11.8, 11.1, "bm process<br>ReducedBM | CollagenNetwork<br>(same port schema)", PURPLE)
+    # Short edge labels in the gaps (full port semantics are in the note below).
+    _arrow(fig, 2.4, 10.1, 3.9, 10.1, "")
+    _arrow(fig, 6.6, 10.5, 8.5, 10.5, "")
+    _arrow(fig, 8.5, 9.7, 6.6, 9.7, "")
+    fig.add_annotation(x=3.15, y=10.55, text="preferred<br>area/vol", showarrow=False,
+                       font=dict(size=9.5, color="#555"), align="center")
+    fig.add_annotation(x=7.55, y=10.95, text="basal areas →", showarrow=False,
+                       font=dict(size=9.5, color="#555"))
+    fig.add_annotation(x=7.55, y=9.25, text="← BM tension<br>(K, A_rest)", showarrow=False,
+                       font=dict(size=9.5, color="#555"), align="center")
     fig.add_annotation(
         x=0.2, y=8.6, xanchor="left", showarrow=False, font=dict(size=11, color="#444"),
         text=("BM = energy on each basal face  E_f = (K/2)(A_f − A_rest)² / A_rest,  tension T_f = K(A_f − A_rest)/A_rest clipped ≥ 0,  "
@@ -2244,10 +2251,16 @@ def reference_state_figure():
             opacity=0.5, showlegend=False, hoverinfo="skip"))
         sym = "diamond" if role == "reference" else "circle"
         sz = 16 if role == "reference" else 12
+        # Label points INWARD (left of right-half points, right of left-half) so a
+        # label never runs off the edge; the full state string stays in the hover.
+        import math as _m
+        inward_left = _m.log10(val) > 0.1          # right half of the log axis
+        pos = "middle left" if inward_left else "middle right"
+        txt = f"{label}  " if inward_left else f"  {label}"
         fig.add_trace(go.Scatter(
-            x=[val], y=[i], mode="markers+text", marker=dict(size=sz, color=c, symbol=sym,
-            line=dict(width=1.2, color="white")),
-            text=[f"  {label} — {state}"], textposition="middle right",
+            x=[val], y=[i], mode="markers+text", cliponaxis=False,
+            marker=dict(size=sz, color=c, symbol=sym, line=dict(width=1.2, color="white")),
+            text=[txt], textposition=pos,
             textfont=dict(size=11, color=("#1f2328" if role != "superseded" else "#8a7898")),
             showlegend=False,
             hovertemplate=f"{label}: {val:g} Pa ({state})<extra></extra>"))
