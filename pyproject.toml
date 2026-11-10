@@ -77,8 +77,13 @@ override-dependencies = ["viva-discovery-engine>=0.2,<0.3"]
 vivarium-workbench = { git = "https://github.com/vivarium-collective/vivarium-workbench.git", branch = "main" }
 # viva-discovery-engine resolves from PyPI (>=0.2,<0.3 -> 0.2.1) — the AI-drivable
 # generation contract + the consistent_with_zero evidence grading (DE #43) are
-# published there. viva-superpowers stays on main for the LAMMPS/cycle plumbing.
-viva-superpowers = { git = "https://github.com/vivarium-collective/viva-superpowers.git", branch = "main" }
+# published there. viva-superpowers is PINNED to a rev compatible with
+# discovery-engine 0.2.x: main advanced to 0.26.0, whose __init__ imports
+# `discovery_engine.reporting.test_contract` (needs discovery-engine >=0.3, which
+# this workspace pins below 0.3), breaking `import viva_lumenoid` in CI. Rev
+# 88faa72 (0.25.0) imports `discovery_engine.test_contract`, which 0.2.1 provides.
+# Bump this rev in lockstep with the discovery-engine floor when moving to 0.3.
+viva-superpowers = { git = "https://github.com/vivarium-collective/viva-superpowers.git", rev = "88faa72068bc1c5678a47c85c3ddce371f493cfd" }
 viva-lammps = { git = "https://github.com/vivarium-collective/viva-lammps.git", branch = "main" }
 viva-smoldyn = { git = "https://github.com/vivarium-collective/viva-smoldyn.git", branch = "main" }
 viva-simularium = { git = "https://github.com/vivarium-collective/viva-simularium.git", branch = "main" }
