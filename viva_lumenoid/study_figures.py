@@ -186,9 +186,9 @@ def e1_cortical_tension_figure(proxies=(0.5, 1.0, 2.0, 3.0, 4.0),
                              line=dict(color=BLUE, width=3), marker=dict(size=9),
                              name="mean τ vs patch size", text=[f"{a} beads" for a in atoms]),
                   row=1, col=2)
-    fig.update_xaxes(title_text="LJ well-depth proxy ε (reduced; attraction strength, NOT biological myosin activity)",
+    fig.update_xaxes(title_text="LJ well-depth proxy ε (not biological myosin)",
                      row=1, col=1)
-    fig.update_yaxes(title_text="effective in-plane tension τ = −(pₓₓ+p_yy)/2 (reduced LJ stress)", row=1, col=1)
+    fig.update_yaxes(title_text="effective in-plane tension τ (reduced LJ stress)", row=1, col=1)
     fig.update_xaxes(title_text="patch size n (n×n bead lattice)", row=1, col=2)
     fig.update_yaxes(title_text="τ (reduced LJ stress)", row=1, col=2)
     fig.update_layout(
@@ -1536,9 +1536,9 @@ def v2_rheology_main_figure():
     fig = make_subplots(
         rows=1, cols=3, horizontal_spacing=0.09,
         subplot_titles=(
-            "A — σ(ε̇) at matched strain ε=0.12",
-            "B — effective viscosity η_eff = σ/ε̇",
-            "C — crosslinks / rod (paired connectivity)"))
+            "A — σ(ε̇) at matched strain",
+            "B — viscosity η_eff = σ/ε̇",
+            "C — crosslinks / rod"))
     fig.add_trace(go.Scatter(x=rates, y=sig_m, error_y=dict(type="data", array=sig_s),
                              mode="lines+markers", line=dict(color=BLUE, width=3),
                              marker=dict(size=10), showlegend=False), row=1, col=1)
@@ -1556,8 +1556,7 @@ def v2_rheology_main_figure():
     fig.update_yaxes(title_text="crosslinks / rod", row=1, col=3)
     fig.update_layout(
         template="plotly_white", height=520, margin=dict(t=92, b=118),
-        title="bm-v2 — growth rate vs apparent mechanical resistance, with the paired "
-              "connectivity readout (observed, bounded-preliminary; 3 seeds)")
+        title="bm-v2 — growth rate vs apparent mechanical resistance (observed, 3 seeds)")
     fig.add_annotation(
         x=0.5, y=-0.30, xref="paper", yref="paper", showarrow=False,
         font=dict(size=11, color="#777"), align="center",
@@ -2311,8 +2310,8 @@ def regime_placement_figure():
                        text="reference BM lands in this band<br>E≈6 Pa → 80 Pa (scale not pinned)",
                        showarrow=False, font=dict(size=11, color=RED),
                        bgcolor="rgba(255,255,255,0.75)")
-    fig.update_xaxes(type="log", title_text="BM stiffness relative to cell (Y_BM / cortical tension — UNPINNED)")
-    fig.update_yaxes(type="log", title_text="BM relaxation / doubling time (unit map also unpinned)")
+    fig.update_xaxes(type="log", title_text="BM stiffness relative to cell (Y_BM / cortical tension)")
+    fig.update_yaxes(type="log", title_text="BM relaxation / doubling time")
     _layout(fig, height=520)
     fig.update_layout(
         margin=dict(l=70, r=30, t=72, b=60),
