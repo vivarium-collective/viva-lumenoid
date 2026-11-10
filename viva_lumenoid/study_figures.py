@@ -186,9 +186,9 @@ def e1_cortical_tension_figure(proxies=(0.5, 1.0, 2.0, 3.0, 4.0),
                              line=dict(color=BLUE, width=3), marker=dict(size=9),
                              name="mean τ vs patch size", text=[f"{a} beads" for a in atoms]),
                   row=1, col=2)
-    fig.update_xaxes(title_text="LJ well-depth proxy ε (reduced; attraction strength, NOT biological myosin activity)",
+    fig.update_xaxes(title_text="LJ well-depth proxy ε (not biological myosin)",
                      row=1, col=1)
-    fig.update_yaxes(title_text="effective in-plane tension τ = −(pₓₓ+p_yy)/2 (reduced LJ stress)", row=1, col=1)
+    fig.update_yaxes(title_text="effective in-plane tension τ (reduced LJ stress)", row=1, col=1)
     fig.update_xaxes(title_text="patch size n (n×n bead lattice)", row=1, col=2)
     fig.update_yaxes(title_text="τ (reduced LJ stress)", row=1, col=2)
     fig.update_layout(
@@ -1149,7 +1149,7 @@ def r1_regime_figure():
     fig = make_subplots(
         rows=3, cols=2, column_widths=[0.62, 0.38], row_heights=[1, 1, 1],
         specs=[[{"rowspan": 3}, {}], [None, {}], [None, {}]],
-        subplot_titles=("A — confinement phase map (reduced-order reimplementation)",
+        subplot_titles=("A — confinement phase map",
                         "B — soft / fast-relaxing", "C — intermediate", "D — stiff / slow-relaxing"))
     fig.add_trace(go.Heatmap(z=C, x=stiff, y=ratio, colorscale="Viridis",
                              colorbar=dict(title="confinement<br>(h/h₀)", len=0.95)),
@@ -1536,9 +1536,9 @@ def v2_rheology_main_figure():
     fig = make_subplots(
         rows=1, cols=3, horizontal_spacing=0.09,
         subplot_titles=(
-            "A — σ(ε̇) at matched strain ε=0.12",
-            "B — effective viscosity η_eff = σ/ε̇",
-            "C — crosslinks / rod (paired connectivity)"))
+            "A — σ(ε̇) at matched strain",
+            "B — viscosity η_eff = σ/ε̇",
+            "C — crosslinks / rod"))
     fig.add_trace(go.Scatter(x=rates, y=sig_m, error_y=dict(type="data", array=sig_s),
                              mode="lines+markers", line=dict(color=BLUE, width=3),
                              marker=dict(size=10), showlegend=False), row=1, col=1)
@@ -1556,8 +1556,7 @@ def v2_rheology_main_figure():
     fig.update_yaxes(title_text="crosslinks / rod", row=1, col=3)
     fig.update_layout(
         template="plotly_white", height=520, margin=dict(t=92, b=118),
-        title="bm-v2 — growth rate vs apparent mechanical resistance, with the paired "
-              "connectivity readout (observed, bounded-preliminary; 3 seeds)")
+        title="bm-v2 — growth rate vs apparent mechanical resistance (observed, 3 seeds)")
     fig.add_annotation(
         x=0.5, y=-0.30, xref="paper", yref="paper", showarrow=False,
         font=dict(size=11, color="#777"), align="center",
@@ -2170,12 +2169,19 @@ def coupling_contract_figure():
     # ---- Band 1: the contract wiring (y 8.4–11.6) ----
     fig.add_annotation(x=0.2, y=11.5, text="<b>① The contract: express the BM↔epithelium edge as process-bigraph wiring</b>",
                        showarrow=False, xanchor="left", font=dict(size=13, color="#1f2328"))
-    _box(fig, 0.3, 9.5, 2.6, 10.7, "growth<br>(preferred schedule)", GREEN)
-    _box(fig, 4.3, 9.1, 7.1, 11.1, "vertex_model<br>(EulerSolver,<br>tyssue)", BLUE)
-    _box(fig, 8.7, 9.1, 11.7, 11.1, "bm process<br>ReducedBM | CollagenNetwork<br>(same port schema)", PURPLE)
-    _arrow(fig, 2.6, 10.1, 4.3, 10.1, "preferred area/vol")
-    _arrow(fig, 7.1, 10.5, 8.7, 10.5, "basal face areas (strain)")
-    _arrow(fig, 8.7, 9.7, 7.1, 9.7, "BM tension on basal faces (K, A_rest)")
+    _box(fig, 0.2, 9.5, 2.4, 10.7, "growth<br>(preferred schedule)", GREEN)
+    _box(fig, 3.9, 9.1, 6.6, 11.1, "vertex_model<br>(EulerSolver,<br>tyssue)", BLUE)
+    _box(fig, 8.5, 9.1, 11.8, 11.1, "bm process<br>ReducedBM | CollagenNetwork<br>(same port schema)", PURPLE)
+    # Short edge labels in the gaps (full port semantics are in the note below).
+    _arrow(fig, 2.4, 10.1, 3.9, 10.1, "")
+    _arrow(fig, 6.6, 10.5, 8.5, 10.5, "")
+    _arrow(fig, 8.5, 9.7, 6.6, 9.7, "")
+    fig.add_annotation(x=3.15, y=10.55, text="preferred<br>area/vol", showarrow=False,
+                       font=dict(size=9.5, color="#555"), align="center")
+    fig.add_annotation(x=7.55, y=10.95, text="basal areas →", showarrow=False,
+                       font=dict(size=9.5, color="#555"))
+    fig.add_annotation(x=7.55, y=9.25, text="← BM tension<br>(K, A_rest)", showarrow=False,
+                       font=dict(size=9.5, color="#555"), align="center")
     fig.add_annotation(
         x=0.2, y=8.6, xanchor="left", showarrow=False, font=dict(size=11, color="#444"),
         text=("BM = energy on each basal face  E_f = (K/2)(A_f − A_rest)² / A_rest,  tension T_f = K(A_f − A_rest)/A_rest clipped ≥ 0,  "
@@ -2244,10 +2250,16 @@ def reference_state_figure():
             opacity=0.5, showlegend=False, hoverinfo="skip"))
         sym = "diamond" if role == "reference" else "circle"
         sz = 16 if role == "reference" else 12
+        # Label points INWARD (left of right-half points, right of left-half) so a
+        # label never runs off the edge; the full state string stays in the hover.
+        import math as _m
+        inward_left = _m.log10(val) > 0.1          # right half of the log axis
+        pos = "middle left" if inward_left else "middle right"
+        txt = f"{label}  " if inward_left else f"  {label}"
         fig.add_trace(go.Scatter(
-            x=[val], y=[i], mode="markers+text", marker=dict(size=sz, color=c, symbol=sym,
-            line=dict(width=1.2, color="white")),
-            text=[f"  {label} — {state}"], textposition="middle right",
+            x=[val], y=[i], mode="markers+text", cliponaxis=False,
+            marker=dict(size=sz, color=c, symbol=sym, line=dict(width=1.2, color="white")),
+            text=[txt], textposition=pos,
             textfont=dict(size=11, color=("#1f2328" if role != "superseded" else "#8a7898")),
             showlegend=False,
             hovertemplate=f"{label}: {val:g} Pa ({state})<extra></extra>"))
@@ -2298,8 +2310,8 @@ def regime_placement_figure():
                        text="reference BM lands in this band<br>E≈6 Pa → 80 Pa (scale not pinned)",
                        showarrow=False, font=dict(size=11, color=RED),
                        bgcolor="rgba(255,255,255,0.75)")
-    fig.update_xaxes(type="log", title_text="BM stiffness relative to cell (Y_BM / cortical tension — UNPINNED)")
-    fig.update_yaxes(type="log", title_text="BM relaxation / doubling time (unit map also unpinned)")
+    fig.update_xaxes(type="log", title_text="BM stiffness relative to cell (Y_BM / cortical tension)")
+    fig.update_yaxes(type="log", title_text="BM relaxation / doubling time")
     _layout(fig, height=520)
     fig.update_layout(
         margin=dict(l=70, r=30, t=72, b=60),
