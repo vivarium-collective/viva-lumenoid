@@ -12,21 +12,21 @@ design_status: drafted
 confidence: Investigating
 
 review_actions:
-  - source: mogre-deep-review
-    date: "2026-11-09"
-    item: "run_sheet_growth_2d is 12 INDEPENDENT scalar ODEs (one Maxwell element per cell, dA_i/dt = mu[(A0 - A_i) - sigma_i]) with NO neighbour coupling, so R4 is an engine-and-wiring check, not a confinement/coupling result; the BM enters only through uncalibrated FaceContractility gains."
-    action: "Reframed the result / report verdict / caveat / findings wording to an engine-and-wiring check (R1xN with per-cell heterogeneity): stated the coupled-growth run is 12 independent per-cell scalar ODEs with no neighbour coupling, that height is V0/A by construction (so each height finding restates the area finding), that the free gap is largely mobility lag and the BM-caused confinement is stiff-minus-free, and that the BM enters via uncalibrated FaceContractility gains. Added a limitation capturing this."
-    status: reframed
-  - source: mogre-deep-review
-    date: "2026-11-09"
-    item: "A real coupled sheet needs neighbour coupling — continuous BM tension carried across cells via shared vertices / a basal-surface BM energy on the vertex-model sheet — which is a code change, not a YAML edit."
-    action: "Recorded followup_proposals entry fp-r4-neighbour-coupling-and-vertex-sheet (basal-surface BM energy with force continuity across shared vertices, run on the tyssue sheet) as the fix that would turn R4 into a real confinement result. Cannot implement code here."
-    status: deferred-followup
-  - source: inline-feedback
-    date: "2026-11-09"
-    item: "The R4 visualization overlaps; identify what mechanisms are needed in tyssue to couple basal stress to area and height (reduced prefered_area vs explicit vertex force), starting from a flat monolayer."
-    action: "Recorded followup_proposals entry fp-r4-tyssue-basal-coupling-mechanisms (enumerate the tyssue coupling options — reduced prefered_area vs explicit basal vertex force — on a flat monolayer, and fix the overlapping sheet layout). Cannot implement code/viz here."
-    status: deferred-followup
+- source: mogre-deep-review
+  date: "2026-11-09"
+  item: "run_sheet_growth_2d is 12 INDEPENDENT scalar ODEs (one Maxwell element per cell, dA_i/dt = mu[(A0 - A_i) - sigma_i]) with NO neighbour coupling, so R4 is an engine-and-wiring check, not a confinement/coupling result; the BM enters only through uncalibrated FaceContractility gains."
+  action: "Reframed the result / report verdict / caveat / findings wording to an engine-and-wiring check (R1xN with per-cell heterogeneity): stated the coupled-growth run is 12 independent per-cell scalar ODEs with no neighbour coupling, that height is V0/A by construction (so each height finding restates the area finding), that the free gap is largely mobility lag and the BM-caused confinement is stiff-minus-free, and that the BM enters via uncalibrated FaceContractility gains. Added a limitation capturing this."
+  status: reframed
+- source: mogre-deep-review
+  date: "2026-11-09"
+  item: "A real coupled sheet needs neighbour coupling — continuous BM tension carried across cells via shared vertices / a basal-surface BM energy on the vertex-model sheet — which is a code change, not a YAML edit."
+  action: "Recorded followup_proposals entry fp-r4-neighbour-coupling-and-vertex-sheet (basal-surface BM energy with force continuity across shared vertices, run on the tyssue sheet) as the fix that would turn R4 into a real confinement result. Cannot implement code here."
+  status: deferred-followup
+- source: inline-feedback
+  date: "2026-11-09"
+  item: "The R4 visualization overlaps; identify what mechanisms are needed in tyssue to couple basal stress to area and height (reduced prefered_area vs explicit vertex force), starting from a flat monolayer."
+  action: "Recorded followup_proposals entry fp-r4-tyssue-basal-coupling-mechanisms (enumerate the tyssue coupling options — reduced prefered_area vs explicit basal vertex force — on a flat monolayer, and fix the overlapping sheet layout). Cannot implement code/viz here."
+  status: deferred-followup
 
 claim: >
   The explicit 2D epithelial sheet relaxes under the Tyssue vertex model and yields finite,
@@ -61,10 +61,10 @@ result: >
 
 pipeline_gate:
   prerequisites:
-    - {study: bm-r1-published-tissue-baseline, condition: tests-passed, relation: builds-on}
-    - {study: bm-r2-collagen-network-rheology, condition: tests-passed, relation: builds-on}
+  - {study: bm-r1-published-tissue-baseline, condition: tests-passed, relation: builds-on}
+  - {study: bm-r2-collagen-network-rheology, condition: tests-passed, relation: builds-on}
   enables:
-    - bm-r5-explicit-3d-confinement
+  - bm-r5-explicit-3d-confinement
   proceed_condition: >
     The explicit 2D sheet resolves over the tyssue engine and relaxes to finite per-cell
     geometry, so it can serve as the planar spatial substrate the 3D monolayer (R5) builds on.
@@ -91,11 +91,11 @@ purpose:
     once the BM traction is coupled.
 
 key_assumptions:
-  - "The sheet is an explicit polygonal CrossSection: each cell-face carries its own basal area and an explicit cell-height degree of freedom, not an inferred volume/area prism relation."
-  - "The current composite is a homogeneous relaxation: no heterogeneous growth, cell division or cortical-tension variation is applied, so all cells relax to the same geometry."
-  - "Reduced units throughout (areas, heights, lengths are dimensionless); no calibration to microns is claimed."
-  - "The BM traction/area law (calibrated from R2) is NOT wired as an explicit coupling in this composite; the effective constitutive BM and an explicit LAMMPS BM are interchangeable alternatives, not additive forces."
-  - "Qualitative scope: this study establishes that the spatial sheet runs and yields finite geometry; the quantitative confinement comparison to R1 is a followup."
+- "The sheet is an explicit polygonal CrossSection: each cell-face carries its own basal area and an explicit cell-height degree of freedom, not an inferred volume/area prism relation."
+- "The current composite is a homogeneous relaxation: no heterogeneous growth, cell division or cortical-tension variation is applied, so all cells relax to the same geometry."
+- "Reduced units throughout (areas, heights, lengths are dimensionless); no calibration to microns is claimed."
+- "The BM traction/area law (calibrated from R2) is NOT wired as an explicit coupling in this composite; the effective constitutive BM and an explicit LAMMPS BM are interchangeable alternatives, not additive forces."
+- "Qualitative scope: this study establishes that the spatial sheet runs and yields finite geometry; the quantitative confinement comparison to R1 is a followup."
 
 model_assumptions_declaration:
   preferred_vs_realized: "explicit — a growing PREFERRED basal area A0(t) drives the cells; the REALIZED area emerges and lags the target under BM resistance (the confinement gap)"
@@ -118,23 +118,23 @@ meeting_alignment_2026_10_20:
     so the causal experiment runs in the reduced-order 2D cross-section and is labelled as such.
 
 parent_studies:
-  - {study: bm-r1-published-tissue-baseline, condition: tests-passed, relation: builds-on}
-  - {study: bm-r2-collagen-network-rheology, condition: tests-passed, relation: builds-on}
+- {study: bm-r1-published-tissue-baseline, condition: tests-passed, relation: builds-on}
+- {study: bm-r2-collagen-network-rheology, condition: tests-passed, relation: builds-on}
 
 cites: [barrientos2026cellshape]
 
 baseline:
-  - name: bm-r4-coupled-2d-epithelium
-    composite: viva_lumenoid.composites.tyssue_2d_sheet
-    params: {}
-    note: >
-      A 2D epithelial sheet with explicit cell height, relaxed against a
-      basement-membrane area law over the vivarium-tyssue vertex-model engine. It
-      is the spatial counterpart of the homogeneous tissue model, so the
-      confinement response can be read cell by cell rather than for one average
-      cell. The current build relaxes a homogeneous sheet to finite per-cell
-      geometry; heterogeneous growth, division and the explicit BM traction are
-      the next additions.
+- name: bm-r4-coupled-2d-epithelium
+  composite: viva_lumenoid.composites.tyssue_2d_sheet
+  params: {}
+  note: >
+    A 2D epithelial sheet with explicit cell height, relaxed against a
+    basement-membrane area law over the vivarium-tyssue vertex-model engine. It
+    is the spatial counterpart of the homogeneous tissue model, so the
+    confinement response can be read cell by cell rather than for one average
+    cell. The current build relaxes a homogeneous sheet to finite per-cell
+    geometry; heterogeneous growth, division and the explicit BM traction are
+    the next additions.
 
 conditions:
   baseline:
@@ -159,257 +159,263 @@ falsifiability: >
   tests/test_tyssue_composites.py (test_tyssue_2d_sheet_runs) would fail in that case.
 
 simulation_set:
-  - name: r4-2d-sheet-relaxation
-    status: completed
-    base_model: viva_lumenoid.composites.tyssue_2d_sheet
-    fixed: {dt: 0.01, steps: 5}
-    metrics:
-      n_faces: 12
-      n_cells: 12
-      n_vertices: 24
-      face_area_min: 5.0
-      face_area_max: 5.0
-      face_height_min: 1.9319
-      face_height_max: 1.9319
-      all_face_areas_finite: true
-      geometry_finite_after_5_steps: true
-    pass_fail_tests:
-      - "sheet-yields-finite-areas: pass"
-      - "sheet-steps-stably: pass"
-  - name: r4-coupled-growth
-    status: completed
-    base_model: viva_lumenoid.growth_runs.run_sheet_growth_2d
-    provenance: {kind: simulation}
-    fixed: {mode: exponential, rate: 0.04, steps: 60, dt: 0.2}
-    axes: {bm_stiffness: [0.0, 1.0, 3.0, 5.0], bm_relaxation: [10.0, 50.0], stiffness_gradient: [0.0, 1.6]}
-    metrics:
-      free_gap: 0.116
-      stiff_gap: 0.317
-      free_height: 0.700
-      stiff_height: 0.905
-      stiff_bm_stress: 0.471
-      no_growth_area_change: 0.0
-      height_gradient_soft_end: 0.761
-      height_gradient_stiff_end: 0.910
-    pass_fail_tests:
-      - "growth-realized-lags-preferred: pass"
-      - "stiff-bm-confines-and-heightens: pass"
-      - "no-growth-no-bm-strain: pass"
-      - "stiffness-gradient-makes-height-gradient: pass"
+- name: r4-2d-sheet-relaxation
+  status: completed
+  base_model: viva_lumenoid.composites.tyssue_2d_sheet
+  fixed: {dt: 0.01, steps: 5}
+  metrics:
+    n_faces: 12
+    n_cells: 12
+    n_vertices: 24
+    face_area_min: 5.0
+    face_area_max: 5.0
+    face_height_min: 1.9319
+    face_height_max: 1.9319
+    all_face_areas_finite: true
+    geometry_finite_after_5_steps: true
+  pass_fail_tests:
+  - "sheet-yields-finite-areas: pass"
+  - "sheet-steps-stably: pass"
+- name: r4-coupled-growth
+  status: completed
+  base_model: viva_lumenoid.growth_runs.run_sheet_growth_2d
+  provenance: {kind: simulation}
+  fixed: {mode: exponential, rate: 0.04, steps: 60, dt: 0.2}
+  axes: {bm_stiffness: [0.0, 1.0, 3.0, 5.0], bm_relaxation: [10.0, 50.0], stiffness_gradient: [0.0, 1.6]}
+  metrics:
+    free_gap: 0.116
+    stiff_gap: 0.317
+    free_height: 0.700
+    stiff_height: 0.905
+    stiff_bm_stress: 0.471
+    no_growth_area_change: 0.0
+    height_gradient_soft_end: 0.761
+    height_gradient_stiff_end: 0.910
+  pass_fail_tests:
+  - "growth-realized-lags-preferred: pass"
+  - "stiff-bm-confines-and-heightens: pass"
+  - "no-growth-no-bm-strain: pass"
+  - "stiffness-gradient-makes-height-gradient: pass"
 
 runs:
-  - name: r4-2d-sheet-relaxation
-    base_model: viva_lumenoid.composites.tyssue_2d_sheet
-    status: completed
-    outcomes:
-      sheet-yields-finite-areas:
-        result: PASS
-        observed: "all 12 cell-faces relax to basal area 5.0 and explicit height 1.9319; every area and height finite and > 0"
-      sheet-steps-stably:
-        result: PASS
-        observed: "5 Euler steps (dt 0.01) keep per-cell area and height finite and positive -- no NaN, no blow-up"
-  - name: r4-coupled-growth
-    base_model: viva_lumenoid.growth_runs.run_sheet_growth_2d
-    status: completed
-    provenance: {kind: simulation}
-    outcomes:
-      growth-realized-lags-preferred:
-        result: PASS
-        observed: "under a stiff/slow BM the realized mean area (1.105) lags the preferred target (1.616) by a 0.317 gap; free-BM gap is 0.116 — the realized area is not hard-coded to the target"
-      stiff-bm-confines-and-heightens:
-        result: PASS
-        observed: "stiff/slow BM confines spreading (realized area 1.105 vs free 1.428) and raises reconstructed height (0.905 vs 0.700); BM carries reaction stress 0.471"
-      no-growth-no-bm-strain:
-        result: PASS
-        observed: "with no preferred growth the realized area stays 1.000 and BM reaction stress stays 0.0 — no growth-driven strain"
-      stiffness-gradient-makes-height-gradient:
-        result: PASS
-        observed: "a BM-stiffness gradient across the row gives a spatial reconstructed-height gradient: 0.761 (soft end) → 0.910 (stiff end)"
+- name: r4-2d-sheet-relaxation
+  base_model: viva_lumenoid.composites.tyssue_2d_sheet
+  status: completed
+  outcomes:
+    sheet-yields-finite-areas:
+      result: PASS
+      observed: "all 12 cell-faces relax to basal area 5.0 and explicit height 1.9319; every area and height finite and > 0"
+    sheet-steps-stably:
+      result: PASS
+      observed: "5 Euler steps (dt 0.01) keep per-cell area and height finite and positive -- no NaN, no blow-up"
+- name: r4-coupled-growth
+  base_model: viva_lumenoid.growth_runs.run_sheet_growth_2d
+  status: completed
+  provenance: {kind: simulation}
+  outcomes:
+    growth-realized-lags-preferred:
+      result: PASS
+      observed: "under a stiff/slow BM the realized mean area (1.105) lags the preferred target (1.616) by a 0.317 gap; free-BM gap is 0.116 — the realized area is not hard-coded to the target"
+    stiff-bm-confines-and-heightens:
+      result: PASS
+      observed: "stiff/slow BM confines spreading (realized area 1.105 vs free 1.428) and raises reconstructed height (0.905 vs 0.700); BM carries reaction stress 0.471"
+    no-growth-no-bm-strain:
+      result: PASS
+      observed: "with no preferred growth the realized area stays 1.000 and BM reaction stress stays 0.0 — no growth-driven strain"
+    stiffness-gradient-makes-height-gradient:
+      result: PASS
+      observed: "a BM-stiffness gradient across the row gives a spatial reconstructed-height gradient: 0.761 (soft end) → 0.910 (stiff end)"
 
 readouts:
-  - name: face_area
-    description: Per-cell basal area read off face_df (faces = cells in the 2D sheet); the spatial confinement readout.
-    store_path: "face_df.area"
-    units: reduced area
-    status: primary
-  - name: face_height
-    description: Explicit per-cell height degree of freedom read off face_df; the spatial counterpart of the R1 prism height.
-    store_path: "face_df.height"
-    units: reduced length
-    status: measured
-  - name: mesh_counts
-    description: Mesh topology (Nf faces = cells, Nv vertices) confirming the sheet loaded and resolved.
-    store_path: "eptm.Nf"
-    units: count
-    status: measured
+- name: face_area
+  description: Per-cell basal area read off face_df (faces = cells in the 2D sheet); the spatial confinement readout.
+  store_path: "face_df.area"
+  units: reduced area
+  status: primary
+- name: face_height
+  description: Explicit per-cell height degree of freedom read off face_df; the spatial counterpart of the R1 prism height.
+  store_path: "face_df.height"
+  units: reduced length
+  status: measured
+- name: mesh_counts
+  description: Mesh topology (Nf faces = cells, Nv vertices) confirming the sheet loaded and resolved.
+  store_path: "eptm.Nf"
+  units: count
+  status: measured
 
 behavior_tests:
-  - name: sheet-yields-finite-areas
-    classification: primary
-    description: >
-      After relaxation, every cell-face in the 2D sheet carries a finite, positive basal area
-      (uniform 5.0 in this homogeneous configuration).
-    measure: {kind: reduce, field: face_area, reduce: all_finite_and_positive}
-    pass_if: {op: all_finite_positive, note: "all 12 face areas finite and > 0; min == max == 5.0"}
-    units: reduced area
-    requires_simulation: r4-2d-sheet-relaxation
+- name: sheet-yields-finite-areas
+  classification: primary
+  description: >
+    After relaxation, every cell-face in the 2D sheet carries a finite, positive basal area
+    (uniform 5.0 in this homogeneous configuration).
+  measure: {kind: reduce, field: face_area, reduce: all_finite_and_positive}
+  pass_if: {op: all_finite_positive, note: "all 12 face areas finite and > 0; min == max == 5.0"}
+  units: reduced area
+  requires_simulation: r4-2d-sheet-relaxation
+  cites: [barrientos2026cellshape]
+  calibration_anchor:
+    observed_value: 5.0
+    literature_target: "finite well-posed per-cell basal area (qualitative; no micron calibration)"
+    resolution: concept
     cites: [barrientos2026cellshape]
-    calibration_anchor:
-      observed_value: 5.0
-      literature_target: "finite well-posed per-cell basal area (qualitative; no micron calibration)"
-      resolution: concept
-      cites: [barrientos2026cellshape]
-  - name: sheet-steps-stably
-    classification: primary
-    description: >
-      Stepping the EulerSolver several steps keeps per-cell areas and explicit heights finite
-      (no NaN, no blow-up).
-    measure: {kind: reduce, field: face_height, reduce: finite_over_steps}
-    pass_if: {op: finite_no_blowup, note: "per-cell area and height finite and positive after 5 Euler steps (dt 0.01)"}
-    units: reduced length
-    requires_simulation: r4-2d-sheet-relaxation
-  - name: growth-realized-lags-preferred
-    classification: primary
-    description: >
-      Under a stiff/slow BM the realized mean basal area lags the growing preferred target
-      (the realized area emerges from the mechanics and is NOT hard-coded to the target).
-    measure: {kind: scalar, field: stiff_gap}
-    pass_if: {op: ">", value: 0.05, note: "stiff-BM preferred-vs-realized gap 0.317 > free-BM gap 0.116 > 0"}
-    units: fraction
-    requires_simulation: r4-coupled-growth
-    cites: [barrientos2026cellshape]
-  - name: stiff-bm-confines-and-heightens
-    classification: primary
-    description: >
-      A stiff/slow BM confines basal spreading (smaller realized area) and raises the
-      reconstructed cell height relative to the free (no-BM) control.
-    measure: {kind: scalar, field: stiff_height}
-    pass_if: {op: ">", value: 0.0, note: "stiff height 0.905 > free height 0.700; stiff area 1.105 < free area 1.428"}
-    units: reduced length
-    requires_simulation: r4-coupled-growth
-  - name: no-growth-no-bm-strain
-    classification: primary
-    description: >
-      With no preferred growth, the realized area stays at its initial value and the BM
-      carries no reaction stress (zero preferred growth → no growth-driven BM strain).
-    measure: {kind: scalar, field: no_growth_area_change}
-    pass_if: {op: "<", value: 0.001, note: "realized area 1.000, BM stress 0.0 under mode=none"}
-    units: fraction
-    requires_simulation: r4-coupled-growth
-  - name: stiffness-gradient-makes-height-gradient
-    classification: secondary
-    description: >
-      A BM-stiffness gradient across the sheet produces a spatial reconstructed-height
-      gradient (stiffer cells are more confined and taller).
-    measure: {kind: scalar, field: height_gradient_stiff_end}
-    pass_if: {op: ">", value: 0.0, note: "height 0.910 at the stiff end vs 0.761 at the soft end"}
-    units: reduced length
-    requires_simulation: r4-coupled-growth
+- name: sheet-steps-stably
+  classification: primary
+  description: >
+    Stepping the EulerSolver several steps keeps per-cell areas and explicit heights finite
+    (no NaN, no blow-up).
+  measure: {kind: reduce, field: face_height, reduce: finite_over_steps}
+  pass_if: {op: finite_no_blowup, note: "per-cell area and height finite and positive after 5 Euler steps (dt 0.01)"}
+  units: reduced length
+  requires_simulation: r4-2d-sheet-relaxation
+- name: growth-realized-lags-preferred
+  classification: primary
+  description: >
+    Under a stiff/slow BM the realized mean basal area lags the growing preferred target
+    (the realized area emerges from the mechanics and is NOT hard-coded to the target).
+  measure: {kind: scalar, field: stiff_gap}
+  pass_if: {op: ">", value: 0.05, note: "stiff-BM preferred-vs-realized gap 0.317 > free-BM gap 0.116 > 0"}
+  units: fraction
+  requires_simulation: r4-coupled-growth
+  cites: [barrientos2026cellshape]
+- name: stiff-bm-confines-and-heightens
+  classification: primary
+  description: >
+    A stiff/slow BM confines basal spreading (smaller realized area) and raises the
+    reconstructed cell height relative to the free (no-BM) control.
+  measure: {kind: scalar, field: stiff_height}
+  pass_if: {op: ">", value: 0.0, note: "stiff height 0.905 > free height 0.700; stiff area 1.105 < free area 1.428"}
+  units: reduced length
+  requires_simulation: r4-coupled-growth
+- name: no-growth-no-bm-strain
+  classification: primary
+  description: >
+    With no preferred growth, the realized area stays at its initial value and the BM
+    carries no reaction stress (zero preferred growth → no growth-driven BM strain).
+  measure: {kind: scalar, field: no_growth_area_change}
+  pass_if: {op: "<", value: 0.001, note: "realized area 1.000, BM stress 0.0 under mode=none"}
+  units: fraction
+  requires_simulation: r4-coupled-growth
+- name: stiffness-gradient-makes-height-gradient
+  classification: secondary
+  description: >
+    A BM-stiffness gradient across the sheet produces a spatial reconstructed-height
+    gradient (stiffer cells are more confined and taller).
+  measure: {kind: scalar, field: height_gradient_stiff_end}
+  pass_if: {op: ">", value: 0.0, note: "height 0.910 at the stiff end vs 0.761 at the soft end"}
+  units: reduced length
+  requires_simulation: r4-coupled-growth
 
 conclusion_logic:
   if_primary_tests_pass:
     implementation_status: "The explicit 2D sheet resolves over the tyssue engine and relaxes to finite per-cell geometry."
     biological_validation: "Qualitative only: the sheet yields well-posed per-cell areas and heights; the quantitative confinement match to R1 is not yet evaluated (BM traction not coupled)."
     pipeline_unblocks:
-      - "R5 explicit 3D monolayer -- this planar sheet is its spatial substrate."
+    - "R5 explicit 3D monolayer -- this planar sheet is its spatial substrate."
   if_primary_tests_fail:
     diagnose:
-      - "Sheet fails to resolve -- check the numpy-2.x 2D-cross shim in tyssue_coupling and the CrossSectionGeometry merge."
-      - "Geometry non-finite after stepping -- lower dt or check the EulerSolver gradient terms."
+    - "Sheet fails to resolve -- check the numpy-2.x 2D-cross shim in tyssue_coupling and the CrossSectionGeometry merge."
+    - "Geometry non-finite after stepping -- lower dt or check the EulerSolver gradient terms."
     block_downstream: "Do not advance R5 until the planar sheet resolves and relaxes to finite geometry."
 
 limitations:
-  - "Qualitative spatial-engine check only: the study confirms the sheet runs and yields finite per-cell geometry, not that it reproduces R1's confinement regimes."
-  - "Homogeneous configuration: no heterogeneous growth, cell division or cortical-tension variation is applied, so all 12 cells relax to the same area (5.0) and height (1.93) -- the spatial heterogeneity the question asks about is not exercised yet."
-  - "The BM traction/area law (from R2) is not wired as an explicit coupling; the homogeneous-vs-spatial confinement comparison to R1 is therefore a followup, not a result."
-  - "ENGINE-AND-WIRING CHECK, not a confinement result (2026-11-09 review): the coupled-growth run (run_sheet_growth_2d) is 12 INDEPENDENT per-cell scalar ODEs (one Maxwell element per cell, dA_i/dt = mu[(A0 - A_i) - sigma_i]) with NO neighbour coupling, so it is R1xN with per-cell heterogeneity, not a coupled sheet. Consequences: a continuous BM would carry tension across cells and smooth the height gradient; height is V0/A by construction so each height finding restates the area finding; the free-BM gap (0.116) is largely mobility lag (mu=0.3) and the BM-caused confinement is the stiff-minus-free difference, not the raw gap; and the BM enters only through uncalibrated FaceContractility gains (strain_gain 20, tension_gain 0.02, no sign/units/work check)."
-  - "Reduced units; single deterministic configuration (no parameter sweep, n_replicates = 1) -- replication across BM stiffness / growth rate is a gap."
+- "Qualitative spatial-engine check only: the study confirms the sheet runs and yields finite per-cell geometry, not that it reproduces R1's confinement regimes."
+- "Homogeneous configuration: no heterogeneous growth, cell division or cortical-tension variation is applied, so all 12 cells relax to the same area (5.0) and height (1.93) -- the spatial heterogeneity the question asks about is not exercised yet."
+- "The BM traction/area law (from R2) is not wired as an explicit coupling; the homogeneous-vs-spatial confinement comparison to R1 is therefore a followup, not a result."
+- "ENGINE-AND-WIRING CHECK, not a confinement result (2026-11-09 review): the coupled-growth run (run_sheet_growth_2d) is 12 INDEPENDENT per-cell scalar ODEs (one Maxwell element per cell, dA_i/dt = mu[(A0 - A_i) - sigma_i]) with NO neighbour coupling, so it is R1xN with per-cell heterogeneity, not a coupled sheet. Consequences: a continuous BM would carry tension across cells and smooth the height gradient; height is V0/A by construction so each height finding restates the area finding; the free-BM gap (0.116) is largely mobility lag (mu=0.3) and the BM-caused confinement is the stiff-minus-free difference, not the raw gap; and the BM enters only through uncalibrated FaceContractility gains (strain_gain 20, tension_gain 0.02, no sign/units/work check)."
+- "Reduced units; single deterministic configuration (no parameter sweep, n_replicates = 1) -- replication across BM stiffness / growth rate is a gap."
 
 visualizations:
-  - name: r4_growth_coupling
-    address: "html:r4_growth_coupling.html"
-    config:
-      title: "2D coupled growth: preferred area → emergent realized area + height"
-      evidence_status: observed
-      tier: main
-      caption: >
-        How to read: In panel A the gap between the dashed preferred-area line and the solid realized-area curves is the confinement; a stiffer BM widens the gap and, in B, makes the cell taller — panels C and D show the BM reaction stress and the resulting spatial cell-height gradient across a stiffness row.
-        MAIN (evidence: observed) — the agreed 2D coupled-growth experiment (2026-10-20
-        review). A PREFERRED (target) basal area A0(t) grows (proliferation OFF — growth,
-        not cell division); the REALIZED mean area A(t) emerges from the mechanical balance
-        and LAGS the target because a viscoelastic BM resists spreading — that gap IS the
-        confinement, and it is NOT hard-coded to the target. (A) target vs realized area for
-        a free (no-BM) and a stiff/slow BM; (B) reconstructed cell height h = V0/A (a stiff
-        BM confines spreading and drives height up); (C) BM reaction stress across
-        stiffness/relaxation regimes; (D) a BM-stiffness gradient across the row produces a
-        spatial cell-height gradient. Reduced-order 2D CROSS-SECTION of prism cells (the
-        effective-BM realization); height is reconstructed under a declared fixed-volume
-        assumption. Reduced units. NOTE: the resolved vertex-model sheet (tyssue_2d_sheet /
-        CrossSectionGeometry) is a STATIC mesh at the engine level — its area does not
-        respond to prefered_area — so the causal experiment is run in this reduced-order
-        cross-section and the resolved-sheet version remains a named engine limitation.
-  - name: coupled_2d_epithelium_movie
-    address: "gif:bm-r4-coupled-2d-epithelium.gif"
-    config:
-      title: "R4 — 2D epithelial sheet relaxing (movie)"
-      evidence_status: observed
-      tier: supplement
-      caption: >
-        Animated movie of the 12-cell 2D Tyssue sheet relaxing to its finite geometry (edges in blue). Verifies mesh construction; the planar z=0 geometry does not compute a real 3D height (see the quantitative panel + the BM-coupling gap).
-  - name: r4_confinement
-    address: "html:r4_confinement.html"
-    config:
-      title: "2D sheet static substrate vs R1 confinement benchmark (demoted)"
-      evidence_status: observed
-      tier: supplement
-      caption: >
-        SUPPLEMENT (demoted 2026-10-20) — superseded as the main by the coupled-growth
-        figure above. Documents that the resolved vertex-model tyssue_2d_sheet is a static
-        substrate (all 12 cells relax to the identical basal area 5.0, max vertex
-        displacement ~0) against the R1 confinement benchmark — the engine limitation that
-        motivates running the causal experiment in the reduced-order cross-section.
-        Original caption follows.
-        MAIN (evidence: observed) — NOT a reproduction. Left: the real tyssue_2d_sheet
-        readout over the vivarium-tyssue EulerSolver (dt 0.01) — mean per-cell basal area
-        (fold-change vs step 0) and the stored CrossSection prism-height degree of freedom.
-        Both are flat: all 12 cells relax to the identical basal area (5.0 reduced) and
-        prism-height DOF (1.9319 reduced), and the max vertex displacement over the run is
-        ~0, so the sheet is a pre-equilibrated static mesh with no spatial heterogeneity.
-        Right: the R1 reduced-order prism benchmark (real TissuePrismProcess runs) — the
-        confinement h/h0 trajectory for three BM regimes (soft/fast 0.998->0.38,
-        intermediate 0.998->0.43, stiff/slow 0.998->0.70) — the confinement response the
-        sheet does NOT reproduce. Axes dimensionless (reduced units); single deterministic
-        run (no stochasticity). GAP (named): tyssue_2d_sheet exposes only line_tension +
-        prefered_area — NO BM stiffness / relaxation / traction coupling — so the
-        BM-dependent confinement regimes of Barrientos Fig 1 cannot be produced here; the
-        right panel is the R1 benchmark, not the tyssue sheet.
-  - name: r4_sheet
-    address: "html:r4_sheet.html"
-    config:
-      title: "12-cell planar Tyssue mesh thumbnail (z=0)"
-      evidence_status: engineered-diagnostic
-      tier: supplement
-      caption: >
-        SUPPLEMENT (evidence: engineered-diagnostic) — a 12-cell planar Tyssue geometry
-        resolves and relaxes on the merged CrossSectionGeometry; this verifies mesh
-        construction but NOT BM-dependent epithelial confinement. The geometry is planar
-        (z=0) and does NOT compute a real 3D cell height: the per-face height column is a
-        stored CrossSection prism degree of freedom, not a resolved apical-basal distance.
-        Reduced units; architecture/methods thumbnail only.
-  - name: r4_bm_hypothesis
-    address: "html:r4_bm_hypothesis.html"
-    config:
-      title: "BM-stiffness-dependent confinement (hypothesis)"
-      evidence_status: hypothesis
-      tier: supplement
-      caption: >
-        SUPPLEMENT (evidence: hypothesis) — the BM-stiffness-dependent confinement test
-        the figure review asked for (matched low/high-BM-relaxation cell-sheet snapshots
-        and a basal-area-vs-time panel stratified by BM stiffness, with the R1 benchmark
-        overlaid). NOT producible from tyssue_2d_sheet: its parameters are line_tension +
-        prefered_area, and BM stiffness / relaxation / traction coupling is not wired into
-        the composite. Marked hypothesis until that coupling exists.
+- name: r4_growth_coupling
+  address: "html:r4_growth_coupling.html"
+  config:
+    title: "2D coupled growth: preferred area → emergent realized area + height"
+    evidence_status: observed
+    tier: main
+    caption: >
+      How to read: In panel A the gap between the dashed preferred-area line and the solid realized-area curves is the confinement; a stiffer BM widens the gap and, in B, makes the cell taller — panels C and D show the BM reaction stress and the resulting spatial cell-height gradient across a stiffness row.
+      MAIN (evidence: observed) — the agreed 2D coupled-growth experiment (2026-10-20
+      review). A PREFERRED (target) basal area A0(t) grows (proliferation OFF — growth,
+      not cell division); the REALIZED mean area A(t) emerges from the mechanical balance
+      and LAGS the target because a viscoelastic BM resists spreading — that gap IS the
+      confinement, and it is NOT hard-coded to the target. (A) target vs realized area for
+      a free (no-BM) and a stiff/slow BM; (B) reconstructed cell height h = V0/A (a stiff
+      BM confines spreading and drives height up); (C) BM reaction stress across
+      stiffness/relaxation regimes; (D) a BM-stiffness gradient across the row produces a
+      spatial cell-height gradient. Reduced-order 2D CROSS-SECTION of prism cells (the
+      effective-BM realization); height is reconstructed under a declared fixed-volume
+      assumption. Reduced units. NOTE: the resolved vertex-model sheet (tyssue_2d_sheet /
+      CrossSectionGeometry) is a STATIC mesh at the engine level — its area does not
+      respond to prefered_area — so the causal experiment is run in this reduced-order
+      cross-section and the resolved-sheet version remains a named engine limitation.
+- name: coupled_2d_epithelium_movie
+  address: "gif:bm-r4-coupled-2d-epithelium.gif"
+  config:
+    title: "R4 — 2D epithelial sheet relaxing (movie)"
+    evidence_status: observed
+    tier: supplement
+    caption: >
+      Animated movie of the 12-cell 2D Tyssue sheet relaxing to its finite geometry (edges in blue). Verifies mesh construction; the planar z=0 geometry does not compute a real 3D height (see the quantitative panel + the BM-coupling gap).
+- name: r4_confinement
+  address: "html:r4_confinement.html"
+  config:
+    title: "2D sheet static substrate vs R1 confinement benchmark (demoted)"
+    evidence_status: observed
+    tier: supplement
+    caption: >
+      SUPPLEMENT (demoted 2026-10-20) — superseded as the main by the coupled-growth
+      figure above. Documents that the resolved vertex-model tyssue_2d_sheet is a static
+      substrate (all 12 cells relax to the identical basal area 5.0, max vertex
+      displacement ~0) against the R1 confinement benchmark — the engine limitation that
+      motivates running the causal experiment in the reduced-order cross-section.
+      Original caption follows.
+      MAIN (evidence: observed) — NOT a reproduction. Left: the real tyssue_2d_sheet
+      readout over the vivarium-tyssue EulerSolver (dt 0.01) — mean per-cell basal area
+      (fold-change vs step 0) and the stored CrossSection prism-height degree of freedom.
+      Both are flat: all 12 cells relax to the identical basal area (5.0 reduced) and
+      prism-height DOF (1.9319 reduced), and the max vertex displacement over the run is
+      ~0, so the sheet is a pre-equilibrated static mesh with no spatial heterogeneity.
+      Right: the R1 reduced-order prism benchmark (real TissuePrismProcess runs) — the
+      confinement h/h0 trajectory for three BM regimes (soft/fast 0.998->0.38,
+      intermediate 0.998->0.43, stiff/slow 0.998->0.70) — the confinement response the
+      sheet does NOT reproduce. Axes dimensionless (reduced units); single deterministic
+      run (no stochasticity). GAP (named): tyssue_2d_sheet exposes only line_tension +
+      prefered_area — NO BM stiffness / relaxation / traction coupling — so the
+      BM-dependent confinement regimes of Barrientos Fig 1 cannot be produced here; the
+      right panel is the R1 benchmark, not the tyssue sheet.
+- name: r4_sheet
+  address: "html:r4_sheet.html"
+  config:
+    title: "12-cell planar Tyssue mesh thumbnail (z=0)"
+    evidence_status: engineered-diagnostic
+    tier: supplement
+    caption: >
+      SUPPLEMENT (evidence: engineered-diagnostic) — a 12-cell planar Tyssue geometry
+      resolves and relaxes on the merged CrossSectionGeometry; this verifies mesh
+      construction but NOT BM-dependent epithelial confinement. The geometry is planar
+      (z=0) and does NOT compute a real 3D cell height: the per-face height column is a
+      stored CrossSection prism degree of freedom, not a resolved apical-basal distance.
+      Reduced units; architecture/methods thumbnail only.
+- name: r4_bm_hypothesis
+  address: "html:r4_bm_hypothesis.html"
+  config:
+    title: "BM-stiffness-dependent confinement (hypothesis)"
+    evidence_status: hypothesis
+    tier: supplement
+    caption: >
+      SUPPLEMENT (evidence: hypothesis) — the BM-stiffness-dependent confinement test
+      the figure review asked for (matched low/high-BM-relaxation cell-sheet snapshots
+      and a basal-area-vs-time panel stratified by BM stiffness, with the R1 benchmark
+      overlaid). NOT producible from tyssue_2d_sheet: its parameters are line_tension +
+      prefered_area, and BM stiffness / relaxation / traction coupling is not wired into
+      the composite. Marked hypothesis until that coupling exists.
 
+- name: r4_coupling_contract
+  address: html:r4_coupling_contract.html
+  config:
+    title: The coupling contract — express the BM↔epithelium edge as wiring (R4 is not wired this way yet)
+    caption: >
+      R4 today runs 12 independent per-cell Maxwell ODEs with no neighbour coupling, so it is an engine-and-wiring check, not a confinement result. This figure shows the contract that would make it one: the BM as a basal-surface energy on the shared-vertex sheet, with the no-BM/one-way/two-way/uncoupled controls expressed as wiring edges.
 report:
   title: "R4 -- 2D coupled growth: preferred area drives emergent realized area + height"
   verdict: >
@@ -443,169 +449,169 @@ report:
     stiff-minus-free, not the raw preferred-vs-realized gap.
 
 findings:
-  - id: F1-2d-sheet-yields-finite-geometry
-    kind: computational
-    status: confirms
-    tier: observation
-    mechanism_origin: engineered
-    statement: >
-      The explicit 2D epithelial sheet resolves and relaxes over the tyssue engine to finite,
-      uniform per-cell geometry: 12 cell-faces (faces = cells) and 24 vertices on a flat z=0
-      plane, every cell-face at basal area 5.0 and explicit height 1.9319, all finite.
-    evidence:
-      from_run: r4-2d-sheet-relaxation
-      from_test: sheet-yields-finite-areas
-      observed: "Nf=12, Nv=24; face area 5.0 (uniform), face height 1.9319 (uniform); all finite"
-    explanation: >
-      Each cell-face carries an explicit basal area and height degree of freedom; with no
-      heterogeneous growth or BM traction applied, the vertex model relaxes every cell to the
-      same well-posed geometry.
-    next_action: "use as the planar spatial substrate for the R5 3D monolayer"
-    next_action_type: escalate_model
-    provenance:
-      run_ids: [r4-2d-sheet-relaxation]
-  - id: F2-steps-stably
-    kind: computational
-    status: confirms
-    tier: observation
-    mechanism_origin: engineered
-    statement: >
-      Stepping the EulerSolver five times (dt 0.01) keeps per-cell area and height finite and
-      positive, with no NaN or blow-up -- the spatial sheet is numerically stable over short
-      integration.
-    evidence:
-      from_run: r4-2d-sheet-relaxation
-      from_test: sheet-steps-stably
-      observed: "per-cell area and height finite and > 0 after 5 Euler steps"
-    provenance:
-      run_ids: [r4-2d-sheet-relaxation]
-  - id: F3-confinement-comparison-not-yet-wired
-    kind: methodological
-    status: partial
-    tier: observation
-    statement: >
-      The quantitative spatial-vs-homogeneous confinement comparison to R1 is NOT yet a result:
-      the sheet is homogeneous (uniform cells) and the BM traction/area law is not wired as an
-      explicit coupling, so only well-posed geometry -- not a reproduced regime -- is established.
-    evidence:
-      from_run: r4-2d-sheet-relaxation
-      from_test: sheet-yields-finite-areas
-      observed: "all cells identical (area 5.0, height 1.93) -- no heterogeneity or BM traction to compare against R1"
-    next_action: "wire the R2-calibrated BM traction and add heterogeneous growth/division, then compare the confinement response to R1"
-    next_action_type: refine_representation
-    provenance:
-      run_ids: [r4-2d-sheet-relaxation]
-  - id: F4-preferred-growth-drives-emergent-realized-area
-    kind: computational
-    status: confirms
-    tier: mechanism
-    mechanism_origin: emergent
-    statement: >
-      A ramped PREFERRED basal area (division OFF) drives a growing REALIZED area that emerges
-      from the mechanical balance and LAGS the target under BM resistance: at a stiff/slow BM
-      the realized area (1.105) lags the preferred target (1.616) by a 0.317 gap, vs a 0.116
-      gap with no BM. The realized area is not hard-coded to the target — the lag is the
-      confinement.
-    evidence:
-      from_run: r4-coupled-growth
-      from_test: growth-realized-lags-preferred
-      observed: "stiff-BM gap 0.317 > free-BM gap 0.116; realized 1.105 < preferred 1.616; zero-growth control: area 1.000, stress 0.0"
-    explanation: >
-      The preferred area sets the FaceAreaElasticity target; the realized area relaxes toward
-      it but a viscoelastic BM reaction (stiffness + relaxation) opposes spreading, so the
-      realized geometry lags — the two-way cell<->BM feedback the 2026-10-20 review asked for.
-      ENGINE-AND-WIRING CAVEAT (2026-11-09 review): this is a per-cell scalar Maxwell ODE with
-      no neighbour coupling, so the "lag" mixes BM reaction with pure mobility lag (mu=0.3); the
-      BM-caused part is the stiff-minus-free difference, not the raw 0.317 gap, and the BM enters
-      only through uncalibrated FaceContractility gains.
-    next_action: "promote to the resolved vertex-model sheet once a deformable 2D geometry is available; cross-check against R1"
-    next_action_type: escalate_model
-    provenance:
-      run_ids: [r4-coupled-growth]
-  - id: F5-stiff-bm-confines-and-raises-height
-    kind: computational
-    status: confirms
-    tier: interpretation
-    mechanism_origin: emergent
-    statement: >
-      A stiff/slow BM confines basal spreading (realized area 1.105 vs 1.428 free) and raises
-      the reconstructed cell height (0.905 vs 0.700 free) — the confinement → taller-cell
-      response, here in a reduced-order 2D cross-section under a fixed-volume height
-      reconstruction.
-    evidence:
-      from_run: r4-coupled-growth
-      from_test: stiff-bm-confines-and-heightens
-      observed: "stiff height 0.905 > free 0.700; stiff area 1.105 < free 1.428; BM stress 0.471"
-    expected:
-      cites: [barrientos2026cellshape]
-      summary: "qualitatively consistent with the paper's confinement direction (stiffer/slower BM → taller cells); relative, not an absolute height prediction"
-    next_action: "calibrate against R1 under matched assumptions; resolve on the 3D monolayer (R5)"
-    next_action_type: calibrate
-    provenance:
-      run_ids: [r4-coupled-growth]
-  - id: F6-bm-stiffness-gradient-makes-spatial-height-gradient
-    kind: computational
-    status: confirms
-    tier: interpretation
-    mechanism_origin: emergent
-    statement: >
-      A BM-stiffness gradient across the sheet produces a spatial reconstructed-height gradient
-      — 0.761 at the soft end to 0.910 at the stiff end — so spatial BM heterogeneity maps to
-      spatial cell-shape heterogeneity, the spatial readout the resolved sheet could not give.
-      ENGINE-AND-WIRING CAVEAT (2026-11-09 review): this "gradient" is 12 INDEPENDENT cells with
-      different per-cell k and no neighbour coupling (R1xN), not a coupled sheet — a continuous
-      BM would carry tension across cells and smooth it, so this is a wiring demonstration, not a
-      coupled-confinement result.
-    evidence:
-      from_run: r4-coupled-growth
-      from_test: stiffness-gradient-makes-height-gradient
-      observed: "height 0.761 (soft end) → 0.910 (stiff end) under a linear stiffness gradient"
-    provenance:
-      run_ids: [r4-coupled-growth]
+- id: F1-2d-sheet-yields-finite-geometry
+  kind: computational
+  status: confirms
+  tier: observation
+  mechanism_origin: engineered
+  statement: >
+    The explicit 2D epithelial sheet resolves and relaxes over the tyssue engine to finite,
+    uniform per-cell geometry: 12 cell-faces (faces = cells) and 24 vertices on a flat z=0
+    plane, every cell-face at basal area 5.0 and explicit height 1.9319, all finite.
+  evidence:
+    from_run: r4-2d-sheet-relaxation
+    from_test: sheet-yields-finite-areas
+    observed: "Nf=12, Nv=24; face area 5.0 (uniform), face height 1.9319 (uniform); all finite"
+  explanation: >
+    Each cell-face carries an explicit basal area and height degree of freedom; with no
+    heterogeneous growth or BM traction applied, the vertex model relaxes every cell to the
+    same well-posed geometry.
+  next_action: "use as the planar spatial substrate for the R5 3D monolayer"
+  next_action_type: escalate_model
+  provenance:
+    run_ids: [r4-2d-sheet-relaxation]
+- id: F2-steps-stably
+  kind: computational
+  status: confirms
+  tier: observation
+  mechanism_origin: engineered
+  statement: >
+    Stepping the EulerSolver five times (dt 0.01) keeps per-cell area and height finite and
+    positive, with no NaN or blow-up -- the spatial sheet is numerically stable over short
+    integration.
+  evidence:
+    from_run: r4-2d-sheet-relaxation
+    from_test: sheet-steps-stably
+    observed: "per-cell area and height finite and > 0 after 5 Euler steps"
+  provenance:
+    run_ids: [r4-2d-sheet-relaxation]
+- id: F3-confinement-comparison-not-yet-wired
+  kind: methodological
+  status: partial
+  tier: observation
+  statement: >
+    The quantitative spatial-vs-homogeneous confinement comparison to R1 is NOT yet a result:
+    the sheet is homogeneous (uniform cells) and the BM traction/area law is not wired as an
+    explicit coupling, so only well-posed geometry -- not a reproduced regime -- is established.
+  evidence:
+    from_run: r4-2d-sheet-relaxation
+    from_test: sheet-yields-finite-areas
+    observed: "all cells identical (area 5.0, height 1.93) -- no heterogeneity or BM traction to compare against R1"
+  next_action: "wire the R2-calibrated BM traction and add heterogeneous growth/division, then compare the confinement response to R1"
+  next_action_type: refine_representation
+  provenance:
+    run_ids: [r4-2d-sheet-relaxation]
+- id: F4-preferred-growth-drives-emergent-realized-area
+  kind: computational
+  status: confirms
+  tier: mechanism
+  mechanism_origin: emergent
+  statement: >
+    A ramped PREFERRED basal area (division OFF) drives a growing REALIZED area that emerges
+    from the mechanical balance and LAGS the target under BM resistance: at a stiff/slow BM
+    the realized area (1.105) lags the preferred target (1.616) by a 0.317 gap, vs a 0.116
+    gap with no BM. The realized area is not hard-coded to the target — the lag is the
+    confinement.
+  evidence:
+    from_run: r4-coupled-growth
+    from_test: growth-realized-lags-preferred
+    observed: "stiff-BM gap 0.317 > free-BM gap 0.116; realized 1.105 < preferred 1.616; zero-growth control: area 1.000, stress 0.0"
+  explanation: >
+    The preferred area sets the FaceAreaElasticity target; the realized area relaxes toward
+    it but a viscoelastic BM reaction (stiffness + relaxation) opposes spreading, so the
+    realized geometry lags — the two-way cell<->BM feedback the 2026-10-20 review asked for.
+    ENGINE-AND-WIRING CAVEAT (2026-11-09 review): this is a per-cell scalar Maxwell ODE with
+    no neighbour coupling, so the "lag" mixes BM reaction with pure mobility lag (mu=0.3); the
+    BM-caused part is the stiff-minus-free difference, not the raw 0.317 gap, and the BM enters
+    only through uncalibrated FaceContractility gains.
+  next_action: "promote to the resolved vertex-model sheet once a deformable 2D geometry is available; cross-check against R1"
+  next_action_type: escalate_model
+  provenance:
+    run_ids: [r4-coupled-growth]
+- id: F5-stiff-bm-confines-and-raises-height
+  kind: computational
+  status: confirms
+  tier: interpretation
+  mechanism_origin: emergent
+  statement: >
+    A stiff/slow BM confines basal spreading (realized area 1.105 vs 1.428 free) and raises
+    the reconstructed cell height (0.905 vs 0.700 free) — the confinement → taller-cell
+    response, here in a reduced-order 2D cross-section under a fixed-volume height
+    reconstruction.
+  evidence:
+    from_run: r4-coupled-growth
+    from_test: stiff-bm-confines-and-heightens
+    observed: "stiff height 0.905 > free 0.700; stiff area 1.105 < free 1.428; BM stress 0.471"
+  expected:
+    cites: [barrientos2026cellshape]
+    summary: "qualitatively consistent with the paper's confinement direction (stiffer/slower BM → taller cells); relative, not an absolute height prediction"
+  next_action: "calibrate against R1 under matched assumptions; resolve on the 3D monolayer (R5)"
+  next_action_type: calibrate
+  provenance:
+    run_ids: [r4-coupled-growth]
+- id: F6-bm-stiffness-gradient-makes-spatial-height-gradient
+  kind: computational
+  status: confirms
+  tier: interpretation
+  mechanism_origin: emergent
+  statement: >
+    A BM-stiffness gradient across the sheet produces a spatial reconstructed-height gradient
+    — 0.761 at the soft end to 0.910 at the stiff end — so spatial BM heterogeneity maps to
+    spatial cell-shape heterogeneity, the spatial readout the resolved sheet could not give.
+    ENGINE-AND-WIRING CAVEAT (2026-11-09 review): this "gradient" is 12 INDEPENDENT cells with
+    different per-cell k and no neighbour coupling (R1xN), not a coupled sheet — a continuous
+    BM would carry tension across cells and smooth it, so this is a wiring demonstration, not a
+    coupled-confinement result.
+  evidence:
+    from_run: r4-coupled-growth
+    from_test: stiffness-gradient-makes-height-gradient
+    observed: "height 0.761 (soft end) → 0.910 (stiff end) under a linear stiffness gradient"
+  provenance:
+    run_ids: [r4-coupled-growth]
 
 followup_proposals:
-  - id: fp-r4-bm-traction-and-r1-comparison
-    title: "Wire the BM traction and compare the 2D sheet's confinement to R1"
-    motivation: >
-      The sheet currently relaxes homogeneously with no explicit BM traction, so it cannot yet
-      test whether the Fig 1 confinement regimes survive explicit topology. Wire the R2-calibrated
-      BM traction/area law, add heterogeneous growth / division / cortical-tension variation, and
-      compare the per-cell confinement response to the homogeneous R1 baseline.
-    hypothesized_mechanism: "An explicit BM traction resisting basal-area growth should reproduce R1's confinement in the homogeneous limit and introduce spatial force/area heterogeneity under growth."
-    status: proposed
-  - id: fp-r4-neighbour-coupling-and-vertex-sheet
-    title: "Add neighbour coupling: run R4 on the vertex-model sheet with a basal-surface BM energy"
-    motivation: >
-      run_sheet_growth_2d is 12 INDEPENDENT per-cell scalar ODEs (one Maxwell element per cell)
-      with no neighbour coupling, so it is an engine-and-wiring check (R1xN), not a coupled sheet.
-      A continuous BM should carry its tension across cells and smooth the height gradient — the
-      spatial physics the study is meant to test. Replace the per-cell Maxwell elements with a
-      basal-surface BM energy on the tyssue vertex-model sheet, where shared vertices give force
-      continuity between neighbouring faces, and calibrate the FaceContractility gains to units.
-    hypothesized_mechanism: "A basal-surface BM energy on shared vertices gives force continuity across cells, so a stiff BM carries tension between neighbours and smooths the per-cell height gradient that independent ODEs cannot couple."
-    status: proposed
-  - id: fp-r4-tyssue-basal-coupling-mechanisms
-    title: "Identify the tyssue mechanisms for basal stress -> area/height coupling (and fix the overlapping viz)"
-    motivation: >
-      The R4 sheet visualization overlaps, and the composite does not express how basal stress
-      couples to area and height in tyssue. Enumerate and compare the candidate tyssue mechanisms
-      — a reduced prefered_area driven by BM stress, vs an explicit force on basal vertices — on a
-      FLAT tyssue monolayer (spherical geometry later), and determine how each is resolved by the
-      EulerSolver. Fix the overlapping sheet layout so the per-cell geometry reads cleanly.
-    hypothesized_mechanism: "Basal BM stress can enter tyssue either as a reduced prefered_area target or as an explicit basal-vertex force; identifying which the EulerSolver resolves cleanly is the key wiring decision for a real coupled sheet."
-    status: proposed
+- id: fp-r4-bm-traction-and-r1-comparison
+  title: "Wire the BM traction and compare the 2D sheet's confinement to R1"
+  motivation: >
+    The sheet currently relaxes homogeneously with no explicit BM traction, so it cannot yet
+    test whether the Fig 1 confinement regimes survive explicit topology. Wire the R2-calibrated
+    BM traction/area law, add heterogeneous growth / division / cortical-tension variation, and
+    compare the per-cell confinement response to the homogeneous R1 baseline.
+  hypothesized_mechanism: "An explicit BM traction resisting basal-area growth should reproduce R1's confinement in the homogeneous limit and introduce spatial force/area heterogeneity under growth."
+  status: proposed
+- id: fp-r4-neighbour-coupling-and-vertex-sheet
+  title: "Add neighbour coupling: run R4 on the vertex-model sheet with a basal-surface BM energy"
+  motivation: >
+    run_sheet_growth_2d is 12 INDEPENDENT per-cell scalar ODEs (one Maxwell element per cell)
+    with no neighbour coupling, so it is an engine-and-wiring check (R1xN), not a coupled sheet.
+    A continuous BM should carry its tension across cells and smooth the height gradient — the
+    spatial physics the study is meant to test. Replace the per-cell Maxwell elements with a
+    basal-surface BM energy on the tyssue vertex-model sheet, where shared vertices give force
+    continuity between neighbouring faces, and calibrate the FaceContractility gains to units.
+  hypothesized_mechanism: "A basal-surface BM energy on shared vertices gives force continuity across cells, so a stiff BM carries tension between neighbours and smooths the per-cell height gradient that independent ODEs cannot couple."
+  status: proposed
+- id: fp-r4-tyssue-basal-coupling-mechanisms
+  title: "Identify the tyssue mechanisms for basal stress -> area/height coupling (and fix the overlapping viz)"
+  motivation: >
+    The R4 sheet visualization overlaps, and the composite does not express how basal stress
+    couples to area and height in tyssue. Enumerate and compare the candidate tyssue mechanisms
+    — a reduced prefered_area driven by BM stress, vs an explicit force on basal vertices — on a
+    FLAT tyssue monolayer (spherical geometry later), and determine how each is resolved by the
+    EulerSolver. Fix the overlapping sheet layout so the per-cell geometry reads cleanly.
+  hypothesized_mechanism: "Basal BM stress can enter tyssue either as a reduced prefered_area target or as an explicit basal-vertex force; identifying which the EulerSolver resolves cleanly is the key wiring decision for a real coupled sheet."
+  status: proposed
 
 discovery_implications:
   resolved_uncertainties:
-    - "The explicit 2D epithelial sheet resolves over the tyssue engine and relaxes to finite, well-posed per-cell geometry."
-    - "The spatial sheet is numerically stable over short EulerSolver integration (no NaN / blow-up)."
+  - "The explicit 2D epithelial sheet resolves over the tyssue engine and relaxes to finite, well-posed per-cell geometry."
+  - "The spatial sheet is numerically stable over short EulerSolver integration (no NaN / blow-up)."
   remaining_uncertainties:
-    - "Whether the Fig 1 confinement regimes survive explicit topology -- needs the BM traction coupling and heterogeneous growth."
-    - "The quantitative spatial-vs-homogeneous (R1) confinement comparison."
+  - "Whether the Fig 1 confinement regimes survive explicit topology -- needs the BM traction coupling and heterogeneous growth."
+  - "The quantitative spatial-vs-homogeneous (R1) confinement comparison."
   followup_study_proposals:
-    - {id: fp-r4-bm-traction-and-r1-comparison, title: "BM traction coupling + R1 confinement comparison"}
-    - {id: fp-r4-neighbour-coupling-and-vertex-sheet, title: "Neighbour coupling on the vertex-model sheet (basal-surface BM energy)"}
-    - {id: fp-r4-tyssue-basal-coupling-mechanisms, title: "Identify tyssue basal-coupling mechanisms + fix overlapping viz"}
+  - {id: fp-r4-bm-traction-and-r1-comparison, title: "BM traction coupling + R1 confinement comparison"}
+  - {id: fp-r4-neighbour-coupling-and-vertex-sheet, title: "Neighbour coupling on the vertex-model sheet (basal-surface BM energy)"}
+  - {id: fp-r4-tyssue-basal-coupling-mechanisms, title: "Identify tyssue basal-coupling mechanisms + fix overlapping viz"}
 
 conclusion_verdicts:
   regression_compatibility:
@@ -631,10 +637,10 @@ conclusion_verdicts:
 
 expert_review_status: requested
 expert_questions:
-  - "Is the homogeneous relaxation (uniform cells, no BM traction) a sufficient substrate milestone, or should the R1 confinement comparison be a blocking requirement before R4 is called evidence?"
-  - "Should the BM traction be wired as an effective constitutive law (continuous with R1) or as an explicit LAMMPS coupling before the spatial confinement claim is made?"
+- "Is the homogeneous relaxation (uniform cells, no BM traction) a sufficient substrate milestone, or should the R1 confinement comparison be a blocking requirement before R4 is called evidence?"
+- "Should the BM traction be wired as an effective constitutive law (continuous with R1) or as an explicit LAMMPS coupling before the spatial confinement claim is made?"
 
 bibliography:
   sources:
-    - key: barrientos2026cellshape
-      note: "Barrientos et al. cell-shape paper; the spatial 2D epithelium is the explicit-topology counterpart of the Fig 1 homogeneous confinement model."
+  - key: barrientos2026cellshape
+    note: "Barrientos et al. cell-shape paper; the spatial 2D epithelium is the explicit-topology counterpart of the Fig 1 homogeneous confinement model."

@@ -161,6 +161,30 @@ visualizations:
       over; the collagen network makes membrane relaxation track that turnover;
       and the tissue-mechanics model makes cell shape follow membrane relaxation.
 
+- name: coupling_contract
+  address: html:viz/coupling_contract.html
+  config:
+    title: The coupling contract — BM↔epithelium as wiring, and where R4/R5/E4 stand
+    caption: >
+      The reviewer's central ask made into one picture. (1) The contract: express the BM↔epithelium interface as process-bigraph wiring — the BM as an energy on each basal face inside the vertex force balance, exchanging a slow rest-area/stiffness state rather than a stiff force, reducing to R1's prism law in the homogeneous limit. (2) The four controls (no-BM / one-way / two-way / uncoupled) are wiring edges, not parameters. (3) Where R4/R5/E4 actually are today: engine-and-wiring checks, because none expresses that edge yet (R4 = 12 independent per-cell Maxwell ODEs; R5 = one scalar Maxwell on the mean basal area; E4 = both engines inside one Process).
+- name: reference_bm_state
+  address: html:viz/reference_bm_state.html
+  config:
+    title: One reference BM state — the reported moduli are one model at different states
+    caption: >
+      Answers the exec-summary critique that the modulus appears as six inconsistent values. They are the SAME model at different crosslink/density states, not a six-way disagreement: pin the dense angle-stabilized reference (E ≈ 6 Pa, τ ≈ 40–60 reduced, with seed CIs from R2) and propagate it. The absolute pascal scale (≈2.2 Pa per kT/σ³) sets the BM:cell stiffness ratio that decides the regime, so it must be pinned before any confinement claim.
+- name: regime_placement
+  address: html:viz/regime_placement.html
+  config:
+    title: Which regime does the lumenoid sit in? Undetermined until the scale is pinned
+    caption: >
+      Places the reference BM on R1's confinement regime map under its scale uncertainty. The BM:cell stiffness ratio is one of R1's two axes, but the absolute scale is unpinned: Y = E·h is ≈1e-5 N/m at 6 Pa and ≈1e-4 N/m at 80 Pa, against a cortical tension of ≈1e-4–1e-3 N/m — so the reference lands in a band that spans the confinement boundary. Until the LJ↔tissue unit map pins E and τ, the regime is undetermined.
+- name: validation_scorecard
+  address: html:viz/validation_scorecard.html
+  config:
+    title: Make the acceptance tests mechanistic — several primary tests cannot fail
+    caption: >
+      The reviewer's validation section as a scorecard. Several primary tests cannot fail (R4 passes if height > 0; R5 passes on a 0.4% one-run difference; E4 checks ≠ 0 / = 0, not sign). Each is paired with the mechanistic test that would actually gate the claim: sign tests, effect size against seed/mesh/dt noise, a quasi-static free control, and the homogeneous limit reproducing R1 — plus recording run parameters for every simulation.
 studies:
 - bm-v2-stress-vs-strainrate
 - bm-r1-published-tissue-baseline
