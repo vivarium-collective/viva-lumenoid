@@ -11,6 +11,18 @@ gate_status: passed
 design_status: drafted
 confidence: Accepted
 
+review_actions:
+  - source: inline-feedback
+    date: "2026-11-09"
+    item: "Study needs redesigning; actin-cortex integration should become a follow-up so this study can focus on the core BM question."
+    action: >
+      Acknowledged: the explicit actomyosin cortex is a NEW extension, not part of the core
+      BM-vertex coupling question, and is already flagged as a future extension in
+      meeting_alignment_2026_10_20. Recorded a followup proposal (fp-e1-split-actin-followup) to
+      carve actin-cortex integration into its own follow-up study and keep this investigation
+      focused on BM composition and the BM<->vertex coupling first.
+    status: deferred-followup
+
 claim: >
   A coarse actomyosin cortex carries a cortical tension that rises monotonically with the
   myosin-contractility proxy, giving a tunable active tension that can be mapped onto the
@@ -385,6 +397,18 @@ followup_proposals:
       cortical-energy value. Impose a strain / tension step and read the relaxation, then fit the
       effective cortical-energy parameter.
     hypothesized_mechanism: "The viscoelastic cortex should show a contractility-dependent relaxation time that sets the effective cortical-energy stiffness."
+    status: proposed
+  - id: fp-e1-split-actin-followup
+    title: "Split explicit actomyosin-cortex integration into a dedicated follow-up study"
+    motivation: >
+      Reviewer (inline, 2026-11-09): this study needs redesigning -- actin-cortex integration
+      should be a separate follow-up so the investigation can focus on the core basement-membrane
+      question (BM composition and the BM<->vertex coupling) first. The explicit cortex is a
+      promising route to cell-cell contacts / focal adhesions but is tangential to the current MVP.
+    hypothesized_mechanism: >
+      A redesigned, standalone actomyosin-cortex study (cortex tension, strain response, relaxation
+      and the cortical-energy mapping) can be developed independently once the BM question is
+      settled, without gating the BM-vertex coupling milestone.
     status: proposed
 
 discovery_implications:

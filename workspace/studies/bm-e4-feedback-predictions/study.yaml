@@ -11,20 +11,53 @@ gate_status: passed
 design_status: drafted
 confidence: Accepted
 
+review_actions:
+  - source: mogre-deep-review
+    date: "2026-11-09"
+    item: "The explicit-LAMMPS path is NOT the BM model the investigation validated (central-force floppy network, no bending_k, ~40 rods/2-sigma vs R2's 300 rods/12-sigma, no LJ<->tissue unit map), and its subcycling 'divergence' looks like a time-accounting bug (substep count scales integrated BM time) rather than a numerical/confinement result — don't report it as a confinement finding."
+    action: >
+      Reframed the explicit-path claims to be honest. (1) Edited claim / result / report.verdict /
+      main_insight so the explicit-LAMMPS path is described as an UN-calibrated WIRING check, not a
+      validated or confinement result, and is no longer said to "close E4's main gap". (2) Reframed
+      the explicit subcycling 'divergence' (finding F5 + result) as consistent with a TIME-ACCOUNTING
+      artifact -- CollagenNetworkProcess runs max(1,round(interval/dt)) steps at dt=0.01, so substeps
+      4/8 integrate 2x/4x more BM time under the same fix-deform rate, reproducing 'stable at 1-2,
+      diverges at 4-8' -- flagged as not-yet-trusted, not a physical instability. (3) Added limitations
+      recording that the explicit path is not the validated angle-stabilized BM (no bending_k, 40 rods
+      vs 300, no unit map) and that the two-way>uncoupled sign anomaly (realized area two-way 1.006 >
+      uncoupled 0.767 is MORE spreading, opposite of confinement; uncoupled shrinks ~23% while
+      preferred grows ~15%, failing the BM-off criterion; two-way reduced basal contractility
+      0.05-0.30 < 0 is energy unbounded below) means the two-way/one-way difference is NOT reported as
+      a growth/confinement finding until explained. Added followups for the time-accounting + units-Step
+      audit, the angle-stabilized explicit BM, the sign-anomaly explanation and the 2D-coupling-first gate.
+    status: reframed
+  - source: inline-feedback
+    date: "2026-11-09"
+    item: "Promising extension but needs more dynamic visualizations; first nail down the 2D coupling between LAMMPS and tyssue before attempting 3D."
+    action: >
+      Recorded the sequencing honestly: nail down the 2D LAMMPS<->tyssue coupling before the
+      3D/explicit path. Added a followup (fp-e4-2d-coupling-first) making the 2D coupling the
+      prerequisite, and a dynamic-visualization followup (fp-e4-dynamic-viz). The existing explicit-path
+      figures are already demoted to engineered-diagnostic / supplement so a delicate run is not shown
+      as a headline.
+    status: deferred-followup
+
 claim: >
   The epithelium and its collagen basement membrane are coupled both ways: the growing
   basal surface stretches the membrane and the membrane's stress pushes back on the cells
   as a basal tension. On the reduced-order (effective) BM path the bidirectional loop runs
   end-to-end, the three coupling controls (two-way / one-way / uncoupled) behave exactly as
   the mechanism demands, and subcycling the BM relaxation converges. The
-  EXPLICIT-LAMMPS-collagen-BM path now also runs the real bidirectional loop with correct
-  feedback directionality (two-way feeds a non-zero basal tension back, one-way does not),
-  closing E4's main gap. It reveals two honest departures from the effective-BM path: the
-  explicit collagen carries intrinsic bond-virial stress (so the reduced "uncoupled
-  bm_sigma==0" inert control does not transfer), and its subcycling DIVERGES rather than
-  converges -- so the explicit loop is stable only in a bounded regime (~40 rods, coarse
-  subcycling), and a stable explicit-BM subcycling integrator + gain calibration are the open
-  items.
+  EXPLICIT-LAMMPS-collagen-BM path also RUNS the bidirectional loop and shows the correct
+  feedback directionality (two-way feeds a non-zero basal tension back, one-way does not), but
+  it is a WIRING CHECK, NOT a validated or confinement result: it does not use the
+  investigation's validated BM (the central-force network is floppy without bending_k, ~40 rods
+  in a 2-sigma slab against R2's 300 rods in 12 sigma) and has no LJ<->tissue unit map. Its
+  apparent subcycling "divergence" is consistent with a TIME-ACCOUNTING artifact (the collagen
+  process integrates proportionally more BM time as bm_substeps rises), not a physical
+  instability, so the explicit numbers are not reported as a numerical or confinement finding.
+  Calibrating the explicit path against the validated angle-stabilized BM, adding a units Step,
+  and auditing the substep time-accounting are the open items.
 
 experiment: >
   Run the coupled_lumenoid composite (real Tyssue epithelium, reduced-order effective BM) for
@@ -51,9 +84,14 @@ result: >
   numerically delicate -- the explicit collagen carries intrinsic stress (uncoupled bm_sigma
   +1.6, NOT 0) and its subcycling DIVERGES (bm_sigma -11.4 / -14.5 / +28.6 / +1828 over
   substeps 1/2/4/8), stable only at coarse subcycling and ~40 rods (120 rods / 24 steps blows
-  up, bm_sigma ~4.5e4). So the explicit demonstration is scoped to the bounded stable regime; a
-  stable explicit-BM subcycling integrator + gain calibration + the full-exchange-interval
-  convergence remain open. Single deterministic runs, reduced units.
+  up, bm_sigma ~4.5e4). REVIEW REFRAME (2026-11-09): the explicit path is a WIRING CHECK, not a
+  validated or confinement result -- it is not the investigation's angle-stabilized BM (no
+  bending_k, ~40 rods/2-sigma vs R2's 300 rods/12-sigma, no LJ<->tissue unit map), and its
+  apparent subcycling "divergence" is consistent with a TIME-ACCOUNTING artifact (the collagen
+  process integrates proportionally more BM time as bm_substeps rises), not a physical
+  instability. So the explicit numbers are NOT reported as a confinement result; a substep
+  time-accounting audit, a units Step, calibration against the validated BM, and the
+  full-exchange-interval convergence remain open. Single deterministic runs, reduced units.
 
 # Canonical DAG edge -- E4 is the multiscale-coupling capstone built on the 3D lumenoid (E3)
 # and the turnover/shape pipeline (R6).
@@ -623,6 +661,8 @@ limitations:
   - "EXPLICIT uncoupled control: the explicit collagen patch carries intrinsic (thermal/assembly) bond-virial stress (~+1.6 at 40 rods), so the reduced-path 'uncoupled bm_sigma==0' inert control does not transfer; at this small network the explicit bm_sigma is also noisy (O(1)). The robust explicit controls are the feedback DIRECTIONALITY (two-way != 0, one-way == 0)."
   - "EXPLICIT run was done LOCALLY, not on the mini: the coupled loop is light (<1 s/run) and a denser run diverges, so the mini's heavy-compute capability is not useful here (and the mini has no viva_lumenoid venv yet). Numbers are single deterministic runs (fixed internal collagen seed; no seed exposed on the composite)."
   - "Exchange-cadence convergence (the epithelium<->BM macro-step interval) is STILL not wired on either path -- only the within-step BM subcycling was probed."
+  - "REVIEW REFRAME (2026-11-09): the EXPLICIT path is NOT the BM model the investigation validated -- LammpsTyssueCoupling builds CollagenParams without bending_k (defaults to 0.0), so the central-force network is floppy (the V3 regime), not the V4/R2 angle-stabilized BM, and it runs ~40 rods in a 2-sigma slab against R2's 300 rods in 12 sigma, with the Tyssue interval passed straight to LAMMPS as LJ time (no unit map). Its apparent subcycling 'divergence' is consistent with a TIME-ACCOUNTING artifact (CollagenNetworkProcess runs max(1,round(interval/dt)) steps at dt=0.01, so more bm_substeps integrate proportionally more BM time under the same fix-deform rate), so the explicit numbers are reported as a wiring check, NOT a trusted numerical/confinement result."
+  - "GROWTH SIGN ANOMALY (flagged by deep review 2026-11-09, unexplained): with growth the two-way realized basal area (1.006) is LARGER than the uncoupled control (0.767) -- the BM reaction coincides with MORE spreading, the opposite of confinement -- and the uncoupled control shrinks ~23% while its preferred area grows ~15% (no pre-relax, unlike R5), failing the agreed 'BM-off -> preferred growth largely realized' criterion. In the no-growth two-way run the fed-back tension makes the basal contractility 0.05 - 0.30 < 0 (a negative FaceContractility is energy unbounded below; R5 clips at 0, E4 does not). Until these are explained, the two-way/one-way difference is NOT reported as a growth or confinement finding."
 
 visualizations:
   - name: e4_coupling_overlay_movie
@@ -730,19 +770,24 @@ report:
     the bidirectional loop runs end-to-end, the three coupling controls behave exactly as the
     mechanism requires (two-way basal_tension -0.2995, one-way 0.0, uncoupled bm_sigma 0.0), and
     subcycling converges (|s8-s4| 0.017 < |s2-s1| 0.066). The EXPLICIT-LAMMPS-collagen-BM path
-    now closes E4's main gap: the real bidirectional loop runs bounded at 40 rods with correct
-    feedback directionality (two-way basal_tension != 0, one-way == 0 exactly). It is, however,
-    numerically delicate -- the explicit collagen carries intrinsic stress (uncoupled != 0) and
-    its subcycling DIVERGES (stable only at coarse subcycling / ~40 rods), so a stable
-    explicit-BM integrator + gain calibration (and the full exchange-interval) are the open items.
+    also RUNS the loop with correct feedback directionality (two-way basal_tension != 0, one-way
+    == 0 exactly), but it is a WIRING CHECK, not a validated or confinement result: it is not the
+    investigation's angle-stabilized BM (no bending_k, ~40 rods/2-sigma vs R2's 300 rods/12-sigma,
+    no unit map), and its apparent subcycling "divergence" is consistent with a TIME-ACCOUNTING
+    artifact rather than a physical instability. A substep time-accounting audit, a units Step, and
+    calibration against the validated BM are the open items; the explicit numbers are NOT reported
+    as confinement. The growth-driven two-way vs uncoupled difference also shows an unexplained SIGN
+    anomaly (two-way spreads MORE than uncoupled, the opposite of confinement), so it is not reported
+    as a growth/confinement finding until explained.
   confidence: medium
   evidence_quality: solid
   main_insight: >
-    Putting the REAL explicit collagen BM in the loop both closes the coupling gap AND exposes
-    what the reduced-order path hid: the explicit BM has intrinsic stress and its subcycling
-    diverges rather than converges. The coupling directionality is correct on both paths, but the
-    explicit path needs a stable subcycling scheme + recalibrated gains before it can be a
-    publication-quality quantitative result -- a concrete next step, honestly scoped.
+    Putting an explicit collagen BM in the loop shows the coupling DIRECTIONALITY wires up on both
+    paths, but the explicit path is a wiring check only: it is not the validated angle-stabilized BM
+    and its apparent subcycling "divergence" is most consistent with a TIME-ACCOUNTING artifact (more
+    BM time integrated per added substep), not a physical result. Auditing the substep time-accounting,
+    adding a units Step, and calibrating against the validated BM come before any explicit quantitative
+    or confinement claim.
   caveat: >
     Reduced-order path: clean controls + convergence. Explicit path: demonstrated but delicate --
     stable only at ~40 rods / coarse subcycling (120 rods diverges), uncoupled stress not zero,
@@ -850,8 +895,10 @@ findings:
     statement: >
       The explicit path does NOT inherit two reduced-path behaviors. (1) Subcycle convergence
       FAILS/inverts: bm_sigma over bm_substeps {1,2,4,8} = -11.4/-14.5/+28.6/+1828, the
-      successive-refinement error GROWS (3.1 -> 43.1 -> 1799.6) -- more subcycling destabilizes
-      the explicit BM rather than converging it. (2) The "uncoupled bm_sigma==0" inert control
+      successive-refinement error GROWS (3.1 -> 43.1 -> 1799.6) -- more subcycling changes bm_sigma
+      without converging it. REVIEW REFRAME (2026-11-09): this is most consistent with a
+      TIME-ACCOUNTING bug, not a physical divergence (see explanation), so it is NOT reported as a
+      trusted numerical/confinement result. (2) The "uncoupled bm_sigma==0" inert control
       does not transfer: the explicit collagen patch carries intrinsic bond-virial stress
       (uncoupled bm_sigma +1.6 at 40 rods). The explicit loop is stable only at coarse subcycling
       (substeps 1-2) and a bounded network (~40 rods)/duration; 120 rods/24 steps diverges
@@ -862,10 +909,17 @@ findings:
       from_test: explicit-subcycling-converges
       observed: "explicit subcycle sweep DIVERGES (1799.6 >> 3.1); uncoupled bm_sigma +1.6 != 0; 120 rods blows up"
     explanation: >
-      The explicit collagen BM is a stochastic LAMMPS relaxation with its own intrinsic stress and
-      dynamics, not a smooth first-order ODE like the reduced BM, so re-running it more finely per
-      coupling step amplifies rather than refines, and its undriven state is not stress-free.
-    next_action: "design a stable explicit-BM subcycling scheme (or an implicit exchange) and recalibrate strain_gain/tension_gain for the explicit stress scale; route a denser multiseed sweep to the mini once stable"
+      REVIEW REFRAME (2026-11-09): the apparent divergence is most consistent with a TIME-ACCOUNTING
+      bug, not a physical instability -- CollagenNetworkProcess runs max(1, round(interval/dt)) steps
+      at dt=0.01, so doubling bm_substeps integrates proportionally MORE BM time under the same
+      fix-deform rate (substeps 4/8 simulate 2x/4x more BM time), which reproduces "stable at 1-2,
+      diverges at 4-8". The explicit collagen is also a floppy central-force network (CollagenParams
+      built without bending_k -> defaults to 0.0) at ~40 rods in a 2-sigma slab, NOT R2's
+      angle-stabilized 300-rod BM, and the Tyssue interval is passed straight to LAMMPS as LJ time
+      with no unit map. So this is NOT a trusted numerical/confinement result: the substep
+      time-accounting must be audited and the gains replaced with a units Step before the explicit
+      subcycling behaviour means anything physical.
+    next_action: "audit the substep time-accounting; build the explicit BM on the validated angle-stabilized network (bending_k, R2 density) and replace the gains with a units Step; only then design a stable subcycling / implicit exchange and route a denser multiseed sweep to the mini"
     next_action_type: escalate_model
     provenance:
       run_ids: [e4-explicit-bm-subcycling-sweep, e4-explicit-coupling-controls]
@@ -928,6 +982,59 @@ followup_proposals:
     hypothesized_mechanism: "Shortening the exchange interval should converge the coupled trajectory just as substep refinement converges bm_sigma."
     status: proposed
     linked_finding: F2-reduced-order-bm-subcycling-converges
+  - id: fp-e4-explicit-time-accounting-and-validated-bm
+    title: "Audit the explicit-BM substep time-accounting and rebuild it on the validated BM with a units Step"
+    motivation: >
+      Reviewer (deep review): the explicit path is not the BM the investigation validated, and its
+      'divergence' looks like a time-accounting bug, not a numerical result. CollagenNetworkProcess
+      runs max(1, round(interval/dt)) steps at dt=0.01, so doubling bm_substeps integrates
+      proportionally more BM time under the same fix-deform rate (substeps 4/8 simulate 2x/4x more
+      BM time) -- reproducing 'stable at 1-2, diverges at 4-8'. The network is also floppy
+      (CollagenParams built without bending_k) at ~40 rods/2-sigma vs R2's 300 rods/12-sigma, the
+      Tyssue interval is passed straight to LAMMPS as LJ time (no unit map), and strain_gain 20
+      drives the BM ~20x faster than the epithelium deforms.
+    hypothesized_mechanism: >
+      Fix the per-macro-step BM time so it is independent of bm_substeps, build the explicit BM on
+      the angle-stabilized R2 network (bending_k, R2 density/slab), and replace strain_gain/
+      tension_gain with a units Step (length/time/energy maps + slab thickness). Only then is the
+      explicit subcycling behaviour physically interpretable.
+    status: proposed
+    linked_finding: F5-explicit-path-numerically-delicate
+  - id: fp-e4-explain-growth-sign-anomaly
+    title: "Explain the growth-driven two-way>uncoupled sign anomaly before claiming a growth result"
+    motivation: >
+      Reviewer (deep review): with growth the two-way realized basal area (1.006) exceeds the
+      uncoupled control (0.767) -- the BM reaction coincides with MORE spreading, the opposite of
+      confinement -- and the uncoupled control shrinks ~23% while preferred grows ~15% (no
+      pre-relax, unlike R5), failing the agreed 'BM-off -> preferred growth largely realized'
+      criterion. The no-growth two-way fed-back tension also makes basal contractility 0.05 - 0.30
+      < 0 (energy unbounded below; R5 clips at 0, E4 does not). Do not call the two-way/one-way
+      difference a growth result until these are explained.
+    hypothesized_mechanism: >
+      A sign/work audit of the reaction term (clip basal tension at >= 0, add a pre-relax, verify a
+      quasi-static free control tracks the preferred area) should reveal whether the difference is a
+      genuine BM-caused confinement or a vertex-model drag / sign artifact.
+    status: proposed
+    linked_finding: F6-growth-driven-feedback-realized-not-hardcoded
+  - id: fp-e4-2d-coupling-first
+    title: "Nail down the 2D LAMMPS<->tyssue coupling before the 3D/explicit path"
+    motivation: >
+      Reviewer (inline, 2026-11-09): first nail down the 2D coupling between LAMMPS and tyssue, then
+      attempt 3D. The 2D basal-surface BM energy coupling is the well-posed prerequisite the explicit
+      3D path should be built on.
+    hypothesized_mechanism: >
+      Establishing and testing the 2D coupling (basal-surface BM energy in the vertex force balance,
+      sign/work-controlled) first gives a trusted contract the 3D explicit path can inherit.
+    status: proposed
+  - id: fp-e4-dynamic-viz
+    title: "Add dynamic visualizations of the coupled loop"
+    motivation: >
+      Reviewer (inline, 2026-11-09): the extension is promising but needs more dynamic
+      visualizations. Once the coupling is trusted (2D first), animate the live force round-trip.
+    hypothesized_mechanism: >
+      A dynamic (e.g. Simularium) animation of the epithelium<->BM exchange would make the coupling
+      legible once the underlying run is trusted rather than a delicate wiring check.
+    status: proposed
 
 discovery_implications:
   alternate_hypotheses:

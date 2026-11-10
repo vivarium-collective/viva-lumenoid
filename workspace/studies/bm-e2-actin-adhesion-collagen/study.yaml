@@ -11,6 +11,29 @@ gate_status: passed
 design_status: drafted
 confidence: Accepted
 
+review_actions:
+  - source: mogre-deep-review
+    date: "2026-11-09"
+    item: "Keep this composite's structure (separate processes exchanging through stores — the pattern E4 should follow); note that BasalAdhesion maps traction to BM strain-rate (a dashpot in series) and the BM stress never reaches the linkers."
+    action: >
+      Recorded that the actin_adhesion_bm composite's structure (separate processes exchanging
+      through stores) is explicitly endorsed by the reviewer as the pattern E4 should adopt -- kept
+      as-is. Added a followup proposal (fp-e2-basaladhesion-stress-exchange) to revise BasalAdhesion
+      when this study is revisited so the linkers exchange displacement/strain and RETURN stress
+      (force-dependent k_off), the same contract as the basal-surface coupling, instead of mapping
+      traction to a BM strain-rate as a series dashpot.
+    status: deferred-followup
+  - source: inline-feedback
+    date: "2026-11-09"
+    item: "Revisit after clearing previous studies; BM composition is more relevant than actin for this investigation."
+    action: >
+      Acknowledged: this force-transfer study is sequenced after the BM-composition studies. Its
+      pipeline_gate already records the prerequisites (bm-e1, bm-r2) honestly, and the
+      meeting_alignment note treats the exact force-transfer relation as wiring verification not
+      required for the earliest MVP; no result is claimed as passed beyond the wiring / BM-response
+      checks already recorded.
+    status: acknowledged
+
 claim: >
   An active cortex transmits force through reversible basal linkers to a collagen membrane
   patch; the transmitted traction equals linker occupancy times cortical tension (by
@@ -429,6 +452,19 @@ followup_proposals:
       relative relaxation set jointly by linker off-rate and crosslink turnover. Add
       prescribed-displacement and imposed-traction tests and sweep k_off x crosslink turnover.
     hypothesized_mechanism: "The relative relaxation of occupancy vs BM deformation should be set by the ratio of linker off-rate to crosslink turnover time."
+    status: proposed
+  - id: fp-e2-basaladhesion-stress-exchange
+    title: "Revise BasalAdhesion to exchange displacement/strain and return stress (force-dependent k_off)"
+    motivation: >
+      Reviewer (deep review, 2026-10-30): BasalAdhesion maps traction to BM strain *rate* (gain
+      1e-4), which makes the linker layer a dashpot in series regardless of the BM's own law, and
+      the BM stress never reaches the linkers (no reaction path, force-independent k_off). Not needed
+      for the MVP, but when this study is revisited the linkers should exchange displacement or strain
+      and return stress -- the same contract as the basal-surface coupling.
+    hypothesized_mechanism: >
+      A displacement/strain-in, stress-out linker contract with force-dependent unbinding would let
+      the BM's own constitutive law (not the linker dashpot) set the transmitted mechanics and close
+      the reaction path back onto the adhesions.
     status: proposed
 
 discovery_implications:
