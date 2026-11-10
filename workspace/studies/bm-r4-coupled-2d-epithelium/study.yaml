@@ -178,7 +178,7 @@ simulation_set:
   - "sheet-steps-stably: pass"
 - name: r4-coupled-growth
   status: completed
-  base_model: viva_lumenoid.growth_runs.run_sheet_growth_2d
+  base_model: viva_lumenoid.composites.tyssue_2d_sheet
   provenance: {kind: simulation}
   fixed: {mode: exponential, rate: 0.04, steps: 60, dt: 0.2}
   axes: {bm_stiffness: [0.0, 1.0, 3.0, 5.0], bm_relaxation: [10.0, 50.0], stiffness_gradient: [0.0, 1.6]}
@@ -327,7 +327,7 @@ limitations:
 
 visualizations:
 - name: r4_growth_coupling
-  address: "html:r4_growth_coupling.html"
+  address: "html:viz/r4_growth_coupling.html"
   config:
     title: "2D coupled growth: preferred area → emergent realized area + height"
     evidence_status: observed
@@ -357,7 +357,7 @@ visualizations:
     caption: >
       Animated movie of the 12-cell 2D Tyssue sheet relaxing to its finite geometry (edges in blue). Verifies mesh construction; the planar z=0 geometry does not compute a real 3D height (see the quantitative panel + the BM-coupling gap).
 - name: r4_confinement
-  address: "html:r4_confinement.html"
+  address: "html:viz/r4_confinement.html"
   config:
     title: "2D sheet static substrate vs R1 confinement benchmark (demoted)"
     evidence_status: observed
@@ -384,7 +384,7 @@ visualizations:
       BM-dependent confinement regimes of Barrientos Fig 1 cannot be produced here; the
       right panel is the R1 benchmark, not the tyssue sheet.
 - name: r4_sheet
-  address: "html:r4_sheet.html"
+  address: "html:viz/r4_sheet.html"
   config:
     title: "12-cell planar Tyssue mesh thumbnail (z=0)"
     evidence_status: engineered-diagnostic
@@ -397,7 +397,7 @@ visualizations:
       stored CrossSection prism degree of freedom, not a resolved apical-basal distance.
       Reduced units; architecture/methods thumbnail only.
 - name: r4_bm_hypothesis
-  address: "html:r4_bm_hypothesis.html"
+  address: "html:viz/r4_bm_hypothesis.html"
   config:
     title: "BM-stiffness-dependent confinement (hypothesis)"
     evidence_status: hypothesis
@@ -411,7 +411,7 @@ visualizations:
       the composite. Marked hypothesis until that coupling exists.
 
 - name: r4_coupling_contract
-  address: html:r4_coupling_contract.html
+  address: html:viz/r4_coupling_contract.html
   config:
     title: The coupling contract — express the BM↔epithelium edge as wiring (R4 is not wired this way yet)
     caption: >
@@ -470,6 +470,7 @@ findings:
   next_action_type: escalate_model
   provenance:
     run_ids: [r4-2d-sheet-relaxation]
+  seeded_study: bm-r5-explicit-3d-confinement
 - id: F2-steps-stably
   kind: computational
   status: confirms
@@ -501,6 +502,7 @@ findings:
   next_action_type: refine_representation
   provenance:
     run_ids: [r4-2d-sheet-relaxation]
+  seeded_study: fp-r4-bm-traction-and-r1-comparison
 - id: F4-preferred-growth-drives-emergent-realized-area
   kind: computational
   status: confirms
@@ -528,6 +530,7 @@ findings:
   next_action_type: escalate_model
   provenance:
     run_ids: [r4-coupled-growth]
+  seeded_study: fp-r4-neighbour-coupling-and-vertex-sheet
 - id: F5-stiff-bm-confines-and-raises-height
   kind: computational
   status: confirms
@@ -549,6 +552,7 @@ findings:
   next_action_type: calibrate
   provenance:
     run_ids: [r4-coupled-growth]
+  seeded_study: fp-r4-bm-traction-and-r1-comparison
 - id: F6-bm-stiffness-gradient-makes-spatial-height-gradient
   kind: computational
   status: confirms
