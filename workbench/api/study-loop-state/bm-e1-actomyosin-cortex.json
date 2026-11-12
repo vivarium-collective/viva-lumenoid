@@ -1,1 +1,1 @@
-{"present": false, "study": "bm-e1-actomyosin-cortex", "reason": "ModuleNotFoundError: No module named 'discovery_engine.reporting'"}
+{"present": false, "study": "bm-e1-actomyosin-cortex", "reason": "not built via the agentic model-building loop"}

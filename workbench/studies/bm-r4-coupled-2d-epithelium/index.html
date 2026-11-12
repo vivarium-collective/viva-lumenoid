@@ -44,26 +44,15 @@
 
 
 
-<div class="composite-lint-banner" role="alert"
-     style="margin:8px 0 14px 0;padding:10px 14px;background:#fffbeb;border:1px solid #f59e0b;border-left-width:5px;border-radius:6px;color:#92400e;font-size:0.9em">
-  
-  <div>⚠ composite not found in registry: <code>viva_lumenoid.composites.tyssue_2d_sheet</code></div>
-  
-  <div style="margin-top:4px;font-size:0.86em;color:#a16207">
-    This study references a composite that doesn't resolve — it may not declare a
-    real, registered composite. Add a <code>.composite.yaml</code> and register it
-    in <code>core.py</code>, or fix the ref.
-  </div>
-</div>
 
 
 
 
 
 
-
-<p id="study-question-headline" class="study-question-headline"><span class="q-glyph">Q</span> Do the paper&#39;s confinement regimes survive explicit cell topology and heterogeneous growth in a spatial 2D epithelium?
-</p>
+<p id="study-question-headline" class="study-question-headline"><span class="q-glyph">Q</span> <span class="study-question-headline-text" data-edit-kind="study" data-edit-field="question" data-edit-value="Do the paper&#39;s confinement regimes survive explicit cell topology and heterogeneous growth in a spatial 2D epithelium?
+" data-edit-multiline data-edit-label="Question">Do the paper&#39;s confinement regimes survive explicit cell topology and heterogeneous growth in a spatial 2D epithelium?
+</span></p>
 
 <nav class="study-tabs" aria-label="Study sections">
   
@@ -579,7 +568,7 @@
 
     <div class="ctr-block">
       <h2 class="overview-label ctr-h">Model &amp; approach</h2>
-      <p class="ctr-text">Build the tyssue_2d_sheet composite (an explicit polygonal CrossSection sheet over the vivarium-tyssue engine, each cell-face carrying an explicit height degree of freedom) and step the EulerSolver. Reconstruct the mesh counts (faces = cells, vertices), read every cell-face basal area and explicit height off face_df, and confirm the geometry stays finite and positive across several Euler steps (dt 0.01). This is a qualitative spatial-engine check -- that the sheet resolves and relaxes to finite per-cell geometry -- not yet a quantitative confinement comparison to R1.
+      <p class="ctr-text" data-edit-kind="study" data-edit-field="objective" data-edit-value="" data-edit-multiline data-edit-label="Objective">Build the tyssue_2d_sheet composite (an explicit polygonal CrossSection sheet over the vivarium-tyssue engine, each cell-face carrying an explicit height degree of freedom) and step the EulerSolver. Reconstruct the mesh counts (faces = cells, vertices), read every cell-face basal area and explicit height off face_df, and confirm the geometry stays finite and positive across several Euler steps (dt 0.01). This is a qualitative spatial-engine check -- that the sheet resolves and relaxes to finite per-cell geometry -- not yet a quantitative confinement comparison to R1.
 </p>
       <div class="ctr-meta">
         <div class="ctr-meta-row"><span class="ctr-meta-k">Model</span> <code>bm-r4-coupled-2d-epithelium</code><a class="ov-tablink" href="#" onclick="_setStudyTab('compose');return false;">model →</a></div>
@@ -1712,6 +1701,20 @@ pass_if: {"note": "height 0.910 at the stiff end vs 0.761 at the soft end", "op"
 
     
     
+    
+    <div class="decide-section" style="margin-top:18px">
+      <h3 class="overview-label">Computed gate verdict</h3>
+      <p class="muted" style="margin:0 0 8px 0;font-size:0.88em">The coded gate
+        evaluator's result from the behavior-test outcomes — the evaluation the
+        conclusion rests on.</p>
+      <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+        <span class="gate-status-passed" style="padding:2px 12px;border-radius:9999px;font-weight:700;font-size:0.85em">passed</span>
+        <span class="muted small">evaluated by code</span>
+        <span class="muted small">2/6 passed</span>
+      </div>
+      
+    </div>
+    
 
     
     
@@ -1952,7 +1955,7 @@ pass_if: {"note": "height 0.910 at the stiff end vs 0.761 at the soft end", "op"
 </section>
 
 </main>
-<script>window.__DASH_CONFIG__ = { mode: "snapshot", interactiveUrl: "https://github.com/vivarium-collective/viva-lumenoid", basePath: "/viva-lumenoid/workbench", inputsDownloadBase: "https://github.com/vivarium-collective/viva-lumenoid/raw/basement-membrane-v1", provenance: {"repo_slug": "vivarium-collective/viva-lumenoid", "repo_url": "https://github.com/vivarium-collective/viva-lumenoid", "commit": "59db806c281585f2d1d06fecca54908b74488ff0", "commit_url": "https://github.com/vivarium-collective/viva-lumenoid/commit/59db806c281585f2d1d06fecca54908b74488ff0", "branch": "basement-membrane-v1", "lockfile": "uv.lock@02435e118a3b", "generated_at": "2026-11-10 19:49 UTC"} };</script>
+<script>window.__DASH_CONFIG__ = { mode: "snapshot", interactiveUrl: "https://github.com/vivarium-collective/viva-lumenoid", basePath: "/viva-lumenoid/workbench", inputsDownloadBase: "https://github.com/vivarium-collective/viva-lumenoid/raw/basement-membrane-v1", provenance: {"repo_slug": "vivarium-collective/viva-lumenoid", "repo_url": "https://github.com/vivarium-collective/viva-lumenoid", "commit": "8320195252cc3fcdd6e404b8d779d286d467ff66", "commit_url": "https://github.com/vivarium-collective/viva-lumenoid/commit/8320195252cc3fcdd6e404b8d779d286d467ff66", "branch": "basement-membrane-v1", "lockfile": "uv.lock@df7785d3583d", "generated_at": "2026-11-12 04:00 UTC"} };</script>
 <script src="/viva-lumenoid/workbench/assets/data-source.js"></script>
 <script src="/viva-lumenoid/workbench/assets/toast.js"></script>
 <script>

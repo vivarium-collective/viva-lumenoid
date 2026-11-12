@@ -1,1 +1,1 @@
-{"present": false, "study": "bm-v2-stress-vs-strainrate", "reason": "ModuleNotFoundError: No module named 'discovery_engine.reporting'"}
+{"present": false, "study": "bm-v2-stress-vs-strainrate", "reason": "not built via the agentic model-building loop"}
