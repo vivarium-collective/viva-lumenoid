@@ -94,14 +94,12 @@ jobs:
           # CI run instead of `uv pip install` aborting with
           # "does not appear to be a Python project".
           if [ -f pyproject.toml ] || [ -f setup.py ]; then
+            # Installs the locked stack: viva-superpowers @ main (0.26.0, whose
+            # __init__ imports discovery_engine.reporting) + discovery-engine 0.3.x,
+            # which ships that reporting subpackage. (Previously this step force-
+            # reinstalled the old 0.25.0 rev to pair with a <0.3 DE floor; both the
+            # floor and that pin moved to 0.3.x in lockstep, so no override is needed.)
             uv pip install -e ".[dev]"
-            # viva-superpowers main advanced to 0.26.0, whose __init__ imports
-            # discovery_engine.reporting (needs discovery-engine>=0.3, which this
-            # workspace pins below 0.3). A transitive git source pulls it in over
-            # the [tool.uv.sources] rev pin, breaking `import viva_lumenoid`. Force
-            # the compatible 0.25.0 rev (same reinstall pattern as the workbench
-            # pin in the render-check step). Bump in lockstep with the DE floor.
-            uv pip install --reinstall-package viva-superpowers "viva-superpowers @ git+https://github.com/vivarium-collective/viva-superpowers.git@88faa72068bc1c5678a47c85c3ddce371f493cfd"
           else
             echo "No root pyproject.toml/setup.py found — installing dev tooling only."
             uv pip install pytest
@@ -187,9 +185,9 @@ jobs:
           # what will deploy.
           source .venv/bin/activate
           uv pip install --reinstall-package vivarium-workbench "vivarium-workbench @ git+https://github.com/vivarium-collective/vivarium-workbench.git@main"
-          # Re-pin viva-superpowers after the workbench@main reinstall (which can
-          # re-pull its 0.26.0 main tip) — see the install step for why 0.25.0.
-          uv pip install --reinstall-package viva-superpowers "viva-superpowers @ git+https://github.com/vivarium-collective/viva-superpowers.git@88faa72068bc1c5678a47c85c3ddce371f493cfd"
+          # workbench@main pulls viva-superpowers 0.26.0 (reporting subpackage),
+          # which the discovery-engine 0.3.x floor satisfies — so the gate now tests
+          # exactly the stack that deploys, with no superpowers override.
           if vivarium-workbench-publish --help >/dev/null 2>&1; then
             # A non-zero exit here means "the snapshot would 404 on opening one
             # or more studies" — fail the PR rather than the live site.
