@@ -185,9 +185,9 @@ jobs:
           # what will deploy.
           source .venv/bin/activate
           uv pip install --reinstall-package vivarium-workbench "vivarium-workbench @ git+https://github.com/vivarium-collective/vivarium-workbench.git@main"
-          # Re-pin viva-superpowers after the workbench@main reinstall (which can
-          # re-pull its 0.26.0 main tip) — see the install step for why 0.25.0.
-          uv pip install --reinstall-package viva-superpowers "viva-superpowers @ git+https://github.com/vivarium-collective/viva-superpowers.git@88faa72068bc1c5678a47c85c3ddce371f493cfd"
+          # workbench@main pulls viva-superpowers 0.26.0 (reporting subpackage),
+          # which the discovery-engine 0.3.x floor satisfies — so the gate now tests
+          # exactly the stack that deploys, with no superpowers override.
           if vivarium-workbench-publish --help >/dev/null 2>&1; then
             # A non-zero exit here means "the snapshot would 404 on opening one
             # or more studies" — fail the PR rather than the live site.
