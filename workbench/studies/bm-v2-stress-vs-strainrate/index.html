@@ -546,8 +546,8 @@
 
     <div class="ctr-block">
       <h2 class="overview-label ctr-h">Claim</h2>
-      <p class="ctr-text" data-edit-kind="study" data-edit-field="claim" data-edit-value="The deliverable of this study is the CONSTITUTIVE LAW the vertex model consumes: imposing an equibiaxial in-plane strain rate ε̇ on the growing collagen IV network and reading the steady-state stress σ(ε̇) is the measurement from which a two-mode Maxwell / standard-linear-solid model is fit — an intrinsic elastic floor plus a residence-dominated relaxation mode — stated over its valid ε̇ and residence ranges and expressed in tissue units. ReducedBM then BECOMES that fit, not a hand-set (k, τ). (Note: the areal strain rate = 2× the linear ε̇ — multiscale_coupling.py passes the areal rate dA/A/dt.)
-" data-edit-multiline data-edit-label="Claim">The deliverable of this study is the CONSTITUTIVE LAW the vertex model consumes: imposing an equibiaxial in-plane strain rate ε̇ on the growing collagen IV network and reading the steady-state stress σ(ε̇) is the measurement from which a two-mode Maxwell / standard-linear-solid model is fit — an intrinsic elastic floor plus a residence-dominated relaxation mode — stated over its valid ε̇ and residence ranges and expressed in tissue units. ReducedBM then BECOMES that fit, not a hand-set (k, τ). (Note: the areal strain rate = 2× the linear ε̇ — multiscale_coupling.py passes the areal rate dA/A/dt.)
+      <p class="ctr-text" data-edit-kind="study" data-edit-field="claim" data-edit-value="Imposing an equibiaxial in-plane strain rate ε̇ on the growing collagen IV network and reading the steady-state stress σ(ε̇) gives the effective viscosity η = σ/ε̇ (viscous at slow rates) and the rate at which the response turns elastic — the σ(ε̇) relation a vertex model needs.
+" data-edit-multiline data-edit-label="Claim">Imposing an equibiaxial in-plane strain rate ε̇ on the growing collagen IV network and reading the steady-state stress σ(ε̇) gives the effective viscosity η = σ/ε̇ (viscous at slow rates) and the rate at which the response turns elastic — the σ(ε̇) relation a vertex model needs.
 </p>
       
     </div>
@@ -1343,7 +1343,9 @@ pass_if: {"note": "\u03b7 ~ const at slow \u03b5\u0307", "op": "plateau"}</pre>
         Each study is a model-building gate: it answers <em>"Can we safely build the next layer?"</em>
       </p>
       
-      <div style="margin-bottom:6px"><strong>Prerequisites:</strong> <em class="muted">none (root study)</em></div>
+      <div style="margin-bottom:6px"><strong>Prerequisites:</strong>
+        <code>{&#39;study&#39;: &#39;bm-v1-stage1-modulus-remodelling&#39;, &#39;condition&#39;: &#39;tests-passed&#39;}</code>
+      </div>
       
       
       
@@ -1429,7 +1431,7 @@ pass_if: {"note": "\u03b7 ~ const at slow \u03b5\u0307", "op": "plateau"}</pre>
 </section>
 
 </main>
-<script>window.__DASH_CONFIG__ = { mode: "snapshot", interactiveUrl: "https://github.com/vivarium-collective/viva-lumenoid", basePath: "/viva-lumenoid/workbench", inputsDownloadBase: "https://github.com/vivarium-collective/viva-lumenoid/raw/basement-membrane-v1", provenance: {"repo_slug": "vivarium-collective/viva-lumenoid", "repo_url": "https://github.com/vivarium-collective/viva-lumenoid", "commit": "8320195252cc3fcdd6e404b8d779d286d467ff66", "commit_url": "https://github.com/vivarium-collective/viva-lumenoid/commit/8320195252cc3fcdd6e404b8d779d286d467ff66", "branch": "basement-membrane-v1", "lockfile": "uv.lock@df7785d3583d", "generated_at": "2026-11-12 04:00 UTC"} };</script>
+<script>window.__DASH_CONFIG__ = { mode: "snapshot", interactiveUrl: "https://github.com/vivarium-collective/viva-lumenoid", basePath: "/viva-lumenoid/workbench", inputsDownloadBase: "https://github.com/vivarium-collective/viva-lumenoid/raw/main", provenance: {"repo_slug": "vivarium-collective/viva-lumenoid", "repo_url": "https://github.com/vivarium-collective/viva-lumenoid", "commit": "c008c34da4d4d474a061714137616d259036459d", "commit_url": "https://github.com/vivarium-collective/viva-lumenoid/commit/c008c34da4d4d474a061714137616d259036459d", "branch": "main", "lockfile": "uv.lock@df7785d3583d", "generated_at": "2026-11-12 04:24 UTC"} };</script>
 <script src="/viva-lumenoid/workbench/assets/data-source.js"></script>
 <script src="/viva-lumenoid/workbench/assets/toast.js"></script>
 <script>

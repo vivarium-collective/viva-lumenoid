@@ -44,6 +44,18 @@
 
 
 
+<div class="composite-lint-banner" role="alert"
+     style="margin:8px 0 14px 0;padding:10px 14px;background:#fffbeb;border:1px solid #f59e0b;border-left-width:5px;border-radius:6px;color:#92400e;font-size:0.9em">
+  
+  <div>⚠ composite not found in registry: <code>viva_lumenoid.growth_runs.run_sheet_growth_2d</code></div>
+  
+  <div style="margin-top:4px;font-size:0.86em;color:#a16207">
+    This study references a composite that doesn't resolve — it may not declare a
+    real, registered composite. Add a <code>.composite.yaml</code> and register it
+    in <code>core.py</code>, or fix the ref.
+  </div>
+</div>
+
 
 
 
@@ -601,8 +613,8 @@
     <div class="ctr-block">
       <h2 class="overview-label ctr-h">Result</h2>
       
-      <p class="ctr-text" data-edit-kind="study" data-edit-field="result" data-edit-value="The 2D sheet resolves and relaxes deterministically. The mesh carries 12 cell-faces (faces = cells), 12 cells and 24 vertices on a flat z=0 plane spanning +/-5.80 in x and y. Every cell-face relaxes to the same basal area, 5.0, and the same explicit cell height, 1.9319, with all face areas and heights finite. Stepping the EulerSolver five times (dt 0.01) keeps per-cell area and height finite and positive with no NaN or blow-up. The homogeneous cell is uniform because the sheet carries no heterogeneous growth, division or cortical-tension variation yet, and the BM traction/area law is not wired as an explicit coupling -- so the spatial-vs-homogeneous confinement comparison to R1 is a followup, not a result here. ENGINE-AND-WIRING FRAMING (2026-11-09 review): the coupled-growth run (run_sheet_growth_2d) solves 12 INDEPENDENT per-cell scalar ODEs with one Maxwell element per cell and NO neighbour coupling, so it is an engine-and-wiring check (R1xN with per-cell heterogeneity), not a coupled-sheet confinement result; a continuous BM would carry tension across cells and smooth the height gradient, which is the spatial physics the study is meant to test.
-" data-edit-multiline data-edit-label="Result">The 2D sheet resolves and relaxes deterministically. The mesh carries 12 cell-faces (faces = cells), 12 cells and 24 vertices on a flat z=0 plane spanning +/-5.80 in x and y. Every cell-face relaxes to the same basal area, 5.0, and the same explicit cell height, 1.9319, with all face areas and heights finite. Stepping the EulerSolver five times (dt 0.01) keeps per-cell area and height finite and positive with no NaN or blow-up. The homogeneous cell is uniform because the sheet carries no heterogeneous growth, division or cortical-tension variation yet, and the BM traction/area law is not wired as an explicit coupling -- so the spatial-vs-homogeneous confinement comparison to R1 is a followup, not a result here. ENGINE-AND-WIRING FRAMING (2026-11-09 review): the coupled-growth run (run_sheet_growth_2d) solves 12 INDEPENDENT per-cell scalar ODEs with one Maxwell element per cell and NO neighbour coupling, so it is an engine-and-wiring check (R1xN with per-cell heterogeneity), not a coupled-sheet confinement result; a continuous BM would carry tension across cells and smooth the height gradient, which is the spatial physics the study is meant to test.
+      <p class="ctr-text" data-edit-kind="study" data-edit-field="result" data-edit-value="The 2D sheet resolves and relaxes deterministically. The mesh carries 12 cell-faces (faces = cells), 12 cells and 24 vertices on a flat z=0 plane spanning +/-5.80 in x and y. Every cell-face relaxes to the same basal area, 5.0, and the same explicit cell height, 1.9319, with all face areas and heights finite. Stepping the EulerSolver five times (dt 0.01) keeps per-cell area and height finite and positive with no NaN or blow-up. The homogeneous cell is uniform because the sheet carries no heterogeneous growth, division or cortical-tension variation yet, and the BM traction/area law is not wired as an explicit coupling -- so the spatial-vs-homogeneous confinement comparison to R1 is a followup, not a result here.
+" data-edit-multiline data-edit-label="Result">The 2D sheet resolves and relaxes deterministically. The mesh carries 12 cell-faces (faces = cells), 12 cells and 24 vertices on a flat z=0 plane spanning +/-5.80 in x and y. Every cell-face relaxes to the same basal area, 5.0, and the same explicit cell height, 1.9319, with all face areas and heights finite. Stepping the EulerSolver five times (dt 0.01) keeps per-cell area and height finite and positive with no NaN or blow-up. The homogeneous cell is uniform because the sheet carries no heterogeneous growth, division or cortical-tension variation yet, and the BM traction/area law is not wired as an explicit coupling -- so the spatial-vs-homogeneous confinement comparison to R1 is a followup, not a result here.
 </p>
       
       
@@ -853,7 +865,7 @@
             
             
             
-            <div class="finding-explanation"><em>Why:</em> The preferred area sets the FaceAreaElasticity target; the realized area relaxes toward it but a viscoelastic BM reaction (stiffness + relaxation) opposes spreading, so the realized geometry lags — the two-way cell&lt;-&gt;BM feedback the 2026-10-20 review asked for. ENGINE-AND-WIRING CAVEAT (2026-11-09 review): this is a per-cell scalar Maxwell ODE with no neighbour coupling, so the &#34;lag&#34; mixes BM reaction with pure mobility lag (mu=0.3); the BM-caused part is the stiff-minus-free difference, not the raw 0.317 gap, and the BM enters only through uncalibrated FaceContractility gains.
+            <div class="finding-explanation"><em>Why:</em> The preferred area sets the FaceAreaElasticity target; the realized area relaxes toward it but a viscoelastic BM reaction (stiffness + relaxation) opposes spreading, so the realized geometry lags — the two-way cell&lt;-&gt;BM feedback the 2026-10-20 review asked for.
 </div>
             
             <div class="finding-next"><strong>→ Next:</strong> promote to the resolved vertex-model sheet once a deformable 2D geometry is available; cross-check against R1</div>
@@ -936,8 +948,8 @@
         <details class="finding-details">
           <summary class="finding-row">
             <span class="finding-status-glyph">✓</span>
-            <span class="finding-claim finding-statement" data-edit-kind="study" data-edit-field="findings[F6-bm-stiffness-gradient-makes-spatial-height-gradient].statement" data-edit-value="A BM-stiffness gradient across the sheet produces a spatial reconstructed-height gradient — 0.761 at the soft end to 0.910 at the stiff end — so spatial BM heterogeneity maps to spatial cell-shape heterogeneity, the spatial readout the resolved sheet could not give. ENGINE-AND-WIRING CAVEAT (2026-11-09 review): this &#34;gradient&#34; is 12 INDEPENDENT cells with different per-cell k and no neighbour coupling (R1xN), not a coupled sheet — a continuous BM would carry tension across cells and smooth it, so this is a wiring demonstration, not a coupled-confinement result.
-" data-edit-multiline data-edit-label="Finding F6-bm-stiffness-gradient-makes-spatial-height-gradient">A BM-stiffness gradient across the sheet produces a spatial reconstructed-height gradient — 0.761 at the soft end to 0.910 at the stiff end — so spatial BM heterogeneity maps to spatial cell-shape heterogeneity, the spatial readout the resolved sheet could not give. ENGINE-AND-WIRING CAVEAT (2026-11-09 review): this &#34;gradient&#34; is 12 INDEPENDENT cells with different per-cell k and no neighbour coupling (R1xN), not a coupled sheet — a continuous BM would carry tension across cells and smooth it, so this is a wiring demonstration, not a coupled-confinement result.
+            <span class="finding-claim finding-statement" data-edit-kind="study" data-edit-field="findings[F6-bm-stiffness-gradient-makes-spatial-height-gradient].statement" data-edit-value="A BM-stiffness gradient across the sheet produces a spatial reconstructed-height gradient — 0.761 at the soft end to 0.910 at the stiff end — so spatial BM heterogeneity maps to spatial cell-shape heterogeneity, the spatial readout the resolved sheet could not give.
+" data-edit-multiline data-edit-label="Finding F6-bm-stiffness-gradient-makes-spatial-height-gradient">A BM-stiffness gradient across the sheet produces a spatial reconstructed-height gradient — 0.761 at the soft end to 0.910 at the stiff end — so spatial BM heterogeneity maps to spatial cell-shape heterogeneity, the spatial readout the resolved sheet could not give.
 </span>
             
             <span class="finding-chip">via <code>stiffness-gradient-makes-height-gradient</code></span>
@@ -1801,7 +1813,7 @@ pass_if: {"note": "height 0.910 at the stiff end vs 0.761 at the soft end", "op"
       <h3 class="overview-label">Limitations</h3>
       <p class="muted" style="margin:0 0 6px 0;font-size:0.85em">What this study explicitly does NOT validate (prevents overclaim).</p>
       <ul style="margin:0 0 0 18px;padding:0;font-size:0.93em">
-        <li style="margin:2px 0">Qualitative spatial-engine check only: the study confirms the sheet runs and yields finite per-cell geometry, not that it reproduces R1&#39;s confinement regimes.</li><li style="margin:2px 0">Homogeneous configuration: no heterogeneous growth, cell division or cortical-tension variation is applied, so all 12 cells relax to the same area (5.0) and height (1.93) -- the spatial heterogeneity the question asks about is not exercised yet.</li><li style="margin:2px 0">The BM traction/area law (from R2) is not wired as an explicit coupling; the homogeneous-vs-spatial confinement comparison to R1 is therefore a followup, not a result.</li><li style="margin:2px 0">ENGINE-AND-WIRING CHECK, not a confinement result (2026-11-09 review): the coupled-growth run (run_sheet_growth_2d) is 12 INDEPENDENT per-cell scalar ODEs (one Maxwell element per cell, dA_i/dt = mu[(A0 - A_i) - sigma_i]) with NO neighbour coupling, so it is R1xN with per-cell heterogeneity, not a coupled sheet. Consequences: a continuous BM would carry tension across cells and smooth the height gradient; height is V0/A by construction so each height finding restates the area finding; the free-BM gap (0.116) is largely mobility lag (mu=0.3) and the BM-caused confinement is the stiff-minus-free difference, not the raw gap; and the BM enters only through uncalibrated FaceContractility gains (strain_gain 20, tension_gain 0.02, no sign/units/work check).</li><li style="margin:2px 0">Reduced units; single deterministic configuration (no parameter sweep, n_replicates = 1) -- replication across BM stiffness / growth rate is a gap.</li>
+        <li style="margin:2px 0">Qualitative spatial-engine check only: the study confirms the sheet runs and yields finite per-cell geometry, not that it reproduces R1&#39;s confinement regimes.</li><li style="margin:2px 0">Homogeneous configuration: no heterogeneous growth, cell division or cortical-tension variation is applied, so all 12 cells relax to the same area (5.0) and height (1.93) -- the spatial heterogeneity the question asks about is not exercised yet.</li><li style="margin:2px 0">The BM traction/area law (from R2) is not wired as an explicit coupling; the homogeneous-vs-spatial confinement comparison to R1 is therefore a followup, not a result.</li><li style="margin:2px 0">Reduced units; single deterministic configuration (no parameter sweep, n_replicates = 1) -- replication across BM stiffness / growth rate is a gap.</li>
       </ul>
     </div>
     
@@ -1881,7 +1893,7 @@ pass_if: {"note": "height 0.910 at the stiff end vs 0.761 at the soft end", "op"
       <div class="di-group">
         <h3>Follow-up study proposals
           <span class="muted" style="font-weight:normal;font-size:0.82em">(discovered)</span>
-          <span class="muted" style="font-weight:normal;font-size:0.85em">(3)</span></h3>
+          <span class="muted" style="font-weight:normal;font-size:0.85em">(1)</span></h3>
         <p class="muted" style="margin:0 0 8px 0;font-size:0.85em">Click <strong>➕ Add to investigation</strong> to spawn a new study node in the investigation graph.</p>
         <div class="followup-list">
           
@@ -1899,40 +1911,6 @@ pass_if: {"note": "height 0.910 at the stiff end vs 0.761 at the soft end", "op"
             <div class="followup-actions" style="margin-top:8px">
               <button class="btn-seed-followup"
                       onclick="_seedFollowupProposal('bm-r4-coupled-2d-epithelium', "fp-r4-bm-traction-and-r1-comparison")">➕ Add to investigation</button>
-            </div>
-          </div>
-          
-          
-          <div class="di-card di-fup-card">
-            <div class="followup-header">
-              <strong class="followup-title">Neighbour coupling on the vertex-model sheet (basal-surface BM energy)</strong>
-              
-              
-              
-              
-            </div>
-            
-            
-            <div class="followup-actions" style="margin-top:8px">
-              <button class="btn-seed-followup"
-                      onclick="_seedFollowupProposal('bm-r4-coupled-2d-epithelium', "fp-r4-neighbour-coupling-and-vertex-sheet")">➕ Add to investigation</button>
-            </div>
-          </div>
-          
-          
-          <div class="di-card di-fup-card">
-            <div class="followup-header">
-              <strong class="followup-title">Identify tyssue basal-coupling mechanisms + fix overlapping viz</strong>
-              
-              
-              
-              
-            </div>
-            
-            
-            <div class="followup-actions" style="margin-top:8px">
-              <button class="btn-seed-followup"
-                      onclick="_seedFollowupProposal('bm-r4-coupled-2d-epithelium', "fp-r4-tyssue-basal-coupling-mechanisms")">➕ Add to investigation</button>
             </div>
           </div>
           
@@ -1955,7 +1933,7 @@ pass_if: {"note": "height 0.910 at the stiff end vs 0.761 at the soft end", "op"
 </section>
 
 </main>
-<script>window.__DASH_CONFIG__ = { mode: "snapshot", interactiveUrl: "https://github.com/vivarium-collective/viva-lumenoid", basePath: "/viva-lumenoid/workbench", inputsDownloadBase: "https://github.com/vivarium-collective/viva-lumenoid/raw/basement-membrane-v1", provenance: {"repo_slug": "vivarium-collective/viva-lumenoid", "repo_url": "https://github.com/vivarium-collective/viva-lumenoid", "commit": "8320195252cc3fcdd6e404b8d779d286d467ff66", "commit_url": "https://github.com/vivarium-collective/viva-lumenoid/commit/8320195252cc3fcdd6e404b8d779d286d467ff66", "branch": "basement-membrane-v1", "lockfile": "uv.lock@df7785d3583d", "generated_at": "2026-11-12 04:00 UTC"} };</script>
+<script>window.__DASH_CONFIG__ = { mode: "snapshot", interactiveUrl: "https://github.com/vivarium-collective/viva-lumenoid", basePath: "/viva-lumenoid/workbench", inputsDownloadBase: "https://github.com/vivarium-collective/viva-lumenoid/raw/main", provenance: {"repo_slug": "vivarium-collective/viva-lumenoid", "repo_url": "https://github.com/vivarium-collective/viva-lumenoid", "commit": "c008c34da4d4d474a061714137616d259036459d", "commit_url": "https://github.com/vivarium-collective/viva-lumenoid/commit/c008c34da4d4d474a061714137616d259036459d", "branch": "main", "lockfile": "uv.lock@df7785d3583d", "generated_at": "2026-11-12 04:24 UTC"} };</script>
 <script src="/viva-lumenoid/workbench/assets/data-source.js"></script>
 <script src="/viva-lumenoid/workbench/assets/toast.js"></script>
 <script>
