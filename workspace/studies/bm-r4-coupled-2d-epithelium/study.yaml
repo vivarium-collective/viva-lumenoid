@@ -28,6 +28,11 @@ review_actions:
   action: "Recorded followup_proposals entry fp-r4-tyssue-basal-coupling-mechanisms (enumerate the tyssue coupling options — reduced prefered_area vs explicit basal vertex force — on a flat monolayer, and fix the overlapping sheet layout). Cannot implement code/viz here."
   status: deferred-followup
 
+- source: inline-feedback-2026-11-09
+  date: '2026-11-09'
+  item: the visualization here is overlapping, can we identify what mechanisms are needed in tyssue to enable coupling of basal stress to area and height? Could this be reduced preferred area? Or an explicit force on vertices? How would that be resolved? This is a key component of the investigation.  R4 should propbably start with a flat tyssue monolayer. Spherical geometry can be added later. This is similar to the prism model implemented using tyssue.
+  action: "BUILDING the real coupling (the investigation's #1 gate): a BM-face-energy effector inside the tyssue vertex solver — per basal face E_f = (K_BM/2)(A_f - A_rest)^2 / A_rest with tension T_f = K_BM (A_f - A_rest)/A_rest clipped >= 0, carried across shared vertices so BM tension is continuous between neighbouring cells (an explicit force on the vertices, not a per-cell reduced preferred-area surrogate) — plus a BM slow-state process evolving A_rest on turnover (dA_rest/dt = (A_f - A_rest)/tau). Runs on a flat tyssue monolayer and reduces to R1's prism law in the homogeneous limit. Also fixes the overlapping sheet layout. Converts fp-r4-neighbour-coupling-and-vertex-sheet and fp-r4-tyssue-basal-coupling-mechanisms from deferred to built."
+  status: in-progress-build
 claim: >
   The explicit 2D epithelial sheet relaxes under the Tyssue vertex model and yields finite,
   uniform per-cell geometry: all 12 cell-faces carry the same basal area (5.0) and the same

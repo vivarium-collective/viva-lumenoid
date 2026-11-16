@@ -553,6 +553,11 @@ followup_proposals:
     crosslink changes under growth directly comparable to the published panel.
   status: proposed
 
+- id: fp-r3-figure2c-three-modes
+  title: Reproduce Barrientos et al. 2026 Fig 2C with the real collagen model across the three supply modes
+  motivation: "R3 already reproduces the Fig 2B/C supply ordering as a scalar crosslink-per-area + rod-count ranking. The reviewer asks to see Fig 2C itself with the actual collagen model — the density and crosslinking trajectories under the three modes (no remodelling / remodelling without supply / remodelling with insertion) rendered as the panel, not only the ordering.\n"
+  status: proposed
+  hypothesized_mechanism: Only combined crosslink turnover AND material insertion grows a connected, densifying, load-bearing network; the three-mode density/crosslinking trajectories reproduce the Fig 2C panel shape.
 discovery_implications:
   resolved_uncertainties:
   - "The composite now expresses all three Fig 2B-C supply modes (insertion mechanism added)."
@@ -593,6 +598,11 @@ review_actions:
   action: "Recorded as followup_proposal fp-r3-fig2c-reproduction (render the three-mode network snapshots the way Fig 2C does, showing density / crosslink change under growth). Visualization work deferred to a follow-up; the three-mode ordering result and numbers unchanged."
   status: deferred-followup
 
+- source: inline-feedback-2026-11-09
+  date: '2026-11-09'
+  item: Can we do a reproduction of the visualization in 2C of Barrientos 2026 using the actual collagen model? Would be good to see the change in density/crosslinking under these three modes
+  action: 'Added followup fp-r3-figure2c-three-modes: reproduce Fig 2C with the real CollagenNetworkProcess across the three supply modes (no remodelling / remodelling without new collagen / remodelling with material insertion), reporting the change in network density and crosslinking per mode.'
+  status: followup-queued
 bibliography:
   sources:
   - key: barrientos2026cellshape

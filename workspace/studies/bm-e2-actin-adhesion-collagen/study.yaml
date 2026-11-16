@@ -34,6 +34,11 @@ review_actions:
     checks already recorded.
   status: acknowledged
 
+- source: inline-feedback-2026-11-09
+  date: '2026-11-09'
+  item: we can revisit this after clearing previous studies, the BM composition is more relevant than actin for this investigation
+  action: Deferred behind the BM/2D core as part of the actin follow-up branch — not on the active path. Revisited only after the collagen/BM-composition and 2D-coupling studies clear.
+  status: deferred-followup-branch
 claim: >
   An active cortex transmits force through reversible basal linkers to a collagen membrane
   patch; the transmitted traction equals linker occupancy times cortical tension (by

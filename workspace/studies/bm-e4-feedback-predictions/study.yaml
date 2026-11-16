@@ -42,6 +42,11 @@ review_actions:
     as a headline.
   status: deferred-followup
 
+- source: inline-feedback-2026-11-09
+  date: '2026-11-09'
+  item: promising extension but needs more dynamic visualizations. first let's nail down the 2D coupling between LAMMPS-tyssue and then attempt 3D
+  action: 'Deferred behind R4: the 2D BM<->tyssue coupling build is the explicit prerequisite the reviewer names before attempting 3D. Added req-e4-dynamic-viz for the additional dynamic visualizations; the explicit-LAMMPS BM path stays a separate verification gate.'
+  status: deferred-behind-r4
 claim: >
   The epithelium and its collagen basement membrane are coupled both ways: the growing
   basal surface stretches the membrane and the membrane's stress pushes back on the cells
@@ -1103,3 +1108,9 @@ bibliography:
   sources:
   - key: barrientos2026cellshape
     note: "Barrientos et al. cell-shape paper; the homogeneous one-way prediction the E4 bidirectional feedback predictions are framed against."
+implementation_requirements:
+- id: req-e4-dynamic-viz
+  title: Dynamic visualizations of the two-way coupled lumenoid
+  kind: visualization
+  status: blocked
+  description: Add dynamic (Simularium/animated) views of the growth-driven two-way LAMMPS-collagen<->tyssue coupling, once the 2D coupling (R4) is nailed down. Blocked on R4.

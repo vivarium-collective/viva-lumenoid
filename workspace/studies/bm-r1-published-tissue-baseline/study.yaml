@@ -428,6 +428,11 @@ followup_proposals:
     drive net height increase; a multi-cell sheet would let BM tension spread across neighbours.
   status: proposed
 
+- id: fp-r1-native-tyssue-biaxial-prism
+  title: Reproduce R1 natively in tyssue via a biaxial explicit-stress prism, at multiple cells, with a height-increase regime
+  motivation: "R1 is a standalone 0-D prism. The reviewer asks to (a) find a regime where cell height increases, (b) extend to multiple cells, and (c) implement it natively in tyssue via a biaxial explicit stress rather than a standalone model. The R4 BM-face-energy coupling build supplies the native-tyssue biaxial stress; this followup sweeps BM stiffness/relaxation vs the preferred-growth timescale on the multi-cell sheet to locate the thickening (height-increase) regime and confirm the homogeneous limit reproduces R1.\n"
+  status: in-progress
+  hypothesized_mechanism: A biaxial explicit basal-BM stress on a multi-cell tyssue prism, with BM stiffness/relaxation slow relative to preferred growth, confines basal area and drives fixed cell volume into height — the height-increase regime R1 only parameterises.
 discovery_implications:
   resolved_uncertainties:
   - "A 3-parameter reduced-order model is sufficient to recover Fig 1G's confinement regimes."
@@ -474,6 +479,21 @@ review_actions:
   action: "Captured the regime / multi-cell / native-tyssue questions as expert_questions entries and added followup_proposal fp-r1-regime-explore-and-multicell for the concrete new runs; left the reduced-order baseline's verdict and numbers unchanged (the focus-ordering reprioritization is an investigation-level call, not a study-content edit)."
   status: acknowledged
 
+- source: inline-feedback-2026-11-09
+  date: '2026-11-09'
+  item: 1. Could we get a regime where the height increases? 2. Could we extend to multiple cells? 3. This is currently implemented as a standalone model, can we use tyssue to simulate natively? This could maybe be done through a biaxial explicit stress?
+  action: "Folded into the R4 native-tyssue BM-coupling build: R1's prism law becomes the homogeneous limit of a real tyssue sheet carrying an explicit basal BM energy (a biaxial explicit stress on the vertex mesh), run at multiple cells. Added followup fp-r1-native-tyssue-biaxial-prism covering the height-increase regime sweep, the multi-cell native prism, and the biaxial explicit-stress realisation."
+  status: addressed-via-r4-build
+- source: inline-feedback-2026-11-09
+  date: '2026-11-09'
+  item: We should only focus on study 6 and onwards. The previous studies are not investigating the correct questions.  The assumptions here may be too simplistic. Is this just a reimplementation of the existing model? Can we try one an explicit 2D stress on a tyssue prism model that shows increased stiffness or viscosity relative to proliferation results in thickening (height increase)
+  action: Reframed R1 as the reduced-order reference the native-tyssue prism must reproduce, not an endpoint. The central mechanistic test the reviewer asks for — explicit 2D stress on a tyssue prism where increased BM stiffness/viscosity relative to the proliferation (preferred-growth) timescale produces thickening (height increase) — is now the R4 build's acceptance experiment.
+  status: addressed-in-r4-build
+- source: inline-feedback-2026-11-09
+  date: '2026-11-09'
+  item: Is there any regime in which we see the area decrease? Is there any regime where we see the height increase? Review figure 1 in https://doi.org/10.1016/j.cell.2026.07.010 to orient. Also would be interesting to include a comparison between volume increase vs increase in number of cells.
+  action: 'Added viz requirement req-r1-regime-fig1-orientation: annotate the R1 regime map with the area-decrease and height-increase regions oriented to Barrientos et al. Fig 1 (doi:10.1016/j.cell.2026.07.010), and add a volume-growth vs cell-number-growth comparison. The DOI is recorded as a pending proposed_input on the investigation (not silently cited).'
+  status: followup-queued
 bibliography:
   sources:
   - key: barrientos2026cellshape

@@ -33,6 +33,11 @@ review_actions:
   action: "Noted on pipeline_gate that acceptance is gated on the upstream studies (R4/R5) being cleared, which they are NOT yet (R4 reframed to an engine-and-wiring check, R5's BM is a scalar Maxwell element, not explicit) — so acceptance of R6 is not fabricated as cleared. Recorded as an acknowledged review action."
   status: acknowledged
 
+- source: inline-feedback-2026-11-09
+  date: '2026-11-09'
+  item: visualization of the cells growing tallershorter would be helpful. needs previous studies to be cleared before acceptance
+  action: 'Kept the reproduced Fig-7 perlecan ordering (knockdown taller > control > overexpression shorter) but gated final acceptance behind the 2D coupling core per the reviewer. Added req-r6-taller-shorter-viz: a dynamic visualization of cells growing taller/shorter across the perlecan + growth-rate conditions.'
+  status: acceptance-gated-behind-2d-core
 claim: >
   Carrying an inferred collagen IV lifetime through BM relaxation to cell shape reproduces the
   paper's Figure 7 perlecan intervention ordering: perlecan knockdown (loss) gives the TALLEST
@@ -580,3 +585,9 @@ bibliography:
   sources:
   - key: barrientos2026cellshape
     note: "Barrientos et al. cell-shape paper; Figure 7 perlecan / growth-rate intervention ordering on cell shape is the reproduction target."
+implementation_requirements:
+- id: req-r6-taller-shorter-viz
+  title: Dynamic visualization of cells growing taller/shorter across perlecan + growth conditions
+  kind: visualization
+  status: planned
+  description: Render the perlecan knockdown/control/overexpression and growth-rate conditions as a dynamic (Simularium or animated) view of cell height changing, so the taller>control>shorter ordering is visible, not only tabulated.

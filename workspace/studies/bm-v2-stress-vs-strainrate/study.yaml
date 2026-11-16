@@ -28,6 +28,11 @@ review_actions:
     (fp-v2-two-mode-maxwell-fit) is what the coupling will consume.
   status: acknowledged
 
+- source: inline-feedback-2026-11-09
+  date: '2026-11-09'
+  item: Useful study but perhaps tangential to the investigation. We would want to use this to quantify the stress strain relationship when composing an explicit BM model with tyssue, but currently this is not ready for it.
+  action: "Retained as the stress-strain calibration input for the explicit-BM<->tyssue composition: V2's sigma(strain-rate) is what sets the K_BM / tau material law the R4 BM-face-energy effector consumes. Marked tangential/deferred until the explicit-BM path (R4 -> E4) is ready to consume it; not removed."
+  status: retained-as-calibration-input
 claim: >
   The deliverable of this study is the CONSTITUTIVE LAW the vertex model consumes:
   imposing an equibiaxial in-plane strain rate ε̇ on the growing collagen IV network
