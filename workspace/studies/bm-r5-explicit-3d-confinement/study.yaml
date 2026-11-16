@@ -28,6 +28,11 @@ review_actions:
   action: "Recorded followup_proposals entry fp-r5-growth-video (render a dynamic video of the tyssue monolayer growing taller under a slow/stiff BM vs spreading over a soft BM). Cannot render the video here."
   status: deferred-followup
 
+- source: inline-feedback-2026-11-09
+  date: '2026-11-09'
+  item: Previous study needs to be resolved before this one. Could we visualize a video of cells simulated using tyssue growing taller under confinement or spreading over softer bm?
+  action: "Deferred behind the 2D coupling core (R4): R5's acceptance is gated on R4 tests-passed (the parent_studies edge already encodes this). Added req-r5-simularium-confinement-video: a Simularium trajectory of the tyssue cells growing taller under a stiff/slow BM and spreading on a soft BM, to be produced once the R4 coupling lands and feeds the 3D monolayer."
+  status: deferred-behind-r4
 claim: >
   The explicit 3D epithelial monolayer runs over the Tyssue engine and per-cell heights and
   volumes emerge directly from the apical/lateral/basal surface energies and volume targets --
@@ -578,3 +583,9 @@ bibliography:
   sources:
   - key: barrientos2026cellshape
     note: "Barrientos et al. cell-shape paper; the explicit 3D monolayer is the resolved-geometry counterpart of the Fig 1 confinement model, replacing the prism approximation."
+implementation_requirements:
+- id: req-r5-simularium-confinement-video
+  title: 'Simularium video: cells growing taller under confinement / spreading on softer BM'
+  kind: visualization
+  status: blocked
+  description: Render a Simularium trajectory of the 3D monolayer cells thickening under a stiff/slow BM reaction and flattening/spreading under a soft BM, using the R4 BM-face-energy coupling once it lands. Blocked until R4 (2D coupling) passes.

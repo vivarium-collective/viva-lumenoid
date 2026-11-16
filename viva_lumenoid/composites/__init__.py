@@ -35,6 +35,13 @@ def _register_tyssue(core):
     return _r(core)
 
 
+def _register_bm_coupling(core):
+    """Lazy core extension: register the tyssue engine AND inject the BM face-
+    energy effector (BMFaceAreaElasticity) into the engine's EFFECTORS_MAP."""
+    from ..bm_coupling import register_bm_coupling as _r
+    return _r(core)
+
+
 def _register_e2(core):
     """Lazy core extension for the E2 coupling: the LAMMPS model seam (cortex) +
     the collagen network + controller + the basal-adhesion linker process."""
@@ -272,6 +279,49 @@ def tyssue_2d_sheet(core=None, **kw) -> dict:
     return tyssue_eptm_spec(
         "Sheet2D", "workspace/datasets/cross_section.hf5", "CrossSectionGeometry", "Sheet",
         effectors=["FaceAreaElasticity", "LineTension"],
+        ref_effector="FaceAreaElasticity", parameters=parameters,
+        settings={"threshold_length": 0.03},
+    )
+
+
+_BM_COUPLED_PARAMS = {
+    "bm_stiffness": {"type": "float", "default": 40.0,
+                     "description": "BM face-energy stiffness K_BM (0 = no BM / free control)."},
+    "bm_rest_area": {"type": "float", "default": 5.0,
+                     "description": "BM rest area A_rest the face energy pulls toward."},
+    "prefered_area": {"type": "float", "default": 8.0,
+                      "description": "Preferred (grown) basal cell area the cell relaxes toward."},
+    "line_tension": {"type": "float", "default": 0.02,
+                     "description": "Junction line tension of the 2D sheet."},
+}
+
+
+@composite_generator(
+    name="tyssue_2d_bm_coupled",
+    description="R4 — explicit BM<->epithelium coupling: a 2D tyssue sheet "
+                "(PlanarGeometry over the cross-section mesh) with the BM as a "
+                "face energy (BMFaceAreaElasticity, tension continuous across "
+                "shared vertices) resisting a grown preferred basal area. A short "
+                "relax shows the confinement; the time-series growth sweep across "
+                "no-bm/elastic/relaxing modes is the study's canonical run.",
+    parameters=_BM_COUPLED_PARAMS,
+    core_extensions=[_register_bm_coupling],
+)
+def tyssue_2d_bm_coupled(core=None, **kw) -> dict:
+    parameters = {
+        "face_df": {
+            "area_elasticity": 1.0,
+            "prefered_area": float(kw.get("prefered_area", 8.0)),
+            "bm_stiffness": float(kw.get("bm_stiffness", 40.0)),
+            "bm_rest_area": float(kw.get("bm_rest_area", 5.0)),
+            "is_alive": 1.0,
+        },
+        "edge_df": {"line_tension": float(kw.get("line_tension", 0.02)), "is_active": 1.0},
+        "vert_df": {"viscosity": 1.0, "is_alive": 1.0},
+    }
+    return tyssue_eptm_spec(
+        "BMCoupled2D", "workspace/datasets/cross_section.hf5", "PlanarGeometry", "Sheet",
+        effectors=["FaceAreaElasticity", "LineTension", "BMFaceAreaElasticity"],
         ref_effector="FaceAreaElasticity", parameters=parameters,
         settings={"threshold_length": 0.03},
     )

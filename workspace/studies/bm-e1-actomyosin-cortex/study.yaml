@@ -23,6 +23,11 @@ review_actions:
     focused on BM composition and the BM<->vertex coupling first.
   status: deferred-followup
 
+- source: inline-feedback-2026-11-09
+  date: '2026-11-09'
+  item: this study needs some redesigning. actin cortex integration can be a follow up study so that this one can focus on the BM for now. This can be a promising way to model cell-cell contacts, focal adhesions, etc.
+  action: Deprioritised to the actin follow-up branch so the active investigation focuses on the BM. E1 stays a recorded engineering check (a coarse LJ cortex tension proxy), removed from the active 2D-BM critical path; its redesign (explicit filaments/motors, cell-cell contacts, focal adhesions) moves to a separate follow-up investigation.
+  status: deferred-followup-branch
 claim: >
   A coarse actomyosin cortex carries a cortical tension that rises monotonically with the
   myosin-contractility proxy, giving a tunable active tension that can be mapped onto the

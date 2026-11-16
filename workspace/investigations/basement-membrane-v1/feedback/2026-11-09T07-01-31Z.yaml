@@ -1,0 +1,152 @@
+meta:
+  investigation: basement-membrane-v1
+  reviewer: reviewer
+  generated_at: '2026-11-09T07:01:31Z'
+  source: workbench-inline-feedback
+annotations:
+  study-bm-e1-actomyosin-cortex:
+  - author: reviewer
+    text: this study needs some redesigning. actin cortex integration can be a follow
+      up study so that this one can focus on the BM for now. This can be a promising
+      way to model cell-cell contacts, focal adhesions, etc.
+    ts: '2026-11-09T06:49:04Z'
+    disposition: revise
+    region: 'Study: Explicit actomyosin cortex mechanics'
+    group: studies
+  study-bm-e2-actin-adhesion-collagen:
+  - author: reviewer
+    text: we can revisit this after clearing previous studies, the BM composition
+      is more relevant than actin for this investigation
+    ts: '2026-11-09T06:49:51Z'
+    disposition: revise
+    region: 'Study: Actin-adhesion-collagen force transfer'
+    group: studies
+  study-bm-e3-closed-3d-lumenoid:
+  - author: reviewer
+    text: 2D composition needs to pass before moving to 3D. pressure/volume relation
+      is interesting but can be a follow up. Could we use simularium for dynamic visualizations?
+    ts: '2026-11-09T06:51:51Z'
+    disposition: revise
+    region: 'Study: Closed 3D lumenoid morphogenesis'
+    group: studies
+  study-bm-e4-feedback-predictions:
+  - author: reviewer
+    text: promising extension but needs more dynamic visualizations. first let's nail
+      down the 2D coupling between LAMMPS-tyssue and then attempt 3D
+    ts: '2026-11-09T06:52:13Z'
+    disposition: revise
+    region: "Study: LAMMPS\u2013Tyssue coupled lumenoid"
+    group: studies
+  study-bm-r1-published-tissue-baseline-finding:
+  - author: reviewer
+    text: 1. Could we get a regime where the height increases? 2. Could we extend
+      to multiple cells? 3. This is currently implemented as a standalone model, can
+      we use tyssue to simulate natively? This could maybe be done through a biaxial
+      explicit stress?
+    ts: '2026-11-09T06:28:54Z'
+    disposition: revise
+    region: "Reduced-order tissue-mechanics baseline \xB7 Finding"
+    group: studies
+  study-bm-r1-published-tissue-baseline-model-key-assumptions:
+  - author: reviewer
+    text: We should only focus on study 6 and onwards. The previous studies are not
+      investigating the correct questions.  The assumptions here may be too simplistic.
+      Is this just a reimplementation of the existing model? Can we try one an explicit
+      2D stress on a tyssue prism model that shows increased stiffness or viscosity
+      relative to proliferation results in thickening (height increase)
+    ts: '2026-10-30T19:24:27Z'
+    region: "Reduced-order tissue-mechanics baseline \xB7 Model & key assumptions"
+    group: studies
+  study-bm-r1-published-tissue-baseline-visualizations:
+  - author: reviewer
+    text: 'Is there any regime in which we see the area decrease? Is there any regime
+      where we see the height increase? Review figure 1 in https://doi.org/10.1016/j.cell.2026.07.010
+      to orient. Also would be interesting to include a comparison between volume
+      increase vs increase in number of cells. '
+    ts: '2026-10-30T19:27:34Z'
+    disposition: revise
+    region: "Reduced-order tissue-mechanics baseline \xB7 Visualizations"
+    group: studies
+  study-bm-r2-collagen-network-rheology-visualizations:
+  - author: reviewer
+    text: Could we reproduce figures 2C, C', D, E from Barrientos et al. 2026? The
+      current crosslink/stress relationship is not very clear.
+    ts: '2026-11-09T06:37:00Z'
+    disposition: revise
+    region: "Faithful collagen IV network rheology \xB7 Visualizations"
+    group: studies
+  study-bm-r3-network-expansion-supply-visualizations:
+  - author: reviewer
+    text: Can we do a reproduction of the visualization in 2C of Barrientos 2026 using
+      the actual collagen model? Would be good to see the change in density/crosslinking
+      under these three modes
+    ts: '2026-11-09T06:39:36Z'
+    disposition: revise
+    region: "Network expansion & collagen supply \xB7 Visualizations"
+    group: studies
+  study-bm-r4-coupled-2d-epithelium-visualizations:
+  - author: reviewer
+    text: the visualization here is overlapping, can we identify what mechanisms are
+      needed in tyssue to enable coupling of basal stress to area and height? Could
+      this be reduced preferred area? Or an explicit force on vertices? How would
+      that be resolved? This is a key component of the investigation.  R4 should propbably
+      start with a flat tyssue monolayer. Spherical geometry can be added later. This
+      is similar to the prism model implemented using tyssue.
+    ts: '2026-11-09T06:42:17Z'
+    disposition: revise
+    region: "Coupled 2D epithelial sheet \xB7 Visualizations"
+    group: studies
+  study-bm-r5-explicit-3d-confinement:
+  - author: reviewer
+    text: Previous study needs to be resolved before this one. Could we visualize
+      a video of cells simulated using tyssue growing taller under confinement or
+      spreading over softer bm?
+    ts: '2026-11-09T06:45:59Z'
+    disposition: revise
+    region: 'Study: Explicit 3D cell confinement'
+    group: studies
+  study-bm-r6-perlecan-growth-perturbations:
+  - author: reviewer
+    text: visualization of the cells growing tallershorter would be helpful. needs
+      previous studies to be cleared before acceptance
+    ts: '2026-11-09T06:47:27Z'
+    disposition: revise
+    region: 'Study: Perlecan & growth perturbations on cell shape'
+    group: studies
+  study-bm-v1-stage1-modulus-remodelling:
+  - author: reviewer
+    text: This study is not relevant for the current investigation and can be removed.
+    ts: '2026-11-09T06:30:23Z'
+    disposition: revise
+    region: 'Study: Elastic modulus & remodelling-time separation'
+    group: studies
+  study-bm-v2-stress-vs-strainrate:
+  - author: reviewer
+    text: Useful study but perhaps tangential to the investigation. We would want
+      to use this to quantify the stress strain relationship when composing an explicit
+      BM model with tyssue, but currently this is not ready for it.
+    ts: '2026-11-09T06:31:30Z'
+    disposition: revise
+    region: 'Study: Growth rheology: stress vs strain rate'
+    group: studies
+  study-bm-v3-junction-bending-rigidity:
+  - author: reviewer
+    text: This study is not relevant for the current investigation and can be removed.
+    ts: '2026-11-09T06:30:06Z'
+    disposition: revise
+    region: 'Study: Rigidity percolation (central-force control)'
+    group: studies
+  study-bm-v4-junction-bending:
+  - author: reviewer
+    text: This study is not relevant for the current investigation and can be removed.
+    ts: '2026-11-09T06:30:00Z'
+    disposition: revise
+    region: 'Study: Native junction-bending modulus'
+    group: studies
+  study-bm-v5-porosity-bundling:
+  - author: reviewer
+    text: This study is not relevant for the current investigation and can be removed.
+    ts: '2026-11-09T06:29:51Z'
+    disposition: revise
+    region: 'Study: Network porosity & strand bundling'
+    group: studies

@@ -411,3 +411,49 @@ review_actions:
   action: >-
     Recorded as sequencing: the coupling contract + 2D coupling are the gating priority; 3D (E3) and the R6 sweeps are gated behind a passing 2D coupling. Captured per-study.
   status: acknowledged
+- source: inline-feedback-2026-11-09
+  date: '2026-11-09'
+  item: 'Full investigation reprioritization (Saurabh Mogre, 2026-11-09): focus on the BM/2D coupling, defer actin + 3D, reproduce specific figures, add dynamic visualizations.'
+  action: 'See reviewer_round_2026_11_09: recorded a review_action per comment across all 11 studies; reprioritised into tiers (active 2D coupling core; collagen-network reproductions; deferred-behind-2D; deferred actin follow-up; V2 retained as calibration input); confirmed V1/V3/V4/V5 already removed; queued figure reproductions + Simularium requirements; started the R4 BM-face-energy coupling build.'
+  status: in-progress
+reviewer_round_2026_11_09:
+  reviewer: Saurabh Mogre
+  date: '2026-11-09'
+  disposition: revise
+  central_reprioritisation: |
+    Focus the active investigation on the 2D basement-membrane <-> epithelium coupling core and defer everything off that spine. The reviewer's spine: the reduced-order tissue reference (R1) -> a NATIVE tyssue prism that couples basal BM stress to cell area and height via an explicit vertex force (R4, the KEY component) is the frontier; actin (E1/E2) becomes a separate follow-up investigation; 3D (R5/E3/E4) and R6 acceptance wait until the 2D coupling passes; the collagen-network studies (R2/R3) get direct figure-panel reproductions; V2 is retained only as the stress-strain calibration input the explicit-BM coupling will consume. The central mechanistic claim to test: an explicit 2D stress on a tyssue prism where BM stiffness/viscosity slow relative to proliferation (preferred growth) produces cell thickening (height increase).
+  priority_tiers:
+    active_2d_coupling_core:
+    - bm-r1-published-tissue-baseline (reduced-order reference; native-tyssue prism + height-increase regime + multi-cell — fp-r1-native-tyssue-biaxial-prism)
+    - bm-r4-coupled-2d-epithelium (THE key component — BM-face-energy effector with explicit vertex-force coupling on a flat monolayer, reduces to R1's prism law)
+    collagen_network_reproductions:
+    - bm-r2-collagen-network-rheology (reproduce Fig 2C/C'/D/E — fp-r2-figure2-panels)
+    - bm-r3-network-expansion-supply (reproduce Fig 2C three supply modes — fp-r3-figure2c-three-modes)
+    deferred_behind_2d_core:
+    - bm-r5-explicit-3d-confinement (3D; needs R4 to pass; + Simularium confinement video)
+    - bm-r6-perlecan-growth-perturbations (Fig-7 ordering reproduced; final acceptance gated on the 2D core; + taller/shorter dynamic viz)
+    - bm-e3-closed-3d-lumenoid (2D must pass before 3D; pressure/volume a later branch; + Simularium viz)
+    - bm-e4-feedback-predictions (nail 2D LAMMPS-tyssue coupling first; + dynamic viz)
+    deferred_actin_followup_branch:
+    - 'bm-e1-actomyosin-cortex (redesign as a separate follow-up: cell-cell contacts, focal adhesions)'
+    - bm-e2-actin-adhesion-collagen (revisit after the BM/2D studies clear)
+    retained_as_calibration_input:
+    - bm-v2-stress-vs-strainrate (tangential; feeds the explicit-BM stress-strain material law for R4->E4)
+  removed_studies: |
+    bm-v1-stage1-modulus-remodelling, bm-v3-junction-bending-rigidity, bm-v4-junction-bending, bm-v5-porosity-bundling — the reviewer flagged all four as not relevant to the current investigation and asked for removal. Already removed in the basement-membrane-v1 restructure (study folders + study-list entries dropped); confirmed satisfied this round.
+  figure_reproduction_targets:
+  - 'R1: orient the regime map to Barrientos et al. Fig 1 (doi:10.1016/j.cell.2026.07.010); mark area-decrease and height-increase regions; add volume-growth vs cell-number-growth comparison.'
+  - "R2: reproduce Fig 2C/C'/D/E of Barrientos et al. 2026 with the real collagen model; clarify the crosslink<->stress relationship."
+  - 'R3: reproduce Fig 2C with the real collagen model across the three supply modes (density + crosslinking).'
+  dynamic_visualization: |
+    The reviewer repeatedly asks for dynamic Simularium visualizations of cell shape change — cells growing taller under confinement and spreading on softer BM (R5), taller/shorter across perlecan + growth conditions (R6), the closed lumenoid (E3), and the two-way coupled lumenoid (E4). Captured as per-study visualization requirements, blocked on the R4 coupling landing.
+  this_round: |
+    Imported the reviewer's inline feedback; recorded a review_action per comment; reprioritised to the 2D coupling core; deferred actin (E1/E2) and 3D (R5/E3/E4) + R6 acceptance; retained V2 as the calibration input; queued the R2/R3/R1 figure reproductions and the Simularium dynamic-viz requirements; and began building the R4 BM-face-energy coupling (the coupling-contract decision below) as the flagship deliverable.
+proposed_inputs:
+- id: barrientos2026-fig1-doi
+  kind: reference
+  status: pending
+  citation: Barrientos et al. 2026, Cell — doi:10.1016/j.cell.2026.07.010 (Figure 1, tissue-mechanics confinement regimes)
+  provenance: Reviewer (Saurabh Mogre) inline feedback 2026-11-09 on bm-r1 visualizations.
+  rationale: |
+    Named by the reviewer as the orientation figure for R1's regime map (which regimes show area decrease / height increase). Record as pending until the expert confirms it is the same artifact as the already-cited barrientos2026cellshape or a distinct reference to add to inputs.references.

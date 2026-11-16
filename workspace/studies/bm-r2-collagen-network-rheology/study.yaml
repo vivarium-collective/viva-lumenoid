@@ -527,6 +527,11 @@ followup_proposals:
     make the network's rheology directly comparable to the published figures.
   status: proposed
 
+- id: fp-r2-figure2-panels
+  title: Reproduce Barrientos et al. 2026 Fig 2C/C'/D/E (collagen IV network rheology) with the real model
+  motivation: "The reviewer finds the current crosslink/stress relationship unclear and asks for a direct reproduction of Fig 2C, C', D and E. Drive the real CollagenNetworkProcess through the figure's loading/turnover protocol and render each panel (stress-relaxation curves, the crosslink-density dependence, and the turnover-rate dependence) against the published panels, in reduced units with seed CIs.\n"
+  status: proposed
+  hypothesized_mechanism: A dense multi-seed collagen IV network reproduces the Fig 2 stress-relaxation panels — relaxation time rising with collagen residence time at a turnover-independent modulus — when driven through the paper's protocol.
 discovery_implications:
   resolved_uncertainties:
   - "The faithful collagen IV network does assemble and carry finite stress under growth loading (outputs confirmed by a smoke run)."
@@ -577,6 +582,11 @@ review_actions:
   action: "Recorded as followup_proposal fp-r2-fig2cd-reproduction (reproduce the Fig 2C/C'/D/E stress traces + crosslink/stress panels with the real collagen model, alongside the existing Fig 2E result). Visualization/reproduction work deferred to a follow-up; existing figures and numbers unchanged."
   status: deferred-followup
 
+- source: inline-feedback-2026-11-09
+  date: '2026-11-09'
+  item: Could we reproduce figures 2C, C', D, E from Barrientos et al. 2026? The current crosslink/stress relationship is not very clear.
+  action: "Added followup fp-r2-figure2-panels: reproduce Barrientos et al. 2026 Fig 2C/C'/D/E with the real CollagenNetworkProcess, and render the crosslink-density <-> stress-relaxation relationship explicitly (it is currently implicit in the tau-vs-residence summary)."
+  status: followup-queued
 bibliography:
   sources:
   - key: barrientos2026cellshape

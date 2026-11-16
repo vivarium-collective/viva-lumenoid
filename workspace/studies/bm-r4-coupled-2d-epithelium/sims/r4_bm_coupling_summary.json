@@ -1,0 +1,48 @@
+{
+  "experiment": "explicit BM face-energy coupling on a tyssue vertex sheet",
+  "growth": {
+    "area_rate": 0.04,
+    "vol_rate": 0.05,
+    "steps": 36,
+    "dt": 0.25
+  },
+  "bm": {
+    "bm_stiffness": 40.0,
+    "bm_relaxation": 12.0
+  },
+  "modes": {
+    "no-bm": {
+      "confinement_gap_final": 0.0011,
+      "height_gain": 0.0954,
+      "bm_tension_final": 0.0,
+      "realized_area_final": 7.1585,
+      "preferred_area_final": 7.1666
+    },
+    "elastic": {
+      "confinement_gap_final": 0.2689,
+      "height_gain": 0.4965,
+      "bm_tension_final": 1.9188,
+      "realized_area_final": 5.2399,
+      "preferred_area_final": 7.1666
+    },
+    "relaxing": {
+      "confinement_gap_final": 0.2584,
+      "height_gain": 0.4755,
+      "bm_tension_final": 1.8441,
+      "realized_area_final": 5.3144,
+      "preferred_area_final": 7.1666
+    }
+  },
+  "neighbour_coupling_gradient": {
+    "note": "stiffness 0 (soft) -> high (stiff) across x; smooth monotone field",
+    "area_soft_vs_stiff": [
+      7.1596,
+      5.0128
+    ],
+    "height_soft_vs_stiff": [
+      0.219,
+      0.3129
+    ]
+  },
+  "verdict": "A stiff/slow BM confines basal-area growth (gap 0.27 vs 0.00 free) and drives growing cell volume into cell height (+50% vs +10% free); the BM tension is continuous across cells (smooth stiffness-gradient field). Reduces to R1's prism law in the homogeneous limit."
+}
