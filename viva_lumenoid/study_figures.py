@@ -326,6 +326,154 @@ def r2_fig2e_figure():
     return _layout(fig, height=560)
 
 
+# ---------------------------------------------------------------------------
+# fp-r2-figure2-panels: Barrientos Fig 2C/C'/D/E panel set (baked REAL data)
+#
+# The data is produced by
+#   workspace/studies/bm-r2-collagen-network-rheology/sims/fig2_panels_run.py
+# which drives the REAL collagen model (viva_lumenoid.stage1.run_stage1 over the
+# density-calibrated NC1/7S network --- the engine the stage2_sweep composite
+# wires) through the paper's staged Fig-2D "breakage off, then on" protocol,
+# sweeping the crosslink off_rate (residence time 1/off_rate) over 3 seeds. The
+# representative-seed traces + the per-rate tau/modulus aggregates are baked into
+# viva_lumenoid/data/fig2_panels.json so the figure renders fast + reproducibly
+# (the same baked-real-data pattern as r2_fig2e / the v4-v5 figures). Reduced-unit
+# reproduction of panel STRUCTURE/DIRECTION --- NOT a pixel match to the PDF.
+# ---------------------------------------------------------------------------
+def _fig2_panels_data():
+    """Load the baked REAL Fig-2 panel data (next to this package)."""
+    import json
+    import pathlib
+    path = pathlib.Path(__file__).resolve().parent / "data" / "fig2_panels.json"
+    with open(path) as fh:
+        return json.load(fh)
+
+
+# slow turnover (long residence) -> blue, fast turnover -> red (perceptual ramp).
+_FIG2_RATE_COLOR = {0.01: BLUE, 0.02: TEAL, 0.04: GOLD, 0.08: RED}
+
+
+def r2_fig2_panels_figure():
+    """R2 (fp-r2-figure2-panels) — Barrientos Fig 2C/C'/D/E, reduced-unit reproduction.
+
+    FOUR panels from REAL staged-protocol runs of the faithful collagen IV network
+    (300 rods, authors' density 3.0, 12σ slab, released NC1/7S angles; run_stage1,
+    3 seeds), sweeping the crosslink off_rate (residence 1/off_rate = 100/50/25/12.5 LJ):
+
+      A (Fig 2C)  — stress-relaxation curves σ(t) over the breakage-only viscous hold;
+      B (Fig 2C') — the crosslink count n(t) decaying over the same hold (the molecular
+                    driver), making the crosslink-turnover → stress link explicit;
+      C (Fig 2D)  — the crosslink-density ↔ stress relationship made EXPLICIT: retained
+                    stress σ/σ₀ vs retained crosslinks n/n₀ during the hold collapse onto
+                    a common curve — stress is carried by the crosslink population;
+      D (Fig 2E)  — fitted relaxation time τ vs collagen residence (per-seed + median),
+                    with the turnover-independent elastic modulus overlaid.
+
+    This reproduces the DIRECTION/STRUCTURE (reduced units), not a pixel match. HONEST
+    scope: τ is a floor-plus-residence relationship — the fast-turnover end (residence
+    12.5–50) sits at the network's intrinsic relaxation floor (~38–41 LJ) and is flat /
+    non-monotonic there; only residence 100 rises clearly above the floor. Residence 200
+    is intentionally excluded (it resolved at only 1/4 seeds in the recorded dense sweep)."""
+    go = _go()
+    from plotly.subplots import make_subplots
+    d = _fig2_panels_data()
+    traces = d["traces"]
+    agg = d["aggregate"]
+    # order curves slow -> fast turnover (residence 100 -> 12.5)
+    keys = sorted(traces, key=lambda k: traces[k]["residence_lj"], reverse=True)
+
+    fig = make_subplots(
+        rows=2, cols=2, vertical_spacing=0.15, horizontal_spacing=0.11,
+        subplot_titles=(
+            "A — stress-relaxation curves σ(t) (Fig 2C): faster turnover relaxes faster",
+            "B — crosslink turnover drives it (Fig 2C'): n(t) over the same hold",
+            "C — stress tracks crosslink density (Fig 2D): σ/σ₀ vs n/n₀, viscous hold",
+            "D — relaxation time τ vs residence (Fig 2E), modulus turnover-independent"))
+
+    for k in keys:
+        tr = traces[k]
+        col = _FIG2_RATE_COLOR.get(tr["off_rate"], PURPLE)
+        ph = np.array(tr["phase"])
+        t = np.array(tr["t"], dtype=float)
+        sig = np.array(tr["sigma"], dtype=float)
+        xl = np.array(tr["n_crosslinks"], dtype=float)
+        vis = ph == "hold_viscous"
+        tv = t[vis] - t[vis][0]
+        sv, xv = sig[vis], xl[vis]
+        res = tr["residence_lj"]
+        lbl = f"residence {res:g} LJ (off_rate {tr['off_rate']:g})"
+        # A: absolute stress-relaxation curve
+        fig.add_trace(go.Scatter(x=tv, y=sv, mode="lines+markers", name=lbl,
+                                 legendgroup=k, line=dict(color=col, width=3),
+                                 marker=dict(size=5)), row=1, col=1)
+        # B: crosslink count over the hold
+        fig.add_trace(go.Scatter(x=tv, y=xv, mode="lines", name=lbl, legendgroup=k,
+                                 showlegend=False, line=dict(color=col, width=3)),
+                      row=1, col=2)
+        # C: retained-stress vs retained-crosslinks (both normalized to viscous start)
+        s0 = sv[0] if sv[0] else 1.0
+        x0 = xv[0] if xv[0] else 1.0
+        fig.add_trace(go.Scatter(x=xv / x0, y=sv / s0, mode="lines+markers", name=lbl,
+                                 legendgroup=k, showlegend=False,
+                                 line=dict(color=col, width=2.5), marker=dict(size=6)),
+                      row=2, col=1)
+
+    # C reference: y = x (stress retained == crosslinks retained)
+    fig.add_trace(go.Scatter(x=[0, 1], y=[0, 1], mode="lines", showlegend=False,
+                             line=dict(color="#bbb", width=1.5, dash="dot"),
+                             hoverinfo="skip"), row=2, col=1)
+
+    # D: tau vs residence (per-seed points + median line) and modulus overlay
+    res_x = [a["residence_lj"] for a in agg]
+    tau_med = [a["tau_lj_median"] for a in agg]
+    order = np.argsort(res_x)
+    res_x = list(np.array(res_x)[order])
+    tau_med = list(np.array(tau_med)[order])
+    fig.add_trace(go.Scatter(x=res_x, y=tau_med, mode="lines+markers", name="median τ",
+                             line=dict(color=BLUE, width=3), marker=dict(size=11),
+                             legendgroup="tau"), row=2, col=2)
+    for a in agg:
+        fig.add_trace(go.Scatter(x=[a["residence_lj"]] * len(a["tau_lj_all"]),
+                                 y=a["tau_lj_all"], mode="markers", showlegend=False,
+                                 marker=dict(color=BLUE, size=7, symbol="circle-open",
+                                             line=dict(width=1.5)),
+                                 legendgroup="tau"), row=2, col=2)
+    floor = float(np.min([a["tau_lj_median"] for a in agg]))
+    fig.add_hline(y=floor, line=dict(color=GREEN, width=1.5, dash="dot"),
+                  annotation_text=f"intrinsic relaxation floor ≈ {floor:.0f} LJ",
+                  annotation_position="top left",
+                  annotation_font=dict(size=10, color=GREEN), row=2, col=2)
+    mod_med = float(np.median([a["modulus_lj_median"] for a in agg]))
+    fig.add_trace(go.Scatter(x=res_x, y=[mod_med] * len(res_x), mode="lines+markers",
+                             name=f"elastic modulus ≈ {mod_med:.1f} LJ (flat)",
+                             line=dict(color=ORANGE, width=2, dash="dash"),
+                             marker=dict(size=7), legendgroup="mod"), row=2, col=2)
+
+    fig.update_xaxes(title_text="time since viscous hold (LJ)", row=1, col=1)
+    fig.update_yaxes(title_text="σ in-plane (LJ)", row=1, col=1)
+    fig.update_xaxes(title_text="time since viscous hold (LJ)", row=1, col=2)
+    fig.update_yaxes(title_text="crosslinks n(t)", row=1, col=2)
+    fig.update_xaxes(title_text="retained crosslinks n/n₀", row=2, col=1, range=[0, 1.02])
+    fig.update_yaxes(title_text="retained stress σ/σ₀", row=2, col=1, range=[0, 1.02])
+    fig.update_xaxes(title_text="collagen residence time 1/off_rate (LJ)", type="log", row=2, col=2)
+    fig.update_yaxes(title_text="τ / modulus (LJ)", row=2, col=2)
+
+    fig.update_layout(
+        title="R2 — Barrientos Fig 2C/C'/D/E: collagen IV network rheology "
+              "(real staged-protocol runs, reduced units)",
+        template="plotly_white", height=960, margin=dict(t=100, b=250),
+        legend=dict(orientation="h", y=-0.12, x=0, font=dict(size=10)),
+        annotations=list(fig.layout.annotations) + [dict(
+            x=0.5, y=-0.25, xref="paper", yref="paper", showarrow=False, align="center",
+            text="REAL staged-protocol runs of the faithful collagen IV network (300 rods, density 3.0, 12σ slab, NC1/7S angles, 3 seeds) —<br>"
+                 "reduced-unit reproduction of panel STRUCTURE/DIRECTION, not a pixel match. Panel C makes the crosslink-density ↔ stress-relaxation<br>"
+                 "link EXPLICIT (retained stress ≈ retained crosslinks during the hold). HONEST scope: τ is floor-plus-residence — the fast-turnover end<br>"
+                 "(residence 12.5–50) sits at the ~38–41 LJ intrinsic relaxation floor (flat/non-monotonic); only residence 100 rises clearly above it. "
+                 "No pascal/hour calibration.",
+            font=dict(size=10.5, color="#777"))])
+    return fig
+
+
 def _r3_supply_mode(make_on, break_on, insert_on, n_rods=40, assemble=4, grow=8, strain_rate=0.003):
     """One R3 supply mode: shared assembly then growth. Returns (rods, crosslinks, density)."""
     from bigraph_schema import allocate_core
@@ -2522,6 +2670,10 @@ EXTRA_STUDY_FIGURES = [
     # most wants re-wired). The investigation-level copies render in gen_study_figures.
     ("bm-r1-published-tissue-baseline", "r1_regime_placement", regime_placement_figure, "data"),
     ("bm-r4-coupled-2d-epithelium", "r4_coupling_contract", coupling_contract_figure, "schematic"),
+    # fp-r2-figure2-panels (2026-11-16): the Barrientos Fig 2C/C'/D/E panel set from
+    # REAL staged-protocol runs, baked into data/fig2_panels.json. kind "baked" so the
+    # build test does not importorskip the engines (the data is pre-run, like v4/v5).
+    ("bm-r2-collagen-network-rheology", "r2_fig2_panels", r2_fig2_panels_figure, "baked"),
 ]
 
 
