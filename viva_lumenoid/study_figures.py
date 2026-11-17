@@ -372,6 +372,117 @@ def r3_supply_figure():
     return _layout(fig, height=560)
 
 
+def _r3_supply_mode_trajectory(make_on, break_on, insert_on, seed=12345,
+                               n_rods=40, assemble=4, grow=12, strain_rate=0.003):
+    """One R3 supply mode, recording the per-growth-step TRAJECTORY (not only the
+    final scalar `_r3_supply_mode` returns). Shares the identical shared-assembly
+    protocol; the three modes differ only during the growth (expansion) phase via
+    make_on/break_on/insert_on. Returns a dict of arrays over growth step:
+    strain, n_crosslinks, rods, density (crosslinks per expanded area)."""
+    from bigraph_schema import allocate_core
+    from viva_lumenoid.collagen import CollagenNetworkProcess
+    from viva_lumenoid.params import CollagenParams
+    box = 8.0
+    p = CollagenParams(n_rods=n_rods, box_xy=box, slab_thickness=4.0, seed=seed,
+                       use_real_angles=True, bending_k=4.0, insert_per_step=3)
+    proc = CollagenNetworkProcess(config={"params": p.to_dict()}, core=allocate_core())
+    proc.initial_state()
+    out = {}
+    for _ in range(assemble):
+        out = proc.update({"strain_rate": 0.0, "make_on": 1.0, "break_on": 1.0,
+                           "insert_on": 0.0}, 1.0)
+    # Assembled state = the growth START (strain ~0, assembly strain_rate was 0).
+    strain = [float(out["strain"])]
+    xl = [int(out["n_crosslinks"])]
+    rods = [int(proc._n_rods_current)]
+    for _ in range(grow):
+        out = proc.update({"strain_rate": strain_rate, "make_on": make_on,
+                           "break_on": break_on, "insert_on": insert_on}, 1.0)
+        strain.append(float(out["strain"]))
+        xl.append(int(out["n_crosslinks"]))
+        rods.append(int(proc._n_rods_current))
+    proc.close()
+    strain = np.array(strain); xl = np.array(xl); rods = np.array(rods)
+    area = box * box * (1.0 + strain) ** 2
+    return {"strain": strain, "xl": xl, "rods": rods, "density": xl / area}
+
+
+def r3_fig2c_three_modes_figure(seeds=(12345, 777, 2024), n_rods=40,
+                                assemble=4, grow=12, strain_rate=0.003):
+    """R3 — the Barrientos Fig 2C PANEL itself (not just the final ordering): the
+    network-density, crosslink-count, and material (rod) TRAJECTORIES through growth
+    for the three supply modes, from REAL CollagenNetworkProcess runs.
+
+    Mode 1 no remodelling (make/break/insert off), mode 2 remodelling WITHOUT new
+    collagen (make/break on, insert off), mode 3 remodelling WITH material insertion
+    (make/break/insert on). Each mode is run over `seeds`; the lines are the seed
+    mean and the shaded band the seed min/max. This renders the SHAPE of the three
+    trajectories so the panel's direction is visible, where `r3_supply_figure`
+    showed only the final scalar ranking.
+
+    Reduced-unit reproduction of the panel STRUCTURE / DIRECTION, not a pixel match.
+    """
+    go = _go()
+    from plotly.subplots import make_subplots
+    modes = [("no remodelling", 0.0, 0.0, 0.0, PURPLE, "rgba(118,80,163,0.13)"),
+             ("remodelling, no new collagen", 1.0, 1.0, 0.0, BLUE, "rgba(76,120,168,0.13)"),
+             ("remodelling + insertion", 1.0, 1.0, 1.0, GREEN, "rgba(89,161,79,0.13)")]
+    # Run every mode over every seed, collecting per-step arrays (REAL runs).
+    data = {}
+    for name, mk, bk, ins, _c, _b in modes:
+        runs = [_r3_supply_mode_trajectory(mk, bk, ins, seed=s, n_rods=n_rods,
+                                           assemble=assemble, grow=grow,
+                                           strain_rate=strain_rate) for s in seeds]
+        # seeds share the same growth strain schedule → use the first run's strain axis
+        x = runs[0]["strain"]
+        data[name] = {"x": x,
+                      "density": np.array([r["density"] for r in runs]),
+                      "xl": np.array([r["xl"] for r in runs]),
+                      "rods": np.array([r["rods"] for r in runs])}
+
+    fig = make_subplots(
+        rows=1, cols=3, horizontal_spacing=0.065,
+        subplot_titles=("A — network density (crosslinks / expanded area)",
+                        "B — crosslinking (total crosslink count)",
+                        "C — material supplied (rod count)"))
+
+    def _band(col, key, legend):
+        for name, mk, bk, ins, color, bandc in modes:
+            d = data[name]; x = d["x"]; arr = d[key]
+            mean = arr.mean(axis=0); lo = arr.min(axis=0); hi = arr.max(axis=0)
+            fig.add_trace(go.Scatter(x=list(x) + list(x)[::-1],
+                                     y=list(hi) + list(lo)[::-1], fill="toself",
+                                     fillcolor=bandc, line=dict(width=0),
+                                     hoverinfo="skip", showlegend=False), row=1, col=col)
+            fig.add_trace(go.Scatter(x=x, y=mean, mode="lines+markers", name=name,
+                                     legendgroup=name, showlegend=legend,
+                                     line=dict(color=color, width=3),
+                                     marker=dict(size=6, color=color)), row=1, col=col)
+
+    _band(1, "density", True)
+    _band(2, "xl", False)
+    _band(3, "rods", False)
+    for c in (1, 2, 3):
+        fig.update_xaxes(title_text="equibiaxial strain ε (growth)", row=1, col=c)
+    fig.update_yaxes(title_text="crosslink density (1/σ²)", row=1, col=1)
+    fig.update_yaxes(title_text="crosslink count", row=1, col=2)
+    fig.update_yaxes(title_text="rod (material) count", row=1, col=3)
+    fig.update_layout(
+        title="R3 — Barrientos Fig 2C panel: density &amp; crosslinking trajectories "
+              "across the three supply modes (real collagen runs)",
+        template="plotly_white", height=560, margin=dict(t=92, b=78),
+        legend=dict(orientation="h", y=1.14, x=0),
+        annotations=list(fig.layout.annotations) + [dict(
+            x=0.5, y=-0.22, xref="paper", yref="paper", showarrow=False,
+            text=f"Real CollagenNetworkProcess runs ({n_rods} rods, real NC1/7S angles; shared "
+                 f"{assemble}-step assembly then {grow}-step equibiaxial growth; seed mean of "
+                 f"{len(seeds)} seeds, band = seed min/max). Reduced (LJ) units — reproduces the "
+                 f"panel DIRECTION/SHAPE (remodelling+insertion densifies, remodelling-only holds, "
+                 f"frozen dilutes), not a pixel match.",
+            font=dict(size=10.5, color="#777"))])
+    return fig
+
+
 # ---------------------------------------------------------------------------
 # R4 / R5 figure-review helpers (new; the listed shared helpers are untouched)
 # ---------------------------------------------------------------------------
@@ -2392,6 +2503,11 @@ COMPANION_FIGURES = {
 # above; these are the demoted thumbnail + the named-gap hypothesis panels. Each is
 # (slug, name, fn, kind) so the generator + tests render them alongside the mains.
 EXTRA_STUDY_FIGURES = [
+    # fp-r3-figure2c-three-modes (2026-11-16): the Fig 2C panel itself (density +
+    # crosslinking + material trajectories across the three supply modes), not only
+    # the final scalar ordering r3_supply shows.
+    ("bm-r3-network-expansion-supply", "r3_fig2c_three_modes",
+     r3_fig2c_three_modes_figure, "data"),
     ("bm-r4-coupled-2d-epithelium", "r4_sheet", r4_sheet_figure, "data"),
     ("bm-r4-coupled-2d-epithelium", "r4_bm_hypothesis", r4_bm_confinement_hypothesis, "schematic"),
     ("bm-r5-explicit-3d-confinement", "r5_volume_hist", r5_volume_hist_figure, "data"),
