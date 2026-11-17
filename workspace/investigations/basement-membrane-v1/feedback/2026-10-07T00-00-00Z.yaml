@@ -2,8 +2,7 @@ meta:
   investigation: basement-membrane-v1
   report_id: feedback-basement-membrane-v1-v1
   generated_at: '2026-10-07T00:00:00Z'
-  page_title: "Basement membrane v1 \u2014 collagen IV network modulus & remodelling\
-    \ for the AICS vertex model"
+  page_title: "Basement membrane v1 — collagen IV network modulus & remodelling for the AICS vertex model"
   source: feedback-basement-membrane-v1 (1).yaml (reviewer download)
   study_verdicts:
     bm-v1-stage1-modulus-remodelling:
@@ -19,9 +18,18 @@ annotations:
   study-bm-v1-stage1-modulus-remodelling:
   - ts: '2026-10-07T00:00:00Z'
     author: reviewer
-    text: "Verdict: pass (disposition: ok) \u2014 no section notes."
+    text: "Verdict: pass (disposition: ok) — no section notes."
   study-bm-v2-stress-vs-strainrate-visualizations:
   - ts: '2026-10-07T00:00:00Z'
     author: reviewer
-    text: '[verdict: warn] The stress vs strain movie seems to be jumping across timepoints?
-      Can we visualize this with the box itself showing the strain?'
+    text: '[verdict: warn] The stress vs strain movie seems to be jumping across timepoints? Can we visualize this with the box itself showing the strain?'
+actions:
+  fb-88b51a9055d87073:
+    kind: design-edit
+    target_study: bm-v2-stress-vs-strainrate
+    proposed_text: 'Addressed: the across-timepoint jumps are a snapshot-decimation artifact of the committed coarse-analysis frames (not a simulation discontinuity); a coherent capture_clip movie with the simulation box outline annotated by the instantaneous equibiaxial strain is tracked as followup fp-v2-box-strain-movie.'
+    status: applied
+    proposed_by: claude
+    by: claude
+    at: '2026-11-10T02:01:01Z'
+    applied_note: 'Addressed: the across-timepoint jumps are a snapshot-decimation artifact of the committed coarse-analysis frames (not a simulation discontinuity); a coherent capture_clip movie with the simulation box outline annotated by the instantaneous equibiaxial strain is tracked as followup fp-v2-box-strain-movie.'

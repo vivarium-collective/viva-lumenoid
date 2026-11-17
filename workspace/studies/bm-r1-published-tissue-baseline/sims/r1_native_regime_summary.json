@@ -1,0 +1,267 @@
+{
+  "experiment": "R1 reduced-order tissue baseline, reproduced natively in tyssue via the R4 BM face energy",
+  "axes": {
+    "stiffness": [
+      0.0,
+      5.0,
+      15.0,
+      40.0,
+      100.0
+    ],
+    "relaxation": [
+      4.0,
+      12.0,
+      40.0
+    ]
+  },
+  "growth": {
+    "rate": 0.04,
+    "vol_rate": 0.05,
+    "steps": 32,
+    "dt": 0.25
+  },
+  "regime_rows": [
+    {
+      "stiffness": 0.0,
+      "relaxation": 4.0,
+      "gap": 0.0012,
+      "height_gain": 0.0846,
+      "area_mean": 6.8774,
+      "bm_tension": 0.0
+    },
+    {
+      "stiffness": 0.0,
+      "relaxation": 12.0,
+      "gap": 0.0012,
+      "height_gain": 0.0846,
+      "area_mean": 6.8774,
+      "bm_tension": 0.0
+    },
+    {
+      "stiffness": 0.0,
+      "relaxation": 40.0,
+      "gap": 0.0012,
+      "height_gain": 0.0846,
+      "area_mean": 6.8774,
+      "bm_tension": 0.0
+    },
+    {
+      "stiffness": 5.0,
+      "relaxation": 4.0,
+      "gap": 0.084,
+      "height_gain": 0.1826,
+      "area_mean": 6.3074,
+      "bm_tension": 0.5702
+    },
+    {
+      "stiffness": 5.0,
+      "relaxation": 12.0,
+      "gap": 0.1155,
+      "height_gain": 0.2248,
+      "area_mean": 6.0901,
+      "bm_tension": 0.7875
+    },
+    {
+      "stiffness": 5.0,
+      "relaxation": 40.0,
+      "gap": 0.1304,
+      "height_gain": 0.2457,
+      "area_mean": 5.9879,
+      "bm_tension": 0.8898
+    },
+    {
+      "stiffness": 15.0,
+      "relaxation": 4.0,
+      "gap": 0.1614,
+      "height_gain": 0.2918,
+      "area_mean": 5.7743,
+      "bm_tension": 1.1032
+    },
+    {
+      "stiffness": 15.0,
+      "relaxation": 12.0,
+      "gap": 0.1895,
+      "height_gain": 0.3365,
+      "area_mean": 5.581,
+      "bm_tension": 1.2966
+    },
+    {
+      "stiffness": 15.0,
+      "relaxation": 40.0,
+      "gap": 0.2007,
+      "height_gain": 0.3552,
+      "area_mean": 5.504,
+      "bm_tension": 1.3736
+    },
+    {
+      "stiffness": 40.0,
+      "relaxation": 4.0,
+      "gap": 0.2193,
+      "height_gain": 0.3877,
+      "area_mean": 5.3753,
+      "bm_tension": 1.5036
+    },
+    {
+      "stiffness": 40.0,
+      "relaxation": 12.0,
+      "gap": 0.2352,
+      "height_gain": 0.4164,
+      "area_mean": 5.2662,
+      "bm_tension": 1.6114
+    },
+    {
+      "stiffness": 40.0,
+      "relaxation": 40.0,
+      "gap": 0.241,
+      "height_gain": 0.4273,
+      "area_mean": 5.2261,
+      "bm_tension": 1.6515
+    },
+    {
+      "stiffness": 100.0,
+      "relaxation": 4.0,
+      "gap": 0.2496,
+      "height_gain": 0.4437,
+      "area_mean": 5.1667,
+      "bm_tension": 1.7122
+    },
+    {
+      "stiffness": 100.0,
+      "relaxation": 12.0,
+      "gap": 0.2571,
+      "height_gain": 0.4581,
+      "area_mean": 5.1155,
+      "bm_tension": 1.762
+    },
+    {
+      "stiffness": 100.0,
+      "relaxation": 40.0,
+      "gap": 0.2597,
+      "height_gain": 0.4633,
+      "area_mean": 5.0973,
+      "bm_tension": 1.7804
+    }
+  ],
+  "height_increase_regime": {
+    "condition": "stiff + slow BM under confined volume growth",
+    "n_cells_in_regime": 11,
+    "example": {
+      "stiffness": 100.0,
+      "relaxation": 40.0,
+      "gap": 0.2597209961755572,
+      "height_gain": 0.4633497128494277,
+      "area_mean": 5.097293847608022,
+      "bm_tension": 1.7803703093179835
+    }
+  },
+  "volume_vs_cell_number": {
+    "volume_growth_height_gain": 0.4164,
+    "cell_number_growth_height_gain": 0.0017,
+    "vol_height_series": [
+      0.2,
+      0.2023,
+      0.2046,
+      0.207,
+      0.2093,
+      0.2117,
+      0.2141,
+      0.2165,
+      0.2189,
+      0.2214,
+      0.2238,
+      0.2263,
+      0.2288,
+      0.2314,
+      0.2339,
+      0.2365,
+      0.2391,
+      0.2417,
+      0.2443,
+      0.247,
+      0.2497,
+      0.2524,
+      0.2551,
+      0.2578,
+      0.2606,
+      0.2633,
+      0.2661,
+      0.2689,
+      0.2718,
+      0.2746,
+      0.2775,
+      0.2804,
+      0.2833
+    ],
+    "num_height_series": [
+      0.2,
+      0.2003,
+      0.2003,
+      0.2003,
+      0.2003,
+      0.2003,
+      0.2003,
+      0.2003,
+      0.2003,
+      0.2003,
+      0.2003,
+      0.2003,
+      0.2003,
+      0.2003,
+      0.2003,
+      0.2003,
+      0.2003,
+      0.2003,
+      0.2003,
+      0.2003,
+      0.2003,
+      0.2003,
+      0.2003,
+      0.2003,
+      0.2003,
+      0.2003,
+      0.2003,
+      0.2003,
+      0.2003,
+      0.2003,
+      0.2003,
+      0.2003,
+      0.2003
+    ],
+    "t": [
+      0.0,
+      0.25,
+      0.5,
+      0.75,
+      1.0,
+      1.25,
+      1.5,
+      1.75,
+      2.0,
+      2.25,
+      2.5,
+      2.75,
+      3.0,
+      3.25,
+      3.5,
+      3.75,
+      4.0,
+      4.25,
+      4.5,
+      4.75,
+      5.0,
+      5.25,
+      5.5,
+      5.75,
+      6.0,
+      6.25,
+      6.5,
+      6.75,
+      7.0,
+      7.25,
+      7.5,
+      7.75,
+      8.0
+    ]
+  },
+  "verdict": "The native-tyssue prism reproduces R1's confinement topology (gap rises with BM stiffness and relaxation time) and LOCATES the height-increase regime: a stiff/slow BM under confined volume growth drives +46% cell height, vs ~8% free. Growth by cell NUMBER (per-cell target constant) leaves per-cell height flat \u2014 only confined volume growth thickens cells."
+}
