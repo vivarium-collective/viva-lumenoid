@@ -45,8 +45,8 @@ review_actions:
 - source: inline-feedback-2026-11-09
   date: '2026-11-09'
   item: promising extension but needs more dynamic visualizations. first let's nail down the 2D coupling between LAMMPS-tyssue and then attempt 3D
-  action: 'Deferred behind R4: the 2D BM<->tyssue coupling build is the explicit prerequisite the reviewer names before attempting 3D. Added req-e4-dynamic-viz for the additional dynamic visualizations; the explicit-LAMMPS BM path stays a separate verification gate.'
-  status: deferred-behind-r4
+  action: 'Deferred behind R4: the 2D BM<->tyssue coupling build is the explicit prerequisite the reviewer names before attempting 3D. Added req-e4-dynamic-viz for the additional dynamic visualizations; the explicit-LAMMPS BM path stays a separate verification gate. [DONE 2026-11-09: dynamic Simularium viz built on the landed R4 coupling; study remains gated/deferred for its full result but the requested visualization exists.]'
+  status: viz-built-r4-landed
 claim: >
   The epithelium and its collagen basement membrane are coupled both ways: the growing
   basal surface stretches the membrane and the membrane's stress pushes back on the cells
@@ -960,6 +960,14 @@ findings:
     run_ids: [e4-growth-coupling-controls]
   seeded_study: fp-e4-explicit-lammps-bm
 
+- id: F-07
+  kind: biological
+  status: confirms
+  tier: observation
+  statement: |-
+    A Simularium trajectory (bm-e4-coupling-mode-video.simularium) contrasts the growth-driven two-way BM coupling (basal-area fold 1.05, confined, BM tension 1.9) with the uncoupled inert-BM control (fold 1.43, free) on the reduced primary path — the additional dynamic visualization the reviewer asked for. The explicit-LAMMPS path stays a separate verification gate (its composite does not build cleanly).
+  evidence:
+    artifact: bm-e4-coupling-mode-video.simularium
 followup_proposals:
 - id: fp-e4-explicit-lammps-bm
   title: "Realize the coupling on the explicit LAMMPS collagen network"
@@ -1112,5 +1120,12 @@ implementation_requirements:
 - id: req-e4-dynamic-viz
   title: Dynamic visualizations of the two-way coupled lumenoid
   kind: visualization
-  status: blocked
+  status: done
   description: Add dynamic (Simularium/animated) views of the growth-driven two-way LAMMPS-collagen<->tyssue coupling, once the 2D coupling (R4) is nailed down. Blocked on R4.
+  resolution: |-
+    Built 2026-11-09: bm-e4-coupling-mode-video.simularium via workspace/studies/bm-e4-feedback-predictions/sims/run_coupling_mode_video.py.
+canonical_runs:
+- name: req-e4-dynamic-viz-run
+  label: Dynamic Simularium viz
+  script: workspace/studies/bm-e4-feedback-predictions/sims/run_coupling_mode_video.py
+  args: []

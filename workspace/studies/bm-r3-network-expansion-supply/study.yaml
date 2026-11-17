@@ -17,7 +17,12 @@ claim: >
   (expansion), remodeling WITH insertion sustains and grows the crosslinked network, remodeling
   WITHOUT insertion cannot replace diluted material, and a frozen (no-remodeling) network is
   static and dilutes most. The ordering holds strictly across rod count, crosslink count, and
-  crosslink-per-area density, and is robust across 3 seeds.
+  crosslink-per-area density, and is robust across 3 seeds. The Fig 2C PANEL itself is now
+  rendered from real runs (viz/r3_fig2c_three_modes.html): the density, crosslink-count, and
+  material-count TRAJECTORIES through growth reproduce the published panel direction/shape --
+  frozen flat and diluting, remodelling-only climbing on fixed material, remodelling+insertion
+  climbing highest with a growing material count -- a reduced-unit reproduction of the panel's
+  structure/direction, not a pixel match.
 
 experiment: >
   A new rod-insertion mechanism (CollagenNetworkProcess._insert_rods, driven by the insert_on
@@ -45,7 +50,12 @@ result: >
   this scale), so modes 2-3 "remodeling" is formation + supply rather than full make/break
   turnover; and density is a per-area connectivity proxy, not the largest-connected-component
   metric. The three-mode ORDERING of Fig 2B-C is reproduced; the absolute connectivity statistics
-  are a documented follow-up.
+  are a documented follow-up. Beyond the scalar endpoint ordering, the Fig 2C PANEL is now
+  reproduced as trajectories (viz/r3_fig2c_three_modes.html, finding F4): through equibiaxial
+  growth the seed-mean density ends 0.339 (remodelling+insertion) > 0.233 (remodelling-only) >
+  0.048 (frozen), crosslink count ends 23 > 16 > 3, and rod (material) count ends 76 > 40 == 40,
+  with the ordering holding at every growth step -- the panel's direction/shape, in reduced units
+  at small scale (40 rods), not a pixel match.
 
 # Canonical DAG edge -- R3 is the supply-mode study; it consumes R2's rheology reference.
 pipeline_gate:
@@ -411,6 +421,15 @@ visualizations:
     tier: supplement
     caption: >
       Animated movie of the collagen network with crosslink turnover AND material insertion (the third Fig-2B/C supply mode): new rods appear and crosslink in as the network expands. Illustrative companion to the three-mode ordering figure.
+- name: r3_fig2c_three_modes
+  address: "html:viz/r3_fig2c_three_modes.html"
+  config:
+    title: "Fig 2C panel -- density & crosslinking trajectories across the three supply modes (real collagen runs)"
+    tier: main
+    evidence_status: observed
+    caption: >
+      How to read: the Barrientos Fig 2C panel itself, reproduced from REAL CollagenNetworkProcess runs rather than only the final scalar ordering. Three panels track, through equibiaxial growth (x = strain), the per-step trajectory of (A) crosslink-per-area density, (B) total crosslink count, and (C) rod (material) count, for each of the three supply modes: no remodelling (frozen, purple), remodelling without new collagen (blue), remodelling with material insertion (green). Lines are the seed mean over 3 seeds; the shaded band is the seed min/max.
+      The panel SHAPE reproduces the published direction: the frozen network stays flat and dilutes, remodelling-on-fixed-material climbs in density/crosslinking but supplies no new rods, and remodelling-with-insertion climbs highest while the material count grows -- only combined turnover + insertion densifies the growing network. Reduced (LJ) units at small scale (40 rods); a reproduction of the panel's structure/direction, not a pixel match. Honest scope: formation-dominant remodelling at this scale (crosslinks climb rather than steady-state turnover), carried over from the study's documented limitation.
 - name: r3_supply
   address: "html:viz/r3_supply.html"
   config:
@@ -519,6 +538,46 @@ findings:
   provenance:
     run_ids: [r3-three-supply-modes]
   seeded_study: fp-r3-connectivity-readouts
+- id: F4-fig2c-panel-trajectories-reproduce
+  kind: biological
+  status: confirms
+  tier: interpretation
+  mechanism_origin: engineered
+  statement: >
+    Rendered as the Fig 2C panel itself (density, crosslink-count, and material-count
+    TRAJECTORIES through growth, not only the endpoint scalar), the three supply modes
+    reproduce the published panel direction/shape from real collagen runs: the frozen
+    (no-remodelling) network stays flat and dilutes (density ~0.052 flat, crosslinks
+    3->3, rods 40->40), remodelling-without-insertion climbs on fixed material (density
+    0.052->0.233, crosslinks 3->16, rods 40->40), and remodelling-with-insertion climbs
+    highest while its rod (material) count grows (density 0.052->0.339, crosslinks 3->23,
+    rods 40->76). The with > without > frozen ordering holds across the whole trajectory.
+  evidence:
+    from_run: r3-three-supply-modes
+    from_test: crosslink-density-ordered
+    observed: >
+      seed mean (seeds 12345/777/2024), 40 rods, 4-step assembly + 12-step equibiaxial
+      growth: density end 0.339 > 0.233 > 0.048; crosslink count end 23 > 16 > 3; rod
+      count end 76 > 40 == 40; ordering holds at every growth step. viz/r3_fig2c_three_modes.html
+  expected:
+    cites: [barrientos2026cellshape]
+    range: "Fig 2C: only remodelling + material insertion grows a densifying load-bearing network; remodelling-only holds on fixed material; frozen dilutes"
+  explanation: >
+    Equibiaxial growth dilutes the network every step. A frozen network can neither reform
+    nor be resupplied, so density decays; remodelling-on-fixed-material reorganises existing
+    rods and raises crosslinking but adds no new material; only remodelling + insertion adds
+    rods (the climbing panel C count) that crosslink in, so density and crosslinking keep
+    rising fastest. The trajectory SHAPE — flat vs climbing vs steepest-climbing with growing
+    material — is the Fig 2C direction.
+  next_action: "optionally re-render at the authors' dense config + a largest-connected-component trajectory (fp-r3-connectivity-readouts)"
+  next_action_type: replicate
+  provenance:
+    run_ids: [r3-three-supply-modes]
+  cites: [barrientos2026cellshape]
+  caveat: >
+    Reduced scale (40 rods) and reduced (LJ) units: a reproduction of the panel's
+    structure/direction, NOT a pixel match. Formation-dominant remodelling at this scale
+    (crosslinks climb rather than steady-state turnover), as documented in F3 / limitations.
 
 followup_proposals:
 - id: fp-r3-insertion-process
@@ -556,8 +615,25 @@ followup_proposals:
 - id: fp-r3-figure2c-three-modes
   title: Reproduce Barrientos et al. 2026 Fig 2C with the real collagen model across the three supply modes
   motivation: "R3 already reproduces the Fig 2B/C supply ordering as a scalar crosslink-per-area + rod-count ranking. The reviewer asks to see Fig 2C itself with the actual collagen model — the density and crosslinking trajectories under the three modes (no remodelling / remodelling without supply / remodelling with insertion) rendered as the panel, not only the ordering.\n"
-  status: proposed
+  status: addressed
   hypothesized_mechanism: Only combined crosslink turnover AND material insertion grows a connected, densifying, load-bearing network; the three-mode density/crosslinking trajectories reproduce the Fig 2C panel shape.
+  resolution: >
+    DONE (2026-11-16) -- rendered the Fig 2C PANEL itself from REAL CollagenNetworkProcess
+    runs: viz/r3_fig2c_three_modes.html (figure r3_fig2c_three_modes_figure + helper
+    _r3_supply_mode_trajectory in viva_lumenoid/study_figures.py; registered in
+    EXTRA_STUDY_FIGURES, covered by tests/test_study_figures.py). Three panels show the
+    per-growth-step trajectory of crosslink-per-area density, total crosslink count, and
+    rod (material) count for each of the three supply modes (seed mean of 3 seeds, band =
+    seed min/max). The panel SHAPE reproduces the published direction: frozen stays flat
+    and dilutes (density ~0.052 flat, crosslinks 3->3, rods 40->40); remodelling-without-
+    insertion climbs on fixed material (density 0.052->0.233, crosslinks 3->16, rods
+    40->40); remodelling-with-insertion climbs highest while the material count grows
+    (density 0.052->0.339, crosslinks 3->23, rods 40->76). The with > without > frozen
+    ordering holds across the whole trajectory, not just at the endpoint. Scope: small
+    scale (40 rods) + reduced (LJ) units; a reproduction of the panel's structure/direction,
+    NOT a pixel match, and formation-dominant remodelling at this scale (crosslinks climb
+    rather than steady-state turnover) -- carried over from the study's documented limitation.
+    See finding F4.
 discovery_implications:
   resolved_uncertainties:
   - "The composite now expresses all three Fig 2B-C supply modes (insertion mechanism added)."

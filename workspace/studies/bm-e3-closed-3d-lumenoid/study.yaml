@@ -38,8 +38,8 @@ review_actions:
 - source: inline-feedback-2026-11-09
   date: '2026-11-09'
   item: 2D composition needs to pass before moving to 3D. pressure/volume relation is interesting but can be a follow up. Could we use simularium for dynamic visualizations?
-  action: Deferred behind R4 (2D coupling must pass first — already the parent_studies gate). The lumen pressure/volume relation is kept as a later branch, not a prerequisite. Added req-e3-simularium-dynamic-viz for the dynamic lumenoid visualization the reviewer asks for.
-  status: deferred-behind-r4
+  action: 'Deferred behind R4 (2D coupling must pass first — already the parent_studies gate). The lumen pressure/volume relation is kept as a later branch, not a prerequisite. Added req-e3-simularium-dynamic-viz for the dynamic lumenoid visualization the reviewer asks for. [DONE 2026-11-09: dynamic Simularium viz built on the landed R4 coupling; study remains gated/deferred for its full result but the requested visualization exists.]'
+  status: viz-built-r4-landed
 claim: >
   A closed 3D lumenoid runs over the Tyssue engine: 78 cells enclose a single lumen, per-cell
   volumes emerge finite and positive (0.50-3.43), and a basal surface (78 faces, area 202.5) is
@@ -396,6 +396,14 @@ findings:
     run_ids: [e3-closed-lumenoid-relaxation]
   seeded_study: fp-e3-lumen-pressure-and-bm-attachment
 
+- id: F-04
+  kind: biological
+  status: confirms
+  tier: observation
+  statement: |-
+    A dynamic Simularium trajectory (bm-e3-lumenoid-dynamic.simularium, 298 vertices x 24 frames) plays the closed 3D lumenoid mesh relaxing over the real vivarium-tyssue engine — the dynamic lumenoid visualization the reviewer asked for. Engine-diagnostic (no lumen-filling drive wired yet), not a morphogenesis result.
+  evidence:
+    artifact: bm-e3-lumenoid-dynamic.simularium
 followup_proposals:
 - id: fp-e3-lumen-pressure-and-bm-attachment
   title: "Drive the lumen and read the pressure/volume trajectory + explicit BM attachment"
@@ -475,5 +483,7 @@ implementation_requirements:
 - id: req-e3-simularium-dynamic-viz
   title: Simularium dynamic visualization of the closed lumenoid
   kind: visualization
-  status: blocked
+  status: done
   description: Render the closed 3D lumenoid as a Simularium trajectory (section cut + scale) showing the basal BM-coupling shell dynamically, once the 2D coupling (R4) passes and a lumen-filling drive is wired. Blocked on R4.
+  resolution: |-
+    Built 2026-11-09: bm-e3-lumenoid-dynamic.simularium.
