@@ -837,13 +837,16 @@ a.viv-bs-commit:hover { text-decoration: underline; }
     <!-- The Vivarium brand logo was removed; the workspace badge (avatar) is the
          top element of the rail. The rail defaults to the full labelled sidebar
          and can be collapsed to a compact icon bar via the toggle below; the
-         choice is persisted. The sidebar has a fixed width (no drag-to-resize).
-         "About Vivarium" is reached from the About button pinned in the rail
-         footer. ⌘K still opens search. -->
+         choice is persisted. The right-edge handle below drag-resizes the rail
+         narrower (capped so it can't get too wide); dragging it all the way in
+         snaps to the collapsed bar. "About Vivarium" is reached from the About
+         button pinned in the rail footer. ⌘K still opens search. -->
 
     <!-- The sidebar expand/collapse toggle lives in the Settings popover (the gear
-         at the bottom of the rail); it drives the persisted vivarium.rail-collapsed
-         state. -->
+         at the bottom of the rail); the right-edge drag handle below also sizes the
+         rail. Both drive the persisted vivarium.rail-collapsed / rail-width state. -->
+    <div id="viv-rail-resize-handle" class="viv-rail-resize-handle" aria-hidden="true"
+         onpointerdown="_vivRailResizeStart(event)" ondblclick="_vivRailResizeReset()"></div>
 
     
     <!-- GitHub mark, defined once and reused (workspace-name link + collapsed icon). -->
@@ -2853,7 +2856,7 @@ Nothing on <code id="pr-base-display-2">main</code> changes until someone presse
      DataSource global that renderers call to fetch narrative data.
      local-server mode (default) fetches from the same-origin /api/* endpoints.
      Hosted mode (sub-projects #2/#3) will set a different config here. -->
-<script>window.__DASH_CONFIG__ = { mode: "snapshot", interactiveUrl: "https://github.com/vivarium-collective/viva-lumenoid", basePath: "/viva-lumenoid/workbench", inputsDownloadBase: "https://github.com/vivarium-collective/viva-lumenoid/raw/basement-membrane-v1", provenance: {"repo_slug": "vivarium-collective/viva-lumenoid", "repo_url": "https://github.com/vivarium-collective/viva-lumenoid", "commit": "33d996851c9f42acc772fef43aaa53c1756e9433", "commit_url": "https://github.com/vivarium-collective/viva-lumenoid/commit/33d996851c9f42acc772fef43aaa53c1756e9433", "branch": "basement-membrane-v1", "lockfile": "uv.lock@df7785d3583d", "generated_at": "2026-11-16 23:10 UTC"} };</script>
+<script>window.__DASH_CONFIG__ = { mode: "snapshot", interactiveUrl: "https://github.com/vivarium-collective/viva-lumenoid", basePath: "/viva-lumenoid/workbench", inputsDownloadBase: "https://github.com/vivarium-collective/viva-lumenoid/raw/basement-membrane-v1", provenance: {"repo_slug": "vivarium-collective/viva-lumenoid", "repo_url": "https://github.com/vivarium-collective/viva-lumenoid", "commit": "89e6a1ca46ad7ab2c3a2e0ecc22d30fd42e80dfc", "commit_url": "https://github.com/vivarium-collective/viva-lumenoid/commit/89e6a1ca46ad7ab2c3a2e0ecc22d30fd42e80dfc", "branch": "basement-membrane-v1", "lockfile": "uv.lock@df7785d3583d", "generated_at": "2026-11-17 00:16 UTC"} };</script>
 <!-- Derive the global URL prefix from the (possibly publish-injected) config.
      Many renderers prefix workspace-root-absolute links (/studies/, /api/)
      with window.__BASE_PATH__ so they resolve when the read-only bundle is

@@ -443,6 +443,11 @@ else:
 #
 # _Results are shown by the figures below, produced by the run above._
 
+# **r1_native_regime**
+
+# r1_native_regime
+_save_viz('bm-r1-published-tissue-baseline', 'r1_native_regime', _render_one('html:viz/r1_native_regime.html', {'title': 'R1 reproduced natively in tyssue — confinement regimes + the height-increase regime', 'evidence_status': 'observed', 'tier': 'main', 'caption': "How to read: R1's reduced-order tissue baseline, reproduced NATIVELY in the tyssue vertex model via the R4 biaxial basal BM stress (not a standalone 0-D model), at 12 cells. Panel A — the confinement gap (A0-A)/A0 rises with BM stiffness and relaxation time: R1's regime topology. Panel B — cell-height change: the height-INCREASE regime is the stiff + slow-BM corner. Panel C — oriented to Barrientos Fig 1: free growth spreads cells (height down), a stiff/slow BM confines basal area so volume growth thickens them (+~46% vs +~8% free). Panel D — volume growth (confined -> thickens, +42%) vs growth by cell NUMBER (per-cell target constant -> per-cell height flat, +0.2%). MAIN (evidence: observed), reduced units; the absolute pascal scale is uncalibrated.\n"}, RUNS_DB, STUDY_YAML))
+
 # **r1_regime**
 
 # r1_regime
@@ -470,7 +475,7 @@ _save_viz('bm-r1-published-tissue-baseline', 'r1_regime_placement', _render_one(
 #
 # **Purpose.** A crosslinked semiflexible rod network relaxes macroscopic stress as crosslinks turn over. Slower turnover (a longer collagen residence time, set by a smaller off_rate) should give a longer, more cleanly resolvable stress-relaxation time tau; fast turnover relaxes stress faster than the network can hold a measurable signal above noise.
 #
-# **Claim.** The faithful collagen IV network assembles and carries in-plane stress under staged growth loading on real LAMMPS, and -- on a dense, multi-seed network (300 rods, authors' density 3.0, 12-sigma slab, 4 seeds) -- its macroscopic stress-relaxation time tau rises monotonically with collagen residence time (37 LJ at residence 12.5 up to ~102 LJ at residence 200), reproducing the DIRECTION of Barrientos Figure 2E across the full turnover range. tau carries an intrinsic network-relaxation floor (~37 LJ) at fast turnover and becomes residence-dominated above residence ~50; the elastic modulus is turnover-independent (3.19 LJ), as elasticity should be.
+# **Claim.** The faithful collagen IV network assembles and carries in-plane stress under staged growth loading on real LAMMPS, and -- on a dense, multi-seed network (300 rods, authors' density 3.0, 12-sigma slab, 4 seeds) -- its macroscopic stress-relaxation time tau rises monotonically with collagen residence time (37 LJ at residence 12.5 up to ~102 LJ at residence 200), reproducing the DIRECTION of Barrientos Figure 2E across the full turnover range. tau carries an intrinsic network-relaxation floor (~37 LJ) at fast turnover and becomes residence-dominated above residence ~50; the elastic modulus is turnover-independent (3.19 LJ), as elasticity should be. The Barrientos Figure 2C/C'/D/E panels are reproduced in STRUCTURE/DIRECTION from real staged- protocol runs (reduced units, not a pixel match): the stress-relaxation curves, the crosslink- turnover dynamics, and -- made explicit for the reviewer -- the crosslink-density <-> stress- relaxation relationship, where the stress a remodelling network retains tracks its surviving crosslink population (sigma/sigma_0 ~ n/n_0 over the viscous hold).
 
 # ### Parameters
 #
@@ -557,6 +562,11 @@ _save_viz('bm-r2-collagen-network-rheology', 'collagen_network_rheology_movie', 
 # r2_fig2e
 _save_viz('bm-r2-collagen-network-rheology', 'r2_fig2e', _render_one('html:viz/r2_fig2e.html', {'title': 'Stress-relaxation time τ vs collagen residence (Barrientos Fig 2E)', 'evidence_status': 'observed', 'tier': 'main', 'caption': 'How to read: Read the stress-relaxation time τ (y-axis) against collagen residence time (x-axis); the curve rising from left to right — longer residence giving larger τ — is the Fig 2E result, and the flat floor at the left shows τ bottoming out at fast turnover. REAL measured data (dense multi-seed sweep: 300 rods, density 3.0, 12σ slab, 4 seeds): the stress-relaxation time τ rises monotonically with collagen residence time (37→102 LJ over residence 12.5→200), reproducing the Fig 2E direction. τ carries an intrinsic relaxation floor (~37 LJ) at fast turnover and is residence-dominated above residence ~50; the modulus is turnover-independent (3.19 LJ). The open marker (residence 200) resolved at only 1/4 seeds.\n'}, RUNS_DB, STUDY_YAML))
 
+# **r2_fig2_panels**
+
+# r2_fig2_panels
+_save_viz('bm-r2-collagen-network-rheology', 'r2_fig2_panels', _render_one('html:viz/r2_fig2_panels.html', {'title': "Barrientos Fig 2C/C'/D/E — collagen IV network rheology (real staged-protocol runs)", 'evidence_status': 'observed', 'tier': 'main', 'caption': "How to read: four panels from REAL staged-protocol runs of the faithful collagen IV network (300 rods, authors' density 3.0, 12σ slab, released NC1/7S angles; 3 seeds), sweeping the crosslink off_rate (collagen residence time 1/off_rate = 100/50/25/12.5 LJ). Panel A (Fig 2C) is the stress-relaxation curve σ(t) over the breakage-only viscous hold — slower turnover (blue) relaxes more slowly. Panel B (Fig 2C') is the crosslink count n(t) decaying over the same hold — the molecular driver. Panel C (Fig 2D) makes the crosslink-density ↔ stress-relaxation relationship EXPLICIT: retained stress σ/σ₀ plotted against retained crosslinks n/n₀ collapses near the diagonal, so the stress a remodelling network holds tracks its surviving crosslink population. Panel D (Fig 2E) is the fitted relaxation time τ vs residence (per-seed + median) with the turnover-independent elastic modulus overlaid (flat orange ≈ 3.3 LJ). This is a reduced-unit reproduction of panel STRUCTURE/DIRECTION, NOT a pixel match to the PDF. Honestly scoped: τ is a floor-plus-residence relationship — the fast-turnover end (residence 12.5–50) sits at the ~38–41 LJ intrinsic relaxation floor and is flat / non-monotonic there, and only residence 100 rises clearly above the floor (τ ≈ 65 LJ); residence 200 is deliberately excluded (it resolved at only 1/4 seeds in the recorded dense sweep). No pascal/hour calibration is claimed. Data baked (real) from sims/fig2_panels_run.py into viva_lumenoid/data/fig2_panels.json.\n"}, RUNS_DB, STUDY_YAML))
+
 # **r2_rheology**
 
 # r2_rheology
@@ -582,7 +592,7 @@ _save_viz('bm-r2-collagen-network-rheology', 'r2_rheology', _render_one('html:vi
 #
 # **Purpose.** Fig 2B-C decomposes sustained growth into three supply modes: no remodeling, remodeling without insertion, and remodeling with insertion. Crosslink remodeling turns the chemistry over; material insertion supplies fresh collagen so a network being diluted by expansion can be replaced. Only remodeling WITH insertion sustains a growing connected network.
 #
-# **Claim.** With a material-insertion process added to the collagen IV network, the composite now expresses all THREE Barrientos Fig 2B-C supply modes and reproduces their ordering: under growth (expansion), remodeling WITH insertion sustains and grows the crosslinked network, remodeling WITHOUT insertion cannot replace diluted material, and a frozen (no-remodeling) network is static and dilutes most. The ordering holds strictly across rod count, crosslink count, and crosslink-per-area density, and is robust across 3 seeds.
+# **Claim.** With a material-insertion process added to the collagen IV network, the composite now expresses all THREE Barrientos Fig 2B-C supply modes and reproduces their ordering: under growth (expansion), remodeling WITH insertion sustains and grows the crosslinked network, remodeling WITHOUT insertion cannot replace diluted material, and a frozen (no-remodeling) network is static and dilutes most. The ordering holds strictly across rod count, crosslink count, and crosslink-per-area density, and is robust across 3 seeds. The Fig 2C PANEL itself is now rendered from real runs (viz/r3_fig2c_three_modes.html): the density, crosslink-count, and material-count TRAJECTORIES through growth reproduce the published panel direction/shape -- frozen flat and diluting, remodelling-only climbing on fixed material, remodelling+insertion climbing highest with a growing material count -- a reduced-unit reproduction of the panel's structure/direction, not a pixel match.
 
 # ### Parameters
 #
@@ -663,6 +673,11 @@ else:
 
 # network_expansion_supply_movie
 _save_viz('bm-r3-network-expansion-supply', 'network_expansion_supply_movie', _render_one('gif:bm-r3-network-expansion-supply.gif', {'title': 'R3 — collagen network, remodeling + supply (movie)', 'evidence_status': 'observed', 'tier': 'supplement', 'caption': 'Animated movie of the collagen network with crosslink turnover AND material insertion (the third Fig-2B/C supply mode): new rods appear and crosslink in as the network expands. Illustrative companion to the three-mode ordering figure.\n'}, RUNS_DB, STUDY_YAML))
+
+# **r3_fig2c_three_modes**
+
+# r3_fig2c_three_modes
+_save_viz('bm-r3-network-expansion-supply', 'r3_fig2c_three_modes', _render_one('html:viz/r3_fig2c_three_modes.html', {'title': 'Fig 2C panel -- density & crosslinking trajectories across the three supply modes (real collagen runs)', 'tier': 'main', 'evidence_status': 'observed', 'caption': "How to read: the Barrientos Fig 2C panel itself, reproduced from REAL CollagenNetworkProcess runs rather than only the final scalar ordering. Three panels track, through equibiaxial growth (x = strain), the per-step trajectory of (A) crosslink-per-area density, (B) total crosslink count, and (C) rod (material) count, for each of the three supply modes: no remodelling (frozen, purple), remodelling without new collagen (blue), remodelling with material insertion (green). Lines are the seed mean over 3 seeds; the shaded band is the seed min/max. The panel SHAPE reproduces the published direction: the frozen network stays flat and dilutes, remodelling-on-fixed-material climbs in density/crosslinking but supplies no new rods, and remodelling-with-insertion climbs highest while the material count grows -- only combined turnover + insertion densifies the growing network. Reduced (LJ) units at small scale (40 rods); a reproduction of the panel's structure/direction, not a pixel match. Honest scope: formation-dominant remodelling at this scale (crosslinks climb rather than steady-state turnover), carried over from the study's documented limitation.\n"}, RUNS_DB, STUDY_YAML))
 
 # **r3_supply**
 
