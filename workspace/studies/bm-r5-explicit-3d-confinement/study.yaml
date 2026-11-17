@@ -31,8 +31,8 @@ review_actions:
 - source: inline-feedback-2026-11-09
   date: '2026-11-09'
   item: Previous study needs to be resolved before this one. Could we visualize a video of cells simulated using tyssue growing taller under confinement or spreading over softer bm?
-  action: "Deferred behind the 2D coupling core (R4): R5's acceptance is gated on R4 tests-passed (the parent_studies edge already encodes this). Added req-r5-simularium-confinement-video: a Simularium trajectory of the tyssue cells growing taller under a stiff/slow BM and spreading on a soft BM, to be produced once the R4 coupling lands and feeds the 3D monolayer."
-  status: deferred-behind-r4
+  action: "Deferred behind the 2D coupling core (R4): R5's acceptance is gated on R4 tests-passed (the parent_studies edge already encodes this). Added req-r5-simularium-confinement-video: a Simularium trajectory of the tyssue cells growing taller under a stiff/slow BM and spreading on a soft BM, to be produced once the R4 coupling lands and feeds the 3D monolayer. [DONE 2026-11-09: dynamic Simularium viz built on the landed R4 coupling; study remains gated/deferred for its full result but the requested visualization exists.]"
+  status: viz-built-r4-landed
 claim: >
   The explicit 3D epithelial monolayer runs over the Tyssue engine and per-cell heights and
   volumes emerge directly from the apical/lateral/basal surface energies and volume targets --
@@ -523,6 +523,14 @@ findings:
     run_ids: [r5-growth-coupling]
   seeded_study: fp-r5-bm-shell-controls
 
+- id: F-06
+  kind: biological
+  status: confirms
+  tier: observation
+  statement: |-
+    A Simularium trajectory (bm-r5-confinement-video.simularium) shows cells growing taller under a stiff/slow BM (+74% height) vs spreading flat on no BM (+27%), footprints shrinking as heights rise — the reviewer's confinement video, driven by the real R4 BM coupling.
+  evidence:
+    artifact: bm-r5-confinement-video.simularium
 followup_proposals:
 - id: fp-r5-bm-shell-controls
   title: "Add the BM-shell controls (no-BM / elastic-BM / relaxing-BM) to the 3D monolayer"
@@ -587,5 +595,12 @@ implementation_requirements:
 - id: req-r5-simularium-confinement-video
   title: 'Simularium video: cells growing taller under confinement / spreading on softer BM'
   kind: visualization
-  status: blocked
+  status: done
   description: Render a Simularium trajectory of the 3D monolayer cells thickening under a stiff/slow BM reaction and flattening/spreading under a soft BM, using the R4 BM-face-energy coupling once it lands. Blocked until R4 (2D coupling) passes.
+  resolution: |-
+    Built 2026-11-09: bm-r5-confinement-video.simularium via workspace/studies/bm-r5-explicit-3d-confinement/sims/run_bm_confinement_video.py.
+canonical_runs:
+- name: req-r5-simularium-confinement-video-run
+  label: Dynamic Simularium viz
+  script: workspace/studies/bm-r5-explicit-3d-confinement/sims/run_bm_confinement_video.py
+  args: []

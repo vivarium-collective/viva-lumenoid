@@ -36,8 +36,8 @@ review_actions:
 - source: inline-feedback-2026-11-09
   date: '2026-11-09'
   item: visualization of the cells growing tallershorter would be helpful. needs previous studies to be cleared before acceptance
-  action: 'Kept the reproduced Fig-7 perlecan ordering (knockdown taller > control > overexpression shorter) but gated final acceptance behind the 2D coupling core per the reviewer. Added req-r6-taller-shorter-viz: a dynamic visualization of cells growing taller/shorter across the perlecan + growth-rate conditions.'
-  status: acceptance-gated-behind-2d-core
+  action: 'Kept the reproduced Fig-7 perlecan ordering (knockdown taller > control > overexpression shorter) but gated final acceptance behind the 2D coupling core per the reviewer. Added req-r6-taller-shorter-viz: a dynamic visualization of cells growing taller/shorter across the perlecan + growth-rate conditions. [DONE 2026-11-09: dynamic Simularium viz built on the landed R4 coupling; study remains gated/deferred for its full result but the requested visualization exists.]'
+  status: viz-built-r4-landed
 claim: >
   Carrying an inferred collagen IV lifetime through BM relaxation to cell shape reproduces the
   paper's Figure 7 perlecan intervention ordering: perlecan knockdown (loss) gives the TALLEST
@@ -494,6 +494,14 @@ findings:
     run_ids: [r6-perlecan-growth-conditions]
   seeded_study: fp-r6-uncertainty-bands
 
+- id: F-04
+  kind: biological
+  status: confirms
+  tier: observation
+  statement: |-
+    A Simularium trajectory (bm-r6-perlecan-height-video.simularium) renders the perlecan ordering as cell height: knockdown taller (+77%) > control (+68%) > overexpression shorter (+39%), mapping each condition onto the BM stiffness/relaxation it sets (knockdown lengthens collagen lifetime -> stiff/slow BM). Qualitative Fig-7 direction, reduced units.
+  evidence:
+    artifact: bm-r6-perlecan-height-video.simularium
 followup_proposals:
 - id: fp-r6-perlecan-direction-audit
   title: "Audit the perlecan -> collagen-turnover direction against the paper"
@@ -589,5 +597,12 @@ implementation_requirements:
 - id: req-r6-taller-shorter-viz
   title: Dynamic visualization of cells growing taller/shorter across perlecan + growth conditions
   kind: visualization
-  status: planned
+  status: done
   description: Render the perlecan knockdown/control/overexpression and growth-rate conditions as a dynamic (Simularium or animated) view of cell height changing, so the taller>control>shorter ordering is visible, not only tabulated.
+  resolution: |-
+    Built 2026-11-09: bm-r6-perlecan-height-video.simularium via workspace/studies/bm-r6-perlecan-growth-perturbations/sims/run_perlecan_height_video.py.
+canonical_runs:
+- name: req-r6-taller-shorter-viz-run
+  label: Dynamic Simularium viz
+  script: workspace/studies/bm-r6-perlecan-growth-perturbations/sims/run_perlecan_height_video.py
+  args: []

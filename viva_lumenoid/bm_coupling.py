@@ -161,6 +161,7 @@ class BMCoupledResult:
     stiffness: np.ndarray           # per-face BM stiffness (heterogeneity)
     area_final_cells: np.ndarray    # per-face realized area at the end
     height_final_cells: np.ndarray  # per-face height at the end
+    frames: list | None = None      # per-step {t,x,y,area,height} (capture_frames)
 
 
 def _build_sheet():
@@ -201,6 +202,7 @@ def run_bm_coupled_sheet(
     vol_rate: float = 0.0,
     steps: int = 40,
     dt: float = 0.25,
+    capture_frames: bool = False,
 ) -> BMCoupledResult:
     """Grow a REAL tyssue sheet's preferred basal area against an explicit BM face
     energy, letting the realized area + cell height emerge from the vertex model.
@@ -251,6 +253,7 @@ def run_bm_coupled_sheet(
     grow_vol = PreferredGrowth(v0, mode=(growth_mode if vol_rate else "none"), rate=vol_rate)
 
     ts, aprefs, ameans, hmeans, tens, acells = [], [], [], [], [], []
+    frames = [] if capture_frames else None
     v0_last = v0
     for i in range(steps + 1):
         t = i * dt
@@ -275,6 +278,11 @@ def run_bm_coupled_sheet(
         ts.append(t); aprefs.append(a_pref); ameans.append(float(A.mean()))
         hmeans.append(float(np.mean(v0_last / A))); tens.append(float(T.mean()))
         acells.append(A.copy())
+        if frames is not None:
+            G.update_all(sh)
+            fx = sh.face_df["x"].to_numpy(); fy = sh.face_df["y"].to_numpy()
+            frames.append({"t": t, "x": fx.copy(), "y": fy.copy(),
+                           "area": A.copy(), "height": (v0_last / A).copy()})
 
     acells = np.asarray(acells)
     ameans = np.asarray(ameans)
@@ -287,6 +295,7 @@ def run_bm_coupled_sheet(
         a_cells=acells, height_mean=hmeans, bm_tension_mean=np.asarray(tens),
         gap_final=gap_final, height_gain=height_gain, x=xc, stiffness=stiff,
         area_final_cells=a_final, height_final_cells=v0_last / a_final,
+        frames=frames,
     )
 
 
