@@ -67,11 +67,11 @@ expert_docs:
       break-mechanism and GCE divergences.
 
 # Visualization wiring (address + config). Populated by the Visualizations
-# tab and /viva-viz.
+# tab and /viva:viz.
 visualizations: []
 
 # Reproducible simulation specs (composite + steps + params). Populated by
-# the Composites tab "Run" button and by `/viva-study run-baseline`.
+# the Composites tab "Run" button and by `/viva:study run-baseline`.
 simulations: []
 
 # Workspace-scoped datasets (file path + format + provenance). Populated by

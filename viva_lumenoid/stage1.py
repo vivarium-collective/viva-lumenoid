@@ -211,7 +211,7 @@ def run_stage1(params: CollagenParams | None = None,
 def stage1_composite_spec(params: CollagenParams | None = None) -> dict:
     """process-bigraph composite document wiring controller -> network -> emitter.
 
-    This is the dashboard/`/viva-run` form of stage 1: a Composite that runs the
+    This is the dashboard/`/viva:run` form of stage 1: a Composite that runs the
     staged protocol on a shared timeline. The direct ``run_stage1`` driver above
     is the analysis path; this is the reproducible spec. Thin wrapper over the
     shared builder (``composites.builders.collagen_network_spec``) so the composite
