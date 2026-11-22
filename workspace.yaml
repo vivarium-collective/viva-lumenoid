@@ -1,5 +1,6 @@
 schema_version: 2
 name: lumenoid
+avatar: assets/avatar.png  # rail icon in the workbench
 created: "2026-09-30"
 plugin_version: 0.4.16
 package_path: viva_lumenoid
