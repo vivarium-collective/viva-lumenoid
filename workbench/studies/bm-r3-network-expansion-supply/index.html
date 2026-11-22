@@ -16,17 +16,25 @@
 </head>
 <body>
 <main class="study-page">
+
+
 <header class="study-header">
-  <div style="display:flex; align-items:center; gap:14px; justify-content:space-between;">
+  <div style="display:flex; align-items:flex-start; gap:14px; justify-content:space-between;">
+  <div class="study-head-main" style="min-width:0; flex:1 1 auto">
   <div style="display:flex; align-items:center; gap:12px; min-width:0; flex-wrap:wrap">
   <h1 class="study-title" style="margin:0">
     <span class="study-name" id="study-name" data-slug="bm-r3-network-expansion-supply" data-study-kind="computational" title="bm-r3-network-expansion-supply" data-edit-kind="study" data-edit-field="title" data-edit-value="Network expansion &amp; collagen supply" data-edit-label="Title">Network expansion &amp; collagen supply</span>
     
   </h1>
+  </div>
+  <p id="study-question-headline" class="study-question-headline" title="Why are both crosslink remodeling and collagen replacement (insertion) necessary for sustained basement-membrane growth?
+" data-edit-kind="study" data-edit-field="question" data-edit-value="Why are both crosslink remodeling and collagen replacement (insertion) necessary for sustained basement-membrane growth?
+" data-edit-multiline data-edit-label="Question"><span class="q-glyph">Q</span> <span class="study-question-headline-text">Why are both crosslink remodeling and collagen replacement (insertion) necessary for sustained basement-membrane growth?
+</span></p>
+  </div>
+  <span class="study-header-actions" style="display:inline-flex; gap:10px; flex-shrink:0; align-items:center;">
     
     <span id="study-axis-markers" data-slug="bm-r3-network-expansion-supply" style="display:inline-flex; gap:8px; align-items:center; flex-wrap:wrap"></span>
-  </div>
-  <span class="study-header-actions" style="display:inline-flex; gap:6px; flex-shrink:0; align-items:center;">
     
     
     
@@ -49,10 +57,6 @@
 
 
 
-
-<p id="study-question-headline" class="study-question-headline"><span class="q-glyph">Q</span> <span class="study-question-headline-text" data-edit-kind="study" data-edit-field="question" data-edit-value="Why are both crosslink remodeling and collagen replacement (insertion) necessary for sustained basement-membrane growth?
-" data-edit-multiline data-edit-label="Question">Why are both crosslink remodeling and collagen replacement (insertion) necessary for sustained basement-membrane growth?
-</span></p>
 
 <nav class="study-tabs" aria-label="Study sections">
   
@@ -82,10 +86,18 @@
   </button>
   
   <span class="study-dl study-export-wrap" style="margin-left:auto; align-self:center; position:relative; display:inline-flex">
-    <button type="button" id="study-export-btn" class="btn-mini" aria-haspopup="true" aria-expanded="false" title="Download this study's figures or a runnable notebook">↓ Export ▾</button>
-    <div id="study-export-menu" role="menu" style="display:none;position:absolute;right:0;top:100%;margin-top:4px;background:#fff;border:1px solid #e2e8f0;border-radius:8px;box-shadow:0 6px 20px rgba(0,0,0,0.14);z-index:70;min-width:200px;padding:4px">
-      <button type="button" id="study-dl-figures" role="menuitem" class="study-jump-item" onclick="window._vivStudyFiguresFromCard(event, 'bm-r3-network-expansion-supply')">Download figures</button>
-      <button type="button" id="study-dl-notebook" role="menuitem" class="study-jump-item" onclick="window._vivStudyNotebookFromCard(event, 'bm-r3-network-expansion-supply', '')">Download notebook</button>
+    <button type="button" id="study-export-btn" class="btn-mini" aria-haspopup="true" aria-expanded="false" title="Shortcuts — open in the browser or download (report, notebook, figures)">Shortcuts ▾</button>
+    
+    <div id="study-export-menu" role="menu" style="display:none;position:absolute;right:0;top:100%;margin-top:4px;background:#fff;border:1px solid #e2e8f0;border-radius:8px;box-shadow:0 6px 20px rgba(0,0,0,0.14);z-index:70;min-width:190px;padding:4px">
+      <div class="study-export-sec">Report</div>
+      <button type="button" id="study-report-open" role="menuitem" class="btn-mini study-export-item" onclick="window._vivStudyReportOpen(event, 'bm-r3-network-expansion-supply')">Open in browser</button>
+      <button type="button" id="study-report-dl" role="menuitem" class="btn-mini study-export-item" onclick="window._vivStudyReportDownload(event, 'bm-r3-network-expansion-supply')">Download HTML</button>
+      <div class="study-export-sec">Notebook</div>
+      <button type="button" id="study-nb-open" role="menuitem" class="btn-mini study-export-item" onclick="window._vivStudyNotebookOpen(event, 'bm-r3-network-expansion-supply')">Open in browser</button>
+      <button type="button" id="study-dl-notebook" role="menuitem" class="btn-mini study-export-item" onclick="window._vivStudyNotebookFromCard(event, 'bm-r3-network-expansion-supply', '')">Download .ipynb</button>
+      <div class="study-export-sec">Figures</div>
+      <button type="button" id="study-fig-open" role="menuitem" class="btn-mini study-export-item" onclick="window._vivStudyFiguresOpen(event, 'bm-r3-network-expansion-supply')">Open in browser</button>
+      <button type="button" id="study-dl-figures" role="menuitem" class="btn-mini study-export-item" onclick="window._vivStudyFiguresFromCard(event, 'bm-r3-network-expansion-supply')">Download (zip)</button>
     </div>
   </span>
 </nav>
@@ -98,8 +110,18 @@
 .study-kind-tag.study-kind-biological{background:#ecfdf5;color:#065f46}
 .study-kind-tag.study-kind-computational{background:#eff6ff;color:#1e40af}
 .study-kind-tag.study-kind-theoretical{background:#faf5ff;color:#6b21a8}
-.study-question-headline{margin:6px 0 0 0;font-size:1.05em;line-height:1.5;color:#1e293b;font-family:Georgia,"Times New Roman",serif}
+.study-question-headline{margin:2px 0 0 0;font-size:0.85em;line-height:1.35;color:#475569;font-family:Georgia,"Times New Roman",serif;padding-right:40px}
+/* Park the inline-edit ✎ in a reserved right gutter so it never lands over the
+   question text (the pencil is an absolutely-positioned child of the editable). */
+.study-question-headline>.ie-pencil{right:6px;top:1px}
+h1.study-title .study-name.ie-editable{padding-right:36px}
+h1.study-title .study-name>.ie-pencil{right:4px;top:6px}
 .study-question-headline .q-glyph{display:inline-block;font-size:0.78em;font-weight:700;font-family:ui-monospace,monospace;color:#64748b;background:#f1f5f9;padding:1px 7px;border-radius:4px;margin-right:6px;vertical-align:middle}
+/* Study Export menu — styled to match the investigation-level ↓ Export menu
+   exactly: grey uppercase section labels + full-width, left-aligned, stacked
+   text-link items (not inline pills). Mirrors walkthrough.js `_sec` + `_mi`. */
+.study-export-sec{padding:6px 8px 2px;font-size:0.72em;font-weight:700;text-transform:uppercase;letter-spacing:0.04em;color:#94a3b8}
+.study-export-item{display:block;width:100%;text-align:left;border:none;background:transparent}
 .status-detail-panel{margin:0;padding:2px 0;background:transparent;border:none;border-radius:0;font-size:0.92em}
 .status-detail-row{display:flex;align-items:center;gap:8px;padding:3px 0}
 .status-detail-axis{min-width:140px;color:#475569;font-size:0.9em}
@@ -548,8 +570,8 @@
 
     <div class="ctr-block">
       <h2 class="overview-label ctr-h">Claim</h2>
-      <p class="ctr-text" data-edit-kind="study" data-edit-field="claim" data-edit-value="With a material-insertion process added to the collagen IV network, the composite now expresses all THREE Barrientos Fig 2B-C supply modes and reproduces their ordering: under growth (expansion), remodeling WITH insertion sustains and grows the crosslinked network, remodeling WITHOUT insertion cannot replace diluted material, and a frozen (no-remodeling) network is static and dilutes most. The ordering holds strictly across rod count, crosslink count, and crosslink-per-area density, and is robust across 3 seeds. The Fig 2C PANEL itself is now rendered from real runs (viz/r3_fig2c_three_modes.html): the density, crosslink-count, and material-count TRAJECTORIES through growth reproduce the published panel direction/shape -- frozen flat and diluting, remodelling-only climbing on fixed material, remodelling+insertion climbing highest with a growing material count -- a reduced-unit reproduction of the panel&#39;s structure/direction, not a pixel match.
-" data-edit-multiline data-edit-label="Claim">With a material-insertion process added to the collagen IV network, the composite now expresses all THREE Barrientos Fig 2B-C supply modes and reproduces their ordering: under growth (expansion), remodeling WITH insertion sustains and grows the crosslinked network, remodeling WITHOUT insertion cannot replace diluted material, and a frozen (no-remodeling) network is static and dilutes most. The ordering holds strictly across rod count, crosslink count, and crosslink-per-area density, and is robust across 3 seeds. The Fig 2C PANEL itself is now rendered from real runs (viz/r3_fig2c_three_modes.html): the density, crosslink-count, and material-count TRAJECTORIES through growth reproduce the published panel direction/shape -- frozen flat and diluting, remodelling-only climbing on fixed material, remodelling+insertion climbing highest with a growing material count -- a reduced-unit reproduction of the panel&#39;s structure/direction, not a pixel match.
+      <p class="ctr-text" data-edit-kind="study" data-edit-field="claim" data-edit-value="With a material-insertion process added to the collagen IV network, the composite now expresses all THREE Barrientos Fig 2B-C supply modes and reproduces their ordering: under growth (expansion), remodeling WITH insertion sustains and grows the crosslinked network, remodeling WITHOUT insertion cannot replace diluted material, and a frozen (no-remodeling) network is static and dilutes most. The ordering holds strictly across rod count, crosslink count, and crosslink-per-area density, and is robust across 3 seeds.
+" data-edit-multiline data-edit-label="Claim">With a material-insertion process added to the collagen IV network, the composite now expresses all THREE Barrientos Fig 2B-C supply modes and reproduces their ordering: under growth (expansion), remodeling WITH insertion sustains and grows the crosslinked network, remodeling WITHOUT insertion cannot replace diluted material, and a frozen (no-remodeling) network is static and dilutes most. The ordering holds strictly across rod count, crosslink count, and crosslink-per-area density, and is robust across 3 seeds.
 </p>
       
     </div>
@@ -611,8 +633,8 @@
     <div class="ctr-block">
       <h2 class="overview-label ctr-h">Result</h2>
       
-      <p class="ctr-text" data-edit-kind="study" data-edit-field="result" data-edit-value="All three modes are now expressible and the ordering reproduces cleanly (seed 12345): rod count grows ONLY with insertion (60-&gt;96 with insertion vs 60-&gt;60 for both remodeling-without-insertion and frozen); crosslink count orders strictly with_insertion 45 &gt; without_insertion 33 &gt; frozen 17; and crosslink-per-area density (which accounts for expansion dilution) orders with_insertion 0.654 &gt; without_insertion 0.480 &gt; frozen 0.247. The density ordering and the rod-count ordering each hold at 3/3 seeds (density with_insertion 0.654/0.567/0.611, without_insertion 0.480/0.451/0.436, frozen 0.247/0.218/0.087). The insertion mechanism itself is exact and deterministic: inserting k rods/step grows the atom count by exactly 2k/step and inserted beads become crosslink-eligible automatically (crosslinks climb as rods are supplied), while insert_on=0 holds the atom count flat. HONEST SCOPE: with the faithful real-angle set the assembly/remodeling path is formation-dominant (breaking is suppressed while crosslinks form at this scale), so modes 2-3 &#34;remodeling&#34; is formation + supply rather than full make/break turnover; and density is a per-area connectivity proxy, not the largest-connected-component metric. The three-mode ORDERING of Fig 2B-C is reproduced; the absolute connectivity statistics are a documented follow-up. Beyond the scalar endpoint ordering, the Fig 2C PANEL is now reproduced as trajectories (viz/r3_fig2c_three_modes.html, finding F4): through equibiaxial growth the seed-mean density ends 0.339 (remodelling+insertion) &gt; 0.233 (remodelling-only) &gt; 0.048 (frozen), crosslink count ends 23 &gt; 16 &gt; 3, and rod (material) count ends 76 &gt; 40 == 40, with the ordering holding at every growth step -- the panel&#39;s direction/shape, in reduced units at small scale (40 rods), not a pixel match.
-" data-edit-multiline data-edit-label="Result">All three modes are now expressible and the ordering reproduces cleanly (seed 12345): rod count grows ONLY with insertion (60-&gt;96 with insertion vs 60-&gt;60 for both remodeling-without-insertion and frozen); crosslink count orders strictly with_insertion 45 &gt; without_insertion 33 &gt; frozen 17; and crosslink-per-area density (which accounts for expansion dilution) orders with_insertion 0.654 &gt; without_insertion 0.480 &gt; frozen 0.247. The density ordering and the rod-count ordering each hold at 3/3 seeds (density with_insertion 0.654/0.567/0.611, without_insertion 0.480/0.451/0.436, frozen 0.247/0.218/0.087). The insertion mechanism itself is exact and deterministic: inserting k rods/step grows the atom count by exactly 2k/step and inserted beads become crosslink-eligible automatically (crosslinks climb as rods are supplied), while insert_on=0 holds the atom count flat. HONEST SCOPE: with the faithful real-angle set the assembly/remodeling path is formation-dominant (breaking is suppressed while crosslinks form at this scale), so modes 2-3 &#34;remodeling&#34; is formation + supply rather than full make/break turnover; and density is a per-area connectivity proxy, not the largest-connected-component metric. The three-mode ORDERING of Fig 2B-C is reproduced; the absolute connectivity statistics are a documented follow-up. Beyond the scalar endpoint ordering, the Fig 2C PANEL is now reproduced as trajectories (viz/r3_fig2c_three_modes.html, finding F4): through equibiaxial growth the seed-mean density ends 0.339 (remodelling+insertion) &gt; 0.233 (remodelling-only) &gt; 0.048 (frozen), crosslink count ends 23 &gt; 16 &gt; 3, and rod (material) count ends 76 &gt; 40 == 40, with the ordering holding at every growth step -- the panel&#39;s direction/shape, in reduced units at small scale (40 rods), not a pixel match.
+      <p class="ctr-text" data-edit-kind="study" data-edit-field="result" data-edit-value="All three modes are now expressible and the ordering reproduces cleanly (seed 12345): rod count grows ONLY with insertion (60-&gt;96 with insertion vs 60-&gt;60 for both remodeling-without-insertion and frozen); crosslink count orders strictly with_insertion 45 &gt; without_insertion 33 &gt; frozen 17; and crosslink-per-area density (which accounts for expansion dilution) orders with_insertion 0.654 &gt; without_insertion 0.480 &gt; frozen 0.247. The density ordering and the rod-count ordering each hold at 3/3 seeds (density with_insertion 0.654/0.567/0.611, without_insertion 0.480/0.451/0.436, frozen 0.247/0.218/0.087). The insertion mechanism itself is exact and deterministic: inserting k rods/step grows the atom count by exactly 2k/step and inserted beads become crosslink-eligible automatically (crosslinks climb as rods are supplied), while insert_on=0 holds the atom count flat. HONEST SCOPE: with the faithful real-angle set the assembly/remodeling path is formation-dominant (breaking is suppressed while crosslinks form at this scale), so modes 2-3 &#34;remodeling&#34; is formation + supply rather than full make/break turnover; and density is a per-area connectivity proxy, not the largest-connected-component metric. The three-mode ORDERING of Fig 2B-C is reproduced; the absolute connectivity statistics are a documented follow-up.
+" data-edit-multiline data-edit-label="Result">All three modes are now expressible and the ordering reproduces cleanly (seed 12345): rod count grows ONLY with insertion (60-&gt;96 with insertion vs 60-&gt;60 for both remodeling-without-insertion and frozen); crosslink count orders strictly with_insertion 45 &gt; without_insertion 33 &gt; frozen 17; and crosslink-per-area density (which accounts for expansion dilution) orders with_insertion 0.654 &gt; without_insertion 0.480 &gt; frozen 0.247. The density ordering and the rod-count ordering each hold at 3/3 seeds (density with_insertion 0.654/0.567/0.611, without_insertion 0.480/0.451/0.436, frozen 0.247/0.218/0.087). The insertion mechanism itself is exact and deterministic: inserting k rods/step grows the atom count by exactly 2k/step and inserted beads become crosslink-eligible automatically (crosslinks climb as rods are supplied), while insert_on=0 holds the atom count flat. HONEST SCOPE: with the faithful real-angle set the assembly/remodeling path is formation-dominant (breaking is suppressed while crosslinks form at this scale), so modes 2-3 &#34;remodeling&#34; is formation + supply rather than full make/break turnover; and density is a per-area connectivity proxy, not the largest-connected-component metric. The three-mode ORDERING of Fig 2B-C is reproduced; the absolute connectivity statistics are a documented follow-up.
 </p>
       
       
@@ -682,10 +704,13 @@
             </div>
             
             
+            
+            
             <div class="finding-traceability" style="font-size:0.84em;color:#475569;padding:4px 10px;margin:4px 0">
               
               
               runs: <a href="#run-r3-three-supply-modes"><code>r3-three-supply-modes</code></a>
+              
             </div>
             
             
@@ -746,10 +771,13 @@
             </div>
             
             
+            
+            
             <div class="finding-traceability" style="font-size:0.84em;color:#475569;padding:4px 10px;margin:4px 0">
               
               
               runs: <a href="#run-r3-three-supply-modes"><code>r3-three-supply-modes</code></a>
+              
             </div>
             
             
@@ -761,7 +789,7 @@
             <div class="finding-explanation"><em>Why:</em> _insert_rods creates each rod as a type-1 + type-2 bead pair joined by an intra-rod bond, clamped inside the box; n_crosslinks subtracts the CURRENT rod count so inserted intra-rod bonds are not miscounted; _fixes_dirty forces a full setup so new atoms enter the neighbor lists.
 </div>
             
-            
+            <div class="finding-next"><strong>→ Next:</strong> none -- mechanism verified; closes fp-r3-insertion-process</div>
           </div>
         </details>
       </div>
@@ -803,10 +831,13 @@
             </div>
             
             
+            
+            
             <div class="finding-traceability" style="font-size:0.84em;color:#475569;padding:4px 10px;margin:4px 0">
               
               
               runs: <a href="#run-r3-three-supply-modes"><code>r3-three-supply-modes</code></a>
+              
             </div>
             
             
@@ -818,71 +849,6 @@
             
             
             <div class="finding-next"><strong>→ Next:</strong> run full make/break turnover under the real-angle set at the authors&#39; dense config + add a largest-connected-component readout</div>
-          </div>
-        </details>
-      </div>
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      <div class="finding-card finding-kind-biological finding-status-confirms" id="finding-F4-fig2c-panel-trajectories-reproduce">
-        <details class="finding-details">
-          <summary class="finding-row">
-            <span class="finding-status-glyph">✓</span>
-            <span class="finding-claim finding-statement" data-edit-kind="study" data-edit-field="findings[F4-fig2c-panel-trajectories-reproduce].statement" data-edit-value="Rendered as the Fig 2C panel itself (density, crosslink-count, and material-count TRAJECTORIES through growth, not only the endpoint scalar), the three supply modes reproduce the published panel direction/shape from real collagen runs: the frozen (no-remodelling) network stays flat and dilutes (density ~0.052 flat, crosslinks 3-&gt;3, rods 40-&gt;40), remodelling-without-insertion climbs on fixed material (density 0.052-&gt;0.233, crosslinks 3-&gt;16, rods 40-&gt;40), and remodelling-with-insertion climbs highest while its rod (material) count grows (density 0.052-&gt;0.339, crosslinks 3-&gt;23, rods 40-&gt;76). The with &gt; without &gt; frozen ordering holds across the whole trajectory.
-" data-edit-multiline data-edit-label="Finding F4-fig2c-panel-trajectories-reproduce">Rendered as the Fig 2C panel itself (density, crosslink-count, and material-count TRAJECTORIES through growth, not only the endpoint scalar), the three supply modes reproduce the published panel direction/shape from real collagen runs: the frozen (no-remodelling) network stays flat and dilutes (density ~0.052 flat, crosslinks 3-&gt;3, rods 40-&gt;40), remodelling-without-insertion climbs on fixed material (density 0.052-&gt;0.233, crosslinks 3-&gt;16, rods 40-&gt;40), and remodelling-with-insertion climbs highest while its rod (material) count grows (density 0.052-&gt;0.339, crosslinks 3-&gt;23, rods 40-&gt;76). The with &gt; without &gt; frozen ordering holds across the whole trajectory.
-</span>
-            
-            <span class="finding-chip">via <code>crosslink-density-ordered</code></span>
-            
-          </summary>
-          <div class="finding-drawer">
-            <div class="finding-header">
-              <span class="finding-id">F4-fig2c-panel-trajectories-reproduce</span>
-              <span class="finding-kind">biological</span>
-              <span class="finding-status-text">confirms literature</span>
-            </div>
-            
-            
-            <div class="finding-evidence">
-              <strong>observed:</strong> seed mean (seeds 12345/777/2024), 40 rods, 4-step assembly + 12-step equibiaxial growth: density end 0.339 &gt; 0.233 &gt; 0.048; crosslink count end 23 &gt; 16 &gt; 3; rod count end 76 &gt; 40 == 40; ordering holds at every growth step. viz/r3_fig2c_three_modes.html
- · 
-              
-              via test <a href="#bt-crosslink-density-ordered" onclick="_gotoStudyTab('audit','bt-crosslink-density-ordered');return false;"><code>crosslink-density-ordered</code></a> · 
-              in run <a href="#run-r3-three-supply-modes"><code>r3-three-supply-modes</code></a>
-              
-              
-            </div>
-            
-            
-            <div class="finding-traceability" style="font-size:0.84em;color:#475569;padding:4px 10px;margin:4px 0">
-              
-              
-              runs: <a href="#run-r3-three-supply-modes"><code>r3-three-supply-modes</code></a>
-            </div>
-            
-            
-            
-            <div class="pass_if-band muted small" style="font-size:0.82em;padding:2px 10px">judged against <code>pass_if: op: strictly_decreasing · note: density ordering holds 3/3 seeds</code></div>
-            
-            
-            
-            <div class="finding-expected">
-              <strong>expected:</strong> Fig 2C: only remodelling + material insertion grows a densifying load-bearing network; remodelling-only holds on fixed material; frozen dilutes · 
-              
-              cites: <a class="ov-cite" href="#sref-barrientos2026cellshape" title="Basement membrane turnover controls cell shape">Barrientos 2026</a>
-            </div>
-            
-            
-            <div class="finding-explanation"><em>Why:</em> Equibiaxial growth dilutes the network every step. A frozen network can neither reform nor be resupplied, so density decays; remodelling-on-fixed-material reorganises existing rods and raises crosslinking but adds no new material; only remodelling + insertion adds rods (the climbing panel C count) that crosslink in, so density and crosslinking keep rising fastest. The trajectory SHAPE — flat vs climbing vs steepest-climbing with growing material — is the Fig 2C direction.
-</div>
-            
-            <div class="finding-next"><strong>→ Next:</strong> optionally re-render at the authors&#39; dense config + a largest-connected-component trajectory (fp-r3-connectivity-readouts)</div>
           </div>
         </details>
       </div>
@@ -939,12 +905,23 @@
 
 
 <section class="study-tab-panel" data-kind="compose" id="panel-compose" hidden>
-  <div style="display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:8px;">
-    <h2 class="overview-label" style="margin:0">Model composition</h2>
-    
-    <button type="button" class="btn-mini" onclick="window._vivStudyNotebookFromCard(event, 'bm-r3-network-expansion-supply', '')" title="Download a runnable Jupyter notebook for THIS study — its composite + editable parameters + figures">↓ notebook</button>
+  
+  <div class="model-subtabs" role="tablist" aria-label="Model sections">
+    <button type="button" class="model-subtab active" data-modelsub="composition" role="tab" aria-selected="true" onclick="_setModelSubtab('composition')">Composition</button>
+    <button type="button" class="model-subtab" data-modelsub="loom" role="tab" aria-selected="false" onclick="_setModelSubtab('loom')">Loom</button>
+    <button type="button" class="model-subtab" data-modelsub="variants" role="tab" aria-selected="false" onclick="_setModelSubtab('variants')">Variants <span class="model-subtab-count">3</span></button>
+    <button type="button" class="model-subtab" data-modelsub="interventions" role="tab" aria-selected="false" onclick="_setModelSubtab('interventions')">Interventions</button>
+    <button type="button" class="model-subtab" data-modelsub="readouts" role="tab" aria-selected="false" onclick="_setModelSubtab('readouts')">Readouts</button>
   </div>
 
+  
+  <div class="model-subpanel" data-modelsubpanel="loom" hidden>
+    <div id="model-loom-mount" class="model-loom-mount">
+      <div class="viv-loading"><span class="viv-loading-spin" aria-hidden="true"></span><span>Loading the interactive model diagram…</span></div>
+    </div>
+  </div>
+
+  <div class="model-subpanel active" data-modelsubpanel="composition">
   
   
   <div id="model-composite-cards" class="model-composite-cards" data-study="bm-r3-network-expansion-supply"
@@ -1222,10 +1199,130 @@
   
   
   
-
-
+  </div>
 
   
+  <div class="model-subpanel" data-modelsubpanel="variants" hidden>
+  <div class="overview-section" id="study-variants-section">
+    <p class="msub-intro">A <strong>variant</strong> is a copy of a baseline model with a few parameters changed, run and compared against the baseline. Everything else stays fixed.</p>
+    
+    <div class="var-list">
+      
+      <div class="var-card">
+        <div class="var-card-main">
+          <div class="var-card-head">
+            <code class="var-name">no-remodeling</code>
+            <span class="var-base">based on the baseline</span>
+          </div>
+          
+          <div class="var-overrides">
+            <span class="ovr-chip"><span class="ovr-k">make_on</span><span class="ovr-eq">=</span><span class="ovr-v">0.0</span></span><span class="ovr-chip"><span class="ovr-k">break_on</span><span class="ovr-eq">=</span><span class="ovr-v">0.0</span></span><span class="ovr-chip"><span class="ovr-k">insert_per_step</span><span class="ovr-eq">=</span><span class="ovr-v">0</span></span>
+          </div>
+        </div>
+        <div class="var-card-actions">
+          <button type="button" class="action-btn study-variant-run" data-variant="no-remodeling" title="Run this variant">▶ Run</button>
+          <button type="button" class="icon-btn study-variant-del" data-variant="no-remodeling" title="Delete variant" aria-label="Delete variant no-remodeling">✕</button>
+        </div>
+      </div>
+      
+      <div class="var-card">
+        <div class="var-card-main">
+          <div class="var-card-head">
+            <code class="var-name">remodeling-no-insertion</code>
+            <span class="var-base">based on the baseline</span>
+          </div>
+          
+          <div class="var-overrides">
+            <span class="ovr-chip"><span class="ovr-k">make_on</span><span class="ovr-eq">=</span><span class="ovr-v">1.0</span></span><span class="ovr-chip"><span class="ovr-k">break_on</span><span class="ovr-eq">=</span><span class="ovr-v">1.0</span></span><span class="ovr-chip"><span class="ovr-k">insert_per_step</span><span class="ovr-eq">=</span><span class="ovr-v">0</span></span>
+          </div>
+        </div>
+        <div class="var-card-actions">
+          <button type="button" class="action-btn study-variant-run" data-variant="remodeling-no-insertion" title="Run this variant">▶ Run</button>
+          <button type="button" class="icon-btn study-variant-del" data-variant="remodeling-no-insertion" title="Delete variant" aria-label="Delete variant remodeling-no-insertion">✕</button>
+        </div>
+      </div>
+      
+      <div class="var-card">
+        <div class="var-card-main">
+          <div class="var-card-head">
+            <code class="var-name">remodeling-with-insertion</code>
+            <span class="var-base">based on the baseline</span>
+          </div>
+          
+          <div class="var-overrides">
+            <span class="ovr-chip"><span class="ovr-k">make_on</span><span class="ovr-eq">=</span><span class="ovr-v">1.0</span></span><span class="ovr-chip"><span class="ovr-k">break_on</span><span class="ovr-eq">=</span><span class="ovr-v">1.0</span></span><span class="ovr-chip"><span class="ovr-k">insert_per_step</span><span class="ovr-eq">=</span><span class="ovr-v">3</span></span>
+          </div>
+        </div>
+        <div class="var-card-actions">
+          <button type="button" class="action-btn study-variant-run" data-variant="remodeling-with-insertion" title="Run this variant">▶ Run</button>
+          <button type="button" class="icon-btn study-variant-del" data-variant="remodeling-with-insertion" title="Delete variant" aria-label="Delete variant remodeling-with-insertion">✕</button>
+        </div>
+      </div>
+      
+    </div>
+    
+    
+    <form class="study-variant-add-form msub-addcard" onsubmit="return _submitStudyVariantAdd(this)">
+      <div class="msub-addcard-title">Add a variant</div>
+      <div class="msub-field-grid">
+        <label class="msub-field">
+          <span class="msub-lbl">Name</span>
+          <input name="name" required pattern="[a-zA-Z0-9_-]+" placeholder="hi-dnaa" class="msub-input mono">
+          <span class="msub-hint">letters, numbers, - and _</span>
+        </label>
+        <label class="msub-field">
+          <span class="msub-lbl">Based on</span>
+          <select name="base_composite" class="msub-input">
+            <option value="collagen-network-supply">collagen-network-supply</option>
+          </select>
+          <span class="msub-hint">the baseline this variant perturbs</span>
+        </label>
+        <label class="msub-field msub-field-wide">
+          <span class="msub-lbl">Parameter overrides</span>
+          <input name="overrides" placeholder='{"k_synth": 2.0}' class="msub-input mono">
+          <span class="msub-hint">JSON object of parameter → value; leave blank for none</span>
+        </label>
+      </div>
+      <div class="msub-addcard-foot">
+        <button type="submit" class="action-btn primary">+ Add variant</button>
+        <span class="study-variant-add-status msub-status"></span>
+      </div>
+    </form>
+    
+  </div>
+  </div>
+
+  
+  <div class="model-subpanel" data-modelsubpanel="interventions" hidden>
+  <div class="overview-section" id="study-interventions-section">
+    <p class="msub-intro">An <strong>intervention</strong> is a named, described perturbation applied in this study (e.g. a knockout) — the conceptual change you are testing, documented alongside the model.</p>
+    
+    <div class="msub-empty">No interventions yet. Add one below.</div>
+    
+    <form class="study-intervention-add-form msub-addcard" onsubmit="return _submitStudyInterventionAdd(this)">
+      <div class="msub-addcard-title">Add an intervention</div>
+      <div class="msub-field-grid">
+        <label class="msub-field">
+          <span class="msub-lbl">Name</span>
+          <input name="name" required pattern="[a-zA-Z0-9_-]+" placeholder="knockout-dnaA" class="msub-input mono">
+          <span class="msub-hint">letters, numbers, - and _</span>
+        </label>
+        <label class="msub-field msub-field-wide">
+          <span class="msub-lbl">Description</span>
+          <input name="description" placeholder="what the intervention does" class="msub-input">
+          <span class="msub-hint">a short, human-readable summary</span>
+        </label>
+      </div>
+      <div class="msub-addcard-foot">
+        <button type="submit" class="action-btn primary">+ Add intervention</button>
+        <span class="study-intervention-add-status msub-status"></span>
+      </div>
+    </form>
+  </div>
+  </div>
+
+  
+  <div class="model-subpanel" data-modelsubpanel="readouts" hidden>
   <div class="overview-section" id="model-readouts-section">
     <h3>Readouts</h3>
 
@@ -1243,6 +1340,7 @@
     </div>
 
     
+  </div>
   </div>
   </div>
 
@@ -1264,7 +1362,6 @@
   <button type="button" id="study-run-current-spec" class="action-btn" title="Run this study's CURRENT baseline spec (POST /api/study-run-baseline) as a brand-new run">▶ Run current spec</button>
   <button type="button" id="study-reproduce" class="btn-mini" title="Replay this study's most recent run's RECORDED manifest verbatim (POST /api/study-reproduce) — ignores any study.yaml edits made since">↻ Reproduce</button>
   
-  <button type="button" id="study-run-composite" class="btn-mini" title="Dispatch a specific process-bigraph composite_id to the remote compute backend (pbg-native multi_node/mbp, or the Nextflow campaign path) — advanced, independent of this study's own pinned baseline">⚙ Dispatch composite</button>
 </div>
 
 <div class="overview-section" id="simulations-section">
@@ -1922,6 +2019,51 @@ cites:   ["meadowcroft2025nonequilibrium"]</pre>
   </div>
 
   
+  <div class="overview-section" id="study-findings-authoring">
+    <h2 class="overview-label">Record a finding</h2>
+    
+    <ul class="synthesis-list" style="margin:0 0 12px">
+      
+      <li style="display:flex;align-items:flex-start;gap:8px">
+        <button type="button" class="action-btn study-finding-del" data-id="F1-three-supply-modes-ordered" title="Delete finding" style="font-size:0.72em;line-height:1;padding:2px 6px">✕</button>
+        <span>With material insertion available, the three Fig 2B-C supply modes order as the paper requires under growth: remodeling-with-insertion sustains/grows the crosslinked network (density 0.654), remodeling-without-insertion remodels on fixed material (0.480), and no-remodeling is static and dilutes most (0.247). Both the density and rod-count orderings hold at 3/3 seeds.
+ <span class="muted small">(confirms)</span></span>
+      </li>
+      
+      <li style="display:flex;align-items:flex-start;gap:8px">
+        <button type="button" class="action-btn study-finding-del" data-id="F2-insertion-mechanism-exact" title="Delete finding" style="font-size:0.72em;line-height:1;padding:2px 6px">✕</button>
+        <span>The added insertion mechanism supplies material exactly and correctly: insert_per_step=k grows the atom count by 2k per step (deterministic), insert_on=0 holds it flat, and inserted rods crosslink in automatically because the make fix filters candidate partners by atom type (crosslinks grow 17-&gt;45 under insertion).
+ <span class="muted small">(confirms)</span></span>
+      </li>
+      
+      <li style="display:flex;align-items:flex-start;gap:8px">
+        <button type="button" class="action-btn study-finding-del" data-id="F3-remodeling-formation-dominant-scope" title="Delete finding" style="font-size:0.72em;line-height:1;padding:2px 6px">✕</button>
+        <span>Under the faithful real-angle set, assembly/remodeling is formation-dominant at this scale (breaking is suppressed while crosslinks form), so modes 2-3 &#34;remodeling&#34; is formation + supply rather than full make/break turnover, and connectivity is read as crosslink-per-area density rather than the exact largest-connected-component. The Fig 2B-C ORDERING is reproduced; full turnover + the exact connectivity statistic are follow-ups.
+ <span class="muted small">(partial)</span></span>
+      </li>
+      
+    </ul>
+    
+    <form class="study-finding-add-form" onsubmit="return _submitStudyFindingAdd(this)" style="display:flex;flex-direction:column;gap:8px;max-width:680px">
+      <textarea name="statement" required rows="2" placeholder="What did this study show? (one sentence)"
+                style="font-size:0.9em;padding:6px 8px;resize:vertical"></textarea>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end">
+        <label style="font-size:0.78em;color:#475569">Status<br>
+          <select name="status" style="font-size:0.82em;padding:3px 6px">
+            <option value="novel">novel</option>
+            <option value="confirms">confirms literature</option>
+            <option value="partial">partial</option>
+            <option value="contradicts">contradicts</option>
+          </select></label>
+        <label style="font-size:0.78em;color:#475569;flex:1;min-width:200px">Why / mechanism (optional)<br>
+          <input name="explanation" style="width:100%;font-size:0.82em;padding:3px 6px"></label>
+        <button type="submit" class="action-btn" style="font-size:0.82em">+ Add finding</button>
+      </div>
+    </form>
+    <div class="study-finding-add-status muted" style="font-size:0.8em;margin-top:4px"></div>
+  </div>
+
+  
   <div class="overview-section"><h2 class="overview-label">Follow-ups &amp; decisions</h2>
 
     
@@ -2001,8 +2143,9 @@ cites:   ["meadowcroft2025nonequilibrium"]</pre>
 </section>
 
 </main>
-<script>window.__DASH_CONFIG__ = { mode: "snapshot", interactiveUrl: "https://github.com/vivarium-collective/viva-lumenoid", basePath: "/viva-lumenoid/workbench", inputsDownloadBase: "https://github.com/vivarium-collective/viva-lumenoid/raw/basement-membrane-v1", provenance: {"repo_slug": "vivarium-collective/viva-lumenoid", "repo_url": "https://github.com/vivarium-collective/viva-lumenoid", "commit": "89e6a1ca46ad7ab2c3a2e0ecc22d30fd42e80dfc", "commit_url": "https://github.com/vivarium-collective/viva-lumenoid/commit/89e6a1ca46ad7ab2c3a2e0ecc22d30fd42e80dfc", "branch": "basement-membrane-v1", "lockfile": "uv.lock@df7785d3583d", "generated_at": "2026-11-17 00:16 UTC"} };</script>
+<script>window.__DASH_CONFIG__ = { mode: "snapshot", interactiveUrl: "https://github.com/vivarium-collective/viva-lumenoid", basePath: "/viva-lumenoid/workbench", inputsDownloadBase: "https://github.com/vivarium-collective/viva-lumenoid/raw/main/workspace", provenance: {"repo_slug": "vivarium-collective/viva-lumenoid", "repo_url": "https://github.com/vivarium-collective/viva-lumenoid", "commit": "bbdcd32b1b6641f27c95f5e091078b9504424ed1", "commit_url": "https://github.com/vivarium-collective/viva-lumenoid/commit/bbdcd32b1b6641f27c95f5e091078b9504424ed1", "branch": "main", "lockfile": "uv.lock@df7785d3583d", "generated_at": "2026-11-22 02:46 UTC"} };</script>
 <script src="/viva-lumenoid/workbench/assets/data-source.js"></script>
+<script src="/viva-lumenoid/workbench/assets/backend-features.js"></script>
 <script src="/viva-lumenoid/workbench/assets/toast.js"></script>
 <script>
 window._studyName = "bm-r3-network-expansion-supply";
@@ -2134,6 +2277,11 @@ window._seedFollowupProposal = _seedFollowupProposal;
 <script src="/viva-lumenoid/workbench/assets/checklist-select.js"></script>
 <script src="/viva-lumenoid/workbench/assets/progress-track.js"></script>
 <script src="/viva-lumenoid/workbench/assets/comparison-view.js"></script>
+<!-- The backend launch plugin's script (remote-pinned dispatch + the
+     "Dispatch composite" panel), quarantined out of study-detail.js. Loaded
+     BEFORE it: study-detail.js calls window.SmsLaunch.mount() while it loads,
+     and runs local-only when the file is absent. -->
+<script src="/viva-lumenoid/workbench/assets/sms-launch.js"></script>
 <script src="/viva-lumenoid/workbench/assets/study-detail.js"></script>
 <script src="/viva-lumenoid/workbench/assets/study-feedback.js"></script>
 <script src="/viva-lumenoid/workbench/assets/inline-edit.js"></script>
@@ -2146,7 +2294,7 @@ window._seedFollowupProposal = _seedFollowupProposal;
 </script>
 <script>
 (function () {
-  // Task 8: the Configure & Run mount and the remote-run (smsvpctest) panel
+  // Task 8: the Configure & Run mount and the remote-run panel
   // were both removed from the Simulate tab — launching now lives entirely
   // in the header buttons (Reproduce / Run current spec). This block used
   // to also mount ConfigureRun into the (now-deleted) mount div and, in an

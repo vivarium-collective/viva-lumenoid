@@ -16,17 +16,25 @@
 </head>
 <body>
 <main class="study-page">
+
+
 <header class="study-header">
-  <div style="display:flex; align-items:center; gap:14px; justify-content:space-between;">
+  <div style="display:flex; align-items:flex-start; gap:14px; justify-content:space-between;">
+  <div class="study-head-main" style="min-width:0; flex:1 1 auto">
   <div style="display:flex; align-items:center; gap:12px; min-width:0; flex-wrap:wrap">
   <h1 class="study-title" style="margin:0">
     <span class="study-name" id="study-name" data-slug="bm-r2-collagen-network-rheology" data-study-kind="computational" title="bm-r2-collagen-network-rheology" data-edit-kind="study" data-edit-field="title" data-edit-value="Faithful collagen IV network rheology" data-edit-label="Title">Faithful collagen IV network rheology</span>
     
   </h1>
+  </div>
+  <p id="study-question-headline" class="study-question-headline" title="Is basement-membrane stress relaxation proportional to collagen IV molecular residence (turnover) time?
+" data-edit-kind="study" data-edit-field="question" data-edit-value="Is basement-membrane stress relaxation proportional to collagen IV molecular residence (turnover) time?
+" data-edit-multiline data-edit-label="Question"><span class="q-glyph">Q</span> <span class="study-question-headline-text">Is basement-membrane stress relaxation proportional to collagen IV molecular residence (turnover) time?
+</span></p>
+  </div>
+  <span class="study-header-actions" style="display:inline-flex; gap:10px; flex-shrink:0; align-items:center;">
     
     <span id="study-axis-markers" data-slug="bm-r2-collagen-network-rheology" style="display:inline-flex; gap:8px; align-items:center; flex-wrap:wrap"></span>
-  </div>
-  <span class="study-header-actions" style="display:inline-flex; gap:6px; flex-shrink:0; align-items:center;">
     
     
     
@@ -49,10 +57,6 @@
 
 
 
-
-<p id="study-question-headline" class="study-question-headline"><span class="q-glyph">Q</span> <span class="study-question-headline-text" data-edit-kind="study" data-edit-field="question" data-edit-value="Is basement-membrane stress relaxation proportional to collagen IV molecular residence (turnover) time?
-" data-edit-multiline data-edit-label="Question">Is basement-membrane stress relaxation proportional to collagen IV molecular residence (turnover) time?
-</span></p>
 
 <nav class="study-tabs" aria-label="Study sections">
   
@@ -82,10 +86,18 @@
   </button>
   
   <span class="study-dl study-export-wrap" style="margin-left:auto; align-self:center; position:relative; display:inline-flex">
-    <button type="button" id="study-export-btn" class="btn-mini" aria-haspopup="true" aria-expanded="false" title="Download this study's figures or a runnable notebook">↓ Export ▾</button>
-    <div id="study-export-menu" role="menu" style="display:none;position:absolute;right:0;top:100%;margin-top:4px;background:#fff;border:1px solid #e2e8f0;border-radius:8px;box-shadow:0 6px 20px rgba(0,0,0,0.14);z-index:70;min-width:200px;padding:4px">
-      <button type="button" id="study-dl-figures" role="menuitem" class="study-jump-item" onclick="window._vivStudyFiguresFromCard(event, 'bm-r2-collagen-network-rheology')">Download figures</button>
-      <button type="button" id="study-dl-notebook" role="menuitem" class="study-jump-item" onclick="window._vivStudyNotebookFromCard(event, 'bm-r2-collagen-network-rheology', '')">Download notebook</button>
+    <button type="button" id="study-export-btn" class="btn-mini" aria-haspopup="true" aria-expanded="false" title="Shortcuts — open in the browser or download (report, notebook, figures)">Shortcuts ▾</button>
+    
+    <div id="study-export-menu" role="menu" style="display:none;position:absolute;right:0;top:100%;margin-top:4px;background:#fff;border:1px solid #e2e8f0;border-radius:8px;box-shadow:0 6px 20px rgba(0,0,0,0.14);z-index:70;min-width:190px;padding:4px">
+      <div class="study-export-sec">Report</div>
+      <button type="button" id="study-report-open" role="menuitem" class="btn-mini study-export-item" onclick="window._vivStudyReportOpen(event, 'bm-r2-collagen-network-rheology')">Open in browser</button>
+      <button type="button" id="study-report-dl" role="menuitem" class="btn-mini study-export-item" onclick="window._vivStudyReportDownload(event, 'bm-r2-collagen-network-rheology')">Download HTML</button>
+      <div class="study-export-sec">Notebook</div>
+      <button type="button" id="study-nb-open" role="menuitem" class="btn-mini study-export-item" onclick="window._vivStudyNotebookOpen(event, 'bm-r2-collagen-network-rheology')">Open in browser</button>
+      <button type="button" id="study-dl-notebook" role="menuitem" class="btn-mini study-export-item" onclick="window._vivStudyNotebookFromCard(event, 'bm-r2-collagen-network-rheology', '')">Download .ipynb</button>
+      <div class="study-export-sec">Figures</div>
+      <button type="button" id="study-fig-open" role="menuitem" class="btn-mini study-export-item" onclick="window._vivStudyFiguresOpen(event, 'bm-r2-collagen-network-rheology')">Open in browser</button>
+      <button type="button" id="study-dl-figures" role="menuitem" class="btn-mini study-export-item" onclick="window._vivStudyFiguresFromCard(event, 'bm-r2-collagen-network-rheology')">Download (zip)</button>
     </div>
   </span>
 </nav>
@@ -98,8 +110,18 @@
 .study-kind-tag.study-kind-biological{background:#ecfdf5;color:#065f46}
 .study-kind-tag.study-kind-computational{background:#eff6ff;color:#1e40af}
 .study-kind-tag.study-kind-theoretical{background:#faf5ff;color:#6b21a8}
-.study-question-headline{margin:6px 0 0 0;font-size:1.05em;line-height:1.5;color:#1e293b;font-family:Georgia,"Times New Roman",serif}
+.study-question-headline{margin:2px 0 0 0;font-size:0.85em;line-height:1.35;color:#475569;font-family:Georgia,"Times New Roman",serif;padding-right:40px}
+/* Park the inline-edit ✎ in a reserved right gutter so it never lands over the
+   question text (the pencil is an absolutely-positioned child of the editable). */
+.study-question-headline>.ie-pencil{right:6px;top:1px}
+h1.study-title .study-name.ie-editable{padding-right:36px}
+h1.study-title .study-name>.ie-pencil{right:4px;top:6px}
 .study-question-headline .q-glyph{display:inline-block;font-size:0.78em;font-weight:700;font-family:ui-monospace,monospace;color:#64748b;background:#f1f5f9;padding:1px 7px;border-radius:4px;margin-right:6px;vertical-align:middle}
+/* Study Export menu — styled to match the investigation-level ↓ Export menu
+   exactly: grey uppercase section labels + full-width, left-aligned, stacked
+   text-link items (not inline pills). Mirrors walkthrough.js `_sec` + `_mi`. */
+.study-export-sec{padding:6px 8px 2px;font-size:0.72em;font-weight:700;text-transform:uppercase;letter-spacing:0.04em;color:#94a3b8}
+.study-export-item{display:block;width:100%;text-align:left;border:none;background:transparent}
 .status-detail-panel{margin:0;padding:2px 0;background:transparent;border:none;border-radius:0;font-size:0.92em}
 .status-detail-row{display:flex;align-items:center;gap:8px;padding:3px 0}
 .status-detail-axis{min-width:140px;color:#475569;font-size:0.9em}
@@ -548,8 +570,8 @@
 
     <div class="ctr-block">
       <h2 class="overview-label ctr-h">Claim</h2>
-      <p class="ctr-text" data-edit-kind="study" data-edit-field="claim" data-edit-value="The faithful collagen IV network assembles and carries in-plane stress under staged growth loading on real LAMMPS, and -- on a dense, multi-seed network (300 rods, authors&#39; density 3.0, 12-sigma slab, 4 seeds) -- its macroscopic stress-relaxation time tau rises monotonically with collagen residence time (37 LJ at residence 12.5 up to ~102 LJ at residence 200), reproducing the DIRECTION of Barrientos Figure 2E across the full turnover range. tau carries an intrinsic network-relaxation floor (~37 LJ) at fast turnover and becomes residence-dominated above residence ~50; the elastic modulus is turnover-independent (3.19 LJ), as elasticity should be. The Barrientos Figure 2C/C&#39;/D/E panels are reproduced in STRUCTURE/DIRECTION from real staged- protocol runs (reduced units, not a pixel match): the stress-relaxation curves, the crosslink- turnover dynamics, and -- made explicit for the reviewer -- the crosslink-density &lt;-&gt; stress- relaxation relationship, where the stress a remodelling network retains tracks its surviving crosslink population (sigma/sigma_0 ~ n/n_0 over the viscous hold).
-" data-edit-multiline data-edit-label="Claim">The faithful collagen IV network assembles and carries in-plane stress under staged growth loading on real LAMMPS, and -- on a dense, multi-seed network (300 rods, authors&#39; density 3.0, 12-sigma slab, 4 seeds) -- its macroscopic stress-relaxation time tau rises monotonically with collagen residence time (37 LJ at residence 12.5 up to ~102 LJ at residence 200), reproducing the DIRECTION of Barrientos Figure 2E across the full turnover range. tau carries an intrinsic network-relaxation floor (~37 LJ) at fast turnover and becomes residence-dominated above residence ~50; the elastic modulus is turnover-independent (3.19 LJ), as elasticity should be. The Barrientos Figure 2C/C&#39;/D/E panels are reproduced in STRUCTURE/DIRECTION from real staged- protocol runs (reduced units, not a pixel match): the stress-relaxation curves, the crosslink- turnover dynamics, and -- made explicit for the reviewer -- the crosslink-density &lt;-&gt; stress- relaxation relationship, where the stress a remodelling network retains tracks its surviving crosslink population (sigma/sigma_0 ~ n/n_0 over the viscous hold).
+      <p class="ctr-text" data-edit-kind="study" data-edit-field="claim" data-edit-value="The faithful collagen IV network assembles and carries in-plane stress under staged growth loading on real LAMMPS, and -- on a dense, multi-seed network (300 rods, authors&#39; density 3.0, 12-sigma slab, 4 seeds) -- its macroscopic stress-relaxation time tau rises monotonically with collagen residence time (37 LJ at residence 12.5 up to ~102 LJ at residence 200), reproducing the DIRECTION of Barrientos Figure 2E across the full turnover range. tau carries an intrinsic network-relaxation floor (~37 LJ) at fast turnover and becomes residence-dominated above residence ~50; the elastic modulus is turnover-independent (3.19 LJ), as elasticity should be.
+" data-edit-multiline data-edit-label="Claim">The faithful collagen IV network assembles and carries in-plane stress under staged growth loading on real LAMMPS, and -- on a dense, multi-seed network (300 rods, authors&#39; density 3.0, 12-sigma slab, 4 seeds) -- its macroscopic stress-relaxation time tau rises monotonically with collagen residence time (37 LJ at residence 12.5 up to ~102 LJ at residence 200), reproducing the DIRECTION of Barrientos Figure 2E across the full turnover range. tau carries an intrinsic network-relaxation floor (~37 LJ) at fast turnover and becomes residence-dominated above residence ~50; the elastic modulus is turnover-independent (3.19 LJ), as elasticity should be.
 </p>
       
     </div>
@@ -615,8 +637,8 @@
     <div class="ctr-block">
       <h2 class="overview-label ctr-h">Result</h2>
       
-      <p class="ctr-text" data-edit-kind="study" data-edit-field="result" data-edit-value="The network assembles and stresses as required: the bounded smoke run forms 5 crosslinks at 40 rods and reports a finite in-plane stress (sigma_inplane 0.250 LJ), confirming the composite emits the sigma_inplane and n_crosslinks readouts the study depends on. In the coordinating session&#39;s moderate turnover sweep, all three turnover rates build the same stiff network (elastic modulus 0.946 LJ, 126 crosslinks), but the relaxation time is resolvable only at the SLOWEST turnover: residence 100 gives tau = 57.7 LJ (resolved, not noise-limited), while residence 50 and 25 give tau = NaN (the relaxable stress falls below the run-to-run noise floor at this network size). This is a PARTIAL Figure 2E: the direction is right (slower turnover -&gt; a resolvable, longer relaxation), but the full tau-proportional-to- residence slope across the turnover range cannot be established until the network is denser / larger and run with several seeds. The dense multi-seed run (300 rods, 4 seeds) then resolved tau across the range and the Fig-2E direction (see run r2-dense-multiseed-sweep). On top of that, the Barrientos Figure 2C/C&#39;/D/E panels are now reproduced (run r2-fig2-panels-sweep, figure viz/r2_fig2_panels.html): real staged-protocol runs give the stress-relaxation curves (Fig 2C), the crosslink-turnover dynamics (Fig 2C&#39;), and -- the reviewer&#39;s ask -- the crosslink-density &lt;-&gt; stress-relaxation relationship made EXPLICIT (Fig 2D: retained stress sigma/sigma_0 tracks retained crosslinks n/n_0 during the viscous hold), alongside tau-vs-residence at a turnover- independent modulus (Fig 2E). Honestly scoped: a reduced-unit reproduction of panel STRUCTURE/ DIRECTION (not a pixel match), with tau floor-plus-residence -- flat at the ~38-41 LJ intrinsic floor for residence 12.5-50 and rising clearly only at residence 100.
-" data-edit-multiline data-edit-label="Result">The network assembles and stresses as required: the bounded smoke run forms 5 crosslinks at 40 rods and reports a finite in-plane stress (sigma_inplane 0.250 LJ), confirming the composite emits the sigma_inplane and n_crosslinks readouts the study depends on. In the coordinating session&#39;s moderate turnover sweep, all three turnover rates build the same stiff network (elastic modulus 0.946 LJ, 126 crosslinks), but the relaxation time is resolvable only at the SLOWEST turnover: residence 100 gives tau = 57.7 LJ (resolved, not noise-limited), while residence 50 and 25 give tau = NaN (the relaxable stress falls below the run-to-run noise floor at this network size). This is a PARTIAL Figure 2E: the direction is right (slower turnover -&gt; a resolvable, longer relaxation), but the full tau-proportional-to- residence slope across the turnover range cannot be established until the network is denser / larger and run with several seeds. The dense multi-seed run (300 rods, 4 seeds) then resolved tau across the range and the Fig-2E direction (see run r2-dense-multiseed-sweep). On top of that, the Barrientos Figure 2C/C&#39;/D/E panels are now reproduced (run r2-fig2-panels-sweep, figure viz/r2_fig2_panels.html): real staged-protocol runs give the stress-relaxation curves (Fig 2C), the crosslink-turnover dynamics (Fig 2C&#39;), and -- the reviewer&#39;s ask -- the crosslink-density &lt;-&gt; stress-relaxation relationship made EXPLICIT (Fig 2D: retained stress sigma/sigma_0 tracks retained crosslinks n/n_0 during the viscous hold), alongside tau-vs-residence at a turnover- independent modulus (Fig 2E). Honestly scoped: a reduced-unit reproduction of panel STRUCTURE/ DIRECTION (not a pixel match), with tau floor-plus-residence -- flat at the ~38-41 LJ intrinsic floor for residence 12.5-50 and rising clearly only at residence 100.
+      <p class="ctr-text" data-edit-kind="study" data-edit-field="result" data-edit-value="The network assembles and stresses as required: the bounded smoke run forms 5 crosslinks at 40 rods and reports a finite in-plane stress (sigma_inplane 0.250 LJ), confirming the composite emits the sigma_inplane and n_crosslinks readouts the study depends on. In the coordinating session&#39;s moderate turnover sweep, all three turnover rates build the same stiff network (elastic modulus 0.946 LJ, 126 crosslinks), but the relaxation time is resolvable only at the SLOWEST turnover: residence 100 gives tau = 57.7 LJ (resolved, not noise-limited), while residence 50 and 25 give tau = NaN (the relaxable stress falls below the run-to-run noise floor at this network size). This is a PARTIAL Figure 2E: the direction is right (slower turnover -&gt; a resolvable, longer relaxation), but the full tau-proportional-to- residence slope across the turnover range cannot be established until the network is denser / larger and run with several seeds.
+" data-edit-multiline data-edit-label="Result">The network assembles and stresses as required: the bounded smoke run forms 5 crosslinks at 40 rods and reports a finite in-plane stress (sigma_inplane 0.250 LJ), confirming the composite emits the sigma_inplane and n_crosslinks readouts the study depends on. In the coordinating session&#39;s moderate turnover sweep, all three turnover rates build the same stiff network (elastic modulus 0.946 LJ, 126 crosslinks), but the relaxation time is resolvable only at the SLOWEST turnover: residence 100 gives tau = 57.7 LJ (resolved, not noise-limited), while residence 50 and 25 give tau = NaN (the relaxable stress falls below the run-to-run noise floor at this network size). This is a PARTIAL Figure 2E: the direction is right (slower turnover -&gt; a resolvable, longer relaxation), but the full tau-proportional-to- residence slope across the turnover range cannot be established until the network is denser / larger and run with several seeds.
 </p>
       
       
@@ -691,10 +713,13 @@
             </div>
             
             
+            
+            
             <div class="finding-traceability" style="font-size:0.84em;color:#475569;padding:4px 10px;margin:4px 0">
               
               
               runs: <a href="#run-r2-dense-multiseed-sweep"><code>r2-dense-multiseed-sweep</code></a>
+              
             </div>
             
             
@@ -755,10 +780,13 @@
             </div>
             
             
+            
+            
             <div class="finding-traceability" style="font-size:0.84em;color:#475569;padding:4px 10px;margin:4px 0">
               
               
               runs: <a href="#run-r2-growth-smoke"><code>r2-growth-smoke</code></a>
+              
             </div>
             
             
@@ -770,71 +798,6 @@
             <div class="finding-explanation"><em>Why:</em> Confirms the sigma_inplane and n_crosslinks readouts the turnover sweep relies on are genuinely emitted by the composite.</div>
             
             
-          </div>
-        </details>
-      </div>
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      <div class="finding-card finding-kind-biological finding-status-confirms" id="finding-F3-fig2-panels-crosslink-stress-explicit">
-        <details class="finding-details">
-          <summary class="finding-row">
-            <span class="finding-status-glyph">✓</span>
-            <span class="finding-claim finding-statement" data-edit-kind="study" data-edit-field="findings[F3-fig2-panels-crosslink-stress-explicit].statement" data-edit-value="Rendering Barrientos Fig 2C/C&#39;/D/E from real staged-protocol runs makes the crosslink-density &lt;-&gt; stress-relaxation relationship EXPLICIT (the relationship the reviewer flagged as unclear). Over the breakage-only viscous hold the in-plane stress decays as crosslinks are lost, and the retained stress sigma/sigma_0 tracks the retained crosslink population n/n_0 (the two collapse near the sigma/sigma_0 = n/n_0 diagonal) -- so the stress a remodelling network holds is carried by its surviving crosslinks. Faster turnover (larger off_rate) breaks crosslinks faster, relaxes stress faster, and assembles a sparser steady-state network (viscous-hold crosslinks fall from 703-&gt;331 at residence 100 to 495-&gt;1 at residence 12.5). The fitted relaxation time tau reproduces the Fig-2E direction at a turnover-independent elastic modulus (~3.3 LJ).
-" data-edit-multiline data-edit-label="Finding F3-fig2-panels-crosslink-stress-explicit">Rendering Barrientos Fig 2C/C&#39;/D/E from real staged-protocol runs makes the crosslink-density &lt;-&gt; stress-relaxation relationship EXPLICIT (the relationship the reviewer flagged as unclear). Over the breakage-only viscous hold the in-plane stress decays as crosslinks are lost, and the retained stress sigma/sigma_0 tracks the retained crosslink population n/n_0 (the two collapse near the sigma/sigma_0 = n/n_0 diagonal) -- so the stress a remodelling network holds is carried by its surviving crosslinks. Faster turnover (larger off_rate) breaks crosslinks faster, relaxes stress faster, and assembles a sparser steady-state network (viscous-hold crosslinks fall from 703-&gt;331 at residence 100 to 495-&gt;1 at residence 12.5). The fitted relaxation time tau reproduces the Fig-2E direction at a turnover-independent elastic modulus (~3.3 LJ).
-</span>
-            
-            <span class="finding-chip">via <code>tau-rises-with-residence-resolved</code></span>
-            
-          </summary>
-          <div class="finding-drawer">
-            <div class="finding-header">
-              <span class="finding-id">F3-fig2-panels-crosslink-stress-explicit</span>
-              <span class="finding-kind">biological</span>
-              <span class="finding-status-text">confirms literature</span>
-            </div>
-            
-            
-            <div class="finding-evidence">
-              <strong>observed:</strong> median tau 40.5/38.9/40.8/64.6 LJ at residence 12.5/25/50/100 (3/3 seeds each); elastic modulus 3.27 LJ (turnover-independent); viscous-hold stress and crosslink count co-decay with sigma/sigma_0 ~ n/n_0. Rendered as viz/r2_fig2_panels.html.
- · 
-              
-              via test <a href="#bt-tau-rises-with-residence-resolved" onclick="_gotoStudyTab('audit','bt-tau-rises-with-residence-resolved');return false;"><code>tau-rises-with-residence-resolved</code></a> · 
-              in run <a href="#run-r2-fig2-panels-sweep"><code>r2-fig2-panels-sweep</code></a>
-              
-              
-            </div>
-            
-            
-            <div class="finding-traceability" style="font-size:0.84em;color:#475569;padding:4px 10px;margin:4px 0">
-              
-              
-              runs: <a href="#run-r2-fig2-panels-sweep"><code>r2-fig2-panels-sweep</code></a>
-            </div>
-            
-            
-            
-            <div class="pass_if-band muted small" style="font-size:0.82em;padding:2px 10px">judged against <code>pass_if: op: monotonic_increasing · note: median tau non-decreasing as residence rises 12.5 -&gt; 200; modulus ~constant</code></div>
-            
-            
-            
-            <div class="finding-expected">
-              <strong>expected:</strong> tau increasing with collagen residence time at a turnover-independent modulus (Fig 2C-E) · 
-              
-              cites: <a class="ov-cite" href="#sref-barrientos2026cellshape" title="Basement membrane turnover controls cell shape">Barrientos 2026</a>
-            </div>
-            
-            
-            <div class="finding-explanation"><em>Why:</em> HONEST scope: tau is floor-plus-residence, not a single proportional slope -- at 3 seeds the fast-turnover end (residence 12.5/25/50) sits at the ~38-41 LJ intrinsic network-relaxation floor and is flat / mildly non-monotonic there; only residence 100 rises clearly above the floor. This matches the recorded dense 4-seed finding (F1). Reduced-unit reproduction of panel STRUCTURE/DIRECTION, not a pixel match to the PDF; residence 200 is excluded (1/4-seed resolution in the dense sweep). No parameter or literature value beyond what the model already carries was introduced to obtain the match.
-</div>
-            
-            <div class="finding-next"><strong>→ Next:</strong> calibrate the LJ time/stress units to hours/pascals so the panels can be overlaid on the published axes (fp-r2-energy-scale-calibration)</div>
           </div>
         </details>
       </div>
@@ -891,12 +854,23 @@
 
 
 <section class="study-tab-panel" data-kind="compose" id="panel-compose" hidden>
-  <div style="display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:8px;">
-    <h2 class="overview-label" style="margin:0">Model composition</h2>
-    
-    <button type="button" class="btn-mini" onclick="window._vivStudyNotebookFromCard(event, 'bm-r2-collagen-network-rheology', '')" title="Download a runnable Jupyter notebook for THIS study — its composite + editable parameters + figures">↓ notebook</button>
+  
+  <div class="model-subtabs" role="tablist" aria-label="Model sections">
+    <button type="button" class="model-subtab active" data-modelsub="composition" role="tab" aria-selected="true" onclick="_setModelSubtab('composition')">Composition</button>
+    <button type="button" class="model-subtab" data-modelsub="loom" role="tab" aria-selected="false" onclick="_setModelSubtab('loom')">Loom</button>
+    <button type="button" class="model-subtab" data-modelsub="variants" role="tab" aria-selected="false" onclick="_setModelSubtab('variants')">Variants <span class="model-subtab-count">3</span></button>
+    <button type="button" class="model-subtab" data-modelsub="interventions" role="tab" aria-selected="false" onclick="_setModelSubtab('interventions')">Interventions</button>
+    <button type="button" class="model-subtab" data-modelsub="readouts" role="tab" aria-selected="false" onclick="_setModelSubtab('readouts')">Readouts</button>
   </div>
 
+  
+  <div class="model-subpanel" data-modelsubpanel="loom" hidden>
+    <div id="model-loom-mount" class="model-loom-mount">
+      <div class="viv-loading"><span class="viv-loading-spin" aria-hidden="true"></span><span>Loading the interactive model diagram…</span></div>
+    </div>
+  </div>
+
+  <div class="model-subpanel active" data-modelsubpanel="composition">
   
   
   <div id="model-composite-cards" class="model-composite-cards" data-study="bm-r2-collagen-network-rheology"
@@ -1174,10 +1148,130 @@
   
   
   
-
-
+  </div>
 
   
+  <div class="model-subpanel" data-modelsubpanel="variants" hidden>
+  <div class="overview-section" id="study-variants-section">
+    <p class="msub-intro">A <strong>variant</strong> is a copy of a baseline model with a few parameters changed, run and compared against the baseline. Everything else stays fixed.</p>
+    
+    <div class="var-list">
+      
+      <div class="var-card">
+        <div class="var-card-main">
+          <div class="var-card-head">
+            <code class="var-name">residence-100</code>
+            <span class="var-base">based on the baseline</span>
+          </div>
+          
+          <div class="var-overrides">
+            <span class="ovr-chip"><span class="ovr-k">off_rate</span><span class="ovr-eq">=</span><span class="ovr-v">0.01</span></span>
+          </div>
+        </div>
+        <div class="var-card-actions">
+          <button type="button" class="action-btn study-variant-run" data-variant="residence-100" title="Run this variant">▶ Run</button>
+          <button type="button" class="icon-btn study-variant-del" data-variant="residence-100" title="Delete variant" aria-label="Delete variant residence-100">✕</button>
+        </div>
+      </div>
+      
+      <div class="var-card">
+        <div class="var-card-main">
+          <div class="var-card-head">
+            <code class="var-name">residence-50</code>
+            <span class="var-base">based on the baseline</span>
+          </div>
+          
+          <div class="var-overrides">
+            <span class="ovr-chip"><span class="ovr-k">off_rate</span><span class="ovr-eq">=</span><span class="ovr-v">0.02</span></span>
+          </div>
+        </div>
+        <div class="var-card-actions">
+          <button type="button" class="action-btn study-variant-run" data-variant="residence-50" title="Run this variant">▶ Run</button>
+          <button type="button" class="icon-btn study-variant-del" data-variant="residence-50" title="Delete variant" aria-label="Delete variant residence-50">✕</button>
+        </div>
+      </div>
+      
+      <div class="var-card">
+        <div class="var-card-main">
+          <div class="var-card-head">
+            <code class="var-name">residence-25</code>
+            <span class="var-base">based on the baseline</span>
+          </div>
+          
+          <div class="var-overrides">
+            <span class="ovr-chip"><span class="ovr-k">off_rate</span><span class="ovr-eq">=</span><span class="ovr-v">0.04</span></span>
+          </div>
+        </div>
+        <div class="var-card-actions">
+          <button type="button" class="action-btn study-variant-run" data-variant="residence-25" title="Run this variant">▶ Run</button>
+          <button type="button" class="icon-btn study-variant-del" data-variant="residence-25" title="Delete variant" aria-label="Delete variant residence-25">✕</button>
+        </div>
+      </div>
+      
+    </div>
+    
+    
+    <form class="study-variant-add-form msub-addcard" onsubmit="return _submitStudyVariantAdd(this)">
+      <div class="msub-addcard-title">Add a variant</div>
+      <div class="msub-field-grid">
+        <label class="msub-field">
+          <span class="msub-lbl">Name</span>
+          <input name="name" required pattern="[a-zA-Z0-9_-]+" placeholder="hi-dnaa" class="msub-input mono">
+          <span class="msub-hint">letters, numbers, - and _</span>
+        </label>
+        <label class="msub-field">
+          <span class="msub-lbl">Based on</span>
+          <select name="base_composite" class="msub-input">
+            <option value="collagen-network-stage2">collagen-network-stage2</option>
+          </select>
+          <span class="msub-hint">the baseline this variant perturbs</span>
+        </label>
+        <label class="msub-field msub-field-wide">
+          <span class="msub-lbl">Parameter overrides</span>
+          <input name="overrides" placeholder='{"k_synth": 2.0}' class="msub-input mono">
+          <span class="msub-hint">JSON object of parameter → value; leave blank for none</span>
+        </label>
+      </div>
+      <div class="msub-addcard-foot">
+        <button type="submit" class="action-btn primary">+ Add variant</button>
+        <span class="study-variant-add-status msub-status"></span>
+      </div>
+    </form>
+    
+  </div>
+  </div>
+
+  
+  <div class="model-subpanel" data-modelsubpanel="interventions" hidden>
+  <div class="overview-section" id="study-interventions-section">
+    <p class="msub-intro">An <strong>intervention</strong> is a named, described perturbation applied in this study (e.g. a knockout) — the conceptual change you are testing, documented alongside the model.</p>
+    
+    <div class="msub-empty">No interventions yet. Add one below.</div>
+    
+    <form class="study-intervention-add-form msub-addcard" onsubmit="return _submitStudyInterventionAdd(this)">
+      <div class="msub-addcard-title">Add an intervention</div>
+      <div class="msub-field-grid">
+        <label class="msub-field">
+          <span class="msub-lbl">Name</span>
+          <input name="name" required pattern="[a-zA-Z0-9_-]+" placeholder="knockout-dnaA" class="msub-input mono">
+          <span class="msub-hint">letters, numbers, - and _</span>
+        </label>
+        <label class="msub-field msub-field-wide">
+          <span class="msub-lbl">Description</span>
+          <input name="description" placeholder="what the intervention does" class="msub-input">
+          <span class="msub-hint">a short, human-readable summary</span>
+        </label>
+      </div>
+      <div class="msub-addcard-foot">
+        <button type="submit" class="action-btn primary">+ Add intervention</button>
+        <span class="study-intervention-add-status msub-status"></span>
+      </div>
+    </form>
+  </div>
+  </div>
+
+  
+  <div class="model-subpanel" data-modelsubpanel="readouts" hidden>
   <div class="overview-section" id="model-readouts-section">
     <h3>Readouts</h3>
 
@@ -1195,6 +1289,7 @@
     </div>
 
     
+  </div>
   </div>
   </div>
 
@@ -1216,7 +1311,6 @@
   <button type="button" id="study-run-current-spec" class="action-btn" title="Run this study's CURRENT baseline spec (POST /api/study-run-baseline) as a brand-new run">▶ Run current spec</button>
   <button type="button" id="study-reproduce" class="btn-mini" title="Replay this study's most recent run's RECORDED manifest verbatim (POST /api/study-reproduce) — ignores any study.yaml edits made since">↻ Reproduce</button>
   
-  <button type="button" id="study-run-composite" class="btn-mini" title="Dispatch a specific process-bigraph composite_id to the remote compute backend (pbg-native multi_node/mbp, or the Nextflow campaign path) — advanced, independent of this study's own pinned baseline">⚙ Dispatch composite</button>
 </div>
 
 <div class="overview-section" id="simulations-section">
@@ -1722,7 +1816,7 @@ cites:   ["barrientos2026basement", "barrientos2026cellshape"]</pre>
       </p>
       
       <div style="margin-bottom:6px"><strong>Prerequisites:</strong>
-        <code>{&#39;study&#39;: &#39;bm-v2-stress-vs-strainrate&#39;, &#39;condition&#39;: &#39;tests-passed&#39;, &#39;relation&#39;: &#39;builds-on&#39;}</code>
+        <code>{&#39;study&#39;: &#39;bm-v1-stage1-modulus-remodelling&#39;, &#39;condition&#39;: &#39;tests-passed&#39;, &#39;relation&#39;: &#39;builds-on&#39;}</code> · <code>{&#39;study&#39;: &#39;bm-v2-stress-vs-strainrate&#39;, &#39;condition&#39;: &#39;tests-passed&#39;, &#39;relation&#39;: &#39;builds-on&#39;}</code>
       </div>
       
       
@@ -1789,6 +1883,45 @@ cites:   ["barrientos2026basement", "barrientos2026cellshape"]</pre>
     
     
 
+  </div>
+
+  
+  <div class="overview-section" id="study-findings-authoring">
+    <h2 class="overview-label">Record a finding</h2>
+    
+    <ul class="synthesis-list" style="margin:0 0 12px">
+      
+      <li style="display:flex;align-items:flex-start;gap:8px">
+        <button type="button" class="action-btn study-finding-del" data-id="F1-fig2e-direction-resolved-dense" title="Delete finding" style="font-size:0.72em;line-height:1;padding:2px 6px">✕</button>
+        <span>On the dense, multi-seed network (300 rods, density 3.0, 12-sigma slab, 4 seeds) the stress-relaxation time tau rises monotonically with collagen residence time -- 37.3 LJ at residence 12.5, 39.7 at 25, 43.1 at 50, 67.5 at 100, 101.6 at 200 -- reproducing the DIRECTION of Figure 2E across the full turnover range, while the elastic modulus stays turnover-independent (3.19 LJ). The relationship is an intrinsic relaxation floor (~37 LJ) at fast turnover plus a residence-dominated regime above residence ~50, not a single proportional slope. This resolves the 120-rod noise floor that had limited the earlier sweep to a single point (residence 100 -&gt; 57.7 LJ).
+ <span class="muted small">(confirms)</span></span>
+      </li>
+      
+      <li style="display:flex;align-items:flex-start;gap:8px">
+        <button type="button" class="action-btn study-finding-del" data-id="F2-network-assembles-and-stresses" title="Delete finding" style="font-size:0.72em;line-height:1;padding:2px 6px">✕</button>
+        <span>The collagen IV composite (viva_lumenoid.composites.stage2_sweep / CollagenNetworkProcess) emits the real outputs this study reads: under growth loading a bounded smoke run forms a crosslinked network (n_crosslinks 5 at 40 rods) and reports a finite in-plane stress (sigma_inplane 0.250 LJ). The emitter and mechanism direction are confirmed, not assumed.
+ <span class="muted small">(confirms)</span></span>
+      </li>
+      
+    </ul>
+    
+    <form class="study-finding-add-form" onsubmit="return _submitStudyFindingAdd(this)" style="display:flex;flex-direction:column;gap:8px;max-width:680px">
+      <textarea name="statement" required rows="2" placeholder="What did this study show? (one sentence)"
+                style="font-size:0.9em;padding:6px 8px;resize:vertical"></textarea>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end">
+        <label style="font-size:0.78em;color:#475569">Status<br>
+          <select name="status" style="font-size:0.82em;padding:3px 6px">
+            <option value="novel">novel</option>
+            <option value="confirms">confirms literature</option>
+            <option value="partial">partial</option>
+            <option value="contradicts">contradicts</option>
+          </select></label>
+        <label style="font-size:0.78em;color:#475569;flex:1;min-width:200px">Why / mechanism (optional)<br>
+          <input name="explanation" style="width:100%;font-size:0.82em;padding:3px 6px"></label>
+        <button type="submit" class="action-btn" style="font-size:0.82em">+ Add finding</button>
+      </div>
+    </form>
+    <div class="study-finding-add-status muted" style="font-size:0.8em;margin-top:4px"></div>
   </div>
 
   
@@ -1871,8 +2004,9 @@ cites:   ["barrientos2026basement", "barrientos2026cellshape"]</pre>
 </section>
 
 </main>
-<script>window.__DASH_CONFIG__ = { mode: "snapshot", interactiveUrl: "https://github.com/vivarium-collective/viva-lumenoid", basePath: "/viva-lumenoid/workbench", inputsDownloadBase: "https://github.com/vivarium-collective/viva-lumenoid/raw/basement-membrane-v1", provenance: {"repo_slug": "vivarium-collective/viva-lumenoid", "repo_url": "https://github.com/vivarium-collective/viva-lumenoid", "commit": "89e6a1ca46ad7ab2c3a2e0ecc22d30fd42e80dfc", "commit_url": "https://github.com/vivarium-collective/viva-lumenoid/commit/89e6a1ca46ad7ab2c3a2e0ecc22d30fd42e80dfc", "branch": "basement-membrane-v1", "lockfile": "uv.lock@df7785d3583d", "generated_at": "2026-11-17 00:16 UTC"} };</script>
+<script>window.__DASH_CONFIG__ = { mode: "snapshot", interactiveUrl: "https://github.com/vivarium-collective/viva-lumenoid", basePath: "/viva-lumenoid/workbench", inputsDownloadBase: "https://github.com/vivarium-collective/viva-lumenoid/raw/main/workspace", provenance: {"repo_slug": "vivarium-collective/viva-lumenoid", "repo_url": "https://github.com/vivarium-collective/viva-lumenoid", "commit": "bbdcd32b1b6641f27c95f5e091078b9504424ed1", "commit_url": "https://github.com/vivarium-collective/viva-lumenoid/commit/bbdcd32b1b6641f27c95f5e091078b9504424ed1", "branch": "main", "lockfile": "uv.lock@df7785d3583d", "generated_at": "2026-11-22 02:46 UTC"} };</script>
 <script src="/viva-lumenoid/workbench/assets/data-source.js"></script>
+<script src="/viva-lumenoid/workbench/assets/backend-features.js"></script>
 <script src="/viva-lumenoid/workbench/assets/toast.js"></script>
 <script>
 window._studyName = "bm-r2-collagen-network-rheology";
@@ -2004,6 +2138,11 @@ window._seedFollowupProposal = _seedFollowupProposal;
 <script src="/viva-lumenoid/workbench/assets/checklist-select.js"></script>
 <script src="/viva-lumenoid/workbench/assets/progress-track.js"></script>
 <script src="/viva-lumenoid/workbench/assets/comparison-view.js"></script>
+<!-- The backend launch plugin's script (remote-pinned dispatch + the
+     "Dispatch composite" panel), quarantined out of study-detail.js. Loaded
+     BEFORE it: study-detail.js calls window.SmsLaunch.mount() while it loads,
+     and runs local-only when the file is absent. -->
+<script src="/viva-lumenoid/workbench/assets/sms-launch.js"></script>
 <script src="/viva-lumenoid/workbench/assets/study-detail.js"></script>
 <script src="/viva-lumenoid/workbench/assets/study-feedback.js"></script>
 <script src="/viva-lumenoid/workbench/assets/inline-edit.js"></script>
@@ -2016,7 +2155,7 @@ window._seedFollowupProposal = _seedFollowupProposal;
 </script>
 <script>
 (function () {
-  // Task 8: the Configure & Run mount and the remote-run (smsvpctest) panel
+  // Task 8: the Configure & Run mount and the remote-run panel
   // were both removed from the Simulate tab — launching now lives entirely
   // in the header buttons (Reproduce / Run current spec). This block used
   // to also mount ConfigureRun into the (now-deleted) mount div and, in an

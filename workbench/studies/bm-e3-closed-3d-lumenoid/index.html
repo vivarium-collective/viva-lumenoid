@@ -16,17 +16,25 @@
 </head>
 <body>
 <main class="study-page">
+
+
 <header class="study-header">
-  <div style="display:flex; align-items:center; gap:14px; justify-content:space-between;">
+  <div style="display:flex; align-items:flex-start; gap:14px; justify-content:space-between;">
+  <div class="study-head-main" style="min-width:0; flex:1 1 auto">
   <div style="display:flex; align-items:center; gap:12px; min-width:0; flex-wrap:wrap">
   <h1 class="study-title" style="margin:0">
     <span class="study-name" id="study-name" data-slug="bm-e3-closed-3d-lumenoid" data-study-kind="computational" title="bm-e3-closed-3d-lumenoid" data-edit-kind="study" data-edit-field="title" data-edit-value="Closed 3D lumenoid morphogenesis" data-edit-label="Title">Closed 3D lumenoid morphogenesis</span>
     
   </h1>
+  </div>
+  <p id="study-question-headline" class="study-question-headline" title="How do lumen pressure/volume and a basement-membrane shell set cell shape and curvature- dependent growth in a closed 3D lumenoid?
+" data-edit-kind="study" data-edit-field="question" data-edit-value="How do lumen pressure/volume and a basement-membrane shell set cell shape and curvature- dependent growth in a closed 3D lumenoid?
+" data-edit-multiline data-edit-label="Question"><span class="q-glyph">Q</span> <span class="study-question-headline-text">How do lumen pressure/volume and a basement-membrane shell set cell shape and curvature- dependent growth in a closed 3D lumenoid?
+</span></p>
+  </div>
+  <span class="study-header-actions" style="display:inline-flex; gap:10px; flex-shrink:0; align-items:center;">
     
     <span id="study-axis-markers" data-slug="bm-e3-closed-3d-lumenoid" style="display:inline-flex; gap:8px; align-items:center; flex-wrap:wrap"></span>
-  </div>
-  <span class="study-header-actions" style="display:inline-flex; gap:6px; flex-shrink:0; align-items:center;">
     
     
     
@@ -49,10 +57,6 @@
 
 
 
-
-<p id="study-question-headline" class="study-question-headline"><span class="q-glyph">Q</span> <span class="study-question-headline-text" data-edit-kind="study" data-edit-field="question" data-edit-value="How do lumen pressure/volume and a basement-membrane shell set cell shape and curvature- dependent growth in a closed 3D lumenoid?
-" data-edit-multiline data-edit-label="Question">How do lumen pressure/volume and a basement-membrane shell set cell shape and curvature- dependent growth in a closed 3D lumenoid?
-</span></p>
 
 <nav class="study-tabs" aria-label="Study sections">
   
@@ -82,10 +86,18 @@
   </button>
   
   <span class="study-dl study-export-wrap" style="margin-left:auto; align-self:center; position:relative; display:inline-flex">
-    <button type="button" id="study-export-btn" class="btn-mini" aria-haspopup="true" aria-expanded="false" title="Download this study's figures or a runnable notebook">↓ Export ▾</button>
-    <div id="study-export-menu" role="menu" style="display:none;position:absolute;right:0;top:100%;margin-top:4px;background:#fff;border:1px solid #e2e8f0;border-radius:8px;box-shadow:0 6px 20px rgba(0,0,0,0.14);z-index:70;min-width:200px;padding:4px">
-      <button type="button" id="study-dl-figures" role="menuitem" class="study-jump-item" onclick="window._vivStudyFiguresFromCard(event, 'bm-e3-closed-3d-lumenoid')">Download figures</button>
-      <button type="button" id="study-dl-notebook" role="menuitem" class="study-jump-item" onclick="window._vivStudyNotebookFromCard(event, 'bm-e3-closed-3d-lumenoid', '')">Download notebook</button>
+    <button type="button" id="study-export-btn" class="btn-mini" aria-haspopup="true" aria-expanded="false" title="Shortcuts — open in the browser or download (report, notebook, figures)">Shortcuts ▾</button>
+    
+    <div id="study-export-menu" role="menu" style="display:none;position:absolute;right:0;top:100%;margin-top:4px;background:#fff;border:1px solid #e2e8f0;border-radius:8px;box-shadow:0 6px 20px rgba(0,0,0,0.14);z-index:70;min-width:190px;padding:4px">
+      <div class="study-export-sec">Report</div>
+      <button type="button" id="study-report-open" role="menuitem" class="btn-mini study-export-item" onclick="window._vivStudyReportOpen(event, 'bm-e3-closed-3d-lumenoid')">Open in browser</button>
+      <button type="button" id="study-report-dl" role="menuitem" class="btn-mini study-export-item" onclick="window._vivStudyReportDownload(event, 'bm-e3-closed-3d-lumenoid')">Download HTML</button>
+      <div class="study-export-sec">Notebook</div>
+      <button type="button" id="study-nb-open" role="menuitem" class="btn-mini study-export-item" onclick="window._vivStudyNotebookOpen(event, 'bm-e3-closed-3d-lumenoid')">Open in browser</button>
+      <button type="button" id="study-dl-notebook" role="menuitem" class="btn-mini study-export-item" onclick="window._vivStudyNotebookFromCard(event, 'bm-e3-closed-3d-lumenoid', '')">Download .ipynb</button>
+      <div class="study-export-sec">Figures</div>
+      <button type="button" id="study-fig-open" role="menuitem" class="btn-mini study-export-item" onclick="window._vivStudyFiguresOpen(event, 'bm-e3-closed-3d-lumenoid')">Open in browser</button>
+      <button type="button" id="study-dl-figures" role="menuitem" class="btn-mini study-export-item" onclick="window._vivStudyFiguresFromCard(event, 'bm-e3-closed-3d-lumenoid')">Download (zip)</button>
     </div>
   </span>
 </nav>
@@ -98,8 +110,18 @@
 .study-kind-tag.study-kind-biological{background:#ecfdf5;color:#065f46}
 .study-kind-tag.study-kind-computational{background:#eff6ff;color:#1e40af}
 .study-kind-tag.study-kind-theoretical{background:#faf5ff;color:#6b21a8}
-.study-question-headline{margin:6px 0 0 0;font-size:1.05em;line-height:1.5;color:#1e293b;font-family:Georgia,"Times New Roman",serif}
+.study-question-headline{margin:2px 0 0 0;font-size:0.85em;line-height:1.35;color:#475569;font-family:Georgia,"Times New Roman",serif;padding-right:40px}
+/* Park the inline-edit ✎ in a reserved right gutter so it never lands over the
+   question text (the pencil is an absolutely-positioned child of the editable). */
+.study-question-headline>.ie-pencil{right:6px;top:1px}
+h1.study-title .study-name.ie-editable{padding-right:36px}
+h1.study-title .study-name>.ie-pencil{right:4px;top:6px}
 .study-question-headline .q-glyph{display:inline-block;font-size:0.78em;font-weight:700;font-family:ui-monospace,monospace;color:#64748b;background:#f1f5f9;padding:1px 7px;border-radius:4px;margin-right:6px;vertical-align:middle}
+/* Study Export menu — styled to match the investigation-level ↓ Export menu
+   exactly: grey uppercase section labels + full-width, left-aligned, stacked
+   text-link items (not inline pills). Mirrors walkthrough.js `_sec` + `_mi`. */
+.study-export-sec{padding:6px 8px 2px;font-size:0.72em;font-weight:700;text-transform:uppercase;letter-spacing:0.04em;color:#94a3b8}
+.study-export-item{display:block;width:100%;text-align:left;border:none;background:transparent}
 .status-detail-panel{margin:0;padding:2px 0;background:transparent;border:none;border-radius:0;font-size:0.92em}
 .status-detail-row{display:flex;align-items:center;gap:8px;padding:3px 0}
 .status-detail-axis{min-width:140px;color:#475569;font-size:0.9em}
@@ -662,10 +684,13 @@
             </div>
             
             
+            
+            
             <div class="finding-traceability" style="font-size:0.84em;color:#475569;padding:4px 10px;margin:4px 0">
               
               
               runs: <a href="#run-e3-closed-lumenoid-relaxation"><code>e3-closed-lumenoid-relaxation</code></a>
+              
             </div>
             
             
@@ -719,10 +744,13 @@
             </div>
             
             
+            
+            
             <div class="finding-traceability" style="font-size:0.84em;color:#475569;padding:4px 10px;margin:4px 0">
               
               
               runs: <a href="#run-e3-closed-lumenoid-relaxation"><code>e3-closed-lumenoid-relaxation</code></a>
+              
             </div>
             
             
@@ -775,10 +803,13 @@
             </div>
             
             
+            
+            
             <div class="finding-traceability" style="font-size:0.84em;color:#475569;padding:4px 10px;margin:4px 0">
               
               
               runs: <a href="#run-e3-closed-lumenoid-relaxation"><code>e3-closed-lumenoid-relaxation</code></a>
+              
             </div>
             
             
@@ -790,50 +821,6 @@
             
             
             <div class="finding-next"><strong>→ Next:</strong> wire the lumen-volume forcing + explicit BM attachment, then read pressure and curvature-dependent shape over time</div>
-          </div>
-        </details>
-      </div>
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      <div class="finding-card finding-kind-biological finding-status-confirms" id="finding-F-04">
-        <details class="finding-details">
-          <summary class="finding-row">
-            <span class="finding-status-glyph">✓</span>
-            <span class="finding-claim finding-statement" data-edit-kind="study" data-edit-field="findings[F-04].statement" data-edit-value="A dynamic Simularium trajectory (bm-e3-lumenoid-dynamic.simularium, 298 vertices x 24 frames) plays the closed 3D lumenoid mesh relaxing over the real vivarium-tyssue engine — the dynamic lumenoid visualization the reviewer asked for. Engine-diagnostic (no lumen-filling drive wired yet), not a morphogenesis result." data-edit-multiline data-edit-label="Finding F-04">A dynamic Simularium trajectory (bm-e3-lumenoid-dynamic.simularium, 298 vertices x 24 frames) plays the closed 3D lumenoid mesh relaxing over the real vivarium-tyssue engine — the dynamic lumenoid visualization the reviewer asked for. Engine-diagnostic (no lumen-filling drive wired yet), not a morphogenesis result.</span>
-            
-          </summary>
-          <div class="finding-drawer">
-            <div class="finding-header">
-              <span class="finding-id">F-04</span>
-              <span class="finding-kind">biological</span>
-              <span class="finding-status-text">confirms literature</span>
-            </div>
-            
-            
-            <div class="finding-evidence">
-              
-              
-              
-              
-              
-              
-            </div>
-            
-            
-            
-            
-            
-            
-            
-            
-            
           </div>
         </details>
       </div>
@@ -890,12 +877,23 @@
 
 
 <section class="study-tab-panel" data-kind="compose" id="panel-compose" hidden>
-  <div style="display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:8px;">
-    <h2 class="overview-label" style="margin:0">Model composition</h2>
-    
-    <button type="button" class="btn-mini" onclick="window._vivStudyNotebookFromCard(event, 'bm-e3-closed-3d-lumenoid', '')" title="Download a runnable Jupyter notebook for THIS study — its composite + editable parameters + figures">↓ notebook</button>
+  
+  <div class="model-subtabs" role="tablist" aria-label="Model sections">
+    <button type="button" class="model-subtab active" data-modelsub="composition" role="tab" aria-selected="true" onclick="_setModelSubtab('composition')">Composition</button>
+    <button type="button" class="model-subtab" data-modelsub="loom" role="tab" aria-selected="false" onclick="_setModelSubtab('loom')">Loom</button>
+    <button type="button" class="model-subtab" data-modelsub="variants" role="tab" aria-selected="false" onclick="_setModelSubtab('variants')">Variants</button>
+    <button type="button" class="model-subtab" data-modelsub="interventions" role="tab" aria-selected="false" onclick="_setModelSubtab('interventions')">Interventions</button>
+    <button type="button" class="model-subtab" data-modelsub="readouts" role="tab" aria-selected="false" onclick="_setModelSubtab('readouts')">Readouts</button>
   </div>
 
+  
+  <div class="model-subpanel" data-modelsubpanel="loom" hidden>
+    <div id="model-loom-mount" class="model-loom-mount">
+      <div class="viv-loading"><span class="viv-loading-spin" aria-hidden="true"></span><span>Loading the interactive model diagram…</span></div>
+    </div>
+  </div>
+
+  <div class="model-subpanel active" data-modelsubpanel="composition">
   
   
   <div id="model-composite-cards" class="model-composite-cards" data-study="bm-e3-closed-3d-lumenoid"
@@ -974,33 +972,80 @@
   
 
   
-  <div class="overview-section">
-    <h3>Implementation requirements <span class="muted" style="font-size:0.85em;font-weight:normal">(1 items)</span></h3>
-    <p class="muted" style="font-size:0.88em">Concrete pieces of work that gate this study from Design → Build. Each generates a task.</p>
+  
+  
+  
+  </div>
+
+  
+  <div class="model-subpanel" data-modelsubpanel="variants" hidden>
+  <div class="overview-section" id="study-variants-section">
+    <p class="msub-intro">A <strong>variant</strong> is a copy of a baseline model with a few parameters changed, run and compared against the baseline. Everything else stays fixed.</p>
+    
+    <div class="msub-empty">No variants yet. Add one below to perturb the baseline and compare against it.</div>
     
     
-    <details style="margin:8px 0;padding:8px 12px;background:#fff;border:1px solid #e5e7eb;border-radius:6px;border-left:3px solid #94a3b8">
-      <summary style="cursor:pointer">
-        <strong>req-e3-simularium-dynamic-viz</strong> — Simularium dynamic visualization of the closed lumenoid
-        
-        <span class="muted" style="font-size:0.78em;margin-left:4px">[visualization]</span>
-      </summary>
-      <p style="margin:8px 0">Render the closed 3D lumenoid as a Simularium trajectory (section cut + scale) showing the basal BM-coupling shell dynamically, once the 2D coupling (R4) passes and a lumen-filling drive is wired. Blocked on R4.</p>
-      
-      
-      
-    </details>
-    
+    <form class="study-variant-add-form msub-addcard" onsubmit="return _submitStudyVariantAdd(this)">
+      <div class="msub-addcard-title">Add a variant</div>
+      <div class="msub-field-grid">
+        <label class="msub-field">
+          <span class="msub-lbl">Name</span>
+          <input name="name" required pattern="[a-zA-Z0-9_-]+" placeholder="hi-dnaa" class="msub-input mono">
+          <span class="msub-hint">letters, numbers, - and _</span>
+        </label>
+        <label class="msub-field">
+          <span class="msub-lbl">Based on</span>
+          <select name="base_composite" class="msub-input">
+            <option value="bm-e3-closed-3d-lumenoid">bm-e3-closed-3d-lumenoid</option>
+          </select>
+          <span class="msub-hint">the baseline this variant perturbs</span>
+        </label>
+        <label class="msub-field msub-field-wide">
+          <span class="msub-lbl">Parameter overrides</span>
+          <input name="overrides" placeholder='{"k_synth": 2.0}' class="msub-input mono">
+          <span class="msub-hint">JSON object of parameter → value; leave blank for none</span>
+        </label>
+      </div>
+      <div class="msub-addcard-foot">
+        <button type="submit" class="action-btn primary">+ Add variant</button>
+        <span class="study-variant-add-status msub-status"></span>
+      </div>
+    </form>
     
   </div>
-  
-  
-  
-  
-
-
+  </div>
 
   
+  <div class="model-subpanel" data-modelsubpanel="interventions" hidden>
+  <div class="overview-section" id="study-interventions-section">
+    <p class="msub-intro">An <strong>intervention</strong> is a named, described perturbation applied in this study (e.g. a knockout) — the conceptual change you are testing, documented alongside the model.</p>
+    
+    <div class="msub-empty">No interventions yet. Add one below.</div>
+    
+    <form class="study-intervention-add-form msub-addcard" onsubmit="return _submitStudyInterventionAdd(this)">
+      <div class="msub-addcard-title">Add an intervention</div>
+      <div class="msub-field-grid">
+        <label class="msub-field">
+          <span class="msub-lbl">Name</span>
+          <input name="name" required pattern="[a-zA-Z0-9_-]+" placeholder="knockout-dnaA" class="msub-input mono">
+          <span class="msub-hint">letters, numbers, - and _</span>
+        </label>
+        <label class="msub-field msub-field-wide">
+          <span class="msub-lbl">Description</span>
+          <input name="description" placeholder="what the intervention does" class="msub-input">
+          <span class="msub-hint">a short, human-readable summary</span>
+        </label>
+      </div>
+      <div class="msub-addcard-foot">
+        <button type="submit" class="action-btn primary">+ Add intervention</button>
+        <span class="study-intervention-add-status msub-status"></span>
+      </div>
+    </form>
+  </div>
+  </div>
+
+  
+  <div class="model-subpanel" data-modelsubpanel="readouts" hidden>
   <div class="overview-section" id="model-readouts-section">
     <h3>Readouts</h3>
 
@@ -1018,6 +1063,7 @@
     </div>
 
     
+  </div>
   </div>
   </div>
 
@@ -1039,7 +1085,6 @@
   <button type="button" id="study-run-current-spec" class="action-btn" title="Run this study's CURRENT baseline spec (POST /api/study-run-baseline) as a brand-new run">▶ Run current spec</button>
   <button type="button" id="study-reproduce" class="btn-mini" title="Replay this study's most recent run's RECORDED manifest verbatim (POST /api/study-reproduce) — ignores any study.yaml edits made since">↻ Reproduce</button>
   
-  <button type="button" id="study-run-composite" class="btn-mini" title="Dispatch a specific process-bigraph composite_id to the remote compute backend (pbg-native multi_node/mbp, or the Nextflow campaign path) — advanced, independent of this study's own pinned baseline">⚙ Dispatch composite</button>
 </div>
 
 <div class="overview-section" id="simulations-section">
@@ -1510,7 +1555,7 @@ pass_if: {"note": "per-cell area and volume finite and positive after 5 Euler st
       <h3 class="overview-label">Limitations</h3>
       <p class="muted" style="margin:0 0 6px 0;font-size:0.85em">What this study explicitly does NOT validate (prevents overclaim).</p>
       <ul style="margin:0 0 0 18px;padding:0;font-size:0.93em">
-        <li style="margin:2px 0">Qualitative morphogenesis check only: the study confirms a closed lumen-enclosing shell resolves with finite per-cell volumes and an exposed BM surface, not that lumen growth or curvature set cell shape.</li><li style="margin:2px 0">The lumen starts at its preferred volume, so lumen pressure is 0.0 at rest; the pressure trajectory (pressure departing from zero as the lumen fills/drains) is NOT exercised -- it is the next dynamic readout.</li><li style="margin:2px 0">The BM is an effective basal surface only (78 faces, area 202.47); the explicit collagen/LAMMPS attachment and the reduced-order-vs-resolved BM consistency check are not wired.</li><li style="margin:2px 0">The measured shell extent (roughly +/-4.7 in x/y, -4.90 to +4.74 in z) is wider than the +/-4.3 of the earlier reconstruction -- reported here from the live run.</li><li style="margin:2px 0">Single deterministic configuration (no parameter sweep, n_replicates = 1); reduced units, no micron calibration.</li><li style="margin:2px 0">ORIENTATION (flagged by deep review 2026-11-09, NOT yet resolved): the composite uses lumen_side=basal and bm_side=basal, but the geometry suggests basal is the INNER, lumen-facing surface -- total basal area 202.47 corresponds to an equal-area sphere of R~4.0 / V~271 vs the reported lumen volume 261.7, and vertices extend to ~+/-4.8 (outside that surface). For a lumenoid with an apical lumen and an outer BM this would be inside-out (it matches tyssue&#39;s Drosophila-ellipsoid convention), reversing cell wedging under curvature and placing lumen pressure and BM tension on the same surface. The orientation must be confirmed before any curvature-dependent or lumen-pressure prediction. Separately, the per-cell basal-area readout (3.90-15.65) is inconsistent with 78 basal faces totalling 202.47 (mean 2.6); which faces that readout uses is unverified.</li>
+        <li style="margin:2px 0">Qualitative morphogenesis check only: the study confirms a closed lumen-enclosing shell resolves with finite per-cell volumes and an exposed BM surface, not that lumen growth or curvature set cell shape.</li><li style="margin:2px 0">The lumen starts at its preferred volume, so lumen pressure is 0.0 at rest; the pressure trajectory (pressure departing from zero as the lumen fills/drains) is NOT exercised -- it is the next dynamic readout.</li><li style="margin:2px 0">The BM is an effective basal surface only (78 faces, area 202.47); the explicit collagen/LAMMPS attachment and the reduced-order-vs-resolved BM consistency check are not wired.</li><li style="margin:2px 0">The measured shell extent (roughly +/-4.7 in x/y, -4.90 to +4.74 in z) is wider than the +/-4.3 of the earlier reconstruction -- reported here from the live run.</li><li style="margin:2px 0">Single deterministic configuration (no parameter sweep, n_replicates = 1); reduced units, no micron calibration.</li>
       </ul>
     </div>
     
@@ -1548,6 +1593,51 @@ pass_if: {"note": "per-cell area and volume finite and positive after 5 Euler st
     
     
 
+  </div>
+
+  
+  <div class="overview-section" id="study-findings-authoring">
+    <h2 class="overview-label">Record a finding</h2>
+    
+    <ul class="synthesis-list" style="margin:0 0 12px">
+      
+      <li style="display:flex;align-items:flex-start;gap:8px">
+        <button type="button" class="action-btn study-finding-del" data-id="F1-closed-shell-with-lumen" title="Delete finding" style="font-size:0.72em;line-height:1;padding:2px 6px">✕</button>
+        <span>The closed lumenoid resolves over the tyssue engine: 78 cells, 606 faces and 298 vertices form a closed 3D shell (extent roughly +/-4.7 in x/y, -4.90 to +4.74 in z) enclosing a single lumen of volume 261.69; per-cell volumes (0.4961-3.4257) and areas (3.9018-15.6489) emerge finite and positive, and a basal surface of 78 faces (area 202.47) is exposed as the BM-coupling shell.
+ <span class="muted small">(confirms)</span></span>
+      </li>
+      
+      <li style="display:flex;align-items:flex-start;gap:8px">
+        <button type="button" class="action-btn study-finding-del" data-id="F2-steps-stably" title="Delete finding" style="font-size:0.72em;line-height:1;padding:2px 6px">✕</button>
+        <span>Stepping the EulerSolver five times (dt 0.01) keeps per-cell area and volume finite and positive, with no NaN or blow-up -- the closed lumenoid shell is numerically stable over short integration.
+ <span class="muted small">(confirms)</span></span>
+      </li>
+      
+      <li style="display:flex;align-items:flex-start;gap:8px">
+        <button type="button" class="action-btn study-finding-del" data-id="F3-lumen-pressure-and-bm-attachment-next" title="Delete finding" style="font-size:0.72em;line-height:1;padding:2px 6px">✕</button>
+        <span>The lumen sits at its preferred volume (pressure 0.0 at rest) and the BM is an effective basal surface with no explicit attachment, so the lumen-growth / pressure trajectory and the curvature-dependent cell-shape prediction -- the new morphogenesis claims -- are not yet tested. Only the closed rest-state geometry and the readable lumen/BM quantities are established.
+ <span class="muted small">(partial)</span></span>
+      </li>
+      
+    </ul>
+    
+    <form class="study-finding-add-form" onsubmit="return _submitStudyFindingAdd(this)" style="display:flex;flex-direction:column;gap:8px;max-width:680px">
+      <textarea name="statement" required rows="2" placeholder="What did this study show? (one sentence)"
+                style="font-size:0.9em;padding:6px 8px;resize:vertical"></textarea>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end">
+        <label style="font-size:0.78em;color:#475569">Status<br>
+          <select name="status" style="font-size:0.82em;padding:3px 6px">
+            <option value="novel">novel</option>
+            <option value="confirms">confirms literature</option>
+            <option value="partial">partial</option>
+            <option value="contradicts">contradicts</option>
+          </select></label>
+        <label style="font-size:0.78em;color:#475569;flex:1;min-width:200px">Why / mechanism (optional)<br>
+          <input name="explanation" style="width:100%;font-size:0.82em;padding:3px 6px"></label>
+        <button type="submit" class="action-btn" style="font-size:0.82em">+ Add finding</button>
+      </div>
+    </form>
+    <div class="study-finding-add-status muted" style="font-size:0.8em;margin-top:4px"></div>
   </div>
 
   
@@ -1630,8 +1720,9 @@ pass_if: {"note": "per-cell area and volume finite and positive after 5 Euler st
 </section>
 
 </main>
-<script>window.__DASH_CONFIG__ = { mode: "snapshot", interactiveUrl: "https://github.com/vivarium-collective/viva-lumenoid", basePath: "/viva-lumenoid/workbench", inputsDownloadBase: "https://github.com/vivarium-collective/viva-lumenoid/raw/basement-membrane-v1", provenance: {"repo_slug": "vivarium-collective/viva-lumenoid", "repo_url": "https://github.com/vivarium-collective/viva-lumenoid", "commit": "89e6a1ca46ad7ab2c3a2e0ecc22d30fd42e80dfc", "commit_url": "https://github.com/vivarium-collective/viva-lumenoid/commit/89e6a1ca46ad7ab2c3a2e0ecc22d30fd42e80dfc", "branch": "basement-membrane-v1", "lockfile": "uv.lock@df7785d3583d", "generated_at": "2026-11-17 00:16 UTC"} };</script>
+<script>window.__DASH_CONFIG__ = { mode: "snapshot", interactiveUrl: "https://github.com/vivarium-collective/viva-lumenoid", basePath: "/viva-lumenoid/workbench", inputsDownloadBase: "https://github.com/vivarium-collective/viva-lumenoid/raw/main/workspace", provenance: {"repo_slug": "vivarium-collective/viva-lumenoid", "repo_url": "https://github.com/vivarium-collective/viva-lumenoid", "commit": "bbdcd32b1b6641f27c95f5e091078b9504424ed1", "commit_url": "https://github.com/vivarium-collective/viva-lumenoid/commit/bbdcd32b1b6641f27c95f5e091078b9504424ed1", "branch": "main", "lockfile": "uv.lock@df7785d3583d", "generated_at": "2026-11-22 02:46 UTC"} };</script>
 <script src="/viva-lumenoid/workbench/assets/data-source.js"></script>
+<script src="/viva-lumenoid/workbench/assets/backend-features.js"></script>
 <script src="/viva-lumenoid/workbench/assets/toast.js"></script>
 <script>
 window._studyName = "bm-e3-closed-3d-lumenoid";
@@ -1763,6 +1854,11 @@ window._seedFollowupProposal = _seedFollowupProposal;
 <script src="/viva-lumenoid/workbench/assets/checklist-select.js"></script>
 <script src="/viva-lumenoid/workbench/assets/progress-track.js"></script>
 <script src="/viva-lumenoid/workbench/assets/comparison-view.js"></script>
+<!-- The backend launch plugin's script (remote-pinned dispatch + the
+     "Dispatch composite" panel), quarantined out of study-detail.js. Loaded
+     BEFORE it: study-detail.js calls window.SmsLaunch.mount() while it loads,
+     and runs local-only when the file is absent. -->
+<script src="/viva-lumenoid/workbench/assets/sms-launch.js"></script>
 <script src="/viva-lumenoid/workbench/assets/study-detail.js"></script>
 <script src="/viva-lumenoid/workbench/assets/study-feedback.js"></script>
 <script src="/viva-lumenoid/workbench/assets/inline-edit.js"></script>
@@ -1775,7 +1871,7 @@ window._seedFollowupProposal = _seedFollowupProposal;
 </script>
 <script>
 (function () {
-  // Task 8: the Configure & Run mount and the remote-run (smsvpctest) panel
+  // Task 8: the Configure & Run mount and the remote-run panel
   // were both removed from the Simulate tab — launching now lives entirely
   // in the header buttons (Reproduce / Run current spec). This block used
   // to also mount ConfigureRun into the (now-deleted) mount div and, in an
