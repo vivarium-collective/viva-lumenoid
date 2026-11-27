@@ -1,5 +1,9 @@
 schema_version: 4
 name: bm-e4-feedback-predictions
+simulator:
+  package: viva-lumenoid-sim
+  ref: "0.1.0"
+  registry: git
 title: "LAMMPS–Tyssue coupled lumenoid"
 created: "2026-10-20"
 status: in-progress

@@ -1,5 +1,9 @@
 schema_version: 4
 name: bm-r1-published-tissue-baseline
+simulator:
+  package: viva-lumenoid-sim
+  ref: "0.1.0"
+  registry: git
 title: "Reduced-order tissue-mechanics baseline"
 created: "2026-09-30"
 status: in-progress

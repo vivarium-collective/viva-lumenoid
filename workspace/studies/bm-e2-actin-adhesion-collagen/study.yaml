@@ -1,5 +1,9 @@
 schema_version: 4
 name: bm-e2-actin-adhesion-collagen
+simulator:
+  package: viva-lumenoid-sim
+  ref: "0.1.0"
+  registry: git
 title: "Actin-adhesion-collagen force transfer"
 created: "2026-10-20"
 status: in-progress

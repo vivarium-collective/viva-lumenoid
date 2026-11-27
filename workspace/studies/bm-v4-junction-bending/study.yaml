@@ -1,5 +1,9 @@
 schema_version: 4
 name: bm-v4-junction-bending
+simulator:
+  package: viva-lumenoid-sim
+  ref: "0.1.0"
+  registry: git
 title: "Native junction-bending modulus"
 created: "2026-09-30"
 status: in-progress

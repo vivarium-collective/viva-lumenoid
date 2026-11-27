@@ -1,5 +1,9 @@
 schema_version: 4
 name: bm-r5-explicit-3d-confinement
+simulator:
+  package: viva-lumenoid-sim
+  ref: "0.1.0"
+  registry: git
 title: "Explicit 3D cell confinement"
 created: "2026-09-30"
 status: in-progress
