@@ -1,5 +1,9 @@
 schema_version: 4
 name: bm-v3-junction-bending-rigidity
+simulator:
+  package: viva-lumenoid-sim
+  ref: "0.1.0"
+  registry: git
 title: "Rigidity percolation (central-force control)"
 created: "2026-09-30"
 kind: adversarial   # counterfactual (central-force) control: it should not reproduce the released angle-stabilized model; retained per upgrade-plan §2

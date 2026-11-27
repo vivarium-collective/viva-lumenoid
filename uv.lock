@@ -1197,21 +1197,15 @@ wheels = [
 
 [[package]]
 name = "lumenoid"
-version = "0.0.0"
+version = "0.1.0"
 source = { editable = "." }
 dependencies = [
-    { name = "bigraph-schema" },
-    { name = "bigraph-viz" },
     { name = "jinja2" },
     { name = "jsonschema", extra = ["format-nongpl"] },
-    { name = "matplotlib" },
-    { name = "plotly" },
-    { name = "process-bigraph" },
     { name = "pypdf" },
     { name = "pyyaml" },
-    { name = "simulariumio" },
     { name = "viva-discovery-engine" },
-    { name = "viva-simularium" },
+    { name = "viva-lumenoid-sim" },
     { name = "vivarium-workbench" },
 ]
 
@@ -1221,40 +1215,24 @@ dev = [
     { name = "pytest" },
 ]
 engines = [
-    { name = "lammps" },
-    { name = "viva-lammps" },
-    { name = "viva-smoldyn" },
+    { name = "viva-lumenoid-sim", extra = ["engines"] },
 ]
 tyssue-serve = [
-    { name = "quantities" },
-    { name = "scikit-image" },
-    { name = "tables" },
-    { name = "tyssue" },
+    { name = "viva-lumenoid-sim", extra = ["tyssue-serve"] },
 ]
 
 [package.metadata]
 requires-dist = [
-    { name = "bigraph-schema" },
-    { name = "bigraph-viz", specifier = ">=2.0.3" },
     { name = "jinja2", specifier = ">=3.1" },
     { name = "jsonschema", extras = ["format-nongpl"], specifier = ">=4.21" },
     { name = "jsonschema", extras = ["format-nongpl"], marker = "extra == 'dev'", specifier = ">=4.21" },
-    { name = "lammps", marker = "extra == 'engines'" },
-    { name = "matplotlib" },
-    { name = "plotly" },
-    { name = "process-bigraph" },
     { name = "pypdf", specifier = ">=4.0" },
     { name = "pytest", marker = "extra == 'dev'", specifier = ">=7.4" },
     { name = "pyyaml", specifier = ">=6.0" },
-    { name = "quantities", marker = "extra == 'tyssue-serve'" },
-    { name = "scikit-image", marker = "extra == 'tyssue-serve'" },
-    { name = "simulariumio" },
-    { name = "tables", marker = "extra == 'tyssue-serve'" },
-    { name = "tyssue", marker = "extra == 'tyssue-serve'", specifier = ">=1.0" },
     { name = "viva-discovery-engine", specifier = ">=0.3,<0.4" },
-    { name = "viva-lammps", marker = "extra == 'engines'", git = "https://github.com/vivarium-collective/viva-lammps.git?branch=main" },
-    { name = "viva-simularium", git = "https://github.com/vivarium-collective/viva-simularium.git?branch=main" },
-    { name = "viva-smoldyn", marker = "extra == 'engines'", git = "https://github.com/vivarium-collective/viva-smoldyn.git?branch=main" },
+    { name = "viva-lumenoid-sim", git = "https://github.com/vivarium-collective/viva-lumenoid-sim.git?tag=0.1.0" },
+    { name = "viva-lumenoid-sim", extras = ["engines"], marker = "extra == 'engines'", git = "https://github.com/vivarium-collective/viva-lumenoid-sim.git?tag=0.1.0" },
+    { name = "viva-lumenoid-sim", extras = ["tyssue-serve"], marker = "extra == 'tyssue-serve'", git = "https://github.com/vivarium-collective/viva-lumenoid-sim.git?tag=0.1.0" },
     { name = "vivarium-workbench", git = "https://github.com/vivarium-collective/vivarium-workbench.git?branch=main" },
 ]
 provides-extras = ["dev", "engines", "tyssue-serve"]
@@ -3609,6 +3587,36 @@ dependencies = [
     { name = "process-bigraph" },
     { name = "pyyaml" },
     { name = "viva-superpowers" },
+]
+
+[[package]]
+name = "viva-lumenoid-sim"
+version = "0.1.0"
+source = { git = "https://github.com/vivarium-collective/viva-lumenoid-sim.git?tag=0.1.0#c606b2fda3d7fcc6edea9c6244c368b99dc69ab4" }
+dependencies = [
+    { name = "bigraph-schema" },
+    { name = "bigraph-viz" },
+    { name = "matplotlib" },
+    { name = "numpy", version = "2.4.6", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.12'" },
+    { name = "numpy", version = "2.5.3", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.12'" },
+    { name = "plotly" },
+    { name = "process-bigraph" },
+    { name = "scipy", version = "1.17.1", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.12'" },
+    { name = "scipy", version = "1.18.1", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.12'" },
+    { name = "simulariumio" },
+]
+
+[package.optional-dependencies]
+engines = [
+    { name = "lammps" },
+    { name = "viva-lammps" },
+    { name = "viva-smoldyn" },
+]
+tyssue-serve = [
+    { name = "quantities" },
+    { name = "scikit-image" },
+    { name = "tables" },
+    { name = "tyssue" },
 ]
 
 [[package]]
